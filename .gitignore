@@ -3,4 +3,9 @@ node_modules/
 .idea/
 __pycache__/
 instance/config.cfg
+*.jpeg
+*.gif
+*.jpg
+*.png
+*.svg
 

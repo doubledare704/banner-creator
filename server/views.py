@@ -1,25 +1,17 @@
 import os
-from flask import render_template,redirect,url_for,current_app,flash,request
+from flask import render_template,redirect,url_for,current_app,flash,request,send_from_directory
 from werkzeug.utils import secure_filename
-from flask import send_from_directory
-
-
-basedir = os.path.abspath(os.path.dirname(__file__))
-UPLOAD_FOLDER = os.path.join(basedir, 'media')
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
-current_app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 def setup_routes(app):
     """Here we map routes to handlers."""
-
     app.add_url_rule('/', methods=['GET', 'POST'], view_func=index)
     app.add_url_rule('/uploads/<filename>', view_func=uploaded_file)
 
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+           filename.rsplit('.', 1)[1] in current_app.config['ALLOWED_EXTENSIONS']
 
 def uploaded_file(filename):
     return send_from_directory(current_app.config['UPLOAD_FOLDER'],
@@ -42,4 +34,5 @@ def index():
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
             return redirect(url_for('uploaded_file',
                                     filename=filename))
-    return render_template('index.html')
+    return render_template('list.html')
+
