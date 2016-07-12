@@ -58,6 +58,17 @@
 	var fabric = __webpack_require__(2).fabric;
 
 	var canvas = new fabric.Canvas('c', { width: 1140, height: 800 });
+	var inputText = new fabric.IText('Some text', {
+	    left: 400,
+	    top: 400,
+	    textAlign: 'center'
+	});
+	canvas.add(inputText).renderAll();
+	canvas.setActiveObject(canvas.item(canvas.getObjects().length - 1));
+
+	var textid = document.getElementById('custom_text');
+	var fontsid = document.getElementById('fonts');
+	var sizeid = document.getElementById('sizes');
 	var fileInput = document.getElementById('input');
 	var downloadLink = document.getElementById('download');
 
@@ -67,6 +78,29 @@
 	        canvas.add(img);
 	        fileInput.value = "";
 	    });
+	});
+	textid.addEventListener('keyup', function () {
+	    var obj = canvas.getActiveObject();
+	    if (obj) {
+	        obj.setText(this.value);
+	        canvas.renderAll();
+	    }
+	});
+
+	fontsid.addEventListener('change', function () {
+	    var obj = canvas.getActiveObject();
+	    if (obj) {
+	        obj.setFontFamily(this.value);
+	        canvas.renderAll();
+	    }
+	});
+
+	sizeid.addEventListener('change', function () {
+	    var obj = canvas.getActiveObject();
+	    if (obj) {
+	        obj.setFontSize(this.value);
+	        canvas.renderAll();
+	    }
 	});
 
 	downloadLink.addEventListener('click', function () {
