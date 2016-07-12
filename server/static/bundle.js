@@ -55,8 +55,17 @@
 
 	'use strict';
 
+	//load fabric
 	var fabric = __webpack_require__(2).fabric;
 
+	//working ids from template
+	var textid = document.getElementById('custom_text');
+	var fontsid = document.getElementById('fonts');
+	var sizeid = document.getElementById('sizes');
+	var fileInput = document.getElementById('input');
+	var downloadLink = document.getElementById('download');
+
+	//initial canvas
 	var canvas = new fabric.Canvas('c', { width: 1140, height: 800 });
 	var inputText = new fabric.IText('Some text', {
 	    left: 400,
@@ -65,12 +74,6 @@
 	});
 	canvas.add(inputText).renderAll();
 	canvas.setActiveObject(canvas.item(canvas.getObjects().length - 1));
-
-	var textid = document.getElementById('custom_text');
-	var fontsid = document.getElementById('fonts');
-	var sizeid = document.getElementById('sizes');
-	var fileInput = document.getElementById('input');
-	var downloadLink = document.getElementById('download');
 
 	fileInput.addEventListener('change', function (e) {
 	    var url = URL.createObjectURL(e.target.files[0]);
