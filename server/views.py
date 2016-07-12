@@ -1,7 +1,8 @@
 import os
 from flask import render_template,redirect,url_for,current_app,flash,request,send_from_directory
 from werkzeug.utils import secure_filename
-
+from .models import Image
+from . import db
 
 def setup_routes(app):
     """Here we map routes to handlers."""
@@ -32,6 +33,7 @@ def index():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+
             return redirect(url_for('uploaded_file',
                                     filename=filename))
     return render_template('list.html')
