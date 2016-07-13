@@ -2,7 +2,7 @@ venv/
 node_modules/
 .idea/
 __pycache__/
-instance/config.cfg
+instance/
 *.jpeg
 *.gif
 *.jpg
