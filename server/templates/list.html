@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block page_content %}
+
+    <div class="table table-striped" class="files" id="previews">
+
+  <div id="template" class="file-row">
+    <!-- This is used as the file preview template -->
+    <div>
+        <span class="preview"><img data-dz-thumbnail /></span>
+    </div>
+
+      <div>
+        <p class="name" data-dz-name></p>
+        <strong class="error text-danger" data-dz-errormessage></strong>
+    </div>
+
+    <div>
+
+        <h1>Upload new File</h1>
+    <form action="" method=post enctype=multipart/form-data>
+
+      <div><input type=file name=file >
+         <input type=submit value=Upload ></div>
+    </form>
+
+    <div class="row">
+        {% for img in images %}
+      <div class="col-sm-6 col-md-4">
+        <div class="thumbnail">
+          <img src="{{ img.name }}" alt="cat">
+          <div class="caption">
+            <h3>image object to use</h3>
+            <p>This is coll image</p>
+            <p><a href="#" class="btn btn-primary" role="button">Use this</a> <a href="{{ img.name }}" class="btn btn-default" role="button">Preview</a></p>
+          </div>
+        </div>
+      </div>
+        {% endfor %}
+    </div>
+
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
