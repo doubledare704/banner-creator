@@ -5,6 +5,7 @@ from server.db import db
 
 bootstrap = Bootstrap()
 
+
 def main():
     app = flask.Flask(__name__, instance_relative_config=True)
     setup_routes(app)

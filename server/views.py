@@ -1,8 +1,11 @@
 import os
+import random
+import string
 from flask import render_template,redirect,url_for,current_app,flash,request,send_from_directory
 from werkzeug.utils import secure_filename
 from server.models import Image
 from server.db import db
+
 
 def setup_routes(app):
     """Here we map routes to handlers."""
@@ -14,9 +17,11 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in current_app.config['ALLOWED_EXTENSIONS']
 
+
 def uploaded_file(filename):
     return send_from_directory(current_app.config['UPLOAD_FOLDER'],
                                filename)
+
 
 def index():
     images = Image.query.all()
@@ -32,7 +37,8 @@ def index():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+            char_set = string.ascii_uppercase + string.digits
+            filename = ''.join(random.sample(char_set * 10, 10))+secure_filename(file.filename)
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
             img = Image(name=url_for('uploaded_file',
                                     filename=filename))
