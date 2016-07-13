@@ -1,5 +1,9 @@
 import flask
+
 from flask_bootstrap import Bootstrap
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
+
 from server.views import setup_routes
 from server.db import db
 
@@ -17,4 +21,12 @@ def main():
     bootstrap.init_app(app)
     db.init_app(app)
 
-    app.run()
+    # Load all models to be available for db migration tool
+    from server import models
+
+
+    migrate = Migrate(app, db, directory='server/migrations')
+    manager = Manager(app)
+    manager.add_command('db', MigrateCommand)
+
+    manager.run()
