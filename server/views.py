@@ -1,8 +1,8 @@
 import os
 from flask import render_template,redirect,url_for,current_app,flash,request,send_from_directory
 from werkzeug.utils import secure_filename
-from .models import Image
-from . import db
+from server.models import Image
+from server.db import db
 
 def setup_routes(app):
     """Here we map routes to handlers."""
@@ -19,6 +19,7 @@ def uploaded_file(filename):
                                filename)
 
 def index():
+    images = Image.query.all()
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -33,8 +34,10 @@ def index():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-
-            return redirect(url_for('uploaded_file',
+            img = Image(name=url_for('uploaded_file',
                                     filename=filename))
-    return render_template('list.html')
+            db.session.add(img)
+
+            return redirect(request.url)
+    return render_template('list.html', images=images)
 

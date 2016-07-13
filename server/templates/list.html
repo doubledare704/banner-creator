@@ -26,44 +26,19 @@
          <input type=submit value=Upload ></div>
     </form>
 
-        <div>
-            <!-- this will work when db is ready -->
-
-        {#<ul>#}
-        {#    {% for file in files %}#}
-        {#    <li><a href="{{ file }}">{{ file }}</a></li>#}
-        {#    {% endfor %}#}
-        {#</ul>#}
-    </div>
     <div class="row">
+        {% for img in images %}
       <div class="col-sm-6 col-md-4">
         <div class="thumbnail">
-
-            <!-- change this  to the dinamic urls when db is ready -->
-
-          <img src="/uploads/image.jpg" alt="cat">
+          <img src="{{ img.name }}" alt="cat">
           <div class="caption">
-            <h3>image object</h3>
-            <p>This is kitty</p>
-            <p><a href="#" class="btn btn-primary" role="button">Use this</a> <a href="#" class="btn btn-default" role="button">Preview</a></p>
+            <h3>image object to use</h3>
+            <p>This is coll image</p>
+            <p><a href="#" class="btn btn-primary" role="button">Use this</a> <a href="{{ img.name }}" class="btn btn-default" role="button">Preview</a></p>
           </div>
         </div>
       </div>
-
-
-        <div class="col-sm-6 col-md-4">
-        <div class="thumbnail">
-          <img src="/uploads/image2.jpg" alt="cat">
-          <div class="caption">
-            <h3>image object</h3>
-            <p>This is kitty</p>
-            <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
-          </div>
-        </div>
-      </div>
-       <!-- change this  to the dinamic urls when db is ready -->
-
-
+        {% endfor %}
     </div>
 
     </div>

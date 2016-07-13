@@ -1,4 +1,4 @@
-from . import db
+from server.db import db
 
 class Image(db.Model):
     __tablename__ = 'image'
