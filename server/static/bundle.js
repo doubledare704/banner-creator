@@ -58,12 +58,19 @@
 	//load fabric
 	var fabric = __webpack_require__(2).fabric;
 
+	//random position for future objects
+	function getRandomPos(min, max) {
+	    return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
 	//working ids from template
 	var textid = document.getElementById('custom_text');
 	var fontsid = document.getElementById('fonts');
 	var sizeid = document.getElementById('sizes');
 	var fileInput = document.getElementById('input');
 	var downloadLink = document.getElementById('download');
+	var addtext = document.getElementById('justaddtext');
+	var color = document.getElementById('colors');
+	var wcanvas = document.getElementById('wcanv'); //width for canvas editor
 
 	//initial canvas
 	var canvas = new fabric.Canvas('c', { width: 1140, height: 800 });
@@ -75,6 +82,33 @@
 	canvas.add(inputText).renderAll();
 	canvas.setActiveObject(canvas.item(canvas.getObjects().length - 1));
 
+	wcanvas.addEventListener('change', function () {
+	    var coef = 0.7;
+	    canvas.setWidth(this.value);
+	    canvas.setHeight(this.value * coef);
+	    canvas.calcOffset();
+	    iWantThemAll();
+	});
+
+	color.addEventListener('change', function () {
+	    var obj = canvas.getActiveObject();
+	    if (obj) {
+	        obj.setColor(this.value);
+	        canvas.renderAll();
+	    }
+	});
+	addtext.addEventListener('click', function () {
+	    var object = new fabric.IText("NEW TEXT", {
+	        fontFamily: "Arial",
+	        left: getRandomPos(500, 700),
+	        top: getRandomPos(300, 400),
+	        fontSize: 24,
+	        textAlign: "left",
+	        fill: "#000000"
+	    });
+	    canvas.add(object);
+	    canvas.renderAll();
+	});
 	fileInput.addEventListener('change', function (e) {
 	    var url = URL.createObjectURL(e.target.files[0]);
 	    fabric.Image.fromURL(url, function (img) {
@@ -111,6 +145,38 @@
 	    link.href = canvas.toDataURL();
 	    link.download = 'result.jpg';
 	}, false);
+
+	function iWantThemAll() {
+	    //adding group
+	    var objs = [];
+	    //get all the objects into an array
+	    objs = canvas._objects.filter(function (obj) {
+	        return obj;
+	    });
+
+	    //group all the objects
+	    var alltogetherObj = new fabric.Group(objs, {
+	        top: 300, left: 300,
+	        originX: 'center',
+	        originY: 'center'
+	    });
+	    //clear previous objects
+	    for (var _i = 0; _i < objs.length; _i++) {
+	        canvas.remove(objs[_i]);
+	    }
+
+	    canvas.add(alltogetherObj);
+	    canvas.renderAll();
+
+	    alltogetherObj.destroy();
+	    var items = alltogetherObj.getObjects();
+	    canvas.remove(alltogetherObj);
+	    for (var i = 0; i < items.length; i++) {
+	        canvas.add(items[i]);
+	    }
+
+	    canvas.renderAll();
+	}
 
 /***/ },
 /* 2 */
