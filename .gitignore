@@ -3,8 +3,5 @@ node_modules/
 .idea/
 __pycache__/
 instance/
-*.jpeg
-*.gif
-*.jpg
-*.png
-*.svg
+media/
+>>>>>>> origin/master
