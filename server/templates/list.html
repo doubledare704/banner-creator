@@ -3,9 +3,8 @@
 {% block title %}Home{% endblock %}
 
 {% block page_content %}
-
     <div class="table table-striped" >
-  <div id="template" class="file-row">
+     <div id="template" class="file-row">
     <!-- This is used as the file preview template -->
     <div>
         <span class="preview"><img data-dz-thumbnail /></span>
@@ -18,17 +17,17 @@
 
     <div>
     <div class="row">
-    <hr>
-        <h1>Upload new File</h1>
-    <form class="form-inline" action="" method=post enctype=multipart/form-data>
-      <div class="form-group">
-          <input type=file name=file accept="image/gif, image/jpeg, image/jpg, image/png" >
-      </div>
-        <div class="form-group">
-          <input type=submit value=Upload  role="button" >
-        </div>
-    </form>
-         <hr>
+        <hr>
+            <h1>Upload new File</h1>
+        <form class="form-inline" action="" method=post enctype=multipart/form-data>
+          <div class="form-group">
+              <input type=file name=file accept="image/gif, image/jpeg, image/jpg, image/png" >
+          </div>
+            <div class="form-group">
+              <input type=submit value=Upload  role="button" >
+            </div>
+        </form>
+        <hr>
     </div>
     <div class="row">
         {% for img in images %}
@@ -38,12 +37,13 @@
           <div class="caption">
             <h3>image object to use</h3>
             <p>This is coll image</p>
+            <p>
+                <a href="#modal-dialog"  data-toggle="modal"  data-modal-type="confirm" data-modal-title="Delete Property" class="btn btn-default modal-toggle" role="button" >
+                <i class="glyphicon glyphicon-trash"></i>
+                <span>Delete</span></a>
+                <a href="{{ img.name }}" class="btn btn-default" role="button">Preview</a></p>
 
-
-
-               <!-- modal caller -->
-              <a href="#modal-dialog" class="modal-toggle" data-toggle="modal"  data-modal-type="confirm" data-modal-title="Delete Property" data-modal-text="Are you sure you want to delete {$property.address_string}?" data-modal-confirm-url="{$base_url}residential-lettings/properties/do-delete/property/{$property.id}"><i class="icon-trash"></i> Modal Submit</a>
-
+              <!-- modal caller -->
             <div id="modal-dialog" class="modal">
                 <div class="modal-dialog">
                   <div class="modal-content">
@@ -61,13 +61,6 @@
                   </div>
                 </div>
             </div>
-
-
-            <p>
-                <a href="{{ url_for('image_delete',id=img.id) }}" data-confirm="Are you sure you want to delete?" class="btn btn-default" role="button" >
-                <i class="glyphicon glyphicon-trash"></i>
-                <span>Delete</span></a>
-                <a href="{{ img.name }}" class="btn btn-default" role="button">Preview</a></p>
           </div>
         </div>
       </div>

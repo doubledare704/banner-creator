@@ -61,5 +61,5 @@ def editor():
 def image_delete(id):
     img = Image.query.get_or_404(id)
     db.session.delete(img)
-    flash('File is deleted youa are the badass !')
+    flash('File is deleted you are really brave person !')
     return redirect(url_for('index'))
