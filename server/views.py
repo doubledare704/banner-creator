@@ -14,6 +14,21 @@ def setup_routes(app):
     app.add_url_rule('/delete/<int:id>', methods=['GET', 'POST'], view_func=image_delete)
     app.add_url_rule('/rename/<int:id>', methods=['GET', 'POST'], view_func=image_rename)
     app.add_url_rule('/editor/', view_func=editor)
+    app.add_url_rule('/admin/', view_func=admin)
+    app.add_url_rule('/admin/backgrounds/', view_func=backgrounds)
+
+
+def allowed_file(filename):
+    if not filename:
+        return False
+    name, extension = os.path.splitext(filename)
+    return extension in current_app.config['ALLOWED_EXTENSIONS']
+
+
+def uploaded_file(filename):
+    return send_from_directory(
+        current_app.config['UPLOAD_FOLDER'],filename
+    )
 
 
 def index():
@@ -45,3 +60,10 @@ def editor():
     return render_template('editor.html')
 
 
+def admin():
+    return render_template('admin.html')
+
+
+def backgrounds():
+    backgrounds = Image.query.order_by(Image.name.asc()).all()
+    return render_template('backgrounds.html', backgrounds=backgrounds)
