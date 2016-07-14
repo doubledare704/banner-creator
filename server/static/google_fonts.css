@@ -1,0 +1,12 @@
+@font-face {
+    font-family: Lobster;
+    src: url(../static/fonts/Lobster-Regular.ttf);
+}
+@font-face {
+    font-family: Roboto;
+    src: url(../static/fonts/Roboto-Regular.ttf);
+}
+@font-face {
+    font-family: RobotoSlab;
+    src: url(../static/fonts/RobotoSlab-Regular.ttf);
+}

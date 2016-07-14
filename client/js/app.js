@@ -1,3 +1,2 @@
-/**
- * Created by n.koropatnik on 11.07.16.
- */
+var fabric = require('./fabmain.js');
+var styluses = require('./../css/main.styl');
