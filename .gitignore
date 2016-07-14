@@ -4,3 +4,7 @@ node_modules/
 __pycache__/
 instance/
 media/
+server/static/css
+server/static/*.js
+server/static/styles.css
+
