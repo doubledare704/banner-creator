@@ -1,7 +1,7 @@
 import os
 import random
 import string
-from flask import render_template,redirect,url_for,current_app,flash,request,send_from_directory
+from flask import render_template, redirect, url_for, current_app, flash, request, send_from_directory
 from werkzeug.utils import secure_filename
 from server.models import Image
 from server.db import db
@@ -13,7 +13,8 @@ def setup_routes(app):
     app.add_url_rule('/uploads/<filename>', view_func=uploaded_file)
     app.add_url_rule('/delete/<int:id>', methods=['GET', 'POST'], view_func=image_delete)
 
-    app.add_url_rule('/', view_func=editor)
+    app.add_url_rule('/editor/', view_func=editor)
+
 
 def allowed_file(filename):
     if not filename:
@@ -24,7 +25,7 @@ def allowed_file(filename):
 
 def uploaded_file(filename):
     return send_from_directory(
-        current_app.config['UPLOAD_FOLDER'],filename
+        current_app.config['UPLOAD_FOLDER'], filename
     )
 
 
@@ -43,7 +44,7 @@ def index():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             char_set = string.ascii_uppercase + string.digits
-            filename = ''.join(random.sample(char_set * 10, 10))+secure_filename(file.filename)
+            filename = ''.join(random.sample(char_set * 10, 10)) + secure_filename(file.filename)
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
             img = Image(
                 name=url_for('uploaded_file', filename=filename
@@ -51,8 +52,9 @@ def index():
             db.session.add(img)
             return redirect(request.url)
     return render_template('list.html', images=images)
+
+
 def editor():
-    # return 'Hello world'
     return render_template('editor.html')
 
 
@@ -60,5 +62,3 @@ def image_delete(id):
     img = Image.query.get_or_404(id)
     db.session.delete(img)
     return redirect(url_for('index'))
-
-

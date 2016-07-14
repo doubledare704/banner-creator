@@ -1,67 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab|Roboto:400,500|Lobster&subset=latin,cyrillic'
-          rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="../static/styles.css">
-    <title>EVO BANNER</title>
-</head>
-<body>
-<!-- <div id="dropzone"></div> -->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-12" id="canvas_cont">
-            <canvas id="c"></canvas>
-            <div class="btn-group block">
-                <input type="button" id="justaddtext" class="btn btn-success btn-lg" value="Just add text">
-                <input type="text" id="custom_text" class="input-lg" placeholder="Enter text here">
-                <div class="colorpack">
-                    <label for="colors">Select font:</label>
-                    <select class="form-control" id="colors">
-                        <option>#2980D9</option>
-                        <option>#7F8C8D</option>
-                        <option>#16A085</option>
-                        <option>#D35400</option>
-                    </select>
-                </div>
-                <div class="widthcanvas">
-                    <label for="wcanv">Select font:</label>
-                    <select class="form-control" id="wcanv">
-                        <option>500</option>
-                        <option>900</option>
-                        <option>1200</option>
-                        <option>300</option>
-                    </select>
-                </div>
-                <div class="fontpack">
-                    <label for="fonts">Select font:</label>
-                    <select class="form-control" id="fonts">
-                        <option>Arial</option>
-                        <option>Roboto</option>
-                        <option>Lobster</option>
-                        <option>Roboto Slab</option>
-                    </select>
-                </div>
-                <div class="sizepack">
-                    <label for="sizes">Select size:</label>
-                    <select class="form-control" id="sizes">
-                        <option>40</option>
-                        <option>50</option>
-                        <option>70</option>
-                        <option>100</option>
-                    </select>
-                </div>
-                <input type="file" id='input' class=" btn btn-default btn-lg"/>
-                <a class="btn btn-success btn-lg btn-block " id="download">download</a>
+{% extends "base.html" %}
+
+{% block title %}Editor for banner{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link href='https://fonts.googleapis.com/css?family=Roboto+Slab|Roboto:400,500|Lobster&subset=latin,cyrillic'
+      rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="../static/styles.css">
+{% endblock %}
+
+{% block page_content %}
+<div class="row">
+    <div class="col-lg-12" id="canvas_cont">
+        <canvas id="c"></canvas>
+        <div class="btn-group block">
+            <input type="button" id="justaddtext" class="btn btn-success btn-lg" value="Just add text">
+            <input type="text" id="custom_text" class="input-lg" placeholder="Enter text here">
+            <div class="colorpack">
+                <label for="colors">Select font:</label>
+                <select class="form-control" id="colors">
+                    <option>#2980D9</option>
+                    <option>#7F8C8D</option>
+                    <option>#16A085</option>
+                    <option>#D35400</option>
+                </select>
             </div>
+            <div class="widthcanvas">
+                <label for="wcanv">Select font:</label>
+                <select class="form-control" id="wcanv">
+                    <option>500</option>
+                    <option>900</option>
+                    <option>1200</option>
+                    <option>300</option>
+                </select>
+            </div>
+            <div class="fontpack">
+                <label for="fonts">Select font:</label>
+                <select class="form-control" id="fonts">
+                    <option>Arial</option>
+                    <option>Roboto</option>
+                    <option>Lobster</option>
+                    <option>Roboto Slab</option>
+                </select>
+            </div>
+            <div class="sizepack">
+                <label for="sizes">Select size:</label>
+                <select class="form-control" id="sizes">
+                    <option>40</option>
+                    <option>50</option>
+                    <option>70</option>
+                    <option>100</option>
+                </select>
+            </div>
+            <input type="file" id='input' class=" btn btn-default btn-lg"/>
+            <a class="btn btn-success btn-lg btn-block " id="download">download</a>
         </div>
     </div>
-
 </div>
+{% endblock %}
 
+{% block scripts %}
+{{ super() }}
 <script src="../static/bundle.js"></script>
-</body>
-</html>
+{% endblock %}
