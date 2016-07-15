@@ -7,6 +7,9 @@ from flask_migrate import Migrate, MigrateCommand
 from server.views import setup_routes
 from server.db import db
 
+from server.auth import google
+from server.auth import facebook
+
 bootstrap = Bootstrap()
 
 
@@ -21,9 +24,12 @@ def main():
     bootstrap.init_app(app)
     db.init_app(app)
 
+    # Auth init
+    facebook.initialize(app)
+    google.initialize(app)
+
     # Load all models to be available for db migration tool
     from server import models
-
 
     migrate = Migrate(app, db, directory='server/migrations')
     manager = Manager(app)
