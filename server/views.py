@@ -1,6 +1,5 @@
 import os
-import random
-import string
+import uuid
 from flask import render_template, redirect, current_app, flash, request
 from werkzeug.utils import secure_filename
 from server.models import Image
@@ -18,7 +17,7 @@ def setup_routes(app):
 
 
 def index():
-    images = Image.query.all()
+    images = Image.query.filter_by(active=True)
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -31,11 +30,11 @@ def index():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            char_set = string.ascii_uppercase + string.digits
-            filename = ''.join(random.sample(char_set * 10, 10)) + secure_filename(file.filename)
+            filename = str(uuid.uuid1()).replace("-","")+'.'+secure_filename(file.filename).rsplit('.', 1)[1]
             file = image_resize(file)
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-            image = Image(name=filename)
+            title = request.form['title']
+            image = Image(name=filename, title = title)
             db.session.add(image)
 
             return redirect(request.url)

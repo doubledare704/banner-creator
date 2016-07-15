@@ -18,7 +18,9 @@ def uploaded_file(filename):
 
 
 def image_resize(file):
-
+    width, height = request.form['width'], request.form['height']
+    if len(width) == 0 and len(height) == 0:
+        return file
     width = int(request.form['width'])
     height = int(request.form['height'])
 
@@ -30,7 +32,6 @@ def image_resize(file):
             bg = pil.new(mode='RGBA', size=image.size, color=(255, 255, 255, 0))
             bg.paste(image, image)
             image = bg
-        print("resized image", width, height)
         return image
     except IOError as e:
         print(e.errno)
