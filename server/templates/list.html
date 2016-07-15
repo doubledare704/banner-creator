@@ -37,13 +37,16 @@
                 <p>File name:</p>
                 <p>{{ image.name }}</p>
                 <p>
-                    <a href="#modal-dialog{{ image.id }}"  data-toggle="modal"  data-modal-type="confirm" data-modal-title="Delete Property" class="btn btn-default modal-toggle" role="button" >
+                    <a href="#modal-dialog-delete{{ image.id }}"  data-toggle="modal"  data-modal-type="confirm" data-modal-title="Delete Property" class="btn btn-default modal-toggle" role="button" >
                         <i class="glyphicon glyphicon-trash"></i>
                          <span>Delete</span></a>
+                    <a href="#modal-dialog-rename{{ image.id }}"  data-toggle="modal"  data-modal-type="confirm" data-modal-title="Delete Property" class="btn btn-default modal-toggle" role="button" >
+                        <i class="glyphicon glyphicon-pencil"></i>
+                         <span>Rename</span></a>
                     <a href="{{ url_for('uploaded_file', filename=image.name) }}" class="btn btn-default" role="button">Preview</a>
                 </p>
-                  <!-- modal caller -->
-                <div id="modal-dialog{{ image.id }}" class="modal">
+                  <!-- modal caller for delete -->
+                <div id="modal-dialog-delete{{ image.id }}" class="modal">
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-header">
@@ -56,6 +59,27 @@
                         <div class="modal-footer">
                           <a href="{{ url_for('image_delete',id=image.id) }}" id="btnYes" class="btn confirm">Yes</a>
                           <a href="#" data-dismiss="modal" aria-hidden="true" class="btn secondary">No</a>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                  <!-- modal dialog for rename -->
+                  <div id="modal-dialog-rename{{ image.id }}" class="modal">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                            <a href="#" data-dismiss="modal" aria-hidden="true" class="close">×</a>
+                             <h3>Rename ?</h3>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-inline" action="{{ url_for('image_rename',id=image.id) }}" method=post enctype=multipart/form-data>
+                                <div class="form-group">
+                                    New title: <input type="text" name="rename" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type=submit value=Rename  role="button" >
+                                </div>
+                            </form>
                         </div>
                       </div>
                     </div>

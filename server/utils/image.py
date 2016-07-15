@@ -44,3 +44,10 @@ def image_delete(id):
     image.active = False
     flash('File is deleted you are really brave person !')
     return redirect(url_for('index'))
+
+
+def image_rename(id):
+    image = Image.query.get_or_404(id)
+    image.title = request.form['rename']
+    flash('Image renamed')
+    return redirect(url_for('index'))
