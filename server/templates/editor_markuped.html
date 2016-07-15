@@ -1,60 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Создание баннера 960х420</title>
+{% extends "base.html" %}
+
+{% block title %}Создание баннера 960х420{% endblock %}
+
+{% block head %}
     <link rel="stylesheet" href="../static/styles.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
-</head>
-<body>
-<div class="wrapper">
-    <aside class="column_aside">
-        <section>
-            <a href="#">
-                <i class="material-icons">usb</i>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab|Roboto:400,500|Lobster&subset=latin,cyrillic'
+          rel='stylesheet' type='text/css'>
+{% endblock %}
+
+{% block navbar %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="wrapper">
+        <aside class="column_aside">
+            <section>
+                <a href="#">
+                    <i class="material-icons">usb</i>
             <span class="detail">
                 Для перемещения объекта просто выберите его и перемещайте.
             </span>
-            </a>
-        </section>
-        <section>
-            <a href="#">
-                <i class="material-icons">sort_by_alpha</i>
+                </a>
+            </section>
+            <section>
+                <a href="#" id="justaddtext">
+                    <i class="material-icons">sort_by_alpha</i>
             <span class="detail">
                 Добавить текст
             </span>
-            </a>
-        </section>
-        <section>
-            <a href="#">
-                <i class="material-icons">input</i>
+                </a>
+            </section>
+            <section>
+                <a href="#" id="addButt">
+                    <i class="material-icons">input</i>
             <span class="detail">
                 Добавить кнопку
             </span>
-            </a>
-        </section>
-        <section class="last-sec">
-            <a href="#">
-                <i class="material-icons">cloud_upload</i>
+                </a>
+            </section>
+            <section class="last-sec">
+                <a href="#">
+                    <i class="material-icons">cloud_upload</i>
             <span class="download-file">
                 Загрузить изображение
             </span>
-            </a>
+                </a>
+            </section>
+        </aside>
+        <section class="container">
+            <nav class="navigation">
+                <a href="#"><i class="material-icons">done_all</i> Отправить на ревью</a>
+                <a href="#"><i class="material-icons">insert_comment</i> Добавить коментарий для ревьюера</a>
+                <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i> Скачать баннер</a>
+            </nav>
+            <main class="container-content">
+                <canvas id="main">
+                </canvas>
+            </main>
         </section>
-    </aside>
-    <section class="container">
-        <nav class="navigation">
-            <a href="#"><i class="material-icons">done_all</i> Отправить на ревью</a>
-            <a href="#"><i class="material-icons">insert_comment</i> Добавить коментарий для ревьюера</a>
-            <a href="#" class="special"><i class="material-icons">cloud_download</i> Скачать баннер</a>
-        </nav>
-        <main class="container-content">
-            <canvas id="main">
-
-            </canvas>
-        </main>
-    </section>
-</div>
-</body>
-</html>
+    </div>
+{% endblock %}
+{% block scripts %}
+<script src="../static/bundle.js"></script>
+{% endblock %}
