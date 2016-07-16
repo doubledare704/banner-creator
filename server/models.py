@@ -1,5 +1,6 @@
 from server.db import db
 from sqlalchemy import Enum
+from sqlalchemy.schema import Index
 
 
 class Image(db.Model):
@@ -23,6 +24,8 @@ class User(db.Model):
     token = db.Column(db.String(32), index=True)
     role = db.Column(Enum('user', 'designer', 'admin', name='user_roles'), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
+
+    __table_args__ = (Index('ix_user_token_social_type', "social_type", "token"),)
 
     def __repr__(self):
         return '<User %r>' % self.name

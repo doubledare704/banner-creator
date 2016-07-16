@@ -3,13 +3,10 @@ import random
 import string
 import re
 from flask import render_template, redirect, url_for, current_app, flash, request, send_from_directory, session, jsonify
+from server.auth.auth import Auth
 from werkzeug.utils import secure_filename
 from server.models import Image
 from server.db import db
-from server.models import User
-
-from server.auth import facebook
-from server.auth import google
 
 
 def setup_routes(app):
@@ -18,13 +15,12 @@ def setup_routes(app):
     app.add_url_rule('/uploads/<filename>', view_func=uploaded_file)
     app.add_url_rule('/delete/<int:id>', methods=['GET', 'POST'], view_func=image_delete)
 
+    # auth routs
     app.add_url_rule('/login', view_func=login_page)
-    app.add_url_rule('/login/google', view_func=google_login)
-    app.add_url_rule('/login/authorized/google/', view_func=google_auth)
-    app.add_url_rule('/logout', view_func=log_out)
+    app.add_url_rule('/login/<social_network_name>', view_func=authorize)
+    app.add_url_rule('/login/authorized/<social_network_name>/', view_func=auth_response)
+    app.add_url_rule('/logout/<social_network_name>', view_func=log_out)
 
-    app.add_url_rule('/login/facebook', view_func=facebook_login)
-    app.add_url_rule('/login/authorized/facebook', view_func=facebook_auth)
     app.before_request(check_auth)
 
 
@@ -78,14 +74,19 @@ def check_auth():
         r"^((/_debug_toolbar)|(" + current_app.static_url_path + ")|(" + url_for('login_page') + "))").match(
         path)
 
-    # wrong token
-    if 'auth_token' in session and User.query.filter_by(token=session['auth_token']).first() is None:  # fake token
-        del session['auth_token']
-    if (result is None and 'auth_token' not in session) or (  # not static/login, not logged in
-                    # try to get another page after redirecting to login page
-                    result is None and 'redirect_url' in session):
-        session['redirect_url'] = request.path
-        return redirect(url_for('login_page'))
+    if 'auth_token' in session:
+        user = Auth.set_current_user(session['auth_token'])
+        # if fake token
+        if user is None:
+            del session['auth_token']
+            return redirect_to_login()
+    elif result is None:  # not static/login, not logged in
+        return redirect_to_login()
+
+
+def redirect_to_login():
+    session['redirect_url'] = request.path
+    return redirect(url_for('login_page'))
 
 
 def redirect_after_login():
@@ -99,24 +100,16 @@ def login_page():
     return render_template('login.html')
 
 
-def google_auth():
-    google.auth()
+# callback for google redirect to
+def auth_response(social_network_name):
+    Auth.user_auth_response(social_network_name)
     return redirect_after_login()
 
 
-def google_login():
-    return google.send_login()
+def authorize(social_network_name):
+    return Auth.authorize(social_network_name)
 
 
-def facebook_auth():
-    facebook.auth()
-    return redirect_after_login()
-
-
-def facebook_login():
-    return facebook.send_login()
-
-
-def log_out():
-    google.log_out()
+def log_out(social_network_name):
+    Auth.log_out(social_network_name)
     return redirect(url_for('login_page'))
