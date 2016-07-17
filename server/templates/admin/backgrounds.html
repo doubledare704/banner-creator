@@ -1,0 +1,115 @@
+{% extends "admin/admin.html" %}
+
+{% block admin_content %}
+
+
+<h2>Backgrounds</h2>
+
+
+<div class="row">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#active-pictures">Активные картинки</a></li>
+        <li><a data-toggle="tab" href="#deleted-pictures">Удалённые картинки</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="active-pictures" class="tab-pane fade in active">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Images</th>
+                    <th></th>
+
+
+                </thead>
+                <tbody>
+                    {% for actBackground in act_backgrounds %}
+                    <tr class= "{{actBackground.id}}">
+                        <td>{{ actBackground.id }}</td>
+                        <td>
+                            <i>{{ actBackground.title }}</i>
+                        </td>
+                        <td>
+                            <div class="thumbnail" >
+                                <img class="img-responsive" src="{{ actBackground.name }}" alt="cat" width="150" height="100" >
+                            </div>
+                        </td>
+                        <td>
+                            <button id= "{{actBackground.id}}" class="btn btn-default" onclick="delete_img({{actBackground.id}})"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div id="deleted-pictures" class="tab-pane fade">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Images</th>
+                    <th></th>
+
+
+                </thead>
+                <tbody>
+                    {% for delBackground in del_backgrounds %}
+                    <tr class= "{{delBackground.id}}">
+                        <td>{{ delBackground.id }}</td>
+                        <td>
+                            <i>{{ delBackground.title }}</i>
+                        </td>
+                        <td>
+                            <div class="thumbnail" >
+                                <img class="img-responsive" src="{{ delBackground.name }}" alt="cat" width="150" height="100" >
+                            </div>
+                        </td>
+                        <td>
+                            <button id= "{{delBackground.id}}" class="btn btn-default" onclick="delete_from_DB({{delBackground.id}})"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+function delete_img(imgId) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+      var img = document.getElementsByClassName(imgId);
+      img[0].style.display = "none";
+    }
+  };
+  xhttp.open("POST",  "/delete/" + imgId, true);
+  xhttp.send(null);
+}
+</script>
+
+<!--<script>-->
+
+<!--function delete_from_DB(imgId) {-->
+  <!--var xhttp = new XMLHttpRequest();-->
+  <!--xhttp.onreadystatechange = function() {-->
+    <!--if (xhttp.readyState == 4 && xhttp.status == 200) {-->
+    <!--console.log("delete")-->
+      <!--&lt;!&ndash;console.log(xhttp.responseText);&ndash;&gt;-->
+      <!--var img = document.getElementsByClassName(imgId);-->
+      <!--img[0].style.display = "none";-->
+    <!--}-->
+  <!--};-->
+  <!--xhttp.open("POST",  "/deleteDB/" + imgId, true);-->
+  <!--xhttp.send(null);-->
+<!--}-->
+
+<!--</script>-->
+
+{% endblock %}

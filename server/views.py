@@ -16,6 +16,8 @@ def setup_routes(app):
     app.add_url_rule('/editor/', view_func=editor)
     app.add_url_rule('/admin/', view_func=admin)
     app.add_url_rule('/admin/backgrounds/', view_func=backgrounds)
+    app.add_url_rule('/deleteDB/<int:id>', methods=['POST'], view_func=image_delete_from_DB)
+
 
 
 def allowed_file(filename):
@@ -61,9 +63,17 @@ def editor():
 
 
 def admin():
-    return render_template('admin.html')
+    return render_template('admin/admin.html')
 
 
 def backgrounds():
-    backgrounds = Image.query.order_by(Image.name.asc()).all()
-    return render_template('backgrounds.html', backgrounds=backgrounds)
+    act_backgrounds = Image.query.filter(Image.active == 't').order_by(Image.name.asc()).all()
+    del_backgrounds = Image.query.filter(Image.active == 'f').order_by(Image.name.asc()).all()
+    return render_template('admin/backgrounds.html', act_backgrounds=act_backgrounds, del_backgrounds=del_backgrounds)
+
+def image_delete_from_DB(id):
+    image = Image.query.get_or_404(id)
+    db.session.delete(image)
+    db.session.commit()
+    del_backgrounds = Image.query.filter(Image.active == 'f').order_by(Image.name.asc()).all()
+    return del_backgrounds
