@@ -15,6 +15,7 @@ const downloadLink = document.getElementById('download');
 const addtext = document.getElementById('justaddtext');
 const color = document.getElementById('colors');
 const wcanvas = document.getElementById('wcanv'); //width for canvas editor
+const use = document.getElementsByClassName("use");
 
 
 //initial canvas
@@ -61,6 +62,22 @@ fileInput.addEventListener('change', (e) => {
         fileInput.value = ""
     });
 });
+// this is added
+function addImg(){
+    let myImg = this.id;
+    fabric.Image.fromURL(myImg, function(oImg) {
+        let l = Math.random() * (500 - 0) + 0;
+        let t = Math.random() * (500 - 0) + 0;
+           // oImg.scale(0.2);
+        oImg.set({'left':l});
+                  oImg.set({'top':t});
+            canvas.add(oImg);
+        });
+};
+for (let i = 0; i < use.length; i++) {
+    use[i].addEventListener('click', addImg, false);
+}
+// end of added
 textid.addEventListener('keyup', function () {
     let obj = canvas.getActiveObject();
     if (obj) {
