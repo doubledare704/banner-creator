@@ -30,4 +30,4 @@ class User(db.Model):
     __table_args__ = (Index('ix_user_token_social_type', "social_type", "token"),)
 
     def __repr__(self):
-        return '<User %r>' % self.name
+        return '<User %r>' % self.f_name

@@ -1,38 +1,38 @@
 import flask
-from server.db import db
+from server.auth.base import BaseAuth
 from server.auth.facebook import FacebookAuth
 from server.auth.google import GoogleAuth
 from server.models import User
 
+_social_networks = None
 
-class Auth:
-    _social_networks = None
 
-    def __init__(self, app):
-        global _social_networks
-        _social_networks = {'facebook': FacebookAuth(app),
-                            'google': GoogleAuth(app)}
+def initialize(app):
+    global _social_networks
+    _social_networks = {'facebook': FacebookAuth(app),
+                        'google': GoogleAuth(app),
+                        'base': BaseAuth(app)}
 
-    @staticmethod
-    def authorize(social_name):
-        return Auth._social_type(social_name).authorize()
 
-    @staticmethod
-    def set_current_user(auth_token):
-        user = db.session.query(User.id).filter_by(token=auth_token).first()
-        if user:
-            flask.g.current_user = user[0]
-            return user[0]
-        return None
+def authorize(social_name):
+    return _social_type(social_name).authorize()
 
-    @staticmethod
-    def user_auth_response(social_name):
-        return Auth._social_type(social_name).user_auth_response()
 
-    @staticmethod
-    def log_out(social_name):
-        return Auth._social_type(social_name).log_out()
+def set_current_user(auth_token):
+    user = User.query.filter_by(token=auth_token).first()
+    if user:
+        flask.g.current_user = user
+        return user
+    return None
 
-    @staticmethod
-    def _social_type(name):
-        return _social_networks[name]
+
+def user_auth_response(social_name):
+    return _social_type(social_name).user_auth_response()
+
+
+def log_out():
+    return _social_type('base').log_out()
+
+
+def _social_type(name):
+    return _social_networks[name]

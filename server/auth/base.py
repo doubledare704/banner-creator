@@ -44,10 +44,10 @@ class BaseAuth:
         return user
 
     def _create_user(self, user_data):
-        pass
+        return NotImplementedError
 
     def log_out(self):
-        user = User.query.filter_by(token=session[self._token_name]).first()
+        user = flask.g.get('current_user', None)
         if user:
             user.token = None
             db.session.add(user)

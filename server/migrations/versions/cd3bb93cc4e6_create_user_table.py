@@ -1,14 +1,14 @@
 """create user table
 
 Revision ID: cd3bb93cc4e6
-Revises: 5baaa60f7a27
+Revises: bf24845de9f9
 Create Date: 2016-07-15 17:49:12.705746
 
 """
 
 # revision identifiers, used by Alembic.
 revision = 'cd3bb93cc4e6'
-down_revision = '5baaa60f7a27'
+down_revision = 'bf24845de9f9'
 
 from alembic import op
 import sqlalchemy as sa
