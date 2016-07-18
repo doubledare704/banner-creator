@@ -42,6 +42,6 @@ def index():
 
 
 def editor():
-    return render_template('editor.html')
+    return render_template('editor_markuped.html')
 
 

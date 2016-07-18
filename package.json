@@ -16,6 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "fabric": "^1.6.3",
+    "normalize-styl": "^3.0.3",
     "webpack": "^1.13.1"
   },
   "devDependencies": {
