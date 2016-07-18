@@ -6,6 +6,8 @@ DEBUG = True
 
 UPLOAD_FOLDER = os.path.join(basedir, 'media')
 ALLOWED_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif')
+SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+
 FLASK_SESSION_TYPE = 'filesystem'
 FLASK_SECRET_KEY = 'super secret key'
 
@@ -22,3 +24,4 @@ FACEBOOK_BASE_URL = "https://graph.facebook.com"
 FACEBOOK_ACCESS_TOKEN_METHOD = 'GET'
 FACEBOOK_ACCESS_TOKEN_URL = '/oauth/access_token'
 FACEBOOK_AUTHORIZE_URL = 'https://www.facebook.com/dialog/oauth'
+
