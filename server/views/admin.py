@@ -1,5 +1,6 @@
 from flask import render_template
 from server.models import Image
+from server.db import db
 
 
 def admin():
@@ -16,3 +17,10 @@ def inactiveImg(id):
     image = Image.query.get_or_404(id)
     image.active = False
     return '', 200
+
+
+def image_delete_from_DB(id):
+    image = Image.query.get_or_404(id)
+    db.session.delete(image)
+    db.session.commit()
+    return '', 204
