@@ -17,6 +17,7 @@
   "dependencies": {
     "bazooka": "^0.5.0",
     "fabric": "^1.6.3",
+    "normalize-styl": "^3.0.3",
     "webpack": "^1.13.1"
   },
   "devDependencies": {

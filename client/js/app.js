@@ -1,7 +1,8 @@
 import inactiveImg from './admin/inactiveImg.js'
 import deleteImg from './admin/deleteFromDB.js'
 
-//var fabric = require('./fabmain.js');
+var editor = require('./editor.js');
+var fabric = require('./fabmain.js');
 var styluses = require('./../css/main.styl');
 var Baz = require('bazooka');
 
@@ -13,3 +14,4 @@ Baz.register({
 
 
 var unwatch = Baz.watch();
+
