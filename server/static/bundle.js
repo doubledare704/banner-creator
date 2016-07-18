@@ -46,137 +46,215 @@
 
 	'use strict';
 
-	var fabric = __webpack_require__(1);
-	var styluses = __webpack_require__(45);
+	var editor = __webpack_require__(1);
+	var fabric = __webpack_require__(42);
+	var styluses = __webpack_require__(43);
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
-	//load fabric
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	// main logic for our editor by constructtor
+
+	//extend function without jquery https://gist.github.com/cfv1984/6319681685f78333d98a
+	var extend = function extend() {
+
+	    function isFunction(fn) {
+	        return typeof fn === "function" && fn.constructor === Function;
+	    }
+
+	    function isArray(ar) {
+	        return ar instanceof Array;
+	    }
+
+	    function isPlainObject(obj) {
+	        return (typeof obj === "undefined" ? "undefined" : _typeof(obj)) == 'object' && obj.constructor == Object;
+	    }
+
+	    var options,
+	        name,
+	        src,
+	        copy,
+	        copyIsArray,
+	        clone,
+	        target = arguments[0] || {},
+	        i = 1,
+	        length = arguments.length,
+	        deep = false;
+	    if (typeof target === "boolean") {
+	        deep = target;
+	        target = arguments[i] || {};
+	        i++;
+	    }
+	    if ((typeof target === "undefined" ? "undefined" : _typeof(target)) !== "object" && !isFunction(target)) target = {};
+	    if (i === length) {
+	        target = this;
+	        i--;
+	    }
+	    for (; i < length; i++) {
+	        if ((options = arguments[i]) != null) {
+	            for (name in options) {
+	                src = target[name];
+	                copy = options[name];
+	                if (target === copy) continue;
+
+	                if (deep && copy && (isPlainObject(copy) || (copyIsArray = isArray(copy)))) {
+	                    if (!copyIsArray) {
+	                        copyIsArray = false;
+	                        clone = src && isArray(src) ? src : [];
+	                    } else clone = src && isPlainObject(src) ? src : {};
+
+	                    target[name] = extend(deep, clone, copy);
+	                } else if (copy !== undefined) target[name] = copy;
+	            }
+	        }
+	    }
+
+	    return target;
+	};
+
+	// initial fabric
 	var fabric = __webpack_require__(2).fabric;
 
-	//random position for future objects
-	function getRandomPos(min, max) {
-	    return Math.floor(Math.random() * (max - min + 1)) + min;
-	}
-	//working ids from template
-	var textid = document.getElementById('custom_text');
-	var fontsid = document.getElementById('fonts');
-	var sizeid = document.getElementById('sizes');
-	var fileInput = document.getElementById('input');
-	var downloadLink = document.getElementById('download');
-	var addtext = document.getElementById('justaddtext');
-	var color = document.getElementById('colors');
-	var wcanvas = document.getElementById('wcanv'); //width for canvas editor
+	//make editor
 
-	//initial canvas
-	var canvas = new fabric.Canvas('c', { width: 1140, height: 800 });
-	var inputText = new fabric.IText('Some text', {
-	    left: 400,
-	    top: 400,
-	    textAlign: 'center'
-	});
-	canvas.add(inputText).renderAll();
-	canvas.setActiveObject(canvas.item(canvas.getObjects().length - 1));
+	var Editor = function () {
+	    function Editor(canvas, width, height) {
+	        _classCallCheck(this, Editor);
 
-	wcanvas.addEventListener('change', function () {
-	    var coef = 0.7;
-	    canvas.setWidth(this.value);
-	    canvas.setHeight(this.value * coef);
-	    canvas.calcOffset();
-	    iWantThemAll();
-	});
-
-	color.addEventListener('change', function () {
-	    var obj = canvas.getActiveObject();
-	    if (obj) {
-	        obj.setColor(this.value);
-	        canvas.renderAll();
-	    }
-	});
-	addtext.addEventListener('click', function () {
-	    var object = new fabric.IText("NEW TEXT", {
-	        fontFamily: "Arial",
-	        left: getRandomPos(500, 700),
-	        top: getRandomPos(300, 400),
-	        fontSize: 24,
-	        textAlign: "left",
-	        fill: "#000000"
-	    });
-	    canvas.add(object);
-	    canvas.renderAll();
-	});
-	fileInput.addEventListener('change', function (e) {
-	    var url = URL.createObjectURL(e.target.files[0]);
-	    fabric.Image.fromURL(url, function (img) {
-	        canvas.add(img);
-	        fileInput.value = "";
-	    });
-	});
-	textid.addEventListener('keyup', function () {
-	    var obj = canvas.getActiveObject();
-	    if (obj) {
-	        obj.setText(this.value);
-	        canvas.renderAll();
-	    }
-	});
-
-	fontsid.addEventListener('change', function () {
-	    var obj = canvas.getActiveObject();
-	    if (obj) {
-	        obj.setFontFamily(this.value);
-	        canvas.renderAll();
-	    }
-	});
-
-	sizeid.addEventListener('change', function () {
-	    var obj = canvas.getActiveObject();
-	    if (obj) {
-	        obj.setFontSize(this.value);
-	        canvas.renderAll();
-	    }
-	});
-
-	downloadLink.addEventListener('click', function () {
-	    var link = this;
-	    link.href = canvas.toDataURL();
-	    link.download = 'result.jpg';
-	}, false);
-
-	function iWantThemAll() {
-	    //adding group
-	    var objs = [];
-	    //get all the objects into an array
-	    objs = canvas._objects.filter(function (obj) {
-	        return obj;
-	    });
-
-	    //group all the objects
-	    var alltogetherObj = new fabric.Group(objs, {
-	        top: 300, left: 300,
-	        originX: 'center',
-	        originY: 'center'
-	    });
-	    //clear previous objects
-	    for (var _i = 0; _i < objs.length; _i++) {
-	        canvas.remove(objs[_i]);
+	        this.canvas_id = canvas;
+	        this.width = width;
+	        this.height = height;
+	        //initial object of fabric
+	        this.canv = new fabric.Canvas(this.canvas_id, {
+	            width: this.width,
+	            height: this.height
+	        });
 	    }
 
-	    canvas.add(alltogetherObj);
-	    canvas.renderAll();
+	    //sets background
 
-	    alltogetherObj.destroy();
-	    var items = alltogetherObj.getObjects();
-	    canvas.remove(alltogetherObj);
-	    for (var i = 0; i < items.length; i++) {
-	        canvas.add(items[i]);
-	    }
 
-	    canvas.renderAll();
-	}
+	    _createClass(Editor, [{
+	        key: "setBackground",
+	        value: function setBackground(imgsrc) {
+	            var center = this.canv.getCenter();
+	            this.canv.setBackgroundImage(imgsrc, this.canv.renderAll.bind(this.canv), {
+	                scaleX: 1,
+	                scaleY: 1,
+	                top: center.top,
+	                left: center.left,
+	                originX: 'center',
+	                originY: 'center'
+	            });
+	        }
+	    }, {
+	        key: "setFont",
+	        value: function setFont(family, size, color) {
+	            var obj = new fabric.IText("New Text", {
+	                fontFamily: family,
+	                left: 220,
+	                top: 100,
+	                fontSize: size,
+	                fill: color
+	            });
+	            this.canv.add(obj);
+	            this.canv.renderAll();
+	        }
+	    }, {
+	        key: "addImage",
+	        value: function addImage(img_for_add) {
+	            var _this = this;
+
+	            fabric.Image.fromURL(img_for_add, function (img) {
+	                _this.canv.add(img);
+	            });
+	        }
+	    }, {
+	        key: "addButton",
+	        value: function addButton(radius) {
+	            fabric.Tag = fabric.util.createClass(fabric.Group, {
+	                type: 'Tag',
+
+	                initialize: function initialize(options, objects, isAlreadyGrouped) {
+	                    if (!options) {
+	                        objects = [];
+	                        options = {};
+	                        options.top = 10;
+	                        options.left = 10;
+
+	                        var defaults = {
+	                            width: 220,
+	                            height: 40,
+	                            originX: 'center',
+	                            originY: 'center'
+	                        };
+
+	                        objects[0] = new fabric.Rect(extend({}, defaults, {
+	                            fill: 'transparent',
+	                            stroke: '#000',
+	                            strokewidth: 4,
+	                            rx: radius,
+	                            ry: radius
+	                        }));
+
+	                        objects[1] = new fabric.IText('Смотреть     >', extend({}, defaults, {
+	                            textAlign: 'center',
+	                            fontFamily: 'Lobster',
+	                            fontSize: 20
+	                        }));
+	                    } else {}
+
+	                    this.callSuper('initialize', objects, options, isAlreadyGrouped);
+	                }
+	            });
+	            fabric.Tag.fromObject = function (object, callback) {
+	                var _enlivenedObjects;
+	                fabric.util.enlivenObjects(object.objects, function (enlivenedObjects) {
+	                    delete object.objects;
+	                    _enlivenedObjects = enlivenedObjects;
+	                });
+	                var tag = new fabric.Tag(object, _enlivenedObjects);
+	                return tag;
+	            };
+	            fabric.Tag.async = false;
+
+	            this.canv.add(new fabric.Tag());
+	        }
+	        //not working now
+
+	    }, {
+	        key: "downloadImage",
+	        value: function downloadImage(link) {
+	            link.href = this.canv.toDataURL({
+	                format: 'png',
+	                quality: 0.8
+	            });
+	            link.download = 'result.png';
+	        }
+	    }]);
+
+	    return Editor;
+	}();
+	// let simplecanvas = new Editor('main', 960, 420);
+	// simplecanvas.setFont('Roboto', 35, '#000');
+	// simplecanvas.setBackground('http://www.intrawallpaper.com/static/images/White-Background-9B1.jpg');
+	// simplecanvas.addButton(6);
+
+
+	exports.default = Editor;
 
 /***/ },
 /* 2 */
@@ -25314,7 +25392,7 @@
 	  var DOMParser = __webpack_require__(10).DOMParser,
 	      URL = __webpack_require__(11),
 	      HTTP = __webpack_require__(17),
-	      HTTPS = __webpack_require__(43),
+	      HTTPS = __webpack_require__(40),
 
 	      Canvas = __webpack_require__(9),
 	      Image = __webpack_require__(9).Image;
@@ -25365,7 +25443,7 @@
 
 	  /** @private */
 	  function requestFs(path, callback) {
-	    var fs = __webpack_require__(44);
+	    var fs = __webpack_require__(41);
 	    fs.readFile(path, function (err, data) {
 	      if (err) {
 	        fabric.log(err);
@@ -29334,9 +29412,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Stream = __webpack_require__(20);
-	var Response = __webpack_require__(37);
-	var Base64 = __webpack_require__(41);
-	var inherits = __webpack_require__(42);
+	var Response = __webpack_require__(36);
+	var Base64 = __webpack_require__(39);
+	var inherits = __webpack_require__(21);
 
 	var Request = module.exports = function (xhr, params) {
 	    var self = this;
@@ -29576,10 +29654,10 @@
 
 	inherits(Stream, EE);
 	Stream.Readable = __webpack_require__(22);
-	Stream.Writable = __webpack_require__(33);
-	Stream.Duplex = __webpack_require__(34);
-	Stream.Transform = __webpack_require__(35);
-	Stream.PassThrough = __webpack_require__(36);
+	Stream.Writable = __webpack_require__(32);
+	Stream.Duplex = __webpack_require__(33);
+	Stream.Transform = __webpack_require__(34);
+	Stream.PassThrough = __webpack_require__(35);
 
 	// Backwards-compat with node 0.4.x
 	Stream.Stream = Stream;
@@ -29713,10 +29791,10 @@
 	/* WEBPACK VAR INJECTION */(function(process) {exports = module.exports = __webpack_require__(23);
 	exports.Stream = __webpack_require__(20);
 	exports.Readable = exports;
-	exports.Writable = __webpack_require__(29);
-	exports.Duplex = __webpack_require__(28);
-	exports.Transform = __webpack_require__(31);
-	exports.PassThrough = __webpack_require__(32);
+	exports.Writable = __webpack_require__(28);
+	exports.Duplex = __webpack_require__(27);
+	exports.Transform = __webpack_require__(30);
+	exports.PassThrough = __webpack_require__(31);
 	if (!process.browser && process.env.READABLE_STREAM === 'disable') {
 	  module.exports = __webpack_require__(20);
 	}
@@ -29773,14 +29851,14 @@
 
 	/*<replacement>*/
 	var util = __webpack_require__(25);
-	util.inherits = __webpack_require__(26);
+	util.inherits = __webpack_require__(21);
 	/*</replacement>*/
 
 	var StringDecoder;
 
 
 	/*<replacement>*/
-	var debug = __webpack_require__(27);
+	var debug = __webpack_require__(26);
 	if (debug && debug.debuglog) {
 	  debug = debug.debuglog('stream');
 	} else {
@@ -29792,7 +29870,7 @@
 	util.inherits(Readable, Stream);
 
 	function ReadableState(options, stream) {
-	  var Duplex = __webpack_require__(28);
+	  var Duplex = __webpack_require__(27);
 
 	  options = options || {};
 
@@ -29853,14 +29931,14 @@
 	  this.encoding = null;
 	  if (options.encoding) {
 	    if (!StringDecoder)
-	      StringDecoder = __webpack_require__(30).StringDecoder;
+	      StringDecoder = __webpack_require__(29).StringDecoder;
 	    this.decoder = new StringDecoder(options.encoding);
 	    this.encoding = options.encoding;
 	  }
 	}
 
 	function Readable(options) {
-	  var Duplex = __webpack_require__(28);
+	  var Duplex = __webpack_require__(27);
 
 	  if (!(this instanceof Readable))
 	    return new Readable(options);
@@ -29963,7 +30041,7 @@
 	// backwards compatibility.
 	Readable.prototype.setEncoding = function(enc) {
 	  if (!StringDecoder)
-	    StringDecoder = __webpack_require__(30).StringDecoder;
+	    StringDecoder = __webpack_require__(29).StringDecoder;
 	  this._readableState.decoder = new StringDecoder(enc);
 	  this._readableState.encoding = enc;
 	  return this;
@@ -30808,39 +30886,10 @@
 /* 26 */
 /***/ function(module, exports) {
 
-	if (typeof Object.create === 'function') {
-	  // implementation from standard node.js 'util' module
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor
-	    ctor.prototype = Object.create(superCtor.prototype, {
-	      constructor: {
-	        value: ctor,
-	        enumerable: false,
-	        writable: true,
-	        configurable: true
-	      }
-	    });
-	  };
-	} else {
-	  // old school shim for old browsers
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor
-	    var TempCtor = function () {}
-	    TempCtor.prototype = superCtor.prototype
-	    ctor.prototype = new TempCtor()
-	    ctor.prototype.constructor = ctor
-	  }
-	}
-
-
-/***/ },
-/* 27 */
-/***/ function(module, exports) {
-
 	/* (ignored) */
 
 /***/ },
-/* 28 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -30882,11 +30931,11 @@
 
 	/*<replacement>*/
 	var util = __webpack_require__(25);
-	util.inherits = __webpack_require__(26);
+	util.inherits = __webpack_require__(21);
 	/*</replacement>*/
 
 	var Readable = __webpack_require__(23);
-	var Writable = __webpack_require__(29);
+	var Writable = __webpack_require__(28);
 
 	util.inherits(Duplex, Readable);
 
@@ -30936,7 +30985,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
-/* 29 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -30975,7 +31024,7 @@
 
 	/*<replacement>*/
 	var util = __webpack_require__(25);
-	util.inherits = __webpack_require__(26);
+	util.inherits = __webpack_require__(21);
 	/*</replacement>*/
 
 	var Stream = __webpack_require__(20);
@@ -30989,7 +31038,7 @@
 	}
 
 	function WritableState(options, stream) {
-	  var Duplex = __webpack_require__(28);
+	  var Duplex = __webpack_require__(27);
 
 	  options = options || {};
 
@@ -31077,7 +31126,7 @@
 	}
 
 	function Writable(options) {
-	  var Duplex = __webpack_require__(28);
+	  var Duplex = __webpack_require__(27);
 
 	  // Writable ctor is applied to Duplexes, though they're not
 	  // instanceof Writable, they're instanceof Readable.
@@ -31420,7 +31469,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
-/* 30 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -31647,7 +31696,7 @@
 
 
 /***/ },
-/* 31 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -31716,11 +31765,11 @@
 
 	module.exports = Transform;
 
-	var Duplex = __webpack_require__(28);
+	var Duplex = __webpack_require__(27);
 
 	/*<replacement>*/
 	var util = __webpack_require__(25);
-	util.inherits = __webpack_require__(26);
+	util.inherits = __webpack_require__(21);
 	/*</replacement>*/
 
 	util.inherits(Transform, Duplex);
@@ -31862,7 +31911,7 @@
 
 
 /***/ },
-/* 32 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -31892,11 +31941,11 @@
 
 	module.exports = PassThrough;
 
-	var Transform = __webpack_require__(31);
+	var Transform = __webpack_require__(30);
 
 	/*<replacement>*/
 	var util = __webpack_require__(25);
-	util.inherits = __webpack_require__(26);
+	util.inherits = __webpack_require__(21);
 	/*</replacement>*/
 
 	util.inherits(PassThrough, Transform);
@@ -31914,17 +31963,24 @@
 
 
 /***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(28)
+
+
+/***/ },
 /* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(29)
+	module.exports = __webpack_require__(27)
 
 
 /***/ },
 /* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(28)
+	module.exports = __webpack_require__(30)
 
 
 /***/ },
@@ -31938,15 +31994,8 @@
 /* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(32)
-
-
-/***/ },
-/* 37 */
-/***/ function(module, exports, __webpack_require__) {
-
 	var Stream = __webpack_require__(20);
-	var util = __webpack_require__(38);
+	var util = __webpack_require__(37);
 
 	var Response = module.exports = function (res) {
 	    this.offset = 0;
@@ -32068,7 +32117,7 @@
 
 
 /***/ },
-/* 38 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -32596,7 +32645,7 @@
 	}
 	exports.isPrimitive = isPrimitive;
 
-	exports.isBuffer = __webpack_require__(39);
+	exports.isBuffer = __webpack_require__(38);
 
 	function objectToString(o) {
 	  return Object.prototype.toString.call(o);
@@ -32640,7 +32689,7 @@
 	 *     prototype.
 	 * @param {function} superCtor Constructor function to inherit prototype from.
 	 */
-	exports.inherits = __webpack_require__(40);
+	exports.inherits = __webpack_require__(21);
 
 	exports._extend = function(origin, add) {
 	  // Don't do anything if add isn't an object
@@ -32661,7 +32710,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(7)))
 
 /***/ },
-/* 39 */
+/* 38 */
 /***/ function(module, exports) {
 
 	module.exports = function isBuffer(arg) {
@@ -32672,36 +32721,7 @@
 	}
 
 /***/ },
-/* 40 */
-/***/ function(module, exports) {
-
-	if (typeof Object.create === 'function') {
-	  // implementation from standard node.js 'util' module
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor
-	    ctor.prototype = Object.create(superCtor.prototype, {
-	      constructor: {
-	        value: ctor,
-	        enumerable: false,
-	        writable: true,
-	        configurable: true
-	      }
-	    });
-	  };
-	} else {
-	  // old school shim for old browsers
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor
-	    var TempCtor = function () {}
-	    TempCtor.prototype = superCtor.prototype
-	    ctor.prototype = new TempCtor()
-	    ctor.prototype.constructor = ctor
-	  }
-	}
-
-
-/***/ },
-/* 41 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;(function () {
@@ -32767,36 +32787,7 @@
 
 
 /***/ },
-/* 42 */
-/***/ function(module, exports) {
-
-	if (typeof Object.create === 'function') {
-	  // implementation from standard node.js 'util' module
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor
-	    ctor.prototype = Object.create(superCtor.prototype, {
-	      constructor: {
-	        value: ctor,
-	        enumerable: false,
-	        writable: true,
-	        configurable: true
-	      }
-	    });
-	  };
-	} else {
-	  // old school shim for old browsers
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor
-	    var TempCtor = function () {}
-	    TempCtor.prototype = superCtor.prototype
-	    ctor.prototype = new TempCtor()
-	    ctor.prototype.constructor = ctor
-	  }
-	}
-
-
-/***/ },
-/* 43 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var http = __webpack_require__(17);
@@ -32815,13 +32806,148 @@
 
 
 /***/ },
-/* 44 */
+/* 41 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 45 */
+/* 42 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _editor = __webpack_require__(1);
+
+	var _editor2 = _interopRequireDefault(_editor);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	//load fabric
+	var fabric = __webpack_require__(2).fabric;
+
+	var editor = new _editor2.default('main', 960, 420);
+
+	editor.setFont('Roboto', 35, '#000');
+	editor.setBackground('http://www.planwallpaper.com/static/images/abstract-background-design.jpg');
+	editor.addButton(6);
+	//I will clean it in future
+	//random position for future objects
+	// function getRandomPos(min, max) {
+	//     return Math.floor(Math.random() * (max - min + 1)) + min;
+	// }
+	//working ids from template
+	// const textid = document.getElementById('custom_text');
+	// const fontsid = document.getElementById('fonts');
+	// const sizeid = document.getElementById('sizes');
+	// const fileInput = document.getElementById('input');
+	var downloadLink = document.getElementById('download');
+	var addtext = document.getElementById('justaddtext');
+	var addbutton = document.getElementById('addButt');
+	// const color = document.getElementById('colors');
+	// const wcanvas = document.getElementById('wcanv'); //width for canvas editor
+
+	//initial canvas
+	// const canvas = new fabric.Canvas('c', {width: 1140, height: 800});
+	// const inputText = new fabric.IText('Some text', {
+	//     left: 400,
+	//     top: 400,
+	//     textAlign: 'center'
+	// });
+	// canvas.add(inputText).renderAll();
+	// canvas.setActiveObject(canvas.item(canvas.getObjects().length - 1));
+	//
+	// wcanvas.addEventListener('change', function () {
+	//     let coef = 0.7;
+	//     canvas.setWidth(this.value);
+	//     canvas.setHeight(this.value * coef);
+	//     canvas.calcOffset();
+	//     iWantThemAll();
+	// });
+	//
+	// color.addEventListener('change', function () {
+	//     let obj = canvas.getActiveObject();
+	//     if (obj) {
+	//         obj.setColor(this.value);
+	//         canvas.renderAll();
+	//     }
+	// });
+	addbutton.addEventListener('click', function () {
+	    editor.addButton(5);
+	});
+
+	addtext.addEventListener('click', function () {
+	    editor.setFont('Roboto', 35, '#000');
+	});
+	// fileInput.addEventListener('change', (e) => {
+	//     const url = URL.createObjectURL(e.target.files[0]);
+	//     fabric.Image.fromURL(url, (img) => {
+	//         canvas.add(img);
+	//         fileInput.value = ""
+	//     });
+	// });
+	// textid.addEventListener('keyup', function () {
+	//     let obj = canvas.getActiveObject();
+	//     if (obj) {
+	//         obj.setText(this.value);
+	//         canvas.renderAll();
+	//     }
+	// });
+	//
+	// fontsid.addEventListener('change', function () {
+	//     let obj = canvas.getActiveObject();
+	//     if (obj) {
+	//         obj.setFontFamily(this.value);
+	//         canvas.renderAll();
+	//     }
+	// });
+	//
+	// sizeid.addEventListener('change', function () {
+	//     let obj = canvas.getActiveObject();
+	//     if (obj) {
+	//         obj.setFontSize(this.value);
+	//         canvas.renderAll();
+	//     }
+	// });
+	//
+	downloadLink.addEventListener('click', function () {
+	    editor.downloadImage(this);
+	}, false);
+	//
+	// function iWantThemAll() {
+	//     //adding group
+	//     let objs = [];
+	//     //get all the objects into an array
+	//     objs = canvas._objects.filter(function (obj) {
+	//         return obj;
+	//     });
+	//
+	//     //group all the objects
+	//     let alltogetherObj = new fabric.Group(objs, {
+	//         top: 300, left: 300,
+	//         originX: 'center',
+	//         originY: 'center'
+	//     });
+	//     //clear previous objects
+	//     for (let i = 0; i < objs.length; i++) {
+	//         canvas.remove(objs[i]);
+	//     }
+	//
+	//     canvas.add(alltogetherObj);
+	//     canvas.renderAll();
+	//
+	//     alltogetherObj.destroy();
+	//     let items = alltogetherObj.getObjects();
+	//     canvas.remove(alltogetherObj);
+	//     for (var i = 0; i < items.length; i++) {
+	//         canvas.add(items[i]);
+	//     }
+	//
+	//     canvas.renderAll();
+	// }
+
+/***/ },
+/* 43 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
