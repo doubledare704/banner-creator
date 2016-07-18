@@ -211,14 +211,15 @@ canvas#c {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-  justify-content: center;
   align-items: stretch;
   border: 2px solid #000;
+  position: relative;
 }
 .column_aside section {
-  flex-basis: 17%;
+  flex-basis: 11%;
   text-align: center;
   align-content: center;
+  position: relative;
 }
 .column_aside section a {
   color: #000;
@@ -227,12 +228,9 @@ canvas#c {
 .column_aside span {
   display: block;
 }
-.last-sec {
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: center;
-  align-content: flex-start;
-  justify-content: flex-start;
+section.last-sec {
+  margin-top: auto;
+  margin-bottom: 0;
 }
 .container {
   order: 2;
@@ -279,4 +277,32 @@ canvas#c {
 }
 canvas#main {
   border: 2px solid #000;
+}
+#rightcol {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  border: 2px solid #000;
+  width: 300%;
+  text-align: left;
+  padding-left: 10px;
+  top: -3%;
+  left: 101%;
+  z-index: 2;
+}
+#rightcol ul {
+  list-style-type: none;
+}
+#rightcol li {
+  line-height: 200%;
+  cursor: pointer;
+}
+#rightcol .head1 {
+  font-size: 24px;
+}
+#rightcol .head2 {
+  font-size: 18px;
+}
+#rightcol .head3 {
+  font-size: 12px;
 }

@@ -162,13 +162,41 @@
 	        }
 	    }, {
 	        key: "setFont",
-	        value: function setFont(family, size, color) {
-	            var obj = new fabric.IText("New Text", {
+	        value: function setFont(family, size, color, texts) {
+	            var obj = new fabric.IText(texts, {
 	                fontFamily: family,
-	                left: 220,
+	                left: 500,
 	                top: 100,
 	                fontSize: size,
 	                fill: color
+	            });
+	            this.canv.add(obj);
+	            this.canv.renderAll();
+	        }
+	    }, {
+	        key: "setPrice",
+	        value: function setPrice(family, size, color, texts) {
+	            var obj = new fabric.IText(texts, {
+	                fontFamily: family,
+	                left: 500,
+	                top: 100,
+	                fontSize: size,
+	                fill: color,
+	                styles: {
+	                    0: {
+	                        0: { fontSize: size * 0.7 },
+	                        1: { fontSize: size * 0.7 },
+	                        3: { fontSize: size * 1.3 },
+
+	                        5: { fontSize: size * 1.3 },
+	                        6: { fontSize: size * 1.3 },
+	                        7: { fontSize: size * 1.3 },
+
+	                        9: { fontSize: size },
+	                        10: { fontSize: size },
+	                        11: { fontSize: size }
+	                    }
+	                }
 	            });
 	            this.canv.add(obj);
 	            this.canv.renderAll();
@@ -233,6 +261,7 @@
 
 	            this.canv.add(new fabric.Tag());
 	        }
+
 	        //not working now
 
 	    }, {
@@ -243,6 +272,17 @@
 	                quality: 0.8
 	            });
 	            link.download = 'result.png';
+	        }
+	    }, {
+	        key: "getImgData",
+	        value: function getImgData() {
+	            var rawCanvas = document.getElementById(this.canvas_id);
+	            // return this.canv.toDataURL({
+	            //         format: 'png',
+	            //         quality: 0.8
+	            //     }
+	            // );;
+	            return rawCanvas.toDataURL();
 	        }
 	    }]);
 
@@ -32828,9 +32868,8 @@
 
 	var editor = new _editor2.default('main', 960, 420);
 
-	editor.setFont('Roboto', 35, '#000');
+	var canvas = editor.canv;
 	editor.setBackground('http://www.planwallpaper.com/static/images/abstract-background-design.jpg');
-	editor.addButton(6);
 	//I will clean it in future
 	//random position for future objects
 	// function getRandomPos(min, max) {
@@ -32842,8 +32881,10 @@
 	// const sizeid = document.getElementById('sizes');
 	// const fileInput = document.getElementById('input');
 	var downloadLink = document.getElementById('download');
-	var addtext = document.getElementById('justaddtext');
+	var showside = document.getElementById('justaddtext');
 	var addbutton = document.getElementById('addButt');
+	var addtexts = document.querySelectorAll('#rightcol ul li');
+	console.log(addtexts);
 	// const color = document.getElementById('colors');
 	// const wcanvas = document.getElementById('wcanv'); //width for canvas editor
 
@@ -32876,9 +32917,24 @@
 	    editor.addButton(5);
 	});
 
-	addtext.addEventListener('click', function () {
-	    editor.setFont('Roboto', 35, '#000');
+	showside.addEventListener('click', function () {
+	    var el = document.getElementById('rightcol');
+	    el.style.display = el.style.display == "block" ? "" : "block";
+	    // editor.setFont('Roboto', 35, '#000');
 	});
+
+	for (var i = 0; i < addtexts.length; i++) {
+	    addtexts[i].addEventListener('click', function () {
+	        var sizes = this.getAttribute("data-size");
+	        var texting = this.getAttribute("data-text");
+	        var typings = this.getAttribute("data-type");
+	        if (typings) {
+	            editor.setPrice('Roboto', sizes, '#000', texting);
+	        } else {
+	            editor.setFont('Roboto', sizes, '#000', texting);
+	        }
+	    });
+	}
 	// fileInput.addEventListener('change', (e) => {
 	//     const url = URL.createObjectURL(e.target.files[0]);
 	//     fabric.Image.fromURL(url, (img) => {
@@ -32910,8 +32966,16 @@
 	//     }
 	// });
 	//
+	var canv = document.getElementById('main');
 	downloadLink.addEventListener('click', function () {
-	    editor.downloadImage(this);
+	    var link = this;
+	    // link.href = editor.getImgData();
+	    link.href = canv.toDataURL();
+	    link.download = 'result.jpg';
+
+	    // editor.canv.deactivateAll().renderAll();
+	    // window.open(editor.canv.toDataURL());
+	    // editor.downloadImage(this);
 	}, false);
 	//
 	// function iWantThemAll() {
