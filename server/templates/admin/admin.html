@@ -24,3 +24,8 @@
 
 {% endblock %}
 
+{% block scripts %}
+{{ super() }}
+<script src="/static/bundle.js"></script>
+{% endblock %}
+

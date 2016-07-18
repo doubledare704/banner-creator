@@ -4,20 +4,7 @@ from flask import render_template, redirect, current_app, flash, request
 from werkzeug.utils import secure_filename
 from server.models import Image
 from server.db import db
-from server.utils.image import uploaded_file,image_delete,allowed_file,image_resize, image_rename
-
-
-def setup_routes(app):
-    """Here we map routes to handlers."""
-    app.add_url_rule('/', methods=['GET', 'POST'], view_func=index)
-    app.add_url_rule('/uploads/<filename>', view_func=uploaded_file)
-    app.add_url_rule('/delete/<int:id>', methods=['GET', 'POST'], view_func=image_delete)
-    app.add_url_rule('/rename/<int:id>', methods=['GET', 'POST'], view_func=image_rename)
-    app.add_url_rule('/editor/', view_func=editor)
-    app.add_url_rule('/admin/', view_func=admin)
-    app.add_url_rule('/admin/backgrounds/', view_func=backgrounds)
-    app.add_url_rule('/deleteDB/<int:id>', methods=['POST'], view_func=image_delete_from_DB)
-
+from server.utils.image import uploaded_file,image_delete,allowed_file,image_resize, image_rename, send_from_directory
 
 
 def allowed_file(filename):
@@ -60,20 +47,3 @@ def index():
 
 def editor():
     return render_template('editor.html')
-
-
-def admin():
-    return render_template('admin/admin.html')
-
-
-def backgrounds():
-    act_backgrounds = Image.query.filter(Image.active == 't').order_by(Image.name.asc()).all()
-    del_backgrounds = Image.query.filter(Image.active == 'f').order_by(Image.name.asc()).all()
-    return render_template('admin/backgrounds.html', act_backgrounds=act_backgrounds, del_backgrounds=del_backgrounds)
-
-def image_delete_from_DB(id):
-    image = Image.query.get_or_404(id)
-    db.session.delete(image)
-    db.session.commit()
-    del_backgrounds = Image.query.filter(Image.active == 'f').order_by(Image.name.asc()).all()
-    return del_backgrounds
