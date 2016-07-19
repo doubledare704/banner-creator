@@ -1,7 +1,6 @@
 import os
-from flask import request,redirect, url_for, current_app, flash, send_from_directory
+from flask import request, current_app, send_from_directory
 from PIL import Image as pil
-from server.models import Image
 from math import ceil
 
 
@@ -86,17 +85,3 @@ def image_preview(file, position=('center', 'center'), fill='contain'):
         print(e.errno)
         print(e)
         print("Can not resize image ")
-
-
-def image_delete(id):
-    image = Image.query.get_or_404(id)
-    image.active = False
-    flash('File is deleted you are really brave person !')
-    return redirect(url_for('index'))
-
-
-def image_rename(id):
-    image = Image.query.get_or_404(id)
-    image.title = request.form['rename']
-    flash('Image renamed')
-    return redirect(url_for('index'))

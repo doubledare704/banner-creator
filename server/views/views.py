@@ -1,13 +1,12 @@
 import os
 import uuid
-from flask import render_template, redirect, current_app, flash, request
+from flask import render_template, redirect, current_app, flash, request, url_for
 from werkzeug.utils import secure_filename
 from server.models import Image
 from server.db import db
-from server.utils.image import uploaded_file,image_delete,allowed_file,image_resize, image_rename, image_preview
+from server.utils.image import allowed_file,image_resize, image_preview
 
 
-imagenames = "BANNER Cretor"
 def index():
     images = Image.query.filter_by(active=True)
     if request.method == 'POST':
@@ -37,7 +36,21 @@ def index():
             db.session.add(image)
 
             return redirect(request.url)
-    return render_template('list.html', images=images, imagenames=imagenames)
+    return render_template('list.html', images=images)
+
+
+def image_delete(id):
+    image = Image.query.get_or_404(id)
+    image.active = False
+    flash('File is deleted you are really brave person !')
+    return redirect(url_for('index'))
+
+
+def image_rename(id):
+    image = Image.query.get_or_404(id)
+    image.title = request.form['rename']
+    flash('Image renamed')
+    return redirect(url_for('index'))
 
 
 def editor():
