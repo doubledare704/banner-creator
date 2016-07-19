@@ -2,23 +2,17 @@
 
 {% block title %}Home{% endblock %}
 
-{% block head %}
-    {{ super() }}
-    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab|Roboto:400,500|Lobster&subset=latin,cyrillic'
-          rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="../static/styles.css">
-{% endblock %}
-
 {% block page_content %}
-    <div data-bazooka="rename"></div>
+    <div data-header-all='{{ all_img }}'></div>
     <div>
+
         <div class="row">
             <div>
                 <p class="name" data-dz-name></p>
                 <strong class="error text-danger" data-dz-errormessage></strong>
             </div>
             <hr>
-             <div data-bazooka="header" ></div>
+             <div data-bazooka="header"></div>
                     <form class="form-inline" action="" method=post enctype=multipart/form-data>
                         <div class="form-group">
                            Width: <input type="number" name="width">
@@ -61,9 +55,7 @@
     </div>
 
 {% endblock %}
-
-
 {% block scripts %}
-    {{ super() }}
-    <script src="../static/bundle.js"></script>
+{{ super() }}
+<script src="../static/bundle.js"></script>
 {% endblock %}

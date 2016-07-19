@@ -1,10 +1,12 @@
 import os
 import uuid
-from flask import render_template, redirect, current_app, flash, request, url_for
+from flask import render_template, redirect, current_app, flash, request, url_for,jsonify
 from werkzeug.utils import secure_filename
 from server.models import Image
 from server.db import db
 from server.utils.image import allowed_file,image_resize, image_preview
+
+
 
 
 def index():
@@ -36,7 +38,12 @@ def index():
             db.session.add(image)
 
             return redirect(request.url)
-    return render_template('list.html', images=images)
+
+    list = [{'param': 'foo', 'val': 2},
+            {'param': 'bar', 'val': 10}]
+    results = jsonify(list)
+
+    return render_template('list.html', images=images, all_img=results)
 
 
 def image_delete(id):

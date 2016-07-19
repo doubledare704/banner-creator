@@ -232,6 +232,9 @@ section.last-sec {
   margin-top: auto;
   margin-bottom: 0;
 }
+section.with_menu:hover > #rightcol {
+  display: block;
+}
 .container {
   order: 2;
   flex-basis: 100%;
@@ -305,4 +308,7 @@ canvas#main {
 }
 #rightcol .head3 {
   font-size: 12px;
+}
+#inputted {
+  display: none;
 }
