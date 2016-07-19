@@ -1,3 +1,4 @@
+from flask.ext.login import unicode
 from server.db import db
 from sqlalchemy import Enum
 from sqlalchemy.schema import Index
@@ -28,6 +29,18 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, nullable=False)
 
     __table_args__ = (Index('ix_user_token_social_type', "social_type", "token"),)
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return unicode(self.token)
 
     def __repr__(self):
         return '<User %r>' % self.f_name

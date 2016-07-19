@@ -1,12 +1,10 @@
-import flask
 import os
 import uuid
 
-from flask.json import jsonify
-from server.utils.auth import check_auth, redirect_after_login
+from flask_login import login_required, current_user
+from server.utils.auth import redirect_after_login, oauth_type
 
-from flask import render_template, redirect, url_for, current_app, flash, request
-from server.auth import auth
+from flask import render_template, redirect, current_app, flash, request
 from werkzeug.utils import secure_filename
 from server.models import Image
 from server.db import db
@@ -24,16 +22,15 @@ def setup_routes(app):
     # auth routs
     app.add_url_rule('/login', view_func=login_page)
     app.add_url_rule('/login/<social_network_name>', view_func=authorize)
-    app.add_url_rule('/login/authorized/<social_network_name>/', view_func=auth_response)
+    app.add_url_rule('/login/authorized/<social_network_name>/', view_func=oauth_callback)
     app.add_url_rule('/logout', methods=['POST'], view_func=log_out)
-
-    app.before_request(check_auth)
 
     @app.context_processor
     def inject_user():
-        return dict(user=flask.g.get('current_user', None))
+        return dict(user=current_user)
 
 
+@login_required
 def index():
     images = Image.query.filter_by(active=True)
     if request.method == 'POST':
@@ -59,6 +56,7 @@ def index():
     return render_template('list.html', images=images)
 
 
+@login_required
 def editor():
     return render_template('editor.html')
 
@@ -67,16 +65,20 @@ def login_page():
     return render_template('login.html')
 
 
-# callback for google redirect to
-def auth_response(social_network_name):
-    auth.user_auth_response(social_network_name)
+def oauth_callback(social_network_name):
+    oauth_obj = oauth_type(social_network_name)
+    oauth_obj.user_auth_response()
+    # z = request.args
     return redirect_after_login()
 
 
 def authorize(social_network_name):
-    return auth.authorize(social_network_name)
+    oauth_obj = oauth_type(social_network_name)
+    return oauth_obj.authorize()
 
 
+@login_required
 def log_out():
-    auth.log_out()
-    return jsonify(redirect=url_for('login_page'))
+    current_user.token = None
+    db.session.add(current_user)
+    return 'OK', 200

@@ -8,10 +8,10 @@ from server.models import User
 
 
 class BaseAuth:
-    def __init__(self, app):
+    def __init__(self):
         self._oauth_app = None
-        self._callback_method = None
-        self._token_name = 'auth_token'
+        self._callback_method = 'oauth_callback'
+        self._token_name = 'user_id'
         self._oauth_name = None
         self._fetch_query = None
 
@@ -19,12 +19,12 @@ class BaseAuth:
         # TODO remove localhost, add _external=True for production
         return self._oauth_app.authorize(
             callback='http://localhost:5000' + url_for(self._callback_method, social_network_name=self._oauth_name))
+        # return self._oauth_app.authorize(
+        #     callback=url_for(self._callback_method, _external=True, social_network_name=self._oauth_name, a=2))
 
     def user_auth_response(self):
         resp = self._oauth_app.authorized_response()
-        if resp is None:
-            return None
-        if isinstance(resp, OAuthException):
+        if resp is None or isinstance(resp, OAuthException):
             return None
         social_token = (resp['access_token'], '')
         return self._fetch_user_from_social(social_token)
@@ -45,11 +45,3 @@ class BaseAuth:
 
     def _create_user(self, user_data):
         return NotImplementedError
-
-    def log_out(self):
-        user = flask.g.get('current_user', None)
-        if user:
-            user.token = None
-            db.session.add(user)
-        if self._token_name in session:
-            del session[self._token_name]
