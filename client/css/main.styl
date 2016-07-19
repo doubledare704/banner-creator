@@ -1,3 +1,9 @@
+@require '~normalize-styl'
+
+
+html,body
+  height 100%
+
 box-shadow(args...)
   -webkit-box-shadow args
   -moz-box-shadow args
@@ -9,7 +15,123 @@ canvas#c
 
 .block
   display block
+
 .fontpack, .sizepack
   display inline-block
   float right
   min-width 20%
+
+.wrapper
+  height 100%
+  display flex
+  flex-wrap wrap
+  flex-direction row
+  justify-content flex-start
+  align-items flex-start
+
+.column_aside
+  flex 1
+  order 1
+  flex-basis 100%
+  height 99.5%
+
+  display flex
+  flex-wrap wrap
+  flex-direction column
+  align-items stretch
+  border 2px solid #000000
+  position relative
+
+
+  section
+    flex-basis 11%
+    text-align center
+    align-content center
+    position relative
+
+    a
+      color #000000
+      text-decoration none
+
+  span
+    display block
+
+section.last-sec
+  margin-top auto
+  margin-bottom 0
+
+
+
+.container
+  order: 2
+  flex-basis 100%
+  height 100%
+
+.navigation
+  display flex
+  flex-direction row
+  align-items center
+  align-content center
+  border 2px solid #000000
+  border-left 0
+  a
+    padding 30px 50px
+    justify-content flex-start
+    color #000000
+    text-decoration none
+
+    i
+      vertical-align text-bottom
+
+  a.special
+    text-align right
+    margin-left auto
+    padding-right 20px
+
+@media (min-width: 600px)
+  .wrapper
+    flex-wrap nowrap
+
+  .column_aside
+    flex-basis 12%
+    order 1
+
+  .container
+    flex-basis 88%
+    order 2
+
+.container-content
+  margin 10%
+
+canvas#main
+  border 2px solid #000000
+
+
+#rightcol
+  display none
+  position absolute
+  background-color #ffffff
+  border 2px solid #000
+  width 300%
+  text-align left
+  padding-left 10px
+  top -3%
+  left 101%
+  z-index 2
+
+  ul
+    list-style-type none
+
+
+  li
+    line-height 200%
+    cursor pointer
+
+  .head1
+    font-size 24px
+
+  .head2
+    font-size 18px
+
+  .head3
+    font-size 12px

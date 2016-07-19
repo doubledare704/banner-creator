@@ -7,17 +7,7 @@ from server.db import db
 from server.utils.image import uploaded_file,image_delete,allowed_file,image_resize, image_rename, image_preview
 
 
-def setup_routes(app):
-    """Here we map routes to handlers."""
-    app.add_url_rule('/', methods=['GET', 'POST'], view_func=index)
-    app.add_url_rule('/uploads/<filename>', view_func=uploaded_file)
-    app.add_url_rule('/delete/<int:id>', methods=['GET', 'POST'], view_func=image_delete)
-    app.add_url_rule('/rename/<int:id>', methods=['GET', 'POST'], view_func=image_rename)
-    app.add_url_rule('/editor/', view_func=editor)
-
-
 imagenames = "BANNER Cretor"
-
 def index():
     images = Image.query.filter_by(active=True)
     if request.method == 'POST':
@@ -51,6 +41,5 @@ def index():
 
 
 def editor():
-    return render_template('editor.html')
-
+    return render_template('editor_markuped.html')
 

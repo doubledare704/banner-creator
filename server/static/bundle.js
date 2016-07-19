@@ -46,6 +46,7 @@
 
 	'use strict';
 
+<<<<<<< HEAD
 	var _header = __webpack_require__(1);
 
 	var _header2 = _interopRequireDefault(_header);
@@ -112,10 +113,371 @@
 
 /***/ },
 /* 2 */
+=======
+	var _inactiveImg = __webpack_require__(1);
+
+	var _inactiveImg2 = _interopRequireDefault(_inactiveImg);
+
+	var _deleteFromDB = __webpack_require__(2);
+
+	var _deleteFromDB2 = _interopRequireDefault(_deleteFromDB);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var editor = __webpack_require__(50);
+	var fabric = __webpack_require__(10);
+	var styluses = __webpack_require__(3);
+	var Baz = __webpack_require__(7);
+
+	Baz.register({
+	    'inactiveImg': _inactiveImg2.default,
+	    'deleteImg': _deleteFromDB2.default
+	});
+
+	var unwatch = Baz.watch();
+
+/***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	var infoClicked = function infoClicked(ev) {
+	    var xhttp = new XMLHttpRequest();
+	    xhttp.onreadystatechange = function () {
+	        if (xhttp.readyState == 4 && xhttp.status == 200) {
+	            var img = document.getElementsByClassName(ev.target.id);
+	            var table = document.getElementById("inactiveImg").tBodies[0];
+
+	            table.appendChild(img[0]);
+	        }
+	    };
+	    xhttp.open("POST", "/admin/inactiveImg/" + ev.target.id, true);
+	    xhttp.send(null);
+	};
+
+	function inactiveImg(node) {
+	    node.onclick = infoClicked;
+	}
+
+	module.exports = {
+	    bazFunc: inactiveImg
+	};
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	var infoClicked = function infoClicked(ev) {
+	    var xhttp = new XMLHttpRequest();
+	    xhttp.onreadystatechange = function () {
+	        if (xhttp.readyState == 4 && xhttp.status == 204) {
+	            var img = document.getElementsByClassName(ev.target.id);
+	            img[0].style.display = "none";
+	        }
+	    };
+	    xhttp.open("POST", "/admin/deleteImg/" + ev.target.id, true);
+	    xhttp.send(null);
+	};
+
+	function deleteImg(node) {
+	    node.onclick = infoClicked;
+	}
+
+	module.exports = {
+	    bazFunc: deleteImg
+	};
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"!!./../../node_modules/css-loader/index.js!./../../node_modules/stylus-loader/index.js!./main.styl\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(6)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/stylus-loader/index.js!./main.styl", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/stylus-loader/index.js!./main.styl");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 4 */,
+/* 5 */,
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	var stylesInDom = {},
+		memoize = function(fn) {
+			var memo;
+			return function () {
+				if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+				return memo;
+			};
+		},
+		isOldIE = memoize(function() {
+			return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
+		}),
+		getHeadElement = memoize(function () {
+			return document.head || document.getElementsByTagName("head")[0];
+		}),
+		singletonElement = null,
+		singletonCounter = 0,
+		styleElementsInsertedAtTop = [];
+
+	module.exports = function(list, options) {
+		if(false) {
+			if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+		}
+
+		options = options || {};
+		// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+		// tags it will allow on a page
+		if (typeof options.singleton === "undefined") options.singleton = isOldIE();
+
+		// By default, add <style> tags to the bottom of <head>.
+		if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
+
+		var styles = listToStyles(list);
+		addStylesToDom(styles, options);
+
+		return function update(newList) {
+			var mayRemove = [];
+			for(var i = 0; i < styles.length; i++) {
+				var item = styles[i];
+				var domStyle = stylesInDom[item.id];
+				domStyle.refs--;
+				mayRemove.push(domStyle);
+			}
+			if(newList) {
+				var newStyles = listToStyles(newList);
+				addStylesToDom(newStyles, options);
+			}
+			for(var i = 0; i < mayRemove.length; i++) {
+				var domStyle = mayRemove[i];
+				if(domStyle.refs === 0) {
+					for(var j = 0; j < domStyle.parts.length; j++)
+						domStyle.parts[j]();
+					delete stylesInDom[domStyle.id];
+				}
+			}
+		};
+	}
+
+	function addStylesToDom(styles, options) {
+		for(var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+			if(domStyle) {
+				domStyle.refs++;
+				for(var j = 0; j < domStyle.parts.length; j++) {
+					domStyle.parts[j](item.parts[j]);
+				}
+				for(; j < item.parts.length; j++) {
+					domStyle.parts.push(addStyle(item.parts[j], options));
+				}
+			} else {
+				var parts = [];
+				for(var j = 0; j < item.parts.length; j++) {
+					parts.push(addStyle(item.parts[j], options));
+				}
+				stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+			}
+		}
+	}
+
+	function listToStyles(list) {
+		var styles = [];
+		var newStyles = {};
+		for(var i = 0; i < list.length; i++) {
+			var item = list[i];
+			var id = item[0];
+			var css = item[1];
+			var media = item[2];
+			var sourceMap = item[3];
+			var part = {css: css, media: media, sourceMap: sourceMap};
+			if(!newStyles[id])
+				styles.push(newStyles[id] = {id: id, parts: [part]});
+			else
+				newStyles[id].parts.push(part);
+		}
+		return styles;
+	}
+
+	function insertStyleElement(options, styleElement) {
+		var head = getHeadElement();
+		var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
+		if (options.insertAt === "top") {
+			if(!lastStyleElementInsertedAtTop) {
+				head.insertBefore(styleElement, head.firstChild);
+			} else if(lastStyleElementInsertedAtTop.nextSibling) {
+				head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
+			} else {
+				head.appendChild(styleElement);
+			}
+			styleElementsInsertedAtTop.push(styleElement);
+		} else if (options.insertAt === "bottom") {
+			head.appendChild(styleElement);
+		} else {
+			throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
+		}
+	}
+
+	function removeStyleElement(styleElement) {
+		styleElement.parentNode.removeChild(styleElement);
+		var idx = styleElementsInsertedAtTop.indexOf(styleElement);
+		if(idx >= 0) {
+			styleElementsInsertedAtTop.splice(idx, 1);
+		}
+	}
+
+	function createStyleElement(options) {
+		var styleElement = document.createElement("style");
+		styleElement.type = "text/css";
+		insertStyleElement(options, styleElement);
+		return styleElement;
+	}
+
+	function createLinkElement(options) {
+		var linkElement = document.createElement("link");
+		linkElement.rel = "stylesheet";
+		insertStyleElement(options, linkElement);
+		return linkElement;
+	}
+
+	function addStyle(obj, options) {
+		var styleElement, update, remove;
+
+		if (options.singleton) {
+			var styleIndex = singletonCounter++;
+			styleElement = singletonElement || (singletonElement = createStyleElement(options));
+			update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
+			remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
+		} else if(obj.sourceMap &&
+			typeof URL === "function" &&
+			typeof URL.createObjectURL === "function" &&
+			typeof URL.revokeObjectURL === "function" &&
+			typeof Blob === "function" &&
+			typeof btoa === "function") {
+			styleElement = createLinkElement(options);
+			update = updateLink.bind(null, styleElement);
+			remove = function() {
+				removeStyleElement(styleElement);
+				if(styleElement.href)
+					URL.revokeObjectURL(styleElement.href);
+			};
+		} else {
+			styleElement = createStyleElement(options);
+			update = applyToTag.bind(null, styleElement);
+			remove = function() {
+				removeStyleElement(styleElement);
+			};
+		}
+
+		update(obj);
+
+		return function updateStyle(newObj) {
+			if(newObj) {
+				if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
+					return;
+				update(obj = newObj);
+			} else {
+				remove();
+			}
+		};
+	}
+
+	var replaceText = (function () {
+		var textStore = [];
+
+		return function (index, replacement) {
+			textStore[index] = replacement;
+			return textStore.filter(Boolean).join('\n');
+		};
+	})();
+
+	function applyToSingletonTag(styleElement, index, remove, obj) {
+		var css = remove ? "" : obj.css;
+
+		if (styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = replaceText(index, css);
+		} else {
+			var cssNode = document.createTextNode(css);
+			var childNodes = styleElement.childNodes;
+			if (childNodes[index]) styleElement.removeChild(childNodes[index]);
+			if (childNodes.length) {
+				styleElement.insertBefore(cssNode, childNodes[index]);
+			} else {
+				styleElement.appendChild(cssNode);
+			}
+		}
+	}
+
+	function applyToTag(styleElement, obj) {
+		var css = obj.css;
+		var media = obj.media;
+
+		if(media) {
+			styleElement.setAttribute("media", media)
+		}
+
+		if(styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = css;
+		} else {
+			while(styleElement.firstChild) {
+				styleElement.removeChild(styleElement.firstChild);
+			}
+			styleElement.appendChild(document.createTextNode(css));
+		}
+	}
+
+	function updateLink(linkElement, obj) {
+		var css = obj.css;
+		var sourceMap = obj.sourceMap;
+
+		if(sourceMap) {
+			// http://stackoverflow.com/a/26603875
+			css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+		}
+
+		var blob = new Blob([css], { type: "text/css" });
+
+		var oldSrc = linkElement.href;
+
+		linkElement.href = URL.createObjectURL(blob);
+
+		if(oldSrc)
+			URL.revokeObjectURL(oldSrc);
+	}
+
+
+/***/ },
+/* 7 */
+>>>>>>> master
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
+<<<<<<< HEAD
 	module.exports = __webpack_require__(3);
 
 
@@ -169,9 +531,653 @@
 	    warned = true;
 	    return _assign.apply(null, arguments);
 	  };
+=======
+	var _bazId = 0;
+	var nodesComponentsRegistry = {};
+	var componentsRegistry = {};
+	var wrappersRegistry = {};
+
+	function _getComponent(name) {
+	  if (!componentsRegistry[name]) {
+	    throw new Error(name + ' component is not registered. Use `Baz.register()` to do it');
+	  }
+
+	  return componentsRegistry[name];
 	}
 
+	function _bindComponentToNode(wrappedNode, componentName) {
+	  var bazId = wrappedNode.id;
+
+	  if (!componentName) {
+	    return
+	  }
+
+	  if (nodesComponentsRegistry[bazId] === void 0) {
+	    nodesComponentsRegistry[bazId] = [];
+	  }
+
+	  if (nodesComponentsRegistry[bazId].indexOf(componentName) === -1) {
+	    nodesComponentsRegistry[bazId].push(componentName);
+	  }
+	}
+
+	function _applyComponentsToNode(wrappedNode) {
+	  var bazId = wrappedNode.id;
+
+	  for (var i = 0; i < nodesComponentsRegistry[bazId].length; i++) {
+	    var component = _getComponent(nodesComponentsRegistry[bazId][i]);
+
+	    if (component.bazFunc) {
+	      component.bazFunc(wrappedNode.__wrapped__);
+	    }
+	  }
+	}
+
+	function BazookaWrapper(node) {
+	  var bazId = node.getAttribute('data-bazid');
+
+	  if (bazId == null) {
+	    bazId = (_bazId++).toString();
+	    node.setAttribute('data-bazid', bazId);
+	    wrappersRegistry[bazId] = this;
+	  }
+
+	  this.__wrapped__ = node;
+	  /**
+	   * Internal id
+	   * @name Bazooka.id
+	   * @type {string}
+	   * @memberof Bazooka
+	   * @instance
+	   */
+	  this.id = bazId;
+	}
+
+	BazookaWrapper.prototype.constructor = BazookaWrapper;
+	BazookaWrapper.prototype.getComponents = function () {
+	  var components = {}
+
+	  for (var i = 0; i < nodesComponentsRegistry[this.id].length; i++) {
+	    components[nodesComponentsRegistry[this.id][i]] = _getComponent(nodesComponentsRegistry[this.id][i])
+	  }
+
+	  return components
+	};
+
+	function _wrapAndBindNode(node) {
+	  var dataBazooka = (node.getAttribute('data-bazooka') || '').trim();
+	  var wrappedNode;
+	  var componentNames;
+
+	  if (dataBazooka) {
+	    componentNames = dataBazooka.split(' ');
+	    wrappedNode = new BazookaWrapper(node);
+
+	    for (var i = 0; i < componentNames.length; i++) {
+	      _bindComponentToNode(wrappedNode, componentNames[i].trim());
+	    }
+
+	    _applyComponentsToNode(wrappedNode);
+	  }
+	}
+
+	/** @class Bazooka */
+
+	/**
+	 * @namespace BazComponent
+	 * @description Interface of component, required by [Bazooka.refresh]{@link module:Bazooka.refresh}
+	 */
+
+	/**
+	 * @name simple
+	 * @func
+	 * @memberof BazComponent
+	 * @param {node} - bound DOM node
+	 * @description CommonJS module written only with Bazooka interface to be used with `data-bazooka`
+	 * @example
+	 * ```javascript
+	 *   module.exports = function bazFunc(node) {}
+	 * ```
+	 */
+
+	/**
+	 * @name universal
+	 * @namespace BazComponent.universal
+	 * @description CommonJS module with Bazooka interface, so it can be used both in `data-bazooka`
+	 * and in another CommonJS modules via `require()`
+	 * @example
+	 * ```javascript
+	 *   function trackEvent(category, action, label) {}
+	 *   module.exports = {
+	 *     bazFunc: function bazFunc(node) { node.onclick = trackEvent.bind(…) },
+	 *     trackEvent: trackEvent,
+	 *   }
+	 * ```
+	 */
+
+	/**
+	 * @name bazFunc
+	 * @memberof BazComponent.universal
+	 * @func
+	 * @param {node} - bound DOM node
+	 * @description Component's binding function
+	 */
+
+	/**
+	 * @func
+	 * @param {node|BazookaWrapper} value - DOM node or wrapped node
+	 * @returns {BazookaWrapper}
+	 * @example
+	 * ```javascript
+	 *   var Baz = require('bazooka');
+	 *   var $baz = Baz(node);
+	 * ```
+	 */
+	var Bazooka = function (value) {
+	  if (value instanceof BazookaWrapper) {
+	    return value;
+	  }
+
+	  return new BazookaWrapper(value);
+	};
+
+	/** @module {function} Bazooka */
+	/**
+	 * Reference to {@link BazookaWrapper} class
+	 * @name BazookaWrapper
+	 */
+	Bazooka.BazookaWrapper = BazookaWrapper;
+
+	Bazooka.h = __webpack_require__(8);
+
+	/**
+	 * Register components names
+	 * @func register
+	 * @param {Object} componentsObj - object with names as keys and components as values
+	 * @static
+	 */
+	Bazooka.register = function (componentsObj) {
+	  for (var name in componentsObj) {
+	    if (typeof componentsObj[name] === 'function') {
+	      componentsRegistry[name] = {
+	        bazFunc: componentsObj[name],
+	      };
+	    } else {
+	      componentsRegistry[name] = componentsObj[name];
+	    }
+	  }
+	};
+
+	/**
+	 * Parse and bind bazooka components to nodes without bound components
+	 * @func refresh
+	 * @param {node} [rootNode=document.body] - DOM node, children of which will be checked for `data-bazooka`
+	 * @static
+	 */
+	Bazooka.refresh = function (rootNode) {
+	  rootNode = rootNode || document.body;
+
+	  for (var bazId in wrappersRegistry) {
+	    if (wrappersRegistry[bazId] && !wrappersRegistry[bazId].__wrapped__.parentNode) {
+	      wrappersRegistry[bazId] = null;
+	      nodesComponentsRegistry[bazId] = [];
+	    }
+	  }
+
+	  Array.prototype.forEach.call(
+	    rootNode.querySelectorAll('[data-bazooka]:not([data-bazid])'),
+	    _wrapAndBindNode
+	  );
+	};
+
+	function _observedMutationCallback(mutation) {
+	  Bazooka.refresh(mutation.target);
+	}
+
+	function _MutationObserverCallback(mutations) {
+	  mutations.forEach(_observedMutationCallback);
+	}
+
+	/**
+	 * Watch for new nodes with `data-bazooka`. No need to run {@link Bazooka.refresh} before this. It will be called automatically.
+	 * @func watch
+	 * @param {node} [rootNode=document.body] - DOM node, children of which will be watched for `data-bazooka`
+	 * @static
+	 * @returns {function} Unwatch function
+	 */
+	Bazooka.watch = function (rootNode) {
+	  var observer = new MutationObserver(_MutationObserverCallback);
+	  rootNode = rootNode || document.body;
+
+	  Bazooka.refresh(rootNode);
+	  observer.observe(rootNode, {childList: true, subtree: true});
+
+	  return observer.disconnect.bind(observer);
+	};
+
+	module.exports = Bazooka;
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	var IGNORED_ATTRS = ['data-bazid', 'data-bazooka'];
+
+	var rbrace = /^(?:\{.*\}|\[.*\])$/;
+	var rdataAttr = /^data-([a-z\d\-]+)$/;
+	var rdashAlpha = /-([a-z])/gi;
+	var fcamelCase = function (all, letter) {
+	  return letter.toUpperCase();
+	};
+
+	function _parseAttr(prefix, parsedAttrs, attr) {
+	  if (typeof attr.value !== 'string') { return parsedAttrs; }
+
+	  if ( !rdataAttr.test(attr.name) || IGNORED_ATTRS.indexOf(attr.name) !== -1) {
+	    return parsedAttrs;
+	  }
+
+	  var attrName = attr.name.match(rdataAttr)[1];
+
+	  if (prefix) {
+	    prefix = prefix.concat('-');
+	    if (prefix === attrName.slice(0, prefix.length)) {
+	      attrName = attrName.slice(prefix.length);
+	    } else {
+	      return parsedAttrs;
+	    }
+	  }
+
+	  var camelCaseName = attrName.replace(rdashAlpha, fcamelCase);
+
+	  var data;
+
+	  switch (attr.value) {
+	    case 'true':
+	      data = true;
+	      break;
+	    case 'false':
+	      data = false;
+	      break;
+	    case 'null':
+	      data = null;
+	      break;
+	    default:
+	      try {
+	        if (attr.value === +attr.value + '') {
+	          data = +attr.value;
+	        } else if (rbrace.test(attr.value)) {
+	          data = JSON.parse(attr.value);
+	        } else {
+	          data = attr.value;
+	        }
+	      } catch (e) { return parsedAttrs; }
+	  }
+
+	  parsedAttrs[camelCaseName] = data;
+	  return parsedAttrs;
+	}
+
+	function _getPrefixedAttrs(prefix, node) {
+	  return Array.prototype.reduce.call(node.attributes, _parseAttr.bind(null, prefix), {});
+	}
+
+	/**
+	 * @param {string} [prefix] - data-attribute prefix
+	 * @param {HTMLNode} node - target node
+	 * @returns {function|object} - curried function for parsing node with passed prefix or parsed attrs
+	 */
+	var getAttrs = function (prefix, node) {
+	  if (typeof prefix === 'string' && node === void 0) {
+	    return _getPrefixedAttrs.bind(null, prefix);
+	  }
+
+	  if (node === void 0) {
+	    if (process.env.NODE_ENV != 'production') {
+	      console.warn('`Baz.h.getAttrs(node)` is deprecated. Use `Baz.h.getAttrs(prefix, node)` or `Baz.h.getAttrs(prefix)(node)` instead')
+	    }
+	    node = prefix;
+	    return _getPrefixedAttrs('', node);
+	  }
+
+	  return _getPrefixedAttrs(prefix, node);
+	};
+
+	function _prefixDataKey(dataKey) {
+	  if (!dataKey) {
+	    throw new Error('dataKey must be non empty');
+	  }
+
+	  if (dataKey.indexOf('data-') === 0) {
+	    return dataKey
+	  } else if (dataKey.indexOf('-') >= 0) {
+	    return 'data-' + dataKey
+	  } else {
+	    return 'data-' + dataKey.replace(/([A-Z])/g, "-$1").toLowerCase()
+	  }
+	};
+
+	/**
+	 * @param {HTMLNode} parentNode
+	 * @param {string} dataKey – data-key. data-baz-key, baz-key and bazKey are equivalent
+	 * @param {string} [dataValue]
+	 * @returns {NodeList}
+	 */
+	var getChildrenWithData = function (parentNode, dataKey, dataValue) {
+	  var prefixedDataKey = _prefixDataKey(dataKey);
+	  var query;
+
+	  if (dataValue === void 0) {
+	    query = '[' + prefixedDataKey + ']'
+	  } else {
+	    query = '[' + prefixedDataKey + '="' + dataValue + '"]'
+	  }
+
+	  return parentNode.querySelectorAll(query)
+	};
+
+	module.exports = {
+	  getAttrs: getAttrs,
+	  getChildrenWithData: getChildrenWithData
+	};
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	// shim for using process in browser
+
+	var process = module.exports = {};
+
+	// cached from whatever global is present so that test runners that stub it
+	// don't break things.  But we need to wrap it in a try catch in case it is
+	// wrapped in strict mode code which doesn't define any globals.  It's inside a
+	// function because try/catches deoptimize in certain engines.
+
+	var cachedSetTimeout;
+	var cachedClearTimeout;
+
+	(function () {
+	  try {
+	    cachedSetTimeout = setTimeout;
+	  } catch (e) {
+	    cachedSetTimeout = function () {
+	      throw new Error('setTimeout is not defined');
+	    }
+	  }
+	  try {
+	    cachedClearTimeout = clearTimeout;
+	  } catch (e) {
+	    cachedClearTimeout = function () {
+	      throw new Error('clearTimeout is not defined');
+	    }
+	  }
+	} ())
+	var queue = [];
+	var draining = false;
+	var currentQueue;
+	var queueIndex = -1;
+
+	function cleanUpNextTick() {
+	    if (!draining || !currentQueue) {
+	        return;
+	    }
+	    draining = false;
+	    if (currentQueue.length) {
+	        queue = currentQueue.concat(queue);
+	    } else {
+	        queueIndex = -1;
+	    }
+	    if (queue.length) {
+	        drainQueue();
+	    }
+	}
+
+	function drainQueue() {
+	    if (draining) {
+	        return;
+	    }
+	    var timeout = cachedSetTimeout(cleanUpNextTick);
+	    draining = true;
+
+	    var len = queue.length;
+	    while(len) {
+	        currentQueue = queue;
+	        queue = [];
+	        while (++queueIndex < len) {
+	            if (currentQueue) {
+	                currentQueue[queueIndex].run();
+	            }
+	        }
+	        queueIndex = -1;
+	        len = queue.length;
+	    }
+	    currentQueue = null;
+	    draining = false;
+	    cachedClearTimeout(timeout);
+	}
+
+	process.nextTick = function (fun) {
+	    var args = new Array(arguments.length - 1);
+	    if (arguments.length > 1) {
+	        for (var i = 1; i < arguments.length; i++) {
+	            args[i - 1] = arguments[i];
+	        }
+	    }
+	    queue.push(new Item(fun, args));
+	    if (queue.length === 1 && !draining) {
+	        cachedSetTimeout(drainQueue, 0);
+	    }
+	};
+
+	// v8 likes predictible objects
+	function Item(fun, array) {
+	    this.fun = fun;
+	    this.array = array;
+	}
+	Item.prototype.run = function () {
+	    this.fun.apply(null, this.array);
+	};
+	process.title = 'browser';
+	process.browser = true;
+	process.env = {};
+	process.argv = [];
+	process.version = ''; // empty string to avoid regexp issues
+	process.versions = {};
+
+	function noop() {}
+
+	process.on = noop;
+	process.addListener = noop;
+	process.once = noop;
+	process.off = noop;
+	process.removeListener = noop;
+	process.removeAllListeners = noop;
+	process.emit = noop;
+
+	process.binding = function (name) {
+	    throw new Error('process.binding is not supported');
+	};
+
+	process.cwd = function () { return '/' };
+	process.chdir = function (dir) {
+	    throw new Error('process.chdir is not supported');
+	};
+	process.umask = function() { return 0; };
+
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _editor = __webpack_require__(50);
+
+	var _editor2 = _interopRequireDefault(_editor);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	//load fabric
+	var fabric = __webpack_require__(11).fabric;
+
+	var editor = new _editor2.default('main', 960, 420);
+
+	var canvas = editor.canv;
+	editor.setBackground('http://www.planwallpaper.com/static/images/abstract-background-design.jpg');
+	//I will clean it in future
+	//random position for future objects
+	// function getRandomPos(min, max) {
+	//     return Math.floor(Math.random() * (max - min + 1)) + min;
+	// }
+	//working ids from template
+	// const textid = document.getElementById('custom_text');
+	// const fontsid = document.getElementById('fonts');
+	// const sizeid = document.getElementById('sizes');
+	// const fileInput = document.getElementById('input');
+	var downloadLink = document.getElementById('download');
+	var showside = document.getElementById('justaddtext');
+	var addbutton = document.getElementById('addButt');
+	var addtexts = document.querySelectorAll('#rightcol ul li');
+	console.log(addtexts);
+	// const color = document.getElementById('colors');
+	// const wcanvas = document.getElementById('wcanv'); //width for canvas editor
+
+	//initial canvas
+	// const canvas = new fabric.Canvas('c', {width: 1140, height: 800});
+	// const inputText = new fabric.IText('Some text', {
+	//     left: 400,
+	//     top: 400,
+	//     textAlign: 'center'
+	// });
+	// canvas.add(inputText).renderAll();
+	// canvas.setActiveObject(canvas.item(canvas.getObjects().length - 1));
+	//
+	// wcanvas.addEventListener('change', function () {
+	//     let coef = 0.7;
+	//     canvas.setWidth(this.value);
+	//     canvas.setHeight(this.value * coef);
+	//     canvas.calcOffset();
+	//     iWantThemAll();
+	// });
+	//
+	// color.addEventListener('change', function () {
+	//     let obj = canvas.getActiveObject();
+	//     if (obj) {
+	//         obj.setColor(this.value);
+	//         canvas.renderAll();
+	//     }
+	// });
+	addbutton.addEventListener('click', function () {
+	    editor.addButton(5);
+	});
+
+	showside.addEventListener('click', function () {
+	    var el = document.getElementById('rightcol');
+	    el.style.display = el.style.display == "block" ? "" : "block";
+	    // editor.setFont('Roboto', 35, '#000');
+	});
+
+	for (var i = 0; i < addtexts.length; i++) {
+	    addtexts[i].addEventListener('click', function () {
+	        var sizes = this.getAttribute("data-size");
+	        var texting = this.getAttribute("data-text");
+	        var typings = this.getAttribute("data-type");
+	        if (typings) {
+	            editor.setPrice('Roboto', sizes, '#000', texting);
+	        } else {
+	            editor.setFont('Roboto', sizes, '#000', texting);
+	        }
+	    });
+>>>>>>> master
+	}
+	// fileInput.addEventListener('change', (e) => {
+	//     const url = URL.createObjectURL(e.target.files[0]);
+	//     fabric.Image.fromURL(url, (img) => {
+	//         canvas.add(img);
+	//         fileInput.value = ""
+	//     });
+	// });
+	// textid.addEventListener('keyup', function () {
+	//     let obj = canvas.getActiveObject();
+	//     if (obj) {
+	//         obj.setText(this.value);
+	//         canvas.renderAll();
+	//     }
+	// });
+	//
+	// fontsid.addEventListener('change', function () {
+	//     let obj = canvas.getActiveObject();
+	//     if (obj) {
+	//         obj.setFontFamily(this.value);
+	//         canvas.renderAll();
+	//     }
+	// });
+	//
+	// sizeid.addEventListener('change', function () {
+	//     let obj = canvas.getActiveObject();
+	//     if (obj) {
+	//         obj.setFontSize(this.value);
+	//         canvas.renderAll();
+	//     }
+	// });
+	//
+	var canv = document.getElementById('main');
+	downloadLink.addEventListener('click', function () {
+	    var link = this;
+	    // link.href = editor.getImgData();
+	    link.href = canv.toDataURL();
+	    link.download = 'result.jpg';
+
+	    // editor.canv.deactivateAll().renderAll();
+	    // window.open(editor.canv.toDataURL());
+	    // editor.downloadImage(this);
+	}, false);
+	//
+	// function iWantThemAll() {
+	//     //adding group
+	//     let objs = [];
+	//     //get all the objects into an array
+	//     objs = canvas._objects.filter(function (obj) {
+	//         return obj;
+	//     });
+	//
+	//     //group all the objects
+	//     let alltogetherObj = new fabric.Group(objs, {
+	//         top: 300, left: 300,
+	//         originX: 'center',
+	//         originY: 'center'
+	//     });
+	//     //clear previous objects
+	//     for (let i = 0; i < objs.length; i++) {
+	//         canvas.remove(objs[i]);
+	//     }
+	//
+	//     canvas.add(alltogetherObj);
+	//     canvas.renderAll();
+	//
+	//     alltogetherObj.destroy();
+	//     let items = alltogetherObj.getObjects();
+	//     canvas.remove(alltogetherObj);
+	//     for (var i = 0; i < items.length; i++) {
+	//         canvas.add(items[i]);
+	//     }
+	//
+	//     canvas.renderAll();
+	// }
+
+<<<<<<< HEAD
 	var React = {
+=======
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+>>>>>>> master
 
 	  // Modern
 
@@ -183,7 +1189,20 @@
 	    only: onlyChild
 	  },
 
+<<<<<<< HEAD
 	  Component: ReactComponent,
+=======
+	if (typeof document !== 'undefined' && typeof window !== 'undefined') {
+	  fabric.document = document;
+	  fabric.window = window;
+	  // ensure globality even if entire library were function wrapped (as in Meteor.js packaging system)
+	  window.fabric = fabric;
+	}
+	else {
+	  // assume we're running under node.js when document/window are not present
+	  fabric.document = __webpack_require__(16)
+	    .jsdom("<!DOCTYPE html><html><head></head><body></body></html>");
+>>>>>>> master
 
 	  createElement: createElement,
 	  cloneElement: cloneElement,
@@ -782,7 +1801,21 @@
 	    message += '&args[]=' + encodeURIComponent(arguments[argIdx + 1]);
 	  }
 
+<<<<<<< HEAD
 	  message += ' for the full message or use the non-minified dev environment' + ' for full errors and additional helpful warnings.';
+=======
+	    /**
+	     * Creates image element (works on client and node)
+	     * @static
+	     * @memberOf fabric.util
+	     * @return {HTMLImageElement} HTML image element
+	     */
+	    createImage: function() {
+	      return fabric.isLikelyNode
+	        ? new (__webpack_require__(17).Image)()
+	        : fabric.document.createElement('img');
+	    },
+>>>>>>> master
 
 	  var error = new Error(message);
 	  error.name = 'Invariant Violation';
@@ -24740,6 +25773,7 @@
 	    return attributes;
 	  }
 
+<<<<<<< HEAD
 	  /**
 	   * Parses "transform" attribute, returning an array of values
 	   * @static
@@ -24765,6 +25799,15 @@
 	    function scaleMatrix(matrix, args) {
 	      var multiplierX = args[0],
 	          multiplierY = (args.length === 2) ? args[1] : args[0];
+=======
+	  var DOMParser = __webpack_require__(18).DOMParser,
+	      URL = __webpack_require__(19),
+	      HTTP = __webpack_require__(25),
+	      HTTPS = __webpack_require__(48),
+
+	      Canvas = __webpack_require__(17),
+	      Image = __webpack_require__(17).Image;
+>>>>>>> master
 
 	      matrix[0] = multiplierX;
 	      matrix[3] = multiplierY;
@@ -24795,8 +25838,24 @@
 	          0  // f
 	        ],
 
+<<<<<<< HEAD
 	        // == begin transform regexp
 	        number = fabric.reNum,
+=======
+	  /** @private */
+	  function requestFs(path, callback) {
+	    var fs = __webpack_require__(49);
+	    fs.readFile(path, function (err, data) {
+	      if (err) {
+	        fabric.log(err);
+	        throw err;
+	      }
+	      else {
+	        callback(data);
+	      }
+	    });
+	  }
+>>>>>>> master
 
 	        commaWsp = '(?:\\s+,?\\s*|,\\s*)',
 
@@ -24884,6 +25943,7 @@
 	            break;
 	        }
 
+<<<<<<< HEAD
 	        // snapshot current matrix into matrices array
 	        matrices.push(matrix.concat());
 	        // reset
@@ -24898,6 +25958,13 @@
 	      return combinedMatrix;
 	    };
 	  })();
+=======
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12).Buffer, __webpack_require__(9)))
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+>>>>>>> master
 
 	  /**
 	   * @private
@@ -24910,9 +25977,15 @@
 	      attr = normalizeAttr(pair[0].trim().toLowerCase());
 	      value = normalizeValue(attr, pair[1].trim());
 
+<<<<<<< HEAD
 	      oStyle[attr] = value;
 	    });
 	  }
+=======
+	var base64 = __webpack_require__(13)
+	var ieee754 = __webpack_require__(14)
+	var isArray = __webpack_require__(15)
+>>>>>>> master
 
 	  /**
 	   * @private
@@ -26771,6 +27844,7 @@
 	            key = split[0].trim(),
 	            value = split[1].trim();
 
+<<<<<<< HEAD
 	        if (key === 'stop-color') {
 	          color = value;
 	        }
@@ -26786,6 +27860,13 @@
 	    if (!opacity) {
 	      opacity = el.getAttribute('stop-opacity');
 	    }
+=======
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12).Buffer, (function() { return this; }())))
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+>>>>>>> master
 
 	    color = new fabric.Color(color);
 	    colorAlpha = color.getAlpha();
@@ -27008,6 +28089,7 @@
 	        }
 	      }
 
+<<<<<<< HEAD
 	      if (this.type === 'linear') {
 	        gradient = ctx.createLinearGradient(
 	          coords.x1, coords.y1, coords.x2, coords.y2);
@@ -27016,6 +28098,11 @@
 	        gradient = ctx.createRadialGradient(
 	          coords.x1, coords.y1, coords.r1, coords.x2, coords.y2, coords.r2);
 	      }
+=======
+/***/ },
+/* 14 */
+/***/ function(module, exports) {
+>>>>>>> master
 
 	      for (var i = 0, len = this.colorStops.length; i < len; i++) {
 	        var color = this.colorStops[i].color,
@@ -27129,6 +28216,7 @@
 	    }
 	  });
 
+<<<<<<< HEAD
 	  /**
 	   * @private
 	   */
@@ -27156,6 +28244,11 @@
 	        options.r2 !== null &&
 	        gradientUnits === 'objectBoundingBox' &&
 	        object.rx !== object.ry) {
+=======
+/***/ },
+/* 15 */
+/***/ function(module, exports) {
+>>>>>>> master
 
 	      var scaleFactor = object.ry/object.rx;
 	      ellipseMatrix = ' scale(1, ' + scaleFactor + ')';
@@ -27180,6 +28273,7 @@
 	 */
 	fabric.Pattern = fabric.util.createClass(/** @lends fabric.Pattern.prototype */ {
 
+<<<<<<< HEAD
 	  /**
 	   * Repeat property of a pattern (one of repeat, repeat-x, repeat-y or no-repeat)
 	   * @type String
@@ -27341,17 +28435,29 @@
 
 
 	(function(global) {
+=======
+/***/ },
+/* 16 */
+/***/ function(module, exports) {
+>>>>>>> master
 
 	  'use strict';
 
+<<<<<<< HEAD
 	  var fabric = global.fabric || (global.fabric = { }),
 	      toFixed = fabric.util.toFixed;
+=======
+/***/ },
+/* 17 */
+/***/ function(module, exports) {
+>>>>>>> master
 
 	  if (fabric.Shadow) {
 	    fabric.warn('fabric.Shadow is already defined.');
 	    return;
 	  }
 
+<<<<<<< HEAD
 	  /**
 	   * Shadow class
 	   * @class fabric.Shadow
@@ -27359,6 +28465,11 @@
 	   * @see {@link fabric.Shadow#initialize} for constructor definition
 	   */
 	  fabric.Shadow = fabric.util.createClass(/** @lends fabric.Shadow.prototype */ {
+=======
+/***/ },
+/* 18 */
+/***/ function(module, exports) {
+>>>>>>> master
 
 	    /**
 	     * Shadow color
@@ -27367,11 +28478,17 @@
 	     */
 	    color: 'rgb(0,0,0)',
 
+<<<<<<< HEAD
 	    /**
 	     * Shadow blur
 	     * @type Number
 	     */
 	    blur: 0,
+=======
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+>>>>>>> master
 
 	    /**
 	     * Shadow horizontal offset
@@ -27380,12 +28497,16 @@
 	     */
 	    offsetX: 0,
 
+<<<<<<< HEAD
 	    /**
 	     * Shadow vertical offset
 	     * @type Number
 	     * @default
 	     */
 	    offsetY: 0,
+=======
+	var punycode = __webpack_require__(20);
+>>>>>>> master
 
 	    /**
 	     * Whether the shadow should affect stroke operations
@@ -27486,7 +28607,11 @@
 	          '\t</feMerge>\n' +
 	        '</filter>\n');
 	    },
+<<<<<<< HEAD
 	    /* _TO_SVG_END_ */
+=======
+	    querystring = __webpack_require__(22);
+>>>>>>> master
 
 	    /**
 	     * Returns object representation of a shadow
@@ -28130,8 +29255,14 @@
 	        this.renderAll();
 	      }
 
+<<<<<<< HEAD
 	      return this;
 	    },
+=======
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+>>>>>>> master
 
 	    /**
 	     * Helper for setting width/height
@@ -28688,6 +29819,7 @@
 	        instance.includeDefaultValues = false;
 	      }
 
+<<<<<<< HEAD
 	      //If the object is part of the current selection group, it should
 	      //be transformed appropriately
 	      //i.e. it should be serialised as it would appear if the selection group
@@ -28700,6 +29832,13 @@
 
 	      //Undo the damage we did by changing all of its properties
 	      this._unwindGroupTransformOnObject(instance, originalProperties);
+=======
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)(module), (function() { return this; }())))
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+>>>>>>> master
 
 	      return object;
 	    },
@@ -28726,6 +29865,7 @@
 	      }
 	    },
 
+<<<<<<< HEAD
 	    /**
 	     * Restores the changed properties of instance
 	     * @private
@@ -28737,6 +29877,11 @@
 	        instance.set(originalValues);
 	      }
 	    },
+=======
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+>>>>>>> master
 
 	    /**
 	     * @private
@@ -28748,6 +29893,7 @@
 	          : this.backgroundColor
 	      };
 
+<<<<<<< HEAD
 	      if (this.overlayColor) {
 	        data.overlay = this.overlayColor.toObject
 	          ? this.overlayColor.toObject()
@@ -28759,10 +29905,15 @@
 	      if (this.overlayImage) {
 	        data.overlayImage = this.overlayImage.toObject();
 	      }
+=======
+	exports.decode = exports.parse = __webpack_require__(23);
+	exports.encode = exports.stringify = __webpack_require__(24);
+>>>>>>> master
 
 	      return data;
 	    },
 
+<<<<<<< HEAD
 	    /* _TO_SVG_START_ */
 	    /**
 	     * When true, getSvgTransform() will apply the StaticCanvas.viewportTransform to the SVG transformation. When true,
@@ -28771,6 +29922,11 @@
 	     * @default
 	     */
 	    svgViewportTransformation: true,
+=======
+/***/ },
+/* 23 */
+/***/ function(module, exports) {
+>>>>>>> master
 
 	    /**
 	     * Returns SVG representation of canvas
@@ -28949,6 +30105,7 @@
 	    },
 	    /* _TO_SVG_END_ */
 
+<<<<<<< HEAD
 	    /**
 	     * Moves an object or the objects of a multiple selection
 	     * to the bottom of the stack of drawn objects
@@ -28976,6 +30133,11 @@
 	      }
 	      return this.renderAll && this.renderAll();
 	    },
+=======
+/***/ },
+/* 24 */
+/***/ function(module, exports) {
+>>>>>>> master
 
 	    /**
 	     * Moves an object or the objects of a multiple selection
@@ -29112,6 +30274,7 @@
 	      return this;
 	    },
 
+<<<<<<< HEAD
 	    /**
 	     * @private
 	     */
@@ -29120,6 +30283,16 @@
 
 	      if (intersecting) {
 	        newIdx = idx;
+=======
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var http = module.exports;
+	var EventEmitter = __webpack_require__(26).EventEmitter;
+	var Request = __webpack_require__(27);
+	var url = __webpack_require__(19)
+>>>>>>> master
 
 	        // traverse up the stack looking for the nearest intersecting object
 	        for (var i = idx + 1; i < this._objects.length; ++i) {
@@ -29174,9 +30347,15 @@
 	    }
 	  });
 
+<<<<<<< HEAD
 	  extend(fabric.StaticCanvas.prototype, fabric.Observable);
 	  extend(fabric.StaticCanvas.prototype, fabric.Collection);
 	  extend(fabric.StaticCanvas.prototype, fabric.DataURLExporter);
+=======
+/***/ },
+/* 26 */
+/***/ function(module, exports) {
+>>>>>>> master
 
 	  extend(fabric.StaticCanvas, /** @lends fabric.StaticCanvas */ {
 
@@ -29568,12 +30747,23 @@
 
 	      var path = this.createPath(pathData);
 
+<<<<<<< HEAD
 	      this.canvas.add(path);
 	      path.setCoords();
 
 	      this.canvas.clearContext(this.canvas.contextTop);
 	      this._resetShadow();
 	      this.canvas.renderAll();
+=======
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Stream = __webpack_require__(28);
+	var Response = __webpack_require__(44);
+	var Base64 = __webpack_require__(47);
+	var inherits = __webpack_require__(29);
+>>>>>>> master
 
 	      // fire event 'path' created
 	      this.canvas.fire('path:created', { path: path });
@@ -29689,19 +30879,37 @@
 	        circleRadius = fabric.util.getRandomInt(
 	                        Math.max(0, this.width - 20), this.width + 20) / 2,
 
+<<<<<<< HEAD
 	        circleColor = new fabric.Color(this.color)
 	                        .setAlpha(fabric.util.getRandomInt(0, 100) / 100)
 	                        .toRgba();
+=======
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+>>>>>>> master
 
 	    pointerPoint.radius = circleRadius;
 	    pointerPoint.fill = circleColor;
 
 	    this.points.push(pointerPoint);
 
+<<<<<<< HEAD
 	    return pointerPoint;
 	  }
 	});
 
+=======
+	var EE = __webpack_require__(26).EventEmitter;
+	var inherits = __webpack_require__(29);
+
+	inherits(Stream, EE);
+	Stream.Readable = __webpack_require__(30);
+	Stream.Writable = __webpack_require__(40);
+	Stream.Duplex = __webpack_require__(41);
+	Stream.Transform = __webpack_require__(42);
+	Stream.PassThrough = __webpack_require__(43);
+>>>>>>> master
 
 	/**
 	 * SprayBrush class
@@ -29858,9 +31066,15 @@
 	    var ctx = this.canvas.contextTop;
 	    ctx.fillStyle = this.color;
 
+<<<<<<< HEAD
 	    var v = this.canvas.viewportTransform;
 	    ctx.save();
 	    ctx.transform(v[0], v[1], v[2], v[3], v[4], v[5]);
+=======
+/***/ },
+/* 29 */
+/***/ function(module, exports) {
+>>>>>>> master
 
 	    for (var i = 0, len = this.sprayChunkPoints.length; i < len; i++) {
 	      var point = this.sprayChunkPoints[i];
@@ -29872,6 +31086,7 @@
 	    ctx.restore();
 	  },
 
+<<<<<<< HEAD
 	  /**
 	   * @param {Object} pointer
 	   */
@@ -29884,6 +31099,28 @@
 
 	      x = fabric.util.getRandomInt(pointer.x - radius, pointer.x + radius);
 	      y = fabric.util.getRandomInt(pointer.y - radius, pointer.y + radius);
+=======
+/***/ },
+/* 30 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {exports = module.exports = __webpack_require__(31);
+	exports.Stream = __webpack_require__(28);
+	exports.Readable = exports;
+	exports.Writable = __webpack_require__(36);
+	exports.Duplex = __webpack_require__(35);
+	exports.Transform = __webpack_require__(38);
+	exports.PassThrough = __webpack_require__(39);
+	if (!process.browser && process.env.READABLE_STREAM === 'disable') {
+	  module.exports = __webpack_require__(28);
+	}
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
+
+/***/ },
+/* 31 */
+/***/ function(module, exports, __webpack_require__) {
+>>>>>>> master
 
 	      if (this.dotWidthVariance) {
 	        width = fabric.util.getRandomInt(
@@ -29898,33 +31135,58 @@
 	      var point = new fabric.Point(x, y);
 	      point.width = width;
 
+<<<<<<< HEAD
 	      if (this.randomOpacity) {
 	        point.opacity = fabric.util.getRandomInt(0, 100) / 100;
 	      }
+=======
+	/*<replacement>*/
+	var isArray = __webpack_require__(32);
+	/*</replacement>*/
+>>>>>>> master
 
 	      this.sprayChunkPoints.push(point);
 	    }
 
+<<<<<<< HEAD
 	    this.sprayChunks.push(this.sprayChunkPoints);
 	  }
 	});
+=======
+	/*<replacement>*/
+	var Buffer = __webpack_require__(12).Buffer;
+	/*</replacement>*/
+>>>>>>> master
 
 
+<<<<<<< HEAD
 	/**
 	 * PatternBrush class
 	 * @class fabric.PatternBrush
 	 * @extends fabric.BaseBrush
 	 */
 	fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fabric.PatternBrush.prototype */ {
+=======
+	var EE = __webpack_require__(26).EventEmitter;
+>>>>>>> master
 
 	  getPatternSrc: function() {
 
+<<<<<<< HEAD
 	    var dotWidth = 20,
 	        dotDistance = 5,
 	        patternCanvas = fabric.document.createElement('canvas'),
 	        patternCtx = patternCanvas.getContext('2d');
 
 	    patternCanvas.width = patternCanvas.height = dotWidth + dotDistance;
+=======
+	var Stream = __webpack_require__(28);
+
+	/*<replacement>*/
+	var util = __webpack_require__(33);
+	util.inherits = __webpack_require__(29);
+	/*</replacement>*/
+>>>>>>> master
 
 	    patternCtx.fillStyle = this.color;
 	    patternCtx.beginPath();
@@ -29935,9 +31197,20 @@
 	    return patternCanvas;
 	  },
 
+<<<<<<< HEAD
 	  getPatternSrcFunction: function() {
 	    return String(this.getPatternSrc).replace('this.color', '"' + this.color + '"');
 	  },
+=======
+	/*<replacement>*/
+	var debug = __webpack_require__(34);
+	if (debug && debug.debuglog) {
+	  debug = debug.debuglog('stream');
+	} else {
+	  debug = function () {};
+	}
+	/*</replacement>*/
+>>>>>>> master
 
 	  /**
 	   * Creates "pattern" instance property
@@ -29954,6 +31227,7 @@
 	    this.canvas.contextTop.strokeStyle = this.getPattern();
 	  },
 
+<<<<<<< HEAD
 	  /**
 	   * Creates path
 	   */
@@ -29965,6 +31239,10 @@
 	    return path;
 	  }
 	});
+=======
+	function ReadableState(options, stream) {
+	  var Duplex = __webpack_require__(35);
+>>>>>>> master
 
 
 	(function() {
@@ -30070,6 +31348,7 @@
 	     */
 	    altActionKey:           'shiftKey',
 
+<<<<<<< HEAD
 	    /**
 	     * Indicates which key enable last rendered selection independently of stack position
 	     * values: altKey, shiftKey, ctrlKey
@@ -30085,6 +31364,20 @@
 	     * @default
 	     */
 	    interactive:            true,
+=======
+	  this.decoder = null;
+	  this.encoding = null;
+	  if (options.encoding) {
+	    if (!StringDecoder)
+	      StringDecoder = __webpack_require__(37).StringDecoder;
+	    this.decoder = new StringDecoder(options.encoding);
+	    this.encoding = options.encoding;
+	  }
+	}
+
+	function Readable(options) {
+	  var Duplex = __webpack_require__(35);
+>>>>>>> master
 
 	    /**
 	     * Indicates whether group selection should be enabled
@@ -30213,7 +31506,18 @@
 	      this._createUpperCanvas();
 	      this._initEventListeners();
 
+<<<<<<< HEAD
 	      this._initRetinaScaling();
+=======
+	// backwards compatibility.
+	Readable.prototype.setEncoding = function(enc) {
+	  if (!StringDecoder)
+	    StringDecoder = __webpack_require__(37).StringDecoder;
+	  this._readableState.decoder = new StringDecoder(enc);
+	  this._readableState.encoding = enc;
+	  return this;
+	};
+>>>>>>> master
 
 	      this.freeDrawingBrush = fabric.PencilBrush && new fabric.PencilBrush(this);
 
@@ -31049,6 +32353,7 @@
 	        );
 	      }
 
+<<<<<<< HEAD
 	      if (boundsWidth === 0 || boundsHeight === 0) {
 	        // If bounds are not available (i.e. not visible), do not apply scale.
 	        cssScale = { width: 1, height: 1 };
@@ -31065,6 +32370,13 @@
 	        y: pointer.y * cssScale.height
 	      };
 	    },
+=======
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
+
+/***/ },
+/* 32 */
+/***/ function(module, exports) {
+>>>>>>> master
 
 	    /**
 	     * @private
@@ -31076,7 +32388,13 @@
 	      this.upperCanvasEl = this._createCanvasElement();
 	      fabric.util.addClass(this.upperCanvasEl, 'upper-canvas ' + lowerCanvasClass);
 
+<<<<<<< HEAD
 	      this.wrapperEl.appendChild(this.upperCanvasEl);
+=======
+/***/ },
+/* 33 */
+/***/ function(module, exports, __webpack_require__) {
+>>>>>>> master
 
 	      this._copyCanvasStyle(this.lowerCanvasEl, this.upperCanvasEl);
 	      this._applyCanvasStyle(this.upperCanvasEl);
@@ -31282,6 +32600,7 @@
 	      return this;
 	    },
 
+<<<<<<< HEAD
 	    /**
 	     * Deactivates all objects and dispatches appropriate events
 	     * @return {fabric.Canvas} thisArg
@@ -31316,6 +32635,13 @@
 	      delete this.wrapperEl;
 	      return this;
 	    },
+=======
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12).Buffer))
+
+/***/ },
+/* 34 */
+/***/ function(module, exports) {
+>>>>>>> master
 
 	    /**
 	     * Draws objects' controls (borders/controls)
@@ -31324,6 +32650,7 @@
 	    drawControls: function(ctx) {
 	      var activeGroup = this.getActiveGroup();
 
+<<<<<<< HEAD
 	      if (activeGroup) {
 	        activeGroup._renderControls(ctx);
 	      }
@@ -31331,6 +32658,11 @@
 	        this._drawObjectsControls(ctx);
 	      }
 	    },
+=======
+/***/ },
+/* 35 */
+/***/ function(module, exports, __webpack_require__) {
+>>>>>>> master
 
 	    /**
 	     * @private
@@ -31380,6 +32712,7 @@
 	    fabric.Canvas.prototype._setCursorFromEvent = function() { };
 	  }
 
+<<<<<<< HEAD
 	  /**
 	   * @ignore
 	   * @class fabric.Element
@@ -31390,6 +32723,15 @@
 	  fabric.Element = fabric.Canvas;
 	})();
 
+=======
+	/*<replacement>*/
+	var util = __webpack_require__(33);
+	util.inherits = __webpack_require__(29);
+	/*</replacement>*/
+
+	var Readable = __webpack_require__(31);
+	var Writable = __webpack_require__(36);
+>>>>>>> master
 
 	(function() {
 
@@ -31469,6 +32811,7 @@
 	      this._onMouseOut = this._onMouseOut.bind(this);
 	    },
 
+<<<<<<< HEAD
 	    /**
 	     * Removes all event listeners
 	     */
@@ -31479,6 +32822,13 @@
 	      removeListener(this.upperCanvasEl, 'mousemove', this._onMouseMove);
 	      removeListener(this.upperCanvasEl, 'mousewheel', this._onMouseWheel);
 	      removeListener(this.upperCanvasEl, 'mouseout', this._onMouseOut);
+=======
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
+
+/***/ },
+/* 36 */
+/***/ function(module, exports, __webpack_require__) {
+>>>>>>> master
 
 	      removeListener(this.upperCanvasEl, 'touchstart', this._onMouseDown);
 	      removeListener(this.upperCanvasEl, 'touchmove', this._onMouseMove);
@@ -31501,6 +32851,7 @@
 	      this.__onTransformGesture && this.__onTransformGesture(e, self);
 	    },
 
+<<<<<<< HEAD
 	    /**
 	     * @private
 	     * @param {Event} [e] Event object fired on Event.js drag
@@ -31509,6 +32860,11 @@
 	    _onDrag: function(e, self) {
 	      this.__onDrag && this.__onDrag(e, self);
 	    },
+=======
+	/*<replacement>*/
+	var Buffer = __webpack_require__(12).Buffer;
+	/*</replacement>*/
+>>>>>>> master
 
 	    /**
 	     * @private
@@ -31530,6 +32886,7 @@
 	      target && target.fire('mouseout', { e: e });
 	    },
 
+<<<<<<< HEAD
 	    /**
 	     * @private
 	     * @param {Event} [e] Event object fired on Event.js orientation change
@@ -31547,6 +32904,14 @@
 	    _onShake: function(e, self) {
 	      this.__onShake && this.__onShake(e, self);
 	    },
+=======
+	/*<replacement>*/
+	var util = __webpack_require__(33);
+	util.inherits = __webpack_require__(29);
+	/*</replacement>*/
+
+	var Stream = __webpack_require__(28);
+>>>>>>> master
 
 	    /**
 	     * @private
@@ -31564,8 +32929,13 @@
 	    _onMouseDown: function (e) {
 	      this.__onMouseDown(e);
 
+<<<<<<< HEAD
 	      addListener(fabric.document, 'touchend', this._onMouseUp);
 	      addListener(fabric.document, 'touchmove', this._onMouseMove);
+=======
+	function WritableState(options, stream) {
+	  var Duplex = __webpack_require__(35);
+>>>>>>> master
 
 	      removeListener(this.upperCanvasEl, 'mousemove', this._onMouseMove);
 	      removeListener(this.upperCanvasEl, 'touchmove', this._onMouseMove);
@@ -31703,6 +33073,7 @@
 	      this._handleEvent(e, eventType, target ? target : null);
 	    },
 
+<<<<<<< HEAD
 	    /**
 	     * Handle event firing for target and subtargets
 	     * @param {Event} e event from mouse
@@ -31713,6 +33084,10 @@
 	      var target = typeof targetObj === undefined ? this.findTarget(e) : targetObj,
 	          targets = this.targets || [ ],
 	          options = { e: e, target: target, subTargets: targets };
+=======
+	function Writable(options) {
+	  var Duplex = __webpack_require__(35);
+>>>>>>> master
 
 	      this.fire('mouse:' + eventType, options);
 	      target && target.fire('mouse' + eventType, options);
@@ -32136,6 +33511,7 @@
 	      }
 	    },
 
+<<<<<<< HEAD
 	    /**
 	     * @private
 	     */
@@ -32152,12 +33528,23 @@
 	      }
 	      // normalize n to be from 0 to 7
 	      n %= 8;
+=======
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
+
+/***/ },
+/* 37 */
+/***/ function(module, exports, __webpack_require__) {
+>>>>>>> master
 
 	      return this.cursorMap[n];
 	    }
 	  });
 	})();
 
+<<<<<<< HEAD
+=======
+	var Buffer = __webpack_require__(12).Buffer;
+>>>>>>> master
 
 	(function() {
 
@@ -32392,6 +33779,7 @@
 	  toDataURL: function (options) {
 	    options || (options = { });
 
+<<<<<<< HEAD
 	    var format = options.format || 'png',
 	        quality = options.quality || 1,
 	        multiplier = options.multiplier || 1,
@@ -32401,6 +33789,11 @@
 	          width: options.width,
 	          height: options.height
 	        };
+=======
+/***/ },
+/* 38 */
+/***/ function(module, exports, __webpack_require__) {
+>>>>>>> master
 
 	    if (this._isRetinaScaling()) {
 	      multiplier *= fabric.devicePixelRatio;
@@ -32421,6 +33814,7 @@
 
 	    this.renderAll();
 
+<<<<<<< HEAD
 	    var canvasEl = this.contextContainer.canvas,
 	        croppedCanvasEl = this.__getCroppedCanvas(canvasEl, cropping);
 
@@ -32428,6 +33822,14 @@
 	    if (format === 'jpg') {
 	      format = 'jpeg';
 	    }
+=======
+	var Duplex = __webpack_require__(35);
+
+	/*<replacement>*/
+	var util = __webpack_require__(33);
+	util.inherits = __webpack_require__(29);
+	/*</replacement>*/
+>>>>>>> master
 
 	    var data = (fabric.StaticCanvas.supports('toDataURLWithQuality'))
 	              ? (croppedCanvasEl || canvasEl).toDataURL('image/' + format, quality)
@@ -32627,6 +34029,7 @@
 
 	    this.clear();
 
+<<<<<<< HEAD
 	    var _this = this;
 	    this._enlivenObjects(serialized.objects, function () {
 	      _this._setBgOverlay(serialized, function () {
@@ -32648,6 +34051,11 @@
 	    }, reviver);
 	    return this;
 	  },
+=======
+/***/ },
+/* 39 */
+/***/ function(module, exports, __webpack_require__) {
+>>>>>>> master
 
 	  /**
 	   * @private
@@ -32680,6 +34088,7 @@
 	    this.__setBgOverlay('backgroundColor', serialized.background, loaded, cbIfLoaded);
 	    this.__setBgOverlay('overlayColor', serialized.overlay, loaded, cbIfLoaded);
 
+<<<<<<< HEAD
 	    cbIfLoaded();
 	  },
 
@@ -32692,6 +34101,14 @@
 	   */
 	  __setBgOverlay: function(property, value, loaded, callback) {
 	    var _this = this;
+=======
+	var Transform = __webpack_require__(38);
+
+	/*<replacement>*/
+	var util = __webpack_require__(33);
+	util.inherits = __webpack_require__(29);
+	/*</replacement>*/
+>>>>>>> master
 
 	    if (!value) {
 	      loaded[property] = true;
@@ -32730,6 +34147,7 @@
 	    var renderOnAddRemove = this.renderOnAddRemove;
 	    this.renderOnAddRemove = false;
 
+<<<<<<< HEAD
 	    fabric.util.enlivenObjects(objects, function(enlivenedObjects) {
 	      enlivenedObjects.forEach(function(obj, index) {
 	        _this.insertAt(obj, index, true);
@@ -32739,6 +34157,13 @@
 	      callback && callback();
 	    }, null, reviver);
 	  },
+=======
+/***/ },
+/* 40 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(36)
+>>>>>>> master
 
 	  /**
 	   * @private
@@ -32751,6 +34176,7 @@
 	    });
 	  },
 
+<<<<<<< HEAD
 	  /**
 	   * @private
 	   * @param {String} format
@@ -32776,6 +34202,13 @@
 	      });
 	    });
 	  },
+=======
+/***/ },
+/* 41 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(35)
+>>>>>>> master
 
 	  /**
 	   * Clones canvas instance without cloning existing data.
@@ -32786,6 +34219,7 @@
 	  cloneWithoutData: function(callback) {
 	    var el = fabric.document.createElement('canvas');
 
+<<<<<<< HEAD
 	    el.width = this.getWidth();
 	    el.height = this.getHeight();
 
@@ -32809,6 +34243,20 @@
 	(function(global) {
 
 	  'use strict';
+=======
+/***/ },
+/* 42 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(38)
+
+
+/***/ },
+/* 43 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(39)
+>>>>>>> master
 
 	  var fabric = global.fabric || (global.fabric = { }),
 	      extend = fabric.util.object.extend,
@@ -32817,6 +34265,7 @@
 	      degreesToRadians = fabric.util.degreesToRadians,
 	      supportsLineDash = fabric.StaticCanvas.supports('setLineDash');
 
+<<<<<<< HEAD
 	  if (fabric.Object) {
 	    return;
 	  }
@@ -32843,6 +34292,14 @@
 	   * @fires mouseout
 	   */
 	  fabric.Object = fabric.util.createClass(/** @lends fabric.Object.prototype */ {
+=======
+/***/ },
+/* 44 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Stream = __webpack_require__(28);
+	var util = __webpack_require__(45);
+>>>>>>> master
 
 	    /**
 	     * Retrieves object's {@link fabric.Object#clipTo|clipping function}
@@ -32922,6 +34379,7 @@
 	     * @return {Number} strokeWidth value
 	     */
 
+<<<<<<< HEAD
 	    /**
 	     * Sets object's {@link fabric.Object#strokeWidth|strokeWidth}
 	     * @method setStrokeWidth
@@ -32930,6 +34388,11 @@
 	     * @return {fabric.Object} thisArg
 	     * @chainable
 	     */
+=======
+/***/ },
+/* 45 */
+/***/ function(module, exports, __webpack_require__) {
+>>>>>>> master
 
 	    /**
 	     * Retrieves object's {@link fabric.Object#originX|originX}
@@ -33468,12 +34931,16 @@
 	     */
 	    rotatingPointOffset:      40,
 
+<<<<<<< HEAD
 	    /**
 	     * When set to `true`, objects are "found" on canvas on per-pixel basis rather than according to bounding box
 	     * @type Boolean
 	     * @default
 	     */
 	    perPixelTargetFind:       false,
+=======
+	exports.isBuffer = __webpack_require__(46);
+>>>>>>> master
 
 	    /**
 	     * When `false`, default object's values are not included in its serialization
@@ -33538,12 +35005,29 @@
 	     */
 	    lockSkewingX:             false,
 
+<<<<<<< HEAD
 	    /**
 	     * When `true`, object vertical skewing is locked
 	     * @type Boolean
 	     * @default
 	     */
 	    lockSkewingY:             false,
+=======
+	/**
+	 * Inherit the prototype methods from one constructor into another.
+	 *
+	 * The Function.prototype.inherits from lang.js rewritten as a standalone
+	 * function (not on Function.prototype). NOTE: If this file is to be loaded
+	 * during bootstrapping this function needs to be rewritten using some native
+	 * functions as prototype setup using normal JavaScript does not work as
+	 * expected during bootstrapping (see mirror.js in r114903).
+	 *
+	 * @param {function} ctor Constructor function which needs to inherit the
+	 *     prototype.
+	 * @param {function} superCtor Constructor function to inherit prototype from.
+	 */
+	exports.inherits = __webpack_require__(29);
+>>>>>>> master
 
 	    /**
 	     * When `true`, object cannot be flipped by scaling into negative values
@@ -33560,6 +35044,7 @@
 	     * @default
 	     */
 
+<<<<<<< HEAD
 	    excludeFromExport:          false,
 
 	    /**
@@ -33574,6 +35059,13 @@
 	      'angle opacity fill fillRule globalCompositeOperation shadow clipTo visible backgroundColor ' +
 	      'alignX alignY meetOrSlice skewX skewY'
 	    ).split(' '),
+=======
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(9)))
+
+/***/ },
+/* 46 */
+/***/ function(module, exports) {
+>>>>>>> master
 
 	    /**
 	     * Constructor
@@ -33585,6 +35077,7 @@
 	      }
 	    },
 
+<<<<<<< HEAD
 	    /**
 	     * @private
 	     * @param {Object} [options] Options object
@@ -33597,6 +35090,11 @@
 	        this.set('stroke', new fabric.Gradient(options.stroke));
 	      }
 	    },
+=======
+/***/ },
+/* 47 */
+/***/ function(module, exports, __webpack_require__) {
+>>>>>>> master
 
 	    /**
 	     * @private
@@ -33699,11 +35197,19 @@
 	            skewY:                    toFixed(this.skewY, NUM_FRACTION_DIGITS)
 	          };
 
+<<<<<<< HEAD
 	      if (!this.includeDefaultValues) {
 	        object = this._removeDefaultValues(object);
 	      }
 
 	      fabric.util.populateWithProperties(this, object, propertiesToInclude);
+=======
+/***/ },
+/* 48 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var http = __webpack_require__(25);
+>>>>>>> master
 
 	      return object;
 	    },
@@ -33733,15 +35239,22 @@
 	        var isArray = Object.prototype.toString.call(object[prop]) === '[object Array]' &&
 	                      Object.prototype.toString.call(prototype[prop]) === '[object Array]';
 
+<<<<<<< HEAD
 	        // basically a check for [] === []
 	        if (isArray && object[prop].length === 0 && prototype[prop].length === 0) {
 	          delete object[prop];
 	        }
 	      });
+=======
+/***/ },
+/* 49 */
+/***/ function(module, exports) {
+>>>>>>> master
 
 	      return object;
 	    },
 
+<<<<<<< HEAD
 	    /**
 	     * Returns a string representation of an instance
 	     * @return {String}
@@ -54170,6 +55683,253 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
+=======
+/***/ },
+/* 50 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	// main logic for our editor by constructtor
+
+	//extend function without jquery https://gist.github.com/cfv1984/6319681685f78333d98a
+	var extend = function extend() {
+
+	    function isFunction(fn) {
+	        return typeof fn === "function" && fn.constructor === Function;
+	    }
+
+	    function isArray(ar) {
+	        return ar instanceof Array;
+	    }
+
+	    function isPlainObject(obj) {
+	        return (typeof obj === "undefined" ? "undefined" : _typeof(obj)) == 'object' && obj.constructor == Object;
+	    }
+
+	    var options,
+	        name,
+	        src,
+	        copy,
+	        copyIsArray,
+	        clone,
+	        target = arguments[0] || {},
+	        i = 1,
+	        length = arguments.length,
+	        deep = false;
+	    if (typeof target === "boolean") {
+	        deep = target;
+	        target = arguments[i] || {};
+	        i++;
+	    }
+	    if ((typeof target === "undefined" ? "undefined" : _typeof(target)) !== "object" && !isFunction(target)) target = {};
+	    if (i === length) {
+	        target = this;
+	        i--;
+	    }
+	    for (; i < length; i++) {
+	        if ((options = arguments[i]) != null) {
+	            for (name in options) {
+	                src = target[name];
+	                copy = options[name];
+	                if (target === copy) continue;
+
+	                if (deep && copy && (isPlainObject(copy) || (copyIsArray = isArray(copy)))) {
+	                    if (!copyIsArray) {
+	                        copyIsArray = false;
+	                        clone = src && isArray(src) ? src : [];
+	                    } else clone = src && isPlainObject(src) ? src : {};
+
+	                    target[name] = extend(deep, clone, copy);
+	                } else if (copy !== undefined) target[name] = copy;
+	            }
+	        }
+	    }
+
+	    return target;
+	};
+
+	// initial fabric
+	var fabric = __webpack_require__(11).fabric;
+
+	//make editor
+
+	var Editor = function () {
+	    function Editor(canvas, width, height) {
+	        _classCallCheck(this, Editor);
+
+	        this.canvas_id = canvas;
+	        this.width = width;
+	        this.height = height;
+	        //initial object of fabric
+	        this.canv = new fabric.Canvas(this.canvas_id, {
+	            width: this.width,
+	            height: this.height
+	        });
+	    }
+
+	    //sets background
+
+
+	    _createClass(Editor, [{
+	        key: "setBackground",
+	        value: function setBackground(imgsrc) {
+	            var center = this.canv.getCenter();
+	            this.canv.setBackgroundImage(imgsrc, this.canv.renderAll.bind(this.canv), {
+	                scaleX: 1,
+	                scaleY: 1,
+	                top: center.top,
+	                left: center.left,
+	                originX: 'center',
+	                originY: 'center'
+	            });
+	        }
+	    }, {
+	        key: "setFont",
+	        value: function setFont(family, size, color, texts) {
+	            var obj = new fabric.IText(texts, {
+	                fontFamily: family,
+	                left: 500,
+	                top: 100,
+	                fontSize: size,
+	                fill: color
+	            });
+	            this.canv.add(obj);
+	            this.canv.renderAll();
+	        }
+	    }, {
+	        key: "setPrice",
+	        value: function setPrice(family, size, color, texts) {
+	            var obj = new fabric.IText(texts, {
+	                fontFamily: family,
+	                left: 500,
+	                top: 100,
+	                fontSize: size,
+	                fill: color,
+	                styles: {
+	                    0: {
+	                        0: { fontSize: size * 0.7 },
+	                        1: { fontSize: size * 0.7 },
+	                        3: { fontSize: size * 1.3 },
+
+	                        5: { fontSize: size * 1.3 },
+	                        6: { fontSize: size * 1.3 },
+	                        7: { fontSize: size * 1.3 },
+
+	                        9: { fontSize: size },
+	                        10: { fontSize: size },
+	                        11: { fontSize: size }
+	                    }
+	                }
+	            });
+	            this.canv.add(obj);
+	            this.canv.renderAll();
+	        }
+	    }, {
+	        key: "addImage",
+	        value: function addImage(img_for_add) {
+	            var _this = this;
+
+	            fabric.Image.fromURL(img_for_add, function (img) {
+	                _this.canv.add(img);
+	            });
+	        }
+	    }, {
+	        key: "addButton",
+	        value: function addButton(radius) {
+	            fabric.Tag = fabric.util.createClass(fabric.Group, {
+	                type: 'Tag',
+
+	                initialize: function initialize(options, objects, isAlreadyGrouped) {
+	                    if (!options) {
+	                        objects = [];
+	                        options = {};
+	                        options.top = 10;
+	                        options.left = 10;
+
+	                        var defaults = {
+	                            width: 220,
+	                            height: 40,
+	                            originX: 'center',
+	                            originY: 'center'
+	                        };
+
+	                        objects[0] = new fabric.Rect(extend({}, defaults, {
+	                            fill: 'transparent',
+	                            stroke: '#000',
+	                            strokewidth: 4,
+	                            rx: radius,
+	                            ry: radius
+	                        }));
+
+	                        objects[1] = new fabric.IText('Смотреть     >', extend({}, defaults, {
+	                            textAlign: 'center',
+	                            fontFamily: 'Lobster',
+	                            fontSize: 20
+	                        }));
+	                    } else {}
+
+	                    this.callSuper('initialize', objects, options, isAlreadyGrouped);
+	                }
+	            });
+	            fabric.Tag.fromObject = function (object, callback) {
+	                var _enlivenedObjects;
+	                fabric.util.enlivenObjects(object.objects, function (enlivenedObjects) {
+	                    delete object.objects;
+	                    _enlivenedObjects = enlivenedObjects;
+	                });
+	                var tag = new fabric.Tag(object, _enlivenedObjects);
+	                return tag;
+	            };
+	            fabric.Tag.async = false;
+
+	            this.canv.add(new fabric.Tag());
+	        }
+
+	        //not working now
+
+	    }, {
+	        key: "downloadImage",
+	        value: function downloadImage(link) {
+	            link.href = this.canv.toDataURL({
+	                format: 'png',
+	                quality: 0.8
+	            });
+	            link.download = 'result.png';
+	        }
+	    }, {
+	        key: "getImgData",
+	        value: function getImgData() {
+	            var rawCanvas = document.getElementById(this.canvas_id);
+	            // return this.canv.toDataURL({
+	            //         format: 'png',
+	            //         quality: 0.8
+	            //     }
+	            // );;
+	            return rawCanvas.toDataURL();
+	        }
+	    }]);
+
+	    return Editor;
+	}();
+	// let simplecanvas = new Editor('main', 960, 420);
+	// simplecanvas.setFont('Roboto', 35, '#000');
+	// simplecanvas.setBackground('http://www.intrawallpaper.com/static/images/White-Background-9B1.jpg');
+	// simplecanvas.addButton(6);
+
+
+	exports.default = Editor;
+>>>>>>> master
 
 /***/ }
 /******/ ]);

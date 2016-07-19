@@ -52,7 +52,6 @@
                         <i class="glyphicon glyphicon-pencil"></i>
                          <span>Rename</span></a>
                     <a href="{{ url_for('uploaded_file', filename=image.name) }}" class="btn btn-default" role="button">Preview</a>
-                    <a href="#canvas_cont" id="{{ url_for('uploaded_file', filename=image.name) }}" class="btn btn-default use" role="button">Use</a>
                 </p>
               </div>
             </div>
@@ -60,57 +59,7 @@
         {% endfor %}
         </div>
     </div>
-    <!-- this is added -->
 
-            <div class="row">
-            <div class="col-lg-12" id="canvas_cont">
-                <canvas id="c"></canvas>
-                <div class="btn-group block">
-                    <input type="button" id="justaddtext" class="btn btn-success btn-lg" value="Just add text">
-                    <input type="text" id="custom_text" class="input-lg" placeholder="Enter text here">
-                    <div class="colorpack">
-                        <label for="colors">Select font:</label>
-                        <select class="form-control" id="colors">
-                            <option>#2980D9</option>
-                            <option>#7F8C8D</option>
-                            <option>#16A085</option>
-                            <option>#D35400</option>
-                        </select>
-                    </div>
-                    <div class="widthcanvas">
-                        <label for="wcanv">Select font:</label>
-                        <select class="form-control" id="wcanv">
-                            <option>500</option>
-                            <option>900</option>
-                            <option>1200</option>
-                            <option>300</option>
-                        </select>
-                    </div>
-                    <div class="fontpack">
-                        <label for="fonts">Select font:</label>
-                        <select class="form-control" id="fonts">
-                            <option>Arial</option>
-                            <option>Roboto</option>
-                            <option>Lobster</option>
-                            <option>Roboto Slab</option>
-                        </select>
-                    </div>
-                    <div class="sizepack">
-                        <label for="sizes">Select size:</label>
-                        <select class="form-control" id="sizes">
-                            <option>40</option>
-                            <option>50</option>
-                            <option>70</option>
-                            <option>100</option>
-                        </select>
-                    </div>
-                    <input type="file" id='input' class=" btn btn-default btn-lg"/>
-                    <a class="btn btn-success btn-lg btn-block " id="download">download</a>
-                </div>
-            </div>
-        </div>
-
-    <!-- this is added -->
 {% endblock %}
 
 
