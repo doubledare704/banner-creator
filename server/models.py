@@ -11,6 +11,7 @@ class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     title = db.Column(db.String(120), unique=False)
+    preview = db.Column(db.String(64), unique=True)
     active = db.Column(db.BOOLEAN, default=True, nullable=False)
 
     def __repr__(self):

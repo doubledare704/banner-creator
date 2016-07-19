@@ -5,7 +5,7 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_login import LoginManager
 from server.utils.auth import load_user
 
-from server.views import setup_routes
+from server.routes import setup_routes
 from server.db import db
 
 
