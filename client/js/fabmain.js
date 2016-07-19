@@ -22,6 +22,7 @@ editor.addButton(6);
 const downloadLink = document.getElementById('download');
 const addtext = document.getElementById('justaddtext');
 const addbutton = document.getElementById('addButt');
+const backgroundsBtn = document.getElementById('backgroundsBtn');
 // const color = document.getElementById('colors');
 // const wcanvas = document.getElementById('wcanv'); //width for canvas editor
 
@@ -124,3 +125,41 @@ downloadLink.addEventListener('click', function () {
 //
 //     canvas.renderAll();
 // }
+
+
+//check visibility helper
+function isHidden(el) {
+    var style = window.getComputedStyle(el);
+    return (style.display === 'none')
+}
+
+backgroundsBtn.addEventListener('click', function () {
+    var bgList = document.getElementById('backgroundsList');
+    if (!isHidden(bgList)) {
+        // If it is visible then just hide it and change section's background color
+        bgList.style.display = 'none';
+        this.parentNode.style.backgroundColor = 'white';
+    }
+    else {
+        // change section's background color
+        this.parentNode.style.backgroundColor = 'grey';
+        // if it's not visible then load all the background images from server and append them in a list
+        fetch('/api/backgrounds/').then(function (response) {
+            response.json().then(function (data) {
+                var ulNode = document.getElementById('backgroundsList');
+                ulNode.innerHTML = '';
+                // iterate over the list of images, create corresponding li nodes for them
+                for (var i = 0; i < data.backgroundImages.length; i++) {
+                    var liNode = document.createElement('li');
+                    var imgName = data.backgroundImages[i].name;
+                    liNode.innerHTML = `<img src='/uploads/${imgName}'/>`;
+                    liNode.addEventListener('click', function () {
+                        var imgSrc = this.firstElementChild.getAttribute('src');
+                        editor.setBackground(imgSrc);
+                    });
+                    ulNode.appendChild(liNode);
+                }
+                bgList.style.display = 'block';
+            })
+    })}
+});

@@ -1,7 +1,9 @@
 import os
 import uuid
-from flask import render_template, redirect, current_app, flash, request
+
+from flask import render_template, redirect, current_app, flash, request, jsonify
 from werkzeug.utils import secure_filename
+
 from server.models import Image
 from server.db import db
 from server.utils.image import uploaded_file,image_delete,allowed_file,image_resize, image_rename
@@ -14,6 +16,7 @@ def setup_routes(app):
     app.add_url_rule('/delete/<int:id>', methods=['GET', 'POST'], view_func=image_delete)
     app.add_url_rule('/rename/<int:id>', methods=['GET', 'POST'], view_func=image_rename)
     app.add_url_rule('/editor/', view_func=editor)
+    app.add_url_rule('/api/backgrounds/', view_func=backgrounds)
 
 
 def index():
@@ -45,3 +48,8 @@ def editor():
     return render_template('editor_markuped.html')
 
 
+def backgrounds():
+    background_images = Image.query.all()
+    serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active}
+                         for image in background_images]
+    return jsonify({"backgroundImages": serialized_images})
