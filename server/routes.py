@@ -1,6 +1,6 @@
-from server.views.views import index, editor
+from server.views.views import index, editor,image_delete, image_rename, background_images
 from server.views.admin import admin, backgrounds, inactiveImg, image_delete_from_DB
-from server.utils.image import uploaded_file,image_delete, image_rename
+from server.utils.image import uploaded_file
 
 def setup_routes(app):
     """Here we map routes to handlers."""
@@ -13,3 +13,4 @@ def setup_routes(app):
     app.add_url_rule('/admin/backgrounds/', view_func=backgrounds)
     app.add_url_rule('/admin/inactiveImg/<int:id>', methods=['POST'], view_func=inactiveImg)
     app.add_url_rule('/admin/deleteImg/<int:id>', methods=['POST'], view_func=image_delete_from_DB)
+    app.add_url_rule('/api/backgrounds/', view_func=background_images)
