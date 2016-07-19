@@ -1,5 +1,6 @@
 import os
 import uuid
+import json
 
 from flask import render_template, redirect, current_app, flash, request, url_for, jsonify
 from werkzeug.utils import secure_filename
@@ -41,9 +42,11 @@ def index():
 
             return redirect(request.url)
 
-    list = [{'param': 'foo', 'val': 2},
-            {'param': 'bar', 'val': 10}]
-    results = jsonify(list)
+    list1 = []
+    for x in images:
+        y = {'id':x.id,'url':'/uploads/'+x.name,'title':x.title,'preview':'/uploads/'+x.preview}
+        list1.append(y)
+    results = json.dumps(list1)
 
     return render_template('list.html', images=images, all_img=results)
 

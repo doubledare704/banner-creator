@@ -58,21 +58,25 @@
 
 	var _header2 = _interopRequireDefault(_header);
 
+	var _renderImages = __webpack_require__(181);
+
+	var _renderImages2 = _interopRequireDefault(_renderImages);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	//import renderImages from './renderImages.jsx';
 	// var editor = require('./editor.js');
-	var styluses = __webpack_require__(175);
-	//import fabric from './fabmain';
 
+	//import fabric from './fabmain';
+	var styluses = __webpack_require__(175);
 	var Baz = __webpack_require__(179);
 
 	Baz.register({
 	    'inactiveImg': _inactiveImg2.default,
 	    'deleteImg': _deleteFromDB2.default,
-	    'header': _header2.default
+	    'header': _header2.default,
+	    'renderImages': _renderImages2.default
 	    //'fabric': fabric
-	    //'renderImages':renderImages
+
 	});
 
 	var unwatch = Baz.watch();
@@ -21567,6 +21571,47 @@
 	};
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+
+/***/ },
+/* 181 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	exports.default = function (node) {
+	    var _h$getAttrs = _bazooka.h.getAttrs(BAZOOKA_PREFIX, node);
+
+	    var id = _h$getAttrs.id;
+
+	    console.log(_bazooka.h.getAttrs(BAZOOKA_PREFIX, node));
+	    console.log(id[0].id, id[1].name);
+	    var RenderImages = _react2.default.createClass({
+	        displayName: 'RenderImages',
+
+	        render: function render() {
+	            return _react2.default.createElement('img', { src: id[0].preview });
+	        }
+	    });
+	    _reactDom2.default.render(_react2.default.createElement(RenderImages, null), node);
+	};
+
+	var _react = __webpack_require__(4);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(36);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _bazooka = __webpack_require__(179);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var BAZOOKA_PREFIX = 'header';
 
 /***/ }
 /******/ ]);
