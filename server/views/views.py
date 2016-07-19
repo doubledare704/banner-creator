@@ -1,7 +1,9 @@
 import os
 import uuid
-from flask import render_template, redirect, current_app, flash, request, url_for
+
+from flask import render_template, redirect, current_app, flash, request, url_for, jsonify
 from werkzeug.utils import secure_filename
+
 from server.models import Image
 from server.db import db
 from server.utils.image import allowed_file,image_resize, image_preview
@@ -56,3 +58,9 @@ def image_rename(id):
 def editor():
     return render_template('editor_markuped.html')
 
+
+def background_images():
+    background_images = Image.query.all()
+    serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active}
+                         for image in background_images]
+    return jsonify({"backgroundImages": serialized_images})
