@@ -1,12 +1,15 @@
+import datetime
+
 import os
 import uuid
+from flask_oauthlib.client import OAuthException
 
-from flask_login import login_required, current_user
-from server.utils.auth import redirect_after_login, oauth_type
+from flask_login import login_required, login_user, logout_user
+from server.utils.auth import redirect_after_login, oauth_apps
 
-from flask import render_template, redirect, current_app, flash, request
+from flask import render_template, redirect, current_app, flash, request, url_for, session
 from werkzeug.utils import secure_filename
-from server.models import Image
+from server.models import Image, User
 from server.db import db
 from server.utils.image import uploaded_file, image_delete, allowed_file, image_resize, image_rename
 
@@ -24,10 +27,6 @@ def setup_routes(app):
     app.add_url_rule('/login/<social_network_name>', view_func=authorize)
     app.add_url_rule('/login/authorized/<social_network_name>/', view_func=oauth_callback)
     app.add_url_rule('/logout', methods=['POST'], view_func=log_out)
-
-    @app.context_processor
-    def inject_user():
-        return dict(user=current_user)
 
 
 @login_required
@@ -62,23 +61,35 @@ def editor():
 
 
 def login_page():
+    session['redirect_url'] = request.args['next']
     return render_template('login.html')
 
 
 def oauth_callback(social_network_name):
-    oauth_obj = oauth_type(social_network_name)
-    oauth_obj.user_auth_response()
-    # z = request.args
+    oauth_app = oauth_apps[social_network_name]
+    resp = oauth_app['oauth'].authorized_response()
+    if resp is None or isinstance(resp, OAuthException):
+        return None
+    user_data = oauth_app['oauth'].get(oauth_app['fetch_query'], token=(resp['access_token'], '')).data
+    user = User.query.filter_by(social_id=user_data['id'], social_type=social_network_name).first()
+
+    # user registration if not exist in db
+    if user is None:
+        user_fields = oauth_app['custom_fields']
+        user = User(f_name=user_data[user_fields['first_name']], l_name=user_data[user_fields['last_name']],
+                    gender=user_data['gender'], social_id=user_data['id'], role='user', email=user_data['email'],
+                    created_at=datetime.datetime.now(), social_type=social_network_name)
+    login_user(user)
     return redirect_after_login()
 
 
 def authorize(social_network_name):
-    oauth_obj = oauth_type(social_network_name)
-    return oauth_obj.authorize()
+    oauth_app = oauth_apps[social_network_name]
+    return oauth_app['oauth'].authorize(
+        callback=url_for('oauth_callback', _external=True, social_network_name=social_network_name))
 
 
 @login_required
 def log_out():
-    current_user.token = None
-    db.session.add(current_user)
-    return 'OK', 200
+    logout_user()
+    return redirect(url_for('index'))

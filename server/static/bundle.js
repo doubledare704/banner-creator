@@ -47,7 +47,8 @@
 	'use strict';
 
 	var fabric = __webpack_require__(1);
-	var styluses = __webpack_require__(45);
+	var styluses = __webpack_require__(42);
+	__webpack_require__(46);
 
 /***/ },
 /* 1 */
@@ -25314,7 +25315,7 @@
 	  var DOMParser = __webpack_require__(10).DOMParser,
 	      URL = __webpack_require__(11),
 	      HTTP = __webpack_require__(17),
-	      HTTPS = __webpack_require__(43),
+	      HTTPS = __webpack_require__(40),
 
 	      Canvas = __webpack_require__(9),
 	      Image = __webpack_require__(9).Image;
@@ -25365,7 +25366,7 @@
 
 	  /** @private */
 	  function requestFs(path, callback) {
-	    var fs = __webpack_require__(44);
+	    var fs = __webpack_require__(41);
 	    fs.readFile(path, function (err, data) {
 	      if (err) {
 	        fabric.log(err);
@@ -29334,9 +29335,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Stream = __webpack_require__(20);
-	var Response = __webpack_require__(37);
-	var Base64 = __webpack_require__(41);
-	var inherits = __webpack_require__(42);
+	var Response = __webpack_require__(36);
+	var Base64 = __webpack_require__(39);
+	var inherits = __webpack_require__(21);
 
 	var Request = module.exports = function (xhr, params) {
 	    var self = this;
@@ -29576,10 +29577,10 @@
 
 	inherits(Stream, EE);
 	Stream.Readable = __webpack_require__(22);
-	Stream.Writable = __webpack_require__(33);
-	Stream.Duplex = __webpack_require__(34);
-	Stream.Transform = __webpack_require__(35);
-	Stream.PassThrough = __webpack_require__(36);
+	Stream.Writable = __webpack_require__(32);
+	Stream.Duplex = __webpack_require__(33);
+	Stream.Transform = __webpack_require__(34);
+	Stream.PassThrough = __webpack_require__(35);
 
 	// Backwards-compat with node 0.4.x
 	Stream.Stream = Stream;
@@ -29713,10 +29714,10 @@
 	/* WEBPACK VAR INJECTION */(function(process) {exports = module.exports = __webpack_require__(23);
 	exports.Stream = __webpack_require__(20);
 	exports.Readable = exports;
-	exports.Writable = __webpack_require__(29);
-	exports.Duplex = __webpack_require__(28);
-	exports.Transform = __webpack_require__(31);
-	exports.PassThrough = __webpack_require__(32);
+	exports.Writable = __webpack_require__(28);
+	exports.Duplex = __webpack_require__(27);
+	exports.Transform = __webpack_require__(30);
+	exports.PassThrough = __webpack_require__(31);
 	if (!process.browser && process.env.READABLE_STREAM === 'disable') {
 	  module.exports = __webpack_require__(20);
 	}
@@ -29773,14 +29774,14 @@
 
 	/*<replacement>*/
 	var util = __webpack_require__(25);
-	util.inherits = __webpack_require__(26);
+	util.inherits = __webpack_require__(21);
 	/*</replacement>*/
 
 	var StringDecoder;
 
 
 	/*<replacement>*/
-	var debug = __webpack_require__(27);
+	var debug = __webpack_require__(26);
 	if (debug && debug.debuglog) {
 	  debug = debug.debuglog('stream');
 	} else {
@@ -29792,7 +29793,7 @@
 	util.inherits(Readable, Stream);
 
 	function ReadableState(options, stream) {
-	  var Duplex = __webpack_require__(28);
+	  var Duplex = __webpack_require__(27);
 
 	  options = options || {};
 
@@ -29853,14 +29854,14 @@
 	  this.encoding = null;
 	  if (options.encoding) {
 	    if (!StringDecoder)
-	      StringDecoder = __webpack_require__(30).StringDecoder;
+	      StringDecoder = __webpack_require__(29).StringDecoder;
 	    this.decoder = new StringDecoder(options.encoding);
 	    this.encoding = options.encoding;
 	  }
 	}
 
 	function Readable(options) {
-	  var Duplex = __webpack_require__(28);
+	  var Duplex = __webpack_require__(27);
 
 	  if (!(this instanceof Readable))
 	    return new Readable(options);
@@ -29963,7 +29964,7 @@
 	// backwards compatibility.
 	Readable.prototype.setEncoding = function(enc) {
 	  if (!StringDecoder)
-	    StringDecoder = __webpack_require__(30).StringDecoder;
+	    StringDecoder = __webpack_require__(29).StringDecoder;
 	  this._readableState.decoder = new StringDecoder(enc);
 	  this._readableState.encoding = enc;
 	  return this;
@@ -30808,39 +30809,10 @@
 /* 26 */
 /***/ function(module, exports) {
 
-	if (typeof Object.create === 'function') {
-	  // implementation from standard node.js 'util' module
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor
-	    ctor.prototype = Object.create(superCtor.prototype, {
-	      constructor: {
-	        value: ctor,
-	        enumerable: false,
-	        writable: true,
-	        configurable: true
-	      }
-	    });
-	  };
-	} else {
-	  // old school shim for old browsers
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor
-	    var TempCtor = function () {}
-	    TempCtor.prototype = superCtor.prototype
-	    ctor.prototype = new TempCtor()
-	    ctor.prototype.constructor = ctor
-	  }
-	}
-
-
-/***/ },
-/* 27 */
-/***/ function(module, exports) {
-
 	/* (ignored) */
 
 /***/ },
-/* 28 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -30882,11 +30854,11 @@
 
 	/*<replacement>*/
 	var util = __webpack_require__(25);
-	util.inherits = __webpack_require__(26);
+	util.inherits = __webpack_require__(21);
 	/*</replacement>*/
 
 	var Readable = __webpack_require__(23);
-	var Writable = __webpack_require__(29);
+	var Writable = __webpack_require__(28);
 
 	util.inherits(Duplex, Readable);
 
@@ -30936,7 +30908,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
-/* 29 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -30975,7 +30947,7 @@
 
 	/*<replacement>*/
 	var util = __webpack_require__(25);
-	util.inherits = __webpack_require__(26);
+	util.inherits = __webpack_require__(21);
 	/*</replacement>*/
 
 	var Stream = __webpack_require__(20);
@@ -30989,7 +30961,7 @@
 	}
 
 	function WritableState(options, stream) {
-	  var Duplex = __webpack_require__(28);
+	  var Duplex = __webpack_require__(27);
 
 	  options = options || {};
 
@@ -31077,7 +31049,7 @@
 	}
 
 	function Writable(options) {
-	  var Duplex = __webpack_require__(28);
+	  var Duplex = __webpack_require__(27);
 
 	  // Writable ctor is applied to Duplexes, though they're not
 	  // instanceof Writable, they're instanceof Readable.
@@ -31420,7 +31392,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
-/* 30 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -31647,7 +31619,7 @@
 
 
 /***/ },
-/* 31 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -31716,11 +31688,11 @@
 
 	module.exports = Transform;
 
-	var Duplex = __webpack_require__(28);
+	var Duplex = __webpack_require__(27);
 
 	/*<replacement>*/
 	var util = __webpack_require__(25);
-	util.inherits = __webpack_require__(26);
+	util.inherits = __webpack_require__(21);
 	/*</replacement>*/
 
 	util.inherits(Transform, Duplex);
@@ -31862,7 +31834,7 @@
 
 
 /***/ },
-/* 32 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -31892,11 +31864,11 @@
 
 	module.exports = PassThrough;
 
-	var Transform = __webpack_require__(31);
+	var Transform = __webpack_require__(30);
 
 	/*<replacement>*/
 	var util = __webpack_require__(25);
-	util.inherits = __webpack_require__(26);
+	util.inherits = __webpack_require__(21);
 	/*</replacement>*/
 
 	util.inherits(PassThrough, Transform);
@@ -31914,17 +31886,24 @@
 
 
 /***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(28)
+
+
+/***/ },
 /* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(29)
+	module.exports = __webpack_require__(27)
 
 
 /***/ },
 /* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(28)
+	module.exports = __webpack_require__(30)
 
 
 /***/ },
@@ -31938,15 +31917,8 @@
 /* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(32)
-
-
-/***/ },
-/* 37 */
-/***/ function(module, exports, __webpack_require__) {
-
 	var Stream = __webpack_require__(20);
-	var util = __webpack_require__(38);
+	var util = __webpack_require__(37);
 
 	var Response = module.exports = function (res) {
 	    this.offset = 0;
@@ -32068,7 +32040,7 @@
 
 
 /***/ },
-/* 38 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -32596,7 +32568,7 @@
 	}
 	exports.isPrimitive = isPrimitive;
 
-	exports.isBuffer = __webpack_require__(39);
+	exports.isBuffer = __webpack_require__(38);
 
 	function objectToString(o) {
 	  return Object.prototype.toString.call(o);
@@ -32640,7 +32612,7 @@
 	 *     prototype.
 	 * @param {function} superCtor Constructor function to inherit prototype from.
 	 */
-	exports.inherits = __webpack_require__(40);
+	exports.inherits = __webpack_require__(21);
 
 	exports._extend = function(origin, add) {
 	  // Don't do anything if add isn't an object
@@ -32661,7 +32633,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(7)))
 
 /***/ },
-/* 39 */
+/* 38 */
 /***/ function(module, exports) {
 
 	module.exports = function isBuffer(arg) {
@@ -32672,36 +32644,7 @@
 	}
 
 /***/ },
-/* 40 */
-/***/ function(module, exports) {
-
-	if (typeof Object.create === 'function') {
-	  // implementation from standard node.js 'util' module
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor
-	    ctor.prototype = Object.create(superCtor.prototype, {
-	      constructor: {
-	        value: ctor,
-	        enumerable: false,
-	        writable: true,
-	        configurable: true
-	      }
-	    });
-	  };
-	} else {
-	  // old school shim for old browsers
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor
-	    var TempCtor = function () {}
-	    TempCtor.prototype = superCtor.prototype
-	    ctor.prototype = new TempCtor()
-	    ctor.prototype.constructor = ctor
-	  }
-	}
-
-
-/***/ },
-/* 41 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;(function () {
@@ -32767,36 +32710,7 @@
 
 
 /***/ },
-/* 42 */
-/***/ function(module, exports) {
-
-	if (typeof Object.create === 'function') {
-	  // implementation from standard node.js 'util' module
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor
-	    ctor.prototype = Object.create(superCtor.prototype, {
-	      constructor: {
-	        value: ctor,
-	        enumerable: false,
-	        writable: true,
-	        configurable: true
-	      }
-	    });
-	  };
-	} else {
-	  // old school shim for old browsers
-	  module.exports = function inherits(ctor, superCtor) {
-	    ctor.super_ = superCtor
-	    var TempCtor = function () {}
-	    TempCtor.prototype = superCtor.prototype
-	    ctor.prototype = new TempCtor()
-	    ctor.prototype.constructor = ctor
-	  }
-	}
-
-
-/***/ },
-/* 43 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var http = __webpack_require__(17);
@@ -32815,16 +32729,36 @@
 
 
 /***/ },
-/* 44 */
+/* 41 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 45 */
+/* 42 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var logout_href = document.getElementById('logout');
+
+	if (logout_href) {
+	    console.log(logout_href);
+	    logout_href.addEventListener('click', function () {
+	        var xhr = new XMLHttpRequest();
+	        xhr.open('POST', '/logout', false);
+	        xhr.send();
+	    });
+	}
 
 /***/ }
 /******/ ]);

@@ -40,7 +40,7 @@ class User(db.Model):
         return False
 
     def get_id(self):
-        return unicode(self.token)
+        return unicode(self.id)
 
     def __repr__(self):
         return '<User %r>' % self.f_name

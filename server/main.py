@@ -3,7 +3,7 @@ import flask
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate, MigrateCommand
 from flask_login import LoginManager
-from server.utils.auth import check_auth, load_user
+from server.utils.auth import load_user
 
 from server.views import setup_routes
 from server.db import db
@@ -26,11 +26,9 @@ def create_app():
     db.init_app(app)
 
     # auth init
-    login_manager = LoginManager()
+    login_manager = LoginManager(app)
     login_manager.login_view = "login_page"
-    login_manager.init_app(app)
     login_manager.user_loader(load_user)
-    login_manager.request_loader(check_auth)
 
     # Load all models to be available for db migration tool
     from server import models
