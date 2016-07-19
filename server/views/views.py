@@ -42,13 +42,13 @@ def index():
 
             return redirect(request.url)
 
-    list1 = []
-    for x in images:
-        y = {'id':x.id,'url':'/uploads/'+x.name,'title':x.title,'preview':'/uploads/'+x.preview}
-        list1.append(y)
-    results = json.dumps(list1)
+    image_json = []
+    for image in images:
+        y = {'id':image.id,'url':'/uploads/'+image.name,'title':image.title,'preview':'/uploads/'+image.preview,'delete':'/delete/'+ str(image.id)}
+        image_json.append(y)
+    image_json = json.dumps(image_json)
 
-    return render_template('list.html', images=images, all_img=results)
+    return render_template('list.html', images=images, image_json=image_json)
 
 
 def image_delete(id):

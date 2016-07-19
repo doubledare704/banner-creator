@@ -58,7 +58,7 @@
 
 	var _header2 = _interopRequireDefault(_header);
 
-	var _renderImages = __webpack_require__(181);
+	var _renderImages = __webpack_require__(175);
 
 	var _renderImages2 = _interopRequireDefault(_renderImages);
 
@@ -67,8 +67,8 @@
 	// var editor = require('./editor.js');
 
 	//import fabric from './fabmain';
-	var styluses = __webpack_require__(175);
-	var Baz = __webpack_require__(179);
+	var styluses = __webpack_require__(178);
+	var Baz = __webpack_require__(176);
 
 	Baz.register({
 	    'inactiveImg': _inactiveImg2.default,
@@ -21205,15 +21205,145 @@
 
 /***/ },
 /* 175 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	// removed by extract-text-webpack-plugin
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	exports.default = function (node) {
+	    var _h$getAttrs = _bazooka.h.getAttrs(BAZOOKA_PREFIX, node);
+
+	    var imageContacts = _h$getAttrs.imageContacts;
+
+	    var Contact = _react2.default.createClass({
+	        displayName: 'Contact',
+
+	        render: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'col-sm-6 col-md-4' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'thumbnail' },
+	                    _react2.default.createElement('img', { className: 'contact-image', src: this.props.preview }),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'caption' },
+	                        _react2.default.createElement(
+	                            'h3',
+	                            null,
+	                            ' ',
+	                            this.props.title,
+	                            ' '
+	                        ),
+	                        _react2.default.createElement(
+	                            'p',
+	                            null,
+	                            ' ',
+	                            this.props.url,
+	                            ' '
+	                        ),
+	                        _react2.default.createElement(
+	                            'a',
+	                            { href: this.props.delete, className: 'btn btn-default modal-toggle', role: 'button' },
+	                            _react2.default.createElement('i', { className: 'glyphicon glyphicon-trash' }),
+	                            _react2.default.createElement(
+	                                'span',
+	                                null,
+	                                'Delete'
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            'a',
+	                            { href: '#', className: 'btn btn-default ', role: 'button' },
+	                            _react2.default.createElement('i', { className: 'glyphicon glyphicon-pencil' }),
+	                            _react2.default.createElement(
+	                                'span',
+	                                null,
+	                                'Rename'
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            'a',
+	                            { href: this.props.url, className: 'btn btn-default', role: 'button' },
+	                            'Preview'
+	                        )
+	                    )
+	                )
+	            );
+	        }
+	    });
+
+	    var ContactsList = _react2.default.createClass({
+	        displayName: 'ContactsList',
+
+	        getInitialState: function getInitialState() {
+	            return {
+	                displayedContacts: imageContacts
+	            };
+	        },
+
+	        handleSearch: function handleSearch(event) {
+	            var searchQuery = event.target.value.toLowerCase();
+	            var displayedContacts = imageContacts.filter(function (el) {
+	                var searchValue = el.title.toLowerCase();
+	                return searchValue.indexOf(searchQuery) !== -1;
+	            });
+
+	            this.setState({
+	                displayedContacts: displayedContacts
+	            });
+	        },
+
+	        render: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'form-inline' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'form-group' },
+	                    'Search ',
+	                    _react2.default.createElement('input', { type: 'text', className: 'search-field', onChange: this.handleSearch })
+	                ),
+	                _react2.default.createElement('hr', null),
+	                _react2.default.createElement(
+	                    'ul',
+	                    { className: 'contacts-list' },
+	                    this.state.displayedContacts.map(function (el) {
+	                        return _react2.default.createElement(Contact, {
+	                            key: el.id,
+	                            title: el.title,
+	                            url: el.url,
+	                            preview: el.preview,
+	                            'delete': el.delete
+	                        });
+	                    })
+	                )
+	            );
+	        }
+	    });
+	    _reactDom2.default.render(_react2.default.createElement(ContactsList, null), node);
+	};
+
+	var _react = __webpack_require__(4);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(36);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _bazooka = __webpack_require__(176);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var BAZOOKA_PREFIX = 'header';
 
 /***/ },
-/* 176 */,
-/* 177 */,
-/* 178 */,
-/* 179 */
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21374,7 +21504,7 @@
 	 */
 	Bazooka.BazookaWrapper = BazookaWrapper;
 
-	Bazooka.h = __webpack_require__(180);
+	Bazooka.h = __webpack_require__(177);
 
 	/**
 	 * Register components names
@@ -21445,7 +21575,7 @@
 
 
 /***/ },
-/* 180 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -21573,45 +21703,10 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ },
-/* 181 */
-/***/ function(module, exports, __webpack_require__) {
+/* 178 */
+/***/ function(module, exports) {
 
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	exports.default = function (node) {
-	    var _h$getAttrs = _bazooka.h.getAttrs(BAZOOKA_PREFIX, node);
-
-	    var id = _h$getAttrs.id;
-
-	    console.log(_bazooka.h.getAttrs(BAZOOKA_PREFIX, node));
-	    console.log(id[0].id, id[1].name);
-	    var RenderImages = _react2.default.createClass({
-	        displayName: 'RenderImages',
-
-	        render: function render() {
-	            return _react2.default.createElement('img', { src: id[0].preview });
-	        }
-	    });
-	    _reactDom2.default.render(_react2.default.createElement(RenderImages, null), node);
-	};
-
-	var _react = __webpack_require__(4);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(36);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	var _bazooka = __webpack_require__(179);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var BAZOOKA_PREFIX = 'header';
+	// removed by extract-text-webpack-plugin
 
 /***/ }
 /******/ ]);
