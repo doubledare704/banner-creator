@@ -10,9 +10,9 @@ var Baz = require('bazooka');
 Baz.register({
     'inactiveImg': inactiveImg,
     'deleteImg': deleteImg,
+    'header': header,
     'fabric': fabric
 });
-
 
 var unwatch = Baz.watch();
 
