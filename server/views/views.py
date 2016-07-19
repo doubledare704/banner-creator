@@ -9,6 +9,8 @@ from server.db import db
 from server.utils.image import allowed_file,image_resize, image_preview
 
 
+
+
 def index():
     images = Image.query.filter_by(active=True)
     if request.method == 'POST':
@@ -38,7 +40,12 @@ def index():
             db.session.add(image)
 
             return redirect(request.url)
-    return render_template('list.html', images=images)
+
+    list = [{'param': 'foo', 'val': 2},
+            {'param': 'bar', 'val': 10}]
+    results = jsonify(list)
+
+    return render_template('list.html', images=images, all_img=results)
 
 
 def image_delete(id):
