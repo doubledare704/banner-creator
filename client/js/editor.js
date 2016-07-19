@@ -80,15 +80,44 @@ export default class Editor {
         });
     }
 
-    setFont(family, size, color) {
+    setFont(family, size, color, texts) {
         let obj = new fabric.IText(
-            "New Text",
+            texts,
             {
                 fontFamily: family,
-                left: 220,
+                left: 500,
                 top: 100,
                 fontSize: size,
                 fill: color
+            });
+        this.canv.add(obj);
+        this.canv.renderAll();
+    }
+
+    setPrice(family, size, color, texts) {
+        let obj = new fabric.IText(
+            texts,
+            {
+                fontFamily: family,
+                left: 500,
+                top: 100,
+                fontSize: size,
+                fill: color,
+                styles: {
+                    0: {
+                        0: {fontSize: size * 0.7},
+                        1: {fontSize: size * 0.7},
+                        3: {fontSize: size * 1.3},
+
+                        5: {fontSize: size * 1.3},
+                        6: {fontSize: size * 1.3},
+                        7: {fontSize: size * 1.3},
+
+                        9: {fontSize: size},
+                        10: {fontSize: size},
+                        11: {fontSize: size}
+                    }
+                }
             });
         this.canv.add(obj);
         this.canv.renderAll();
@@ -150,6 +179,7 @@ export default class Editor {
 
         this.canv.add(new fabric.Tag())
     }
+
     //not working now
     downloadImage(link) {
         link.href = this.canv.toDataURL({
@@ -158,6 +188,16 @@ export default class Editor {
             }
         );
         link.download = 'result.png';
+    }
+
+    getImgData() {
+        const rawCanvas = document.getElementById(this.canvas_id);
+        // return this.canv.toDataURL({
+        //         format: 'png',
+        //         quality: 0.8
+        //     }
+        // );;
+        return rawCanvas.toDataURL();
     }
 }
 // let simplecanvas = new Editor('main', 960, 420);

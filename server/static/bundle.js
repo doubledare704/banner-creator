@@ -46,9 +46,27 @@
 
 	'use strict';
 
+	var _inactiveImg = __webpack_require__(50);
+
+	var _inactiveImg2 = _interopRequireDefault(_inactiveImg);
+
+	var _deleteFromDB = __webpack_require__(51);
+
+	var _deleteFromDB2 = _interopRequireDefault(_deleteFromDB);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	var editor = __webpack_require__(1);
-	var fabric = __webpack_require__(42);
-	var styluses = __webpack_require__(43);
+	var fabric = __webpack_require__(45);
+	var styluses = __webpack_require__(46);
+	var Baz = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"bazooka\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+
+	Baz.register({
+	    'inactiveImg': _inactiveImg2.default,
+	    'deleteImg': _deleteFromDB2.default
+	});
+
+	var unwatch = Baz.watch();
 
 /***/ },
 /* 1 */
@@ -162,13 +180,41 @@
 	        }
 	    }, {
 	        key: "setFont",
-	        value: function setFont(family, size, color) {
-	            var obj = new fabric.IText("New Text", {
+	        value: function setFont(family, size, color, texts) {
+	            var obj = new fabric.IText(texts, {
 	                fontFamily: family,
-	                left: 220,
+	                left: 500,
 	                top: 100,
 	                fontSize: size,
 	                fill: color
+	            });
+	            this.canv.add(obj);
+	            this.canv.renderAll();
+	        }
+	    }, {
+	        key: "setPrice",
+	        value: function setPrice(family, size, color, texts) {
+	            var obj = new fabric.IText(texts, {
+	                fontFamily: family,
+	                left: 500,
+	                top: 100,
+	                fontSize: size,
+	                fill: color,
+	                styles: {
+	                    0: {
+	                        0: { fontSize: size * 0.7 },
+	                        1: { fontSize: size * 0.7 },
+	                        3: { fontSize: size * 1.3 },
+
+	                        5: { fontSize: size * 1.3 },
+	                        6: { fontSize: size * 1.3 },
+	                        7: { fontSize: size * 1.3 },
+
+	                        9: { fontSize: size },
+	                        10: { fontSize: size },
+	                        11: { fontSize: size }
+	                    }
+	                }
 	            });
 	            this.canv.add(obj);
 	            this.canv.renderAll();
@@ -233,6 +279,7 @@
 
 	            this.canv.add(new fabric.Tag());
 	        }
+
 	        //not working now
 
 	    }, {
@@ -243,6 +290,17 @@
 	                quality: 0.8
 	            });
 	            link.download = 'result.png';
+	        }
+	    }, {
+	        key: "getImgData",
+	        value: function getImgData() {
+	            var rawCanvas = document.getElementById(this.canvas_id);
+	            // return this.canv.toDataURL({
+	            //         format: 'png',
+	            //         quality: 0.8
+	            //     }
+	            // );;
+	            return rawCanvas.toDataURL();
 	        }
 	    }]);
 
@@ -25392,7 +25450,7 @@
 	  var DOMParser = __webpack_require__(10).DOMParser,
 	      URL = __webpack_require__(11),
 	      HTTP = __webpack_require__(17),
-	      HTTPS = __webpack_require__(40),
+	      HTTPS = __webpack_require__(43),
 
 	      Canvas = __webpack_require__(9),
 	      Image = __webpack_require__(9).Image;
@@ -25443,7 +25501,7 @@
 
 	  /** @private */
 	  function requestFs(path, callback) {
-	    var fs = __webpack_require__(41);
+	    var fs = __webpack_require__(44);
 	    fs.readFile(path, function (err, data) {
 	      if (err) {
 	        fabric.log(err);
@@ -29412,9 +29470,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Stream = __webpack_require__(20);
-	var Response = __webpack_require__(36);
-	var Base64 = __webpack_require__(39);
-	var inherits = __webpack_require__(21);
+	var Response = __webpack_require__(37);
+	var Base64 = __webpack_require__(41);
+	var inherits = __webpack_require__(42);
 
 	var Request = module.exports = function (xhr, params) {
 	    var self = this;
@@ -29654,10 +29712,10 @@
 
 	inherits(Stream, EE);
 	Stream.Readable = __webpack_require__(22);
-	Stream.Writable = __webpack_require__(32);
-	Stream.Duplex = __webpack_require__(33);
-	Stream.Transform = __webpack_require__(34);
-	Stream.PassThrough = __webpack_require__(35);
+	Stream.Writable = __webpack_require__(33);
+	Stream.Duplex = __webpack_require__(34);
+	Stream.Transform = __webpack_require__(35);
+	Stream.PassThrough = __webpack_require__(36);
 
 	// Backwards-compat with node 0.4.x
 	Stream.Stream = Stream;
@@ -29791,10 +29849,10 @@
 	/* WEBPACK VAR INJECTION */(function(process) {exports = module.exports = __webpack_require__(23);
 	exports.Stream = __webpack_require__(20);
 	exports.Readable = exports;
-	exports.Writable = __webpack_require__(28);
-	exports.Duplex = __webpack_require__(27);
-	exports.Transform = __webpack_require__(30);
-	exports.PassThrough = __webpack_require__(31);
+	exports.Writable = __webpack_require__(29);
+	exports.Duplex = __webpack_require__(28);
+	exports.Transform = __webpack_require__(31);
+	exports.PassThrough = __webpack_require__(32);
 	if (!process.browser && process.env.READABLE_STREAM === 'disable') {
 	  module.exports = __webpack_require__(20);
 	}
@@ -29851,14 +29909,14 @@
 
 	/*<replacement>*/
 	var util = __webpack_require__(25);
-	util.inherits = __webpack_require__(21);
+	util.inherits = __webpack_require__(26);
 	/*</replacement>*/
 
 	var StringDecoder;
 
 
 	/*<replacement>*/
-	var debug = __webpack_require__(26);
+	var debug = __webpack_require__(27);
 	if (debug && debug.debuglog) {
 	  debug = debug.debuglog('stream');
 	} else {
@@ -29870,7 +29928,7 @@
 	util.inherits(Readable, Stream);
 
 	function ReadableState(options, stream) {
-	  var Duplex = __webpack_require__(27);
+	  var Duplex = __webpack_require__(28);
 
 	  options = options || {};
 
@@ -29931,14 +29989,14 @@
 	  this.encoding = null;
 	  if (options.encoding) {
 	    if (!StringDecoder)
-	      StringDecoder = __webpack_require__(29).StringDecoder;
+	      StringDecoder = __webpack_require__(30).StringDecoder;
 	    this.decoder = new StringDecoder(options.encoding);
 	    this.encoding = options.encoding;
 	  }
 	}
 
 	function Readable(options) {
-	  var Duplex = __webpack_require__(27);
+	  var Duplex = __webpack_require__(28);
 
 	  if (!(this instanceof Readable))
 	    return new Readable(options);
@@ -30041,7 +30099,7 @@
 	// backwards compatibility.
 	Readable.prototype.setEncoding = function(enc) {
 	  if (!StringDecoder)
-	    StringDecoder = __webpack_require__(29).StringDecoder;
+	    StringDecoder = __webpack_require__(30).StringDecoder;
 	  this._readableState.decoder = new StringDecoder(enc);
 	  this._readableState.encoding = enc;
 	  return this;
@@ -30886,10 +30944,39 @@
 /* 26 */
 /***/ function(module, exports) {
 
-	/* (ignored) */
+	if (typeof Object.create === 'function') {
+	  // implementation from standard node.js 'util' module
+	  module.exports = function inherits(ctor, superCtor) {
+	    ctor.super_ = superCtor
+	    ctor.prototype = Object.create(superCtor.prototype, {
+	      constructor: {
+	        value: ctor,
+	        enumerable: false,
+	        writable: true,
+	        configurable: true
+	      }
+	    });
+	  };
+	} else {
+	  // old school shim for old browsers
+	  module.exports = function inherits(ctor, superCtor) {
+	    ctor.super_ = superCtor
+	    var TempCtor = function () {}
+	    TempCtor.prototype = superCtor.prototype
+	    ctor.prototype = new TempCtor()
+	    ctor.prototype.constructor = ctor
+	  }
+	}
+
 
 /***/ },
 /* 27 */
+/***/ function(module, exports) {
+
+	/* (ignored) */
+
+/***/ },
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -30931,11 +31018,11 @@
 
 	/*<replacement>*/
 	var util = __webpack_require__(25);
-	util.inherits = __webpack_require__(21);
+	util.inherits = __webpack_require__(26);
 	/*</replacement>*/
 
 	var Readable = __webpack_require__(23);
-	var Writable = __webpack_require__(28);
+	var Writable = __webpack_require__(29);
 
 	util.inherits(Duplex, Readable);
 
@@ -30985,7 +31072,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -31024,7 +31111,7 @@
 
 	/*<replacement>*/
 	var util = __webpack_require__(25);
-	util.inherits = __webpack_require__(21);
+	util.inherits = __webpack_require__(26);
 	/*</replacement>*/
 
 	var Stream = __webpack_require__(20);
@@ -31038,7 +31125,7 @@
 	}
 
 	function WritableState(options, stream) {
-	  var Duplex = __webpack_require__(27);
+	  var Duplex = __webpack_require__(28);
 
 	  options = options || {};
 
@@ -31126,7 +31213,7 @@
 	}
 
 	function Writable(options) {
-	  var Duplex = __webpack_require__(27);
+	  var Duplex = __webpack_require__(28);
 
 	  // Writable ctor is applied to Duplexes, though they're not
 	  // instanceof Writable, they're instanceof Readable.
@@ -31469,7 +31556,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -31696,7 +31783,7 @@
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -31765,11 +31852,11 @@
 
 	module.exports = Transform;
 
-	var Duplex = __webpack_require__(27);
+	var Duplex = __webpack_require__(28);
 
 	/*<replacement>*/
 	var util = __webpack_require__(25);
-	util.inherits = __webpack_require__(21);
+	util.inherits = __webpack_require__(26);
 	/*</replacement>*/
 
 	util.inherits(Transform, Duplex);
@@ -31911,7 +31998,7 @@
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -31941,11 +32028,11 @@
 
 	module.exports = PassThrough;
 
-	var Transform = __webpack_require__(30);
+	var Transform = __webpack_require__(31);
 
 	/*<replacement>*/
 	var util = __webpack_require__(25);
-	util.inherits = __webpack_require__(21);
+	util.inherits = __webpack_require__(26);
 	/*</replacement>*/
 
 	util.inherits(PassThrough, Transform);
@@ -31963,24 +32050,17 @@
 
 
 /***/ },
-/* 32 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(28)
-
-
-/***/ },
 /* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(27)
+	module.exports = __webpack_require__(29)
 
 
 /***/ },
 /* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(30)
+	module.exports = __webpack_require__(28)
 
 
 /***/ },
@@ -31994,8 +32074,15 @@
 /* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
+	module.exports = __webpack_require__(32)
+
+
+/***/ },
+/* 37 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var Stream = __webpack_require__(20);
-	var util = __webpack_require__(37);
+	var util = __webpack_require__(38);
 
 	var Response = module.exports = function (res) {
 	    this.offset = 0;
@@ -32117,7 +32204,7 @@
 
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -32645,7 +32732,7 @@
 	}
 	exports.isPrimitive = isPrimitive;
 
-	exports.isBuffer = __webpack_require__(38);
+	exports.isBuffer = __webpack_require__(39);
 
 	function objectToString(o) {
 	  return Object.prototype.toString.call(o);
@@ -32689,7 +32776,7 @@
 	 *     prototype.
 	 * @param {function} superCtor Constructor function to inherit prototype from.
 	 */
-	exports.inherits = __webpack_require__(21);
+	exports.inherits = __webpack_require__(40);
 
 	exports._extend = function(origin, add) {
 	  // Don't do anything if add isn't an object
@@ -32710,7 +32797,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(7)))
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports) {
 
 	module.exports = function isBuffer(arg) {
@@ -32721,7 +32808,36 @@
 	}
 
 /***/ },
-/* 39 */
+/* 40 */
+/***/ function(module, exports) {
+
+	if (typeof Object.create === 'function') {
+	  // implementation from standard node.js 'util' module
+	  module.exports = function inherits(ctor, superCtor) {
+	    ctor.super_ = superCtor
+	    ctor.prototype = Object.create(superCtor.prototype, {
+	      constructor: {
+	        value: ctor,
+	        enumerable: false,
+	        writable: true,
+	        configurable: true
+	      }
+	    });
+	  };
+	} else {
+	  // old school shim for old browsers
+	  module.exports = function inherits(ctor, superCtor) {
+	    ctor.super_ = superCtor
+	    var TempCtor = function () {}
+	    TempCtor.prototype = superCtor.prototype
+	    ctor.prototype = new TempCtor()
+	    ctor.prototype.constructor = ctor
+	  }
+	}
+
+
+/***/ },
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;(function () {
@@ -32787,7 +32903,36 @@
 
 
 /***/ },
-/* 40 */
+/* 42 */
+/***/ function(module, exports) {
+
+	if (typeof Object.create === 'function') {
+	  // implementation from standard node.js 'util' module
+	  module.exports = function inherits(ctor, superCtor) {
+	    ctor.super_ = superCtor
+	    ctor.prototype = Object.create(superCtor.prototype, {
+	      constructor: {
+	        value: ctor,
+	        enumerable: false,
+	        writable: true,
+	        configurable: true
+	      }
+	    });
+	  };
+	} else {
+	  // old school shim for old browsers
+	  module.exports = function inherits(ctor, superCtor) {
+	    ctor.super_ = superCtor
+	    var TempCtor = function () {}
+	    TempCtor.prototype = superCtor.prototype
+	    ctor.prototype = new TempCtor()
+	    ctor.prototype.constructor = ctor
+	  }
+	}
+
+
+/***/ },
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var http = __webpack_require__(17);
@@ -32806,13 +32951,13 @@
 
 
 /***/ },
-/* 41 */
+/* 44 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 42 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32828,9 +32973,8 @@
 
 	var editor = new _editor2.default('main', 960, 420);
 
-	editor.setFont('Roboto', 35, '#000');
+	var canvas = editor.canv;
 	editor.setBackground('http://www.planwallpaper.com/static/images/abstract-background-design.jpg');
-	editor.addButton(6);
 	//I will clean it in future
 	//random position for future objects
 	// function getRandomPos(min, max) {
@@ -32842,8 +32986,11 @@
 	// const sizeid = document.getElementById('sizes');
 	// const fileInput = document.getElementById('input');
 	var downloadLink = document.getElementById('download');
-	var addtext = document.getElementById('justaddtext');
+	var showside = document.getElementById('justaddtext');
 	var addbutton = document.getElementById('addButt');
+	var backgroundsBtn = document.getElementById('backgroundsBtn');
+	var addtexts = document.querySelectorAll('#rightcol ul li');
+	console.log(addtexts);
 	// const color = document.getElementById('colors');
 	// const wcanvas = document.getElementById('wcanv'); //width for canvas editor
 
@@ -32876,9 +33023,24 @@
 	    editor.addButton(5);
 	});
 
-	addtext.addEventListener('click', function () {
-	    editor.setFont('Roboto', 35, '#000');
+	showside.addEventListener('click', function () {
+	    var el = document.getElementById('rightcol');
+	    el.style.display = el.style.display == "block" ? "" : "block";
+	    // editor.setFont('Roboto', 35, '#000');
 	});
+
+	for (var i = 0; i < addtexts.length; i++) {
+	    addtexts[i].addEventListener('click', function () {
+	        var sizes = this.getAttribute("data-size");
+	        var texting = this.getAttribute("data-text");
+	        var typings = this.getAttribute("data-type");
+	        if (typings) {
+	            editor.setPrice('Roboto', sizes, '#000', texting);
+	        } else {
+	            editor.setFont('Roboto', sizes, '#000', texting);
+	        }
+	    });
+	}
 	// fileInput.addEventListener('change', (e) => {
 	//     const url = URL.createObjectURL(e.target.files[0]);
 	//     fabric.Image.fromURL(url, (img) => {
@@ -32910,8 +33072,16 @@
 	//     }
 	// });
 	//
+	var canv = document.getElementById('main');
 	downloadLink.addEventListener('click', function () {
-	    editor.downloadImage(this);
+	    var link = this;
+	    // link.href = editor.getImgData();
+	    link.href = canv.toDataURL();
+	    link.download = 'result.jpg';
+
+	    // editor.canv.deactivateAll().renderAll();
+	    // window.open(editor.canv.toDataURL());
+	    // editor.downloadImage(this);
 	}, false);
 	//
 	// function iWantThemAll() {
@@ -32946,11 +33116,105 @@
 	//     canvas.renderAll();
 	// }
 
+	//check visibility helper
+	function isHidden(el) {
+	    var style = window.getComputedStyle(el);
+	    return style.display === 'none';
+	}
+
+	backgroundsBtn.addEventListener('click', function () {
+	    var bgList = document.getElementById('backgroundsList');
+	    if (!isHidden(bgList)) {
+	        // If it is visible then just hide it and change section's background color
+	        bgList.style.display = 'none';
+	        this.parentNode.style.backgroundColor = 'white';
+	    } else {
+	        // change section's background color
+	        this.parentNode.style.backgroundColor = 'grey';
+	        // if it's not visible then load all the background images from server and append them in a list
+	        fetch('/api/backgrounds/').then(function (response) {
+	            response.json().then(function (data) {
+	                var ulNode = document.getElementById('backgroundsList');
+	                ulNode.innerHTML = '';
+	                // iterate over the list of images, create corresponding li nodes for them
+	                for (var i = 0; i < data.backgroundImages.length; i++) {
+	                    var liNode = document.createElement('li');
+	                    var imgName = data.backgroundImages[i].name;
+	                    liNode.innerHTML = '<img src=\'/uploads/' + imgName + '\'/>';
+	                    liNode.addEventListener('click', function () {
+	                        var imgSrc = this.firstElementChild.getAttribute('src');
+	                        editor.setBackground(imgSrc);
+	                    });
+	                    ulNode.appendChild(liNode);
+	                }
+	                bgList.style.display = 'block';
+	            });
+	        });
+	    }
+	});
+
 /***/ },
-/* 43 */
+/* 46 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	var infoClicked = function infoClicked(ev) {
+	    var xhttp = new XMLHttpRequest();
+	    xhttp.onreadystatechange = function () {
+	        if (xhttp.readyState == 4 && xhttp.status == 200) {
+	            var img = document.getElementsByClassName(ev.target.id);
+	            var table = document.getElementById("inactiveImg").tBodies[0];
+
+	            table.appendChild(img[0]);
+	        }
+	    };
+	    xhttp.open("POST", "/admin/inactiveImg/" + ev.target.id, true);
+	    xhttp.send(null);
+	};
+
+	function inactiveImg(node) {
+	    node.onclick = infoClicked;
+	}
+
+	module.exports = {
+	    bazFunc: inactiveImg
+	};
+
+/***/ },
+/* 51 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	var infoClicked = function infoClicked(ev) {
+	    var xhttp = new XMLHttpRequest();
+	    xhttp.onreadystatechange = function () {
+	        if (xhttp.readyState == 4 && xhttp.status == 204) {
+	            var img = document.getElementsByClassName(ev.target.id);
+	            img[0].style.display = "none";
+	        }
+	    };
+	    xhttp.open("POST", "/admin/deleteImg/" + ev.target.id, true);
+	    xhttp.send(null);
+	};
+
+	function deleteImg(node) {
+	    node.onclick = infoClicked;
+	}
+
+	module.exports = {
+	    bazFunc: deleteImg
+	};
 
 /***/ }
 /******/ ]);
