@@ -155,12 +155,12 @@ downloadLink.addEventListener('click', function () {
 
 //check visibility helper
 function isHidden(el) {
-    var style = window.getComputedStyle(el);
+    const style = window.getComputedStyle(el);
     return (style.display === 'none')
 }
 
 backgroundsBtn.addEventListener('click', function () {
-    var bgList = document.getElementById('backgroundsList');
+    const bgList = document.getElementById('backgroundsList');
     if (!isHidden(bgList)) {
         // If it is visible then just hide it and change section's background color
         bgList.style.display = 'none';
@@ -172,15 +172,14 @@ backgroundsBtn.addEventListener('click', function () {
         // if it's not visible then load all the background images from server and append them in a list
         fetch('/api/backgrounds/').then(function (response) {
             response.json().then(function (data) {
-                var ulNode = document.getElementById('backgroundsList');
+                const ulNode = document.getElementById('backgroundsList');
                 ulNode.innerHTML = '';
                 // iterate over the list of images, create corresponding li nodes for them
-                for (var i = 0; i < data.backgroundImages.length; i++) {
-                    var liNode = document.createElement('li');
-                    var imgName = data.backgroundImages[i].name;
-                    liNode.innerHTML = `<img src='/uploads/${imgName}'/>`;
+                for (const img of data.backgroundImages) {
+                    const liNode = document.createElement('li');
+                    liNode.innerHTML = `<img src='/uploads/${img.name}'/>`;
                     liNode.addEventListener('click', function () {
-                        var imgSrc = this.firstElementChild.getAttribute('src');
+                        const imgSrc = this.firstElementChild.getAttribute('src');
                         editor.setBackground(imgSrc);
                     });
                     ulNode.appendChild(liNode);

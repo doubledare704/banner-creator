@@ -38,7 +38,7 @@ def editor():
     return render_template('editor_markuped.html')
 
 
-def backgrounds():
+def background_images():
     background_images = Image.query.all()
     serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active}
                          for image in background_images]
