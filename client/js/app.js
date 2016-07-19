@@ -1,18 +1,11 @@
 var fabric = require('./fabmain.js');
 var styluses = require('./../css/main.styl');
-var React = require('react');
-var ReactDOM = require('react-dom');
+var Baz = require('bazooka');
 
- var Header = React.createClass({
-  render: function() {
-    return (
-      <h1>Upload new File</h1>
-    );
-  }
+import header from './header.jsx';
+
+Baz.register({
+    'header': header,
 });
-ReactDOM.render(
-  <Header />,
-  document.getElementById('content')
-);
 
-
+var unwatch = Baz.watch();
