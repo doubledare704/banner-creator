@@ -25,13 +25,29 @@
             </span>
                 </a>
             </section>
-            <section>
-                <a href="#" id="justaddtext">
+            <section class="with_menu">
+                <a href="#">
                     <i class="material-icons">sort_by_alpha</i>
             <span class="detail">
                 Добавить текст
             </span>
                 </a>
+                <div id="rightcol">
+                    <h2>Выберите вариант текста</h2>
+                    <ul>
+                        <li class="head1" data-size="24" data-text="Header text">H1 подзаголовок</li>
+                        <li class="head2" data-size="18" data-text="Header text">H2 подзаголовок</li>
+                        <li class="head3" data-size="12" data-text="Header text">H3 подзаголовок
+                            <hr>
+                        </li>
+                        <li class="head1" data-size="24" data-type="p" data-text="от 1 700 грн">Цена от для большого
+                            банера
+                        </li>
+                        <li class="head2" data-size="18" data-type="p" data-text="от 1 700 грн">Цена от для маленького
+                            банера
+                        </li>
+                    </ul>
+                </div>
             </section>
             <section>
                 <a href="#" id="addButt">
@@ -41,28 +57,36 @@
             </span>
                 </a>
             </section>
+
             <section class="last-sec">
-                <a href="#">
+                <a href="#" id="input">
                     <i class="material-icons">cloud_upload</i>
             <span class="download-file">
                 Загрузить изображение
             </span>
                 </a>
+                <input type="file" id='inputted'/>
             </section>
         </aside>
         <section class="container">
             <nav class="navigation">
                 <a href="#"><i class="material-icons">done_all</i> Отправить на ревью</a>
                 <a href="#"><i class="material-icons">insert_comment</i> Добавить коментарий для ревьюера</a>
-                <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i> Скачать баннер</a>
+                <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i> Скачать
+                    баннер</a>
             </nav>
             <main class="container-content">
-                <canvas id="main">
+                <div class="button-group">
+                    <a href="#" id="del_item">
+                        <i class="material-icons">delete</i>
+                    </a>
+                </div>
+                <canvas id="main" data-bazooka="fabric">
                 </canvas>
             </main>
         </section>
     </div>
 {% endblock %}
 {% block scripts %}
-<script src="../static/bundle.js"></script>
+    <script src="../static/bundle.js"></script>
 {% endblock %}

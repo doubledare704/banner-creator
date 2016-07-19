@@ -1,5 +1,15 @@
 // main logic for our editor by constructtor
 
+//in array http://stackoverflow.com/questions/784012/javascript-equivalent-of-phps-in-array
+function inArray(needle, haystack) {
+    var length = haystack.length;
+    for (var i = 0; i < length; i++) {
+        if (haystack[i] == needle) return true;
+    }
+    return false;
+}
+
+
 //extend function without jquery https://gist.github.com/cfv1984/6319681685f78333d98a
 var extend = function () {
 
@@ -53,6 +63,11 @@ var extend = function () {
 // initial fabric
 let fabric = require('fabric').fabric;
 
+//this is used to align buttons by bottom. When we add new button - dynamic left coord changes
+let left_coords = 0;
+//padding between buttons
+let padding_buttons = 65;
+
 //make editor
 export default class Editor {
     constructor(canvas, width, height) {
@@ -80,15 +95,44 @@ export default class Editor {
         });
     }
 
-    setFont(family, size, color) {
+    setFont(family, size, color, texts) {
         let obj = new fabric.IText(
-            "New Text",
+            texts,
             {
                 fontFamily: family,
-                left: 220,
+                left: 500,
                 top: 100,
                 fontSize: size,
                 fill: color
+            });
+        this.canv.add(obj);
+        this.canv.renderAll();
+    }
+
+    setPrice(family, size, color, texts) {
+        let obj = new fabric.IText(
+            texts,
+            {
+                fontFamily: family,
+                left: 500,
+                top: 100,
+                fontSize: size,
+                fill: color,
+                styles: {
+                    0: {
+                        0: {fontSize: size * 0.7},
+                        1: {fontSize: size * 0.7},
+                        3: {fontSize: size * 1.3},
+
+                        5: {fontSize: size * 1.3},
+                        6: {fontSize: size * 1.3},
+                        7: {fontSize: size * 1.3},
+
+                        9: {fontSize: size},
+                        10: {fontSize: size},
+                        11: {fontSize: size}
+                    }
+                }
             });
         this.canv.add(obj);
         this.canv.renderAll();
@@ -108,11 +152,11 @@ export default class Editor {
                 if (!options) {
                     objects = [];
                     options = {};
-                    options.top = 10;
-                    options.left = 10;
+                    options.top = 20;
+                    options.left = 10 + left_coords;
 
                     var defaults = {
-                        width: 220,
+                        width: 200,
                         height: 40,
                         originX: 'center',
                         originY: 'center'
@@ -128,12 +172,11 @@ export default class Editor {
 
                     objects[1] = new fabric.IText('Смотреть     >', extend({}, defaults, {
                         textAlign: 'center',
-                        fontFamily: 'Lobster',
+                        fontFamily: 'Roboto',
                         fontSize: 20
                     }));
-                } else {
                 }
-
+                left_coords += defaults.width + padding_buttons;
                 this.callSuper('initialize', objects, options, isAlreadyGrouped);
             }
         });
@@ -143,24 +186,44 @@ export default class Editor {
                 delete object.objects;
                 _enlivenedObjects = enlivenedObjects;
             });
-            var tag = new fabric.Tag(object, _enlivenedObjects);
-            return tag;
+            return new fabric.Tag(object, _enlivenedObjects);
         };
         fabric.Tag.async = false;
-
         this.canv.add(new fabric.Tag())
     }
-    //not working now
+
+    //working now
     downloadImage(link) {
         link.href = this.canv.toDataURL({
                 format: 'png',
-                quality: 0.8
+                quality: 1.0
             }
         );
         link.download = 'result.png';
     }
+
+    deleteObject(obj, group) {
+        let canvaser = this.canv;
+        if (obj) {
+            if (this.canv.getActiveObject().get('type') == 'Tag') {
+                left_coords = 0;
+            }
+            canvaser.remove(obj);
+        }
+        else if (group) {
+            let del_types = [];
+            const objectsInGroup = group.getObjects();
+            canvaser.discardActiveGroup();
+            for (var i = 0; i < objectsInGroup.length; i++) {
+                del_types.push(objectsInGroup[i].get('type'));
+            }
+            if (inArray('Tag', del_types)){
+                left_coords = 0;
+            }
+                objectsInGroup.forEach(function (object) {
+                    canvaser.remove(object);
+                });
+        }
+
+    }
 }
-// let simplecanvas = new Editor('main', 960, 420);
-// simplecanvas.setFont('Roboto', 35, '#000');
-// simplecanvas.setBackground('http://www.intrawallpaper.com/static/images/White-Background-9B1.jpg');
-// simplecanvas.addButton(6);
