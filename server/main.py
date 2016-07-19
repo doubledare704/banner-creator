@@ -3,7 +3,7 @@ import flask
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
 
-from server.views import setup_routes
+from server.routes import setup_routes
 from server.db import db
 
 bootstrap = Bootstrap()
