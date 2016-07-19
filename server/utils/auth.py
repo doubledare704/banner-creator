@@ -4,12 +4,12 @@ from flask_oauthlib.contrib.apps import google as google_app
 from flask_oauthlib.client import OAuth
 from server.models import User
 
-oauth = OAuth()
+app = OAuth()
 
 
 facebook_data = {
     'fetch_query': '/me?fields=email,id,first_name,last_name,gender',
-    'oauth': facebook_app.register_to(oauth, app_key='FACEBOOK_OAUTH_PARAMS'),
+    'oauth': facebook_app.register_to(app, app_key='FACEBOOK_OAUTH_PARAMS'),
     'custom_fields': {
         'first_name': 'first_name',
         'last_name': 'last_name'
@@ -18,7 +18,7 @@ facebook_data = {
 
 google_data = {
     'fetch_query': 'userinfo',
-    'oauth': google_app.register_to(oauth, app_key='GOOGLE_OAUTH_PARAMS'),
+    'oauth': google_app.register_to(app, app_key='GOOGLE_OAUTH_PARAMS'),
     'custom_fields': {
         'first_name': 'given_name',
         'last_name': 'family_name'

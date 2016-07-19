@@ -29,9 +29,9 @@
                 <li><a href="{{ url_for ('editor')}}">Editor</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/">{{current_user.f_name}} {{current_user.l_name}}</a></li>
+                <li><a href="/">{{current_user.first_name}} {{current_user.last_name}}</a></li>
                 <li>
-                    <form method="post" action="{{url_for ('log_out')}}" class="form-inline">
+                    <form method="post" action="{{ url_for ('log_out') }}" class="form-inline">
                         <button class="btn btn-link logout" type="submit">Logout</button>
                     </form>
                 </li>

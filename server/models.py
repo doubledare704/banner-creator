@@ -1,7 +1,9 @@
-from flask.ext.login import unicode
+import datetime
+
+from flask_login import unicode
 from server.db import db
-from sqlalchemy import Enum
 from sqlalchemy.schema import Index
+from sqlalchemy.types import Enum
 
 
 class Image(db.Model):
@@ -16,19 +18,31 @@ class Image(db.Model):
 
 
 class User(db.Model):
+    class Gender(Enum):
+        male = 0
+        female = 1
+
+    class UserRole(Enum):
+        user = 0
+        designer = 1
+        admin = 2
+
+    class SocialNetwork(Enum):
+        google = 0
+        facebook = 1
+
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     social_id = db.Column(db.String(255), index=True)
-    social_type = db.Column(Enum('google', 'facebook', name='social_network_list'), nullable=False)
-    f_name = db.Column(db.String(255))
-    l_name = db.Column(db.String(255))
-    gender = db.Column(Enum('male', 'female', name='gender_list'), nullable=False)
+    social_type = db.Column(SocialNetwork, nullable=False)
+    first_name = db.Column(db.String(255))
+    last_name = db.Column(db.String(255))
+    gender = db.Column(Gender, nullable=False)
     email = db.Column(db.String(255), index=True, unique=True)
-    token = db.Column(db.String(32), index=True)
-    role = db.Column(Enum('user', 'designer', 'admin', name='user_roles'), nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False)
+    role = db.Column(UserRole, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())
 
-    __table_args__ = (Index('ix_user_token_social_type', "social_type", "token"),)
+    __table_args__ = (Index('ix_user_id_social_type', "social_type", "id"),)
 
     def is_authenticated(self):
         return True
@@ -43,4 +57,4 @@ class User(db.Model):
         return unicode(self.id)
 
     def __repr__(self):
-        return '<User %r>' % self.f_name
+        return '<User %r>' % self.first_name

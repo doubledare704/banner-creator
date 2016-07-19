@@ -52,8 +52,3 @@ class TestAuth(unittest.TestCase):
         with app.app_context():
             response = self.client.get(url_for('login'))
         self.assertEqual(response.status_code, 200)
-
-    def test_check_auth_static_url(self):
-        with app.app_context():
-            response = self.client.get('/static/styles.css')
-        self.assertEqual(response.status_code, 200)

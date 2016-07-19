@@ -18,7 +18,6 @@ def create_app():
     setup_routes(app)
 
     # Apply default config and dev config from instance/config.py if exists
-    # APP_SETTINGS = 'config.ProductionConfig' if
     app.config.from_object('server.config')
     app.config.from_pyfile('config.py', silent=True)
 

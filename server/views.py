@@ -66,26 +66,33 @@ def login_page():
 
 
 def oauth_callback(social_network_name):
-    oauth_app = oauth_apps[social_network_name]
-    resp = oauth_app['oauth'].authorized_response()
+    oauth_dict = oauth_apps[social_network_name]
+    oauth_app = oauth_dict['oauth']
+    resp = oauth_app.authorized_response()
     if resp is None or isinstance(resp, OAuthException):
         return None
-    user_data = oauth_app['oauth'].get(oauth_app['fetch_query'], token=(resp['access_token'], '')).data
+    user_data = oauth_app.get(oauth_dict['fetch_query'], token=(resp['access_token'], '')).data
     user = User.query.filter_by(social_id=user_data['id'], social_type=social_network_name).first()
 
-    # user registration if not exist in db
     if user is None:
-        user_fields = oauth_app['custom_fields']
-        user = User(f_name=user_data[user_fields['first_name']], l_name=user_data[user_fields['last_name']],
-                    gender=user_data['gender'], social_id=user_data['id'], role='user', email=user_data['email'],
-                    created_at=datetime.datetime.now(), social_type=social_network_name)
+        user_fields = oauth_dict['custom_fields']
+        user = User(
+            first_name=user_data[user_fields['first_name']],
+            last_name=user_data[user_fields['last_name']],
+            gender=user_data['gender'],
+            social_id=user_data['id'],
+            email=user_data['email'],
+            role='user',
+            social_type=social_network_name
+        )
+        db.session.add(user)
+        db.session.commit()
     login_user(user)
     return redirect_after_login()
 
 
 def authorize(social_network_name):
-    oauth_app = oauth_apps[social_network_name]
-    return oauth_app['oauth'].authorize(
+    return oauth_apps[social_network_name]['oauth'].authorize(
         callback=url_for('oauth_callback', _external=True, social_network_name=social_network_name))
 
 
