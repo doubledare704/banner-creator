@@ -5,4 +5,11 @@ __pycache__/
 instance/
 media/
 *.pyc
-server/static
+server/static/css
+adminbundle.js
+editorbundle.js
+server/static/styles.css
+editorbundle.js
+adminbundle.js
+
+
