@@ -13,11 +13,11 @@ module.exports = {
                 exclude: /node_modules/
             },
             {
-                test: /\.js$/,
+                test: /\.jsx?/,
                 exclude: /(node_modules|bower_components)/,
                 loader: 'babel-loader',
                 query: {
-                    presets: ['es2015']
+                    presets: ['es2015', 'react']
                 }
             }
         ]

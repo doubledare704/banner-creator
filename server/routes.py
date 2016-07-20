@@ -1,5 +1,5 @@
 from server.views.views import index, editor
-from server.views.admin import admin, backgrounds, inactiveImg
+from server.views.admin import admin, backgrounds, inactiveImg, image_delete_from_DB
 from server.utils.image import uploaded_file,image_delete, image_rename
 
 def setup_routes(app):

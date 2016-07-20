@@ -5,3 +5,4 @@ __pycache__/
 instance/
 media/
 *.pyc
+server/static
