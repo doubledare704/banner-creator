@@ -21,11 +21,6 @@ def create_app():
     bootstrap.init_app(app)
     db.init_app(app)
 
-    # logging
-    import logging
-
-    logging.basicConfig(filename='error.log', level=logging.INFO)
-
     # Load all models to be available for db migration tool
     from server import models
 
