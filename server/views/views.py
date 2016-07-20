@@ -1,10 +1,15 @@
 import os
 import uuid
-from flask import render_template, redirect, current_app, flash, request, url_for
+import json
+
+from flask import render_template, redirect, current_app, flash, request, url_for, jsonify
 from werkzeug.utils import secure_filename
+
 from server.models import Image
 from server.db import db
-from server.utils.image import allowed_file,image_resize, image_preview
+from server.utils.image import allowed_file, image_resize, image_preview
+
+
 
 
 def index():
@@ -21,7 +26,7 @@ def index():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = str(uuid.uuid1()).replace("-","")+'.'+secure_filename(file.filename).rsplit('.', 1)[1]
+            filename = str(uuid.uuid1()).replace("-", "") + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
             preview_name = 'preview_' + filename
             file = image_resize(file)
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
@@ -30,13 +35,20 @@ def index():
             title = request.form['title']
             image = Image(
                 name=filename,
-                title = title,
-                preview = preview_name
+                title=title,
+                preview=preview_name
             )
             db.session.add(image)
 
             return redirect(request.url)
-    return render_template('list.html', images=images)
+
+    image_json = []
+    for image in images:
+        y = {'id':image.id,'url':'/uploads/'+image.name,'title':image.title,'preview':'/uploads/'+image.preview,'delete':'/delete/'+ str(image.id)}
+        image_json.append(y)
+    image_json = json.dumps(image_json)
+
+    return render_template('list.html', images=images, image_json=image_json)
 
 
 def image_delete(id):
@@ -56,3 +68,9 @@ def image_rename(id):
 def editor():
     return render_template('editor_markuped.html')
 
+
+def background_images():
+    background_images = Image.query.all()
+    serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active}
+                         for image in background_images]
+    return jsonify({"backgroundImages": serialized_images})
