@@ -1,5 +1,6 @@
 import os
 import uuid
+import json
 
 from flask import render_template, redirect, current_app, flash, request, url_for, jsonify
 from werkzeug.utils import secure_filename
@@ -7,6 +8,8 @@ from werkzeug.utils import secure_filename
 from server.models import Image
 from server.db import db
 from server.utils.image import allowed_file, image_resize, image_preview
+
+
 
 
 def index():
@@ -38,7 +41,14 @@ def index():
             db.session.add(image)
 
             return redirect(request.url)
-    return render_template('list.html', images=images)
+
+    image_json = []
+    for image in images:
+        y = {'id':image.id,'url':'/uploads/'+image.name,'title':image.title,'preview':'/uploads/'+image.preview,'delete':'/delete/'+ str(image.id)}
+        image_json.append(y)
+    image_json = json.dumps(image_json)
+
+    return render_template('list.html', images=images, image_json=image_json)
 
 
 def image_delete(id):

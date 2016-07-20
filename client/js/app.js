@@ -1,7 +1,8 @@
-import inactiveImg from './admin/inactiveImg.js'
-import deleteImg from './admin/deleteFromDB.js'
-import fabric from './fabmain'
-
+import inactiveImg from './admin/inactiveImg.js';
+import deleteImg from './admin/deleteFromDB.js';
+//import fabric from './fabmain';
+import header from './header.jsx';
+import renderImages from './renderImages.jsx';
 // var editor = require('./editor.js');
 var styluses = require('./../css/main.styl');
 var Baz = require('bazooka');
@@ -10,7 +11,10 @@ var Baz = require('bazooka');
 Baz.register({
     'inactiveImg': inactiveImg,
     'deleteImg': deleteImg,
-    'fabric': fabric
+    'header': header,
+    'renderImages':renderImages
+    //'fabric': fabric
+    
 });
 
 

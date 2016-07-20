@@ -2,15 +2,7 @@
 
 {% block title %}Home{% endblock %}
 
-{% block head %}
-    {{ super() }}
-    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab|Roboto:400,500|Lobster&subset=latin,cyrillic'
-          rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="../static/styles.css">
-{% endblock %}
-
 {% block page_content %}
-    <div data-bazooka="rename"></div>
     <div>
         <div class="row">
             <div>
@@ -18,7 +10,7 @@
                 <strong class="error text-danger" data-dz-errormessage></strong>
             </div>
             <hr>
-             <div data-bazooka="header" ></div>
+             <div data-bazooka="header"></div>
                     <form class="form-inline" action="" method=post enctype=multipart/form-data>
                         <div class="form-group">
                            Width: <input type="number" name="width">
@@ -33,37 +25,15 @@
                         </div>
                     </form>
                 <hr>
+
         </div>
     <div class="row">
-        {% for image in images %}
-          <div class="col-sm-6 col-md-4">
-            <div class="thumbnail">
-              <img src="{{ url_for('uploaded_file', filename=image.preview) }}" alt="cat">
-              <div class="caption">
-                <h3>{{ image.title }}</h3>
-                <hr>
-                <p>File name:</p>
-                <p>{{ image.name }}</p>
-                <p>
-                    <a href="{{ url_for('image_delete',id=image.id) }}"  class="btn btn-default modal-toggle" role="button" >
-                        <i class="glyphicon glyphicon-trash"></i>
-                         <span>Delete</span></a>
-                    <a href="#"  class="btn btn-default " role="button">
-                        <i class="glyphicon glyphicon-pencil"></i>
-                         <span>Rename</span></a>
-                    <a href="{{ url_for('uploaded_file', filename=image.name) }}" class="btn btn-default" role="button">Preview</a>
-                </p>
-              </div>
-            </div>
-          </div>
-        {% endfor %}
+        <div data-bazooka="renderImages" data-header-image-array='{{ image_json }}'></div>
         </div>
     </div>
 
 {% endblock %}
-
-
 {% block scripts %}
-    {{ super() }}
-    <script src="../static/bundle.js"></script>
+{{ super() }}
+<script src="../static/bundle.js"></script>
 {% endblock %}
