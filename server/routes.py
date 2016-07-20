@@ -1,6 +1,7 @@
-from server.views.views import index, editor,image_delete, image_rename, background_images
+from server.views.views import index, editor, image_delete, image_rename, background_images
 from server.views.admin import admin, backgrounds, inactiveImg, image_delete_from_DB
 from server.utils.image import uploaded_file
+
 
 def setup_routes(app):
     """Here we map routes to handlers."""

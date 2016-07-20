@@ -64,7 +64,7 @@ var extend = function () {
 let fabric = require('fabric').fabric;
 
 //this is used to align buttons by bottom. When we add new button - dynamic left coord changes
-let left_coords = 0;
+let leftCoords = 0;
 //padding between buttons
 let padding_buttons = 65;
 
@@ -138,8 +138,8 @@ export default class Editor {
         this.canv.renderAll();
     }
 
-    addImage(img_for_add) {
-        fabric.Image.fromURL(img_for_add, (img) => {
+    addImage(imgForAdd) {
+        fabric.Image.fromURL(imgForAdd, (img) => {
             this.canv.add(img);
         });
     }
@@ -153,7 +153,7 @@ export default class Editor {
                     objects = [];
                     options = {};
                     options.top = 20;
-                    options.left = 10 + left_coords;
+                    options.left = 10 + leftCoords;
 
                     var defaults = {
                         width: 200,
@@ -176,7 +176,7 @@ export default class Editor {
                         fontSize: 20
                     }));
                 }
-                left_coords += defaults.width + padding_buttons;
+                leftCoords += defaults.width + padding_buttons;
                 this.callSuper('initialize', objects, options, isAlreadyGrouped);
             }
         });
@@ -206,7 +206,7 @@ export default class Editor {
         let canvaser = this.canv;
         if (obj) {
             if (this.canv.getActiveObject().get('type') == 'Tag') {
-                left_coords = 0;
+                leftCoords = 0;
             }
             canvaser.remove(obj);
         }
@@ -218,7 +218,7 @@ export default class Editor {
                 del_types.push(objectsInGroup[i].get('type'));
             }
             if (inArray('Tag', del_types)){
-                left_coords = 0;
+                leftCoords = 0;
             }
                 objectsInGroup.forEach(function (object) {
                     canvaser.remove(object);

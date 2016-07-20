@@ -10,8 +10,6 @@ from server.db import db
 from server.utils.image import allowed_file, image_resize, image_preview
 
 
-
-
 def index():
     images = Image.query.filter_by(active=True)
     if request.method == 'POST':
@@ -44,7 +42,8 @@ def index():
 
     image_json = []
     for image in images:
-        y = {'id':image.id,'url':'/uploads/'+image.name,'title':image.title,'preview':'/uploads/'+image.preview,'delete':'/delete/'+ str(image.id)}
+        y = {'id': image.id, 'url': '/uploads/' + image.name, 'title': image.title,
+             'preview': '/uploads/' + image.preview, 'delete': '/delete/' + str(image.id)}
         image_json.append(y)
     image_json = json.dumps(image_json)
 
