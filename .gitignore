@@ -6,6 +6,8 @@ instance/
 media/
 *.pyc
 server/static/css
+adminbundle.js
+editorbundle.js
 server/static/styles.css
 editorbundle.js
 adminbundle.js
