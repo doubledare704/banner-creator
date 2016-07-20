@@ -60,6 +60,8 @@ section.last-sec
   margin-top auto
   margin-bottom 0
 
+section.with_menu:hover > #rightcol
+  display block
 
 
 .container
@@ -106,6 +108,23 @@ section.last-sec
 canvas#main
   border 2px solid #000000
 
+#backgroundsContainer
+  position: absolute
+  left: 225px
+  top: 0
+  border: 1px solid black
+  background-color: white
+  #backgroundsList
+    list-style: none
+    display: none
+    padding: 0
+    height: 400px
+    overflow: hidden
+    overflow-y: scroll
+    img
+      border: 2px solid black
+      height: 100px
+      width: 100px
 
 #rightcol
   display none
@@ -135,3 +154,6 @@ canvas#main
 
   .head3
     font-size 12px
+
+#inputted
+  display none
