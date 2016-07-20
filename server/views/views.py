@@ -69,8 +69,9 @@ def editor():
     return render_template('editor_markuped.html')
 
 
-def background_images():
-    background_images = Image.query.all()
-    serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active}
-                         for image in background_images]
+def background_images(page=1):
+    paginated_images = Image.query.paginate(page, 4)
+    serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active,
+                          "preview": image.preview}
+                         for image in paginated_images.items]
     return jsonify({"backgroundImages": serialized_images})
