@@ -1,9 +1,8 @@
 {% extends "base.html" %}
 
-{% block title %}Создание баннера 960х420{% endblock %}
-
 {% block head %}
-    <link rel="stylesheet" href="../static/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='fav/favicon.ico')  }}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab|Roboto:400,500|Lobster&subset=latin,cyrillic'
@@ -98,5 +97,5 @@
     </div>
 {% endblock %}
 {% block scripts %}
-    <script src="../static/bundle.js"></script>
+    <script src="{{ url_for('static', filename='editorbundle.js')  }}"></script>
 {% endblock %}

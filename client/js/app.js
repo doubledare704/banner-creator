@@ -1,9 +1,7 @@
-import inactiveImg from './admin/inactiveImg.js'
-import deleteImg from './admin/deleteFromDB.js'
-import fabric from './fabmain'
-import {openBackgroundsList, setBackground, loadBackgroundImages} from './background'
-
-// var editor = require('./editor.js');
+import inactiveImg from './admin/inactiveImg.js';
+import deleteImg from './admin/deleteFromDB.js';
+import header from './header.jsx';
+import renderImages from './renderImages.jsx';
 var styluses = require('./../css/main.styl');
 var Baz = require('bazooka');
 
@@ -11,11 +9,9 @@ var Baz = require('bazooka');
 Baz.register({
     'inactiveImg': inactiveImg,
     'deleteImg': deleteImg,
-    'fabric': fabric,
-    'openBackgroundsList': openBackgroundsList,
-    'setBackground': setBackground,
-    'loadBackgroundImages': loadBackgroundImages
+    'header': header,
+    'renderImages':renderImages
 });
 
-var unwatch = Baz.watch();
 
+var unwatch = Baz.watch();

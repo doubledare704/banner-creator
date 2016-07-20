@@ -6,7 +6,6 @@ import Editor from './editor.js';
 
 let editor = new Editor('main', 960, 420);
 
-
 const fileInput = document.getElementById('input');
 const downloadLink = document.getElementById('download');
 const addbutton = document.getElementById('addButt');
