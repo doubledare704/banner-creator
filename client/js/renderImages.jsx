@@ -6,14 +6,14 @@ const BAZOOKA_PREFIX = 'header';
 
 
 export default function (node) {
-    let {imageContacts} = h.getAttrs(BAZOOKA_PREFIX, node);
-    var Contact = React.createClass({
+    let {imageArray} = h.getAttrs(BAZOOKA_PREFIX, node);
+    var Image = React.createClass({
             render: function() {
                 return (
                     <div className="col-sm-6 col-md-4">
                         <div className="thumbnail">
 
-                        <img className="contact-image" src={this.props.preview}  />
+                        <img src={this.props.preview}  />
                         <div className="caption">
                             <h3> {this.props.title} </h3>
                             <p> {this.props.url} </p>
@@ -34,22 +34,22 @@ export default function (node) {
             }
         });
 
-        var ContactsList = React.createClass({
+        var ImagesList = React.createClass({
             getInitialState: function() {
                 return {
-                    displayedContacts: imageContacts
+                    displayedImages: imageArray
                 };
             },
 
             handleSearch: function(event) {
                 var searchQuery = event.target.value.toLowerCase();
-                var displayedContacts = imageContacts.filter(function(el) {
+                var displayedImages = imageArray.filter(function(el) {
                     var searchValue = el.title.toLowerCase();
                     return searchValue.indexOf(searchQuery) !== -1;
                 });
 
                 this.setState({
-                    displayedContacts: displayedContacts
+                    displayedImages: displayedImages
                 });
             },
 
@@ -60,10 +60,10 @@ export default function (node) {
                         Search <input type="text" className="search-field" onChange={this.handleSearch} />
                         </div>
                         <hr/>
-                        <ul className="contacts-list">
+                        <ul>
                             {
-                               this.state.displayedContacts.map(function(el) {
-                                    return <Contact
+                               this.state.displayedImages.map(function(el) {
+                                    return <Image
                                         key={el.id}
                                         title={el.title}
                                         url={el.url}
@@ -78,7 +78,7 @@ export default function (node) {
             }
         });
     ReactDOM.render(
-        <ContactsList />,
+        <ImagesList />,
         node
     );
 }

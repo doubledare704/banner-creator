@@ -21216,10 +21216,10 @@
 	exports.default = function (node) {
 	    var _h$getAttrs = _bazooka.h.getAttrs(BAZOOKA_PREFIX, node);
 
-	    var imageContacts = _h$getAttrs.imageContacts;
+	    var imageArray = _h$getAttrs.imageArray;
 
-	    var Contact = _react2.default.createClass({
-	        displayName: 'Contact',
+	    var Image = _react2.default.createClass({
+	        displayName: 'Image',
 
 	        render: function render() {
 	            return _react2.default.createElement(
@@ -21228,7 +21228,7 @@
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'thumbnail' },
-	                    _react2.default.createElement('img', { className: 'contact-image', src: this.props.preview }),
+	                    _react2.default.createElement('img', { src: this.props.preview }),
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'caption' },
@@ -21277,24 +21277,24 @@
 	        }
 	    });
 
-	    var ContactsList = _react2.default.createClass({
-	        displayName: 'ContactsList',
+	    var ImagesList = _react2.default.createClass({
+	        displayName: 'ImagesList',
 
 	        getInitialState: function getInitialState() {
 	            return {
-	                displayedContacts: imageContacts
+	                displayedImages: imageArray
 	            };
 	        },
 
 	        handleSearch: function handleSearch(event) {
 	            var searchQuery = event.target.value.toLowerCase();
-	            var displayedContacts = imageContacts.filter(function (el) {
+	            var displayedImages = imageArray.filter(function (el) {
 	                var searchValue = el.title.toLowerCase();
 	                return searchValue.indexOf(searchQuery) !== -1;
 	            });
 
 	            this.setState({
-	                displayedContacts: displayedContacts
+	                displayedImages: displayedImages
 	            });
 	        },
 
@@ -21311,9 +21311,9 @@
 	                _react2.default.createElement('hr', null),
 	                _react2.default.createElement(
 	                    'ul',
-	                    { className: 'contacts-list' },
-	                    this.state.displayedContacts.map(function (el) {
-	                        return _react2.default.createElement(Contact, {
+	                    null,
+	                    this.state.displayedImages.map(function (el) {
+	                        return _react2.default.createElement(Image, {
 	                            key: el.id,
 	                            title: el.title,
 	                            url: el.url,
@@ -21325,7 +21325,7 @@
 	            );
 	        }
 	    });
-	    _reactDom2.default.render(_react2.default.createElement(ContactsList, null), node);
+	    _reactDom2.default.render(_react2.default.createElement(ImagesList, null), node);
 	};
 
 	var _react = __webpack_require__(4);
