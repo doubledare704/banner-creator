@@ -8,4 +8,4 @@ ALLOWED_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif')
 
 SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://postgres@localhost:5433/banner_creator'
-SQLALCHEMY_TEST_DATABASE_URI = 'postgresql+psycopg2://postgres@localhost:5433/banner_creator_tests'
+SQLALCHEMY_TEST_DATABASE_URI = 'postgresql+psycopg2://postgres:postgres@localhost:5433/banner_creator_tests'
