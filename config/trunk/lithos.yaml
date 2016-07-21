@@ -7,8 +7,9 @@ environ:
   LANG: en_US.UTF-8
   LC_ALL: en_US.UTF-8
   PYTHONIOENCODING: UTF-8
-  PORT: 20100
+  PORT: 20000
 workdir: /app
 executable: /usr/bin/python3
 arguments:
-- run.py
+- manage.py
+- runserver

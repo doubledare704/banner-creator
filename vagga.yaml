@@ -82,6 +82,21 @@ containers:
       /var/lib/postgresql: !Snapshot
     environ: *pgenv
 
+  deploy-tools:
+    setup:
+    - !Alpine v3.3
+    - !Download
+      url: http://alpine.packages.gitlab.uaprom/alpine.packages@gitlab.uaprom.rsa.pub
+      path: /etc/apk/keys/alpine.packages@gitlab.uaprom.rsa.pub
+    - !Sh |
+        echo http://alpine.packages.gitlab.uaprom/ >> /etc/apk/repositories
+        apk update
+    - !Install [deploy=0.7.2-r0]
+    # A directory for every container
+    - !EnsureDir /target/python-deploy
+    volumes:
+      /target/python-deploy: !Container python-deploy
+
 commands:
   run: !Command
     description: Run this application
@@ -121,3 +136,6 @@ commands:
     container: static
     run: [webpack, --progress]
 
+  deploy: !Command
+     container: deploy-tools
+     run: [deploy]
