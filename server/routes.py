@@ -14,5 +14,5 @@ def setup_routes(app):
     app.add_url_rule('/admin/backgrounds/', view_func=backgrounds)
     app.add_url_rule('/admin/inactiveImg/<int:id>', methods=['POST'], view_func=inactiveImg)
     app.add_url_rule('/admin/deleteImg/<int:id>', methods=['POST'], view_func=image_delete_from_DB)
-    app.add_url_rule('/api/backgrounds/', view_func=background_images)
     app.add_url_rule('/api/review/', methods=['POST'], view_func=review)
+    app.add_url_rule('/api/backgrounds/<int:page>', view_func=background_images)

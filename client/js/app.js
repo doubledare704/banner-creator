@@ -15,4 +15,3 @@ Baz.register({
 
 
 var unwatch = Baz.watch();
-
