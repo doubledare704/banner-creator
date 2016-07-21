@@ -10,8 +10,8 @@ def admin():
 def backgrounds():
     backgrounds = Image.query.order_by(Image.name.asc()).all()
 
-    back_im = [{"id": act_background.id, "name": act_background.name, 'url': '/uploads/' + act_background.name,
-                'delete': '/admin/inactiveImg/' + str(act_background.id),
+    back_im = [{"id": act_background.id, 'title': act_background.title,
+                'preview': '/uploads/' + act_background.preview,
                 "title": act_background.title, "active": str(act_background.active)}
                for act_background in backgrounds]
     back_im = json.dumps(back_im)
