@@ -40,6 +40,14 @@ commands:
     - manage.py
     - runserver
 
+  test: !Command
+    description: Run tests
+    container: python
+    run:
+    - python3
+    - manage.py
+    - test
+
   createdb: !Command
     description: Create initial database
     container: python
