@@ -1,11 +1,14 @@
+import base64
 import os
 import uuid
 import json
 
 from flask import render_template, redirect, current_app, flash, request, url_for, jsonify
+from io import BytesIO
+from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
-from server.models import Image
+from server.models import Image, Review, Image_history
 from server.db import db
 from server.utils.image import allowed_file, image_resize, image_preview
 
@@ -65,11 +68,40 @@ def image_rename(id):
 
 
 def editor():
+    if request.method == 'POST':
+        pass
+    else:
+        pass
     return render_template('editor_markuped.html')
 
 
-def background_images():
-    background_images = Image.query.all()
-    serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active}
-                         for image in background_images]
+def background_images(page=1):
+    paginated_images = Image.query.paginate(page, 4)
+    serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active,
+                          "preview": image.preview}
+                         for image in paginated_images.items]
+
     return jsonify({"backgroundImages": serialized_images})
+
+
+def review():
+    _, b64data = request.json['file'].split(',')
+    random_name = request.json['name']
+    decoded_data = base64.b64decode(b64data)
+    file = FileStorage(BytesIO(decoded_data), filename=random_name)
+    filename = secure_filename(file.filename)
+    file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+
+    rev = Review(
+        name=filename
+    )
+    db.session.add(rev)
+    db.session.flush()
+
+    history = Image_history(
+        review_image=rev.id,
+        json_hist=request.json['file_json']
+    )
+    db.session.add(history)
+
+    return jsonify({'src': url_for('uploaded_file', filename=filename)})

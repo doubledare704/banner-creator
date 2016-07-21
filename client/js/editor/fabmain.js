@@ -9,11 +9,38 @@ let editor = new Editor('main', 960, 420);
 const fileInput = document.getElementById('input');
 const downloadLink = document.getElementById('download');
 const addbutton = document.getElementById('addButt');
-const backgroundsBtn = document.getElementById('backgroundsBtn');
 const addtexts = document.querySelectorAll('#rightcol ul li');
 const filetoeditor = document.getElementById('inputted');
 const deleteFabricItem = document.getElementById('del_item');
+const sendImageReview = document.getElementById('to_send');
 
+//send image to review model
+sendImageReview.addEventListener('click', function sendImageToReview() {
+    let image_review = editor.canv.toJSON();
+    let image_base64 = editor.canv.toDataURL("image/png", 1.0);
+    let random_name = Math.random().toString(36).substr(2, 10) + '.png';
+    const data = {
+        file: image_base64,
+        name: random_name,
+        file_json: image_review
+    };
+    console.log(image_review);
+    console.log(image_base64);
+    console.log(random_name);
+    fetch('/api/review/', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then((res) => res.json(), console.log("It arrived to flask"))
+        .then(({src}) => document.getElementById('result_review').href = src)
+        .catch(function (error) {
+            console.log('Request failed', error);
+        });
+    // document.getElementById('send_button').click();
+});
 
 //deletes custom object from canvas
 deleteFabricItem.addEventListener('click', function () {
@@ -53,7 +80,6 @@ filetoeditor.addEventListener('change', (e) => {
         let originalsize = img.getOriginalSize();
         let imgratio = img.width / img.height;
         let newsize = [editor.canv.width * 0.5, editor.canv.width * 0.5 / imgratio];
-        console.log(imgratio);
 
         if (originalsize.width > editor.canv.width || originalsize.height > editor.canv.height) {
             img.set({
@@ -71,39 +97,4 @@ downloadLink.addEventListener('click', function () {
     editor.downloadImage(link);
 }, false);
 
-//check visibility helper
-function isHidden(el) {
-    const style = window.getComputedStyle(el);
-    return (style.display === 'none')
-}
-
-backgroundsBtn.addEventListener('click', function () {
-    const bgList = document.getElementById('backgroundsList');
-    if (!isHidden(bgList)) {
-        // If it is visible then just hide it and change section's background color
-        bgList.style.display = 'none';
-        this.parentNode.style.backgroundColor = 'white';
-    }
-    else {
-        // change section's background color
-        this.parentNode.style.backgroundColor = 'grey';
-        // if it's not visible then load all the background images from server and append them in a list
-        fetch('/api/backgrounds/').then(function (response) {
-            response.json().then(function (data) {
-                const ulNode = document.getElementById('backgroundsList');
-                ulNode.innerHTML = '';
-                // iterate over the list of images, create corresponding li nodes for them
-                for (const img of data.backgroundImages) {
-                    const liNode = document.createElement('li');
-                    liNode.innerHTML = `<img src='/uploads/${img.name}'/>`;
-                    liNode.addEventListener('click', function () {
-                        const imgSrc = this.firstElementChild.getAttribute('src');
-                        editor.setBackground(imgSrc);
-                    });
-                    ulNode.appendChild(liNode);
-                }
-                bgList.style.display = 'block';
-            })
-    })}
-});
-
+module.exports = {'editor': editor};

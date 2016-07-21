@@ -41,6 +41,11 @@ npm run webpack
 ```
 to run webpack in auto mode
 
+### How to minimize and uglify js\css
+```
+npm run prod
+```
+
 ## Client side structure
 1. Styles sources stored in stylus file in /client/css
 2. JS sources stored in /client/js

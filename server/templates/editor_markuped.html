@@ -58,12 +58,12 @@
             </section>
 
             <section>
-                <a href="#" id="backgroundsBtn">
+                <a href="#" id="backgroundsBtn" data-bazooka="openBackgroundsList">
                     <i class="material-icons">image</i>
                     <span class="detail">Фоны</span>
                 </a>
                 <div id="backgroundsContainer">
-                    <ul id="backgroundsList"></ul>
+                    <ul id="backgroundsList" data-bazooka="loadBackgroundImages"></ul>
                 </div>
             </section>
 
@@ -79,8 +79,9 @@
         </aside>
         <section class="container">
             <nav class="navigation">
-                <a href="#"><i class="material-icons">done_all</i> Отправить на ревью</a>
+                <a href="#" id="to_send"><i class="material-icons">done_all</i> Отправить на ревью</a>
                 <a href="#"><i class="material-icons">insert_comment</i> Добавить коментарий для ревьюера</a>
+                <a href="#" id="result_review"><i class="material-icons">description</i>Просмотреть результат</a>
                 <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i> Скачать
                     баннер</a>
             </nav>
