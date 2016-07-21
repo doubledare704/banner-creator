@@ -13,7 +13,35 @@ const backgroundsBtn = document.getElementById('backgroundsBtn');
 const addtexts = document.querySelectorAll('#rightcol ul li');
 const filetoeditor = document.getElementById('inputted');
 const deleteFabricItem = document.getElementById('del_item');
+const sendImageReview = document.getElementById('to_send');
 
+//send image to review model
+sendImageReview.addEventListener('click', function sendImageToReview() {
+    let image_review = editor.canv.toJSON();
+    let image_base64 = editor.canv.toDataURL("image/png", 1.0);
+    let random_name = Math.random().toString(36).substr(2, 10) + '.png';
+    const data = {
+        file: image_base64,
+        name: random_name,
+        file_json: image_review
+    };
+    console.log(image_review);
+    console.log(image_base64);
+    console.log(random_name);
+    fetch('/api/review/', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then((res) => res.json(), console.log("It arrived to flask"))
+        .then(({src}) => document.getElementById('result_review').href = src)
+        .catch(function (error) {
+            console.log('Request failed', error);
+        });
+    // document.getElementById('send_button').click();
+});
 
 //deletes custom object from canvas
 deleteFabricItem.addEventListener('click', function () {
@@ -53,7 +81,6 @@ filetoeditor.addEventListener('change', (e) => {
         let originalsize = img.getOriginalSize();
         let imgratio = img.width / img.height;
         let newsize = [editor.canv.width * 0.5, editor.canv.width * 0.5 / imgratio];
-        console.log(imgratio);
 
         if (originalsize.width > editor.canv.width || originalsize.height > editor.canv.height) {
             img.set({
@@ -104,6 +131,7 @@ backgroundsBtn.addEventListener('click', function () {
                 }
                 bgList.style.display = 'block';
             })
-    })}
+        })
+    }
 });
 

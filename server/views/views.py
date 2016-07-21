@@ -1,11 +1,14 @@
+import base64
 import os
 import uuid
 import json
 
 from flask import render_template, redirect, current_app, flash, request, url_for, jsonify
+from io import BytesIO
+from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
-from server.models import Image
+from server.models import Image, Review
 from server.db import db
 from server.utils.image import allowed_file, image_resize, image_preview
 
@@ -65,7 +68,27 @@ def image_rename(id):
 
 
 def editor():
+    if request.method == 'POST':
+        pass
+    else:
+        pass
     return render_template('editor_markuped.html')
+
+
+def review():
+    _, b64data = request.json['file'].split(',')
+    random_name = request.json['name']
+    decoded_data = base64.b64decode(b64data)
+    file = FileStorage(BytesIO(decoded_data), filename=random_name)
+    filename = secure_filename(file.filename)
+    file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+
+    rev = Review(
+        name=filename
+    )
+    db.session.add(rev)
+
+    return jsonify({'src': url_for('uploaded_file', filename=filename)})
 
 
 def background_images():
