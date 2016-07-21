@@ -8,7 +8,7 @@ from io import BytesIO
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
-from server.models import Image, Review
+from server.models import Image, Review, Image_history
 from server.db import db
 from server.utils.image import allowed_file, image_resize, image_preview
 
@@ -96,5 +96,12 @@ def review():
         name=filename
     )
     db.session.add(rev)
+    db.session.flush()
+
+    history = Image_history(
+        review_image=rev.id,
+        json_hist=request.json['file_json']
+    )
+    db.session.add(history)
 
     return jsonify({'src': url_for('uploaded_file', filename=filename)})
