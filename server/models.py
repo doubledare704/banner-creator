@@ -4,6 +4,7 @@ from flask_login import unicode
 from server.db import db
 from sqlalchemy.schema import Index
 from sqlalchemy.types import Enum
+import enum
 
 
 class Image(db.Model):
@@ -19,29 +20,29 @@ class Image(db.Model):
 
 
 class User(db.Model):
-    class Gender(Enum):
+    class Gender(enum.Enum):
         male = 0
         female = 1
 
-    class UserRole(Enum):
+    class UserRole(enum.Enum):
         user = 0
         designer = 1
         admin = 2
 
-    class SocialNetwork(Enum):
+    class SocialNetwork(enum.Enum):
         google = 0
         facebook = 1
 
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     social_id = db.Column(db.String(255), index=True)
-    social_type = db.Column(SocialNetwork, nullable=False)
+    social_type = db.Column(Enum(SocialNetwork), nullable=False)
     first_name = db.Column(db.String(255))
     last_name = db.Column(db.String(255))
-    gender = db.Column(Gender, nullable=False)
+    gender = db.Column(Enum(Gender), nullable=False)
     email = db.Column(db.String(255), index=True, unique=True)
-    role = db.Column(UserRole, nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())
+    role = db.Column(Enum(UserRole), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
     __table_args__ = (Index('ix_user_id_social_type', "social_type", "id"),)
 
