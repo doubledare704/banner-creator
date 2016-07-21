@@ -17,10 +17,8 @@ export default function (node) {
                         <div className="caption">
                             <h3> {this.props.title} </h3>
                             <p> {this.props.url} </p>
-                            <a href={this.props.delete} className="btn btn-default modal-toggle" role="button">
-                                <i className="glyphicon glyphicon-trash"/>
-                                <span>Delete</span>
-                            </a>
+                            <div data-bazooka="deleteBtn">
+                            </div>
                             <a href="#"  className="btn btn-default " role="button">
                         <i className="glyphicon glyphicon-pencil"/>
                          <span>Rename</span></a>

@@ -62,19 +62,29 @@
 
 	var _renderImages2 = _interopRequireDefault(_renderImages);
 
+	var _deleteBtn = __webpack_require__(178);
+
+	var _deleteBtn2 = _interopRequireDefault(_deleteBtn);
+
+	var _renameBtn = __webpack_require__(183);
+
+	var _renameBtn2 = _interopRequireDefault(_renameBtn);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// var editor = require('./editor.js');
 
 	//import fabric from './fabmain';
-	var styluses = __webpack_require__(178);
+	var styluses = __webpack_require__(179);
 	var Baz = __webpack_require__(176);
 
 	Baz.register({
 	    'inactiveImg': _inactiveImg2.default,
 	    'deleteImg': _deleteFromDB2.default,
 	    'header': _header2.default,
-	    'renderImages': _renderImages2.default
+	    'renderImages': _renderImages2.default,
+	    'deleteBtn': _deleteBtn2.default,
+	    'renameBtn': _renameBtn2.default
 	    //'fabric': fabric
 
 	});
@@ -21246,16 +21256,7 @@
 	                            this.props.url,
 	                            ' '
 	                        ),
-	                        _react2.default.createElement(
-	                            'a',
-	                            { href: this.props.delete, className: 'btn btn-default modal-toggle', role: 'button' },
-	                            _react2.default.createElement('i', { className: 'glyphicon glyphicon-trash' }),
-	                            _react2.default.createElement(
-	                                'span',
-	                                null,
-	                                'Delete'
-	                            )
-	                        ),
+	                        _react2.default.createElement('div', { 'data-bazooka': 'deleteBtn' }),
 	                        _react2.default.createElement(
 	                            'a',
 	                            { href: '#', className: 'btn btn-default ', role: 'button' },
@@ -21704,9 +21705,141 @@
 
 /***/ },
 /* 178 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	exports.default = function (node) {
+	    var DeleteButton = function (_React$Component) {
+	        _inherits(DeleteButton, _React$Component);
+
+	        function DeleteButton() {
+	            _classCallCheck(this, DeleteButton);
+
+	            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DeleteButton).call(this));
+
+	            _this.state = {
+	                deleted: false
+	            };
+	            _this.handleClick = _this.handleClick.bind(_this);
+	            return _this;
+	        }
+
+	        _createClass(DeleteButton, [{
+	            key: 'handleClick',
+	            value: function handleClick() {
+	                this.setState({ deleted: !this.state.deleted });
+	            }
+	        }, {
+	            key: 'render',
+	            value: function render() {
+	                var text = this.state.deleted ? 'deleted' : 'haven\'t deleted';
+	                return _react2.default.createElement(
+	                    'div',
+	                    { className: 'btn btn-default modal-toggle', role: 'button', onClick: this.handleClick },
+	                    _react2.default.createElement('i', { className: 'glyphicon glyphicon-trash' }),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        'U ',
+	                        text
+	                    )
+	                );
+	            }
+	        }]);
+
+	        return DeleteButton;
+	    }(_react2.default.Component);
+
+	    _reactDom2.default.render(_react2.default.createElement(DeleteButton, null), node);
+	};
+
+	var _react = __webpack_require__(4);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(36);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/***/ },
+/* 179 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 180 */,
+/* 181 */,
+/* 182 */,
+/* 183 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	exports.default = function (node) {
+	    var Rename = _react2.default.createClass({
+	        displayName: 'Rename',
+
+	        getInitialState: function getInitialState() {
+	            return { showResults: false };
+	        },
+	        onClick: function onClick() {
+	            this.setState({ showResults: true });
+	        },
+	        render: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement('input', { type: 'submit', value: 'Rename', onClick: this.onClick }),
+	                this.state.showResults ? _react2.default.createElement(Results, null) : null
+	            );
+	        }
+	    });
+
+	    var Results = _react2.default.createClass({
+	        displayName: 'Results',
+
+	        render: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                { id: 'results', className: 'Rename-results' },
+	                'Some Results ',
+	                _react2.default.createElement('input', { type: 'text' }),
+	                _react2.default.createElement('input', { type: 'submit', value: 'Rename', role: 'button' })
+	            );
+	        }
+	    });
+	    _reactDom2.default.render(_react2.default.createElement(Rename, null), node);
+	};
+
+	var _react = __webpack_require__(4);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(36);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }
 /******/ ]);

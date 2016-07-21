@@ -51,14 +51,14 @@ def index():
     return render_template('list.html', images=images, image_json=image_json)
 
 
-def image_delete(id):
-    image = Image.query.get_or_404(id)
+def image_delete(img_id):
+    image = Image.query.get_or_404(img_id)
     image.active = False
     flash('File is deleted you are really brave person !')
     return redirect(url_for('index'))
 
 
-def image_rename(id):
+def image_rename(img_id):
     image = Image.query.get_or_404(id)
     image.title = request.form['rename']
     flash('Image renamed')
