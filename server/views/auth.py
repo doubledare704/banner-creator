@@ -7,7 +7,8 @@ from server.db import db
 
 
 def login_page():
-    session['redirect_url'] = request.args['next']
+    if request.args.get('next', None) and request.args['next'] != url_for('log_out'):
+        session['redirect_url'] = request.args['next']
     return render_template('login.html')
 
 
