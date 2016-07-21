@@ -26,6 +26,6 @@
 
 {% block scripts %}
 {{ super() }}
-<script src="/static/bundle.js"></script>
+<script src="{{ url_for('static', filename='adminbundle.js')  }}"></script>
 {% endblock %}
 
