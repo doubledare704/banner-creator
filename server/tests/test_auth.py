@@ -1,5 +1,5 @@
 import unittest
-from flask import session, url_for
+from flask import session, url_for, request
 
 from server.main import create_app
 from server.db import db
@@ -38,17 +38,15 @@ class TestAuth(unittest.TestCase):
         with app.app_context():
             response = self.client.get(url_for('index'))
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.headers['location'], url_for('login'))
-        self.assertEqual(session['redirect_url'], url_for('index'))
+        self.assertEqual(response.headers['location'], url_for('login_page', _external=True) + '?next=%2F')
 
     def test_log_out(self):
         with app.app_context():
             response = self.client.post(url_for('log_out'))
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.headers['location'], url_for('login'))
-        self.assertEqual(session['redirect_url'], url_for('index'))
+        self.assertEqual(response.headers['location'], url_for('login_page', _external=True) + '?next=%2Flogout')
 
     def test_check_auth_login_url(self):
         with app.app_context():
-            response = self.client.get(url_for('login'))
+            response = self.client.get(url_for('login_page'))
         self.assertEqual(response.status_code, 200)
