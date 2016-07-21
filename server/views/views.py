@@ -55,7 +55,6 @@ def index():
 
 
 def image_delete():
-    print("SYKA BLA")
     img_id = request.json['id']
     image = Image.query.get_or_404(img_id)
     image.active = False
@@ -66,17 +65,20 @@ def image_delete():
           'url': '/uploads/' + image.name,
           'title': image.title,
           'preview': '/uploads/' + image.preview,
-          'delete': '/delete/' + str(image.id)}
+          'delete': '/delete/' + str(image.id),
+          'rename': '/rename/' + str(image.id)}
          for image in images
          ])
     return json.dumps(image_json)
 
 
-def image_rename(img_id):
+def image_rename():
+    img_id = request.json['id']
     image = Image.query.get_or_404(img_id)
-    image.title = request.form['rename']
+    image.title = request.json['name']
     flash('Image renamed')
-    return redirect(url_for('index'))
+    image_json = {'message':'xyu !!!'}
+    return json.dumps(image_json)
 
 
 def editor():
