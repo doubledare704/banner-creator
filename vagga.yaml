@@ -1,0 +1,59 @@
+containers:
+  python:
+    setup:
+    - !Ubuntu xenial
+    - !Install [libpq-dev]
+    - !Py3Requirements requirements.txt
+
+  postgres:
+    setup:
+    - !Ubuntu xenial
+    - !UbuntuUniverse
+    - !EnsureDir /var/lib/postgresql/9.5
+    - !Install
+      - postgresql-9.5
+      - runit
+    - &pgenv !Env
+      PG_BIN: /usr/lib/postgresql/9.5/bin
+      PG_DATA: /var/lib/postgresql/9.5/main
+      PG_PORT: 5433
+      PG_DB: banner_creator
+      PG_USER: banner_creator
+      PG_PASSWORD: banner_creator
+    - !Sh |
+        rm -rf $PG_DATA/*;
+        chpst -u postgres $PG_BIN/pg_ctl initdb -D $PG_DATA;
+        chpst -u postgres $PG_BIN/pg_ctl start -D $PG_DATA -w \
+          -o "-k /tmp -F -p $PG_PORT -h 127.0.0.1";
+        psql -U postgres -h 127.0.0.1 -p $PG_PORT \
+          -c "CREATE DATABASE banner_creator;";
+    volumes:
+      /var/lib/postgresql: !Snapshot
+    environ: *pgenv
+
+commands:
+  run: !Command
+    description: Run this application
+    container: python
+    run:
+    - python3
+    - manage.py
+    - runserver
+
+  createdb: !Command
+    description: Create initial database
+    container: python
+    run:
+    - python3
+    - manage.py
+    - db
+    - upgrade
+
+  postgres: !Command
+    description: Run posgres
+    container: postgres
+    run: |
+      chpst -u postgres $PG_BIN/postgres -D "$PG_DATA" \
+        -F --port=$PG_PORT \
+        -k /tmp >/dev/null
+
