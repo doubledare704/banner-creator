@@ -80,6 +80,10 @@ def background_images(page=1):
     serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active,
                           "preview": image.preview}
                          for image in paginated_images.items]
+
+    return jsonify({"backgroundImages": serialized_images})
+
+
 def review():
     _, b64data = request.json['file'].split(',')
     random_name = request.json['name']
@@ -94,5 +98,3 @@ def review():
     db.session.add(rev)
 
     return jsonify({'src': url_for('uploaded_file', filename=filename)})
-
-    return jsonify({"backgroundImages": serialized_images})

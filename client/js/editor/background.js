@@ -17,21 +17,24 @@ function makeBackgroundImagesLoader() {
     return function () {
         if (!blocked) {
             blocked = true;
-            fetch(`/api/backgrounds/${page}`).then(function (response) {
+            fetch(`/api/backgrounds/${page}`)
+                .then(function (response) {
+                {console.log(response.text)}
                 if (response.status == 200) {
                     response.json().then(function (data) {
                         populateBackgroundsList(data.backgroundImages);
                         backgroundsList.style.display = 'block';
                         page += 1;
                         blocked = false;
-                        })
+                    })
                 }
                 else {
                     backgroundsList.style.display = 'block';
                     blocked = false;
                 }
             })
-        }}
+        }
+    }
 }
 
 function populateBackgroundsList(images) {
@@ -55,7 +58,8 @@ function loadBackgroundImages() {
         this.parentNode.style.backgroundColor = 'grey';
         // if it's not visible then load images
         backgroundImagesLoader();
-}}
+    }
+}
 
 function setBackground() {
     // sets image as a background on the canvas
@@ -84,7 +88,8 @@ function setBackgroundOnClick(node) {
 }
 
 
-module.exports = {'openBackgroundsList': openBackgroundsList,
-                  'setBackground': setBackgroundOnClick,
-                  'loadBackgroundImages': loadBackgroundImagesOnScroll
+module.exports = {
+    'openBackgroundsList': openBackgroundsList,
+    'setBackground': setBackgroundOnClick,
+    'loadBackgroundImages': loadBackgroundImagesOnScroll
 };
