@@ -1,14 +1,18 @@
 import os
 import uuid
-
+from flask_login import login_required
 from flask import render_template, redirect, current_app, flash, request, url_for, jsonify
-from werkzeug.utils import secure_filename
+
 
 from server.models import Image
+
+from werkzeug.utils import secure_filename
+
 from server.db import db
 from server.utils.image import allowed_file,image_resize, image_preview
 
 
+@login_required
 def index():
     images = Image.query.filter_by(active=True)
     if request.method == 'POST':
@@ -41,6 +45,7 @@ def index():
     return render_template('list.html', images=images)
 
 
+@login_required
 def image_delete(id):
     image = Image.query.get_or_404(id)
     image.active = False
@@ -48,6 +53,7 @@ def image_delete(id):
     return redirect(url_for('index'))
 
 
+@login_required
 def image_rename(id):
     image = Image.query.get_or_404(id)
     image.title = request.form['rename']
@@ -55,12 +61,14 @@ def image_rename(id):
     return redirect(url_for('index'))
 
 
-def editor():
-    return render_template('editor_markuped.html')
-
-
+@login_required
 def background_images():
     background_images = Image.query.all()
     serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active}
                          for image in background_images]
     return jsonify({"backgroundImages": serialized_images})
+
+
+@login_required
+def editor():
+    return render_template('editor_markuped.html')
