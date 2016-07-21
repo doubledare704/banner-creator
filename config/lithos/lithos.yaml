@@ -1,0 +1,14 @@
+user-id: 1
+group-id: 1
+memory-limit: 100Mi
+volumes:
+  /state: !Statedir {}
+environ:
+  LANG: en_US.UTF-8
+  LC_ALL: en_US.UTF-8
+  PYTHONIOENCODING: UTF-8
+  PORT: 20100
+workdir: /app
+executable: /usr/bin/python3
+arguments:
+- run.py

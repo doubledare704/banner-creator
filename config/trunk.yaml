@@ -1,0 +1,6 @@
+role: banner-creator-trunk
+processes:
+  container: python-deploy
+  config: /config/trunk/lithos.yaml
+  http-host: banner-creator
+  port: 20000
