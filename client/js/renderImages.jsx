@@ -17,7 +17,7 @@ export default function (node) {
                         <div className="caption">
                             <h3> {this.props.title} </h3>
                             <p> {this.props.url} </p>
-                            <a href={this.props.delete} className="btn btn-default modal-toggle" role="button">
+                            <a id={this.props.id} href="#" className="btn btn-default modal-toggle" role="button">
                                 <i className="glyphicon glyphicon-trash"/>
                                 <span>Delete</span>
                             </a>

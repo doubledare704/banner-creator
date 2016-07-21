@@ -42,24 +42,38 @@ def index():
 
             return redirect(request.url)
 
-    image_json = []
-    for image in images:
-        y = {'id':image.id,'url':'/uploads/'+image.name,'title':image.title,'preview':'/uploads/'+image.preview,'delete':'/delete/'+ str(image.id)}
-        image_json.append(y)
-    image_json = json.dumps(image_json)
+    image_json = json.dumps(
+        [{'id':image.id,
+          'url':'/uploads/'+image.name,
+          'title':image.title,
+          'preview':'/uploads/'+image.preview,
+          'delete':'/delete/'+ str(image.id)}
+         for image in images
+         ])
 
     return render_template('list.html', images=images, image_json=image_json)
 
 
-def image_delete(id):
-    image = Image.query.get_or_404(id)
+def image_delete():
+    print("SYKA BLA")
+    img_id = request.json['id']
+    image = Image.query.get_or_404(img_id)
     image.active = False
     flash('File is deleted you are really brave person !')
-    return redirect(url_for('index'))
+    images = Image.query.filter_by(active=True)
+    image_json = json.dumps(
+        [{'id': image.id,
+          'url': '/uploads/' + image.name,
+          'title': image.title,
+          'preview': '/uploads/' + image.preview,
+          'delete': '/delete/' + str(image.id)}
+         for image in images
+         ])
+    return json.dumps(image_json)
 
 
-def image_rename(id):
-    image = Image.query.get_or_404(id)
+def image_rename(img_id):
+    image = Image.query.get_or_404(img_id)
     image.title = request.form['rename']
     flash('Image renamed')
     return redirect(url_for('index'))
@@ -74,3 +88,6 @@ def background_images():
     serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active}
                          for image in background_images]
     return jsonify({"backgroundImages": serialized_images})
+
+
+

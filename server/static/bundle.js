@@ -21248,7 +21248,7 @@
 	                        ),
 	                        _react2.default.createElement(
 	                            'a',
-	                            { href: this.props.delete, className: 'btn btn-default modal-toggle', role: 'button' },
+	                            { id: this.props.id, href: '#', className: 'btn btn-default modal-toggle delete-btn', role: 'button' },
 	                            _react2.default.createElement('i', { className: 'glyphicon glyphicon-trash' }),
 	                            _react2.default.createElement(
 	                                'span',
