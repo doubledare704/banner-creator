@@ -18,23 +18,6 @@ export default function (node) {
         }
     });
 
-        let ActivePictures = React.createClass({displayName: 'active_section',
-        render: function() {
-            return (
-                <li className="active" onClick={this.props.onClick}><a data-toggle="tab" href="#active-pictures">Активные картинки</a></li>
-            );
-        }
-    });
-
-
-    let InactivePictures = React.createClass({displayName: 'active_section',
-        render: function() {
-            return (
-                <li className="inactive" onClick={this.props.onClick}><a data-toggle="tab" href="#inactive-pictures">Неактивные картинки</a></li>
-            );
-        }
-    });
-
 
     let TableRow = React.createClass({
 
