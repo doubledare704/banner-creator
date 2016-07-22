@@ -13,34 +13,49 @@ const addtexts = document.querySelectorAll('#rightcol ul li');
 const filetoeditor = document.getElementById('inputted');
 const deleteFabricItem = document.getElementById('del_item');
 const sendImageReview = document.getElementById('to_send');
+const result_preview = document.getElementById('result_review');
+const modals = document.getElementById('myModal');
+const span = document.getElementsByClassName("close")[0];
+
+
+//show result
+result_preview.addEventListener('click', () => {
+    modals.style.display = "block";
+});
+
+//hide result
+span.onclick = ()=> {
+    modals.style.display = "none";
+};
+window.onclick = (e) =>{
+    if(e.target == modals){
+        modals.style.display = "none";
+    }
+};
 
 //send image to review model
-sendImageReview.addEventListener('click', function sendImageToReview() {
-    let image_review = editor.canv.toJSON();
-    let image_base64 = editor.canv.toDataURL("image/png", 1.0);
-    let random_name = Math.random().toString(36).substr(2, 10) + '.png';
-    const data = {
-        file: image_base64,
-        name: random_name,
-        file_json: image_review
-    };
-    console.log(image_review);
-    console.log(image_base64);
-    console.log(random_name);
-    fetch('/api/review/', {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-        .then((res) => res.json(), console.log("It arrived to flask"))
-        .then(({src}) => document.getElementById('result_review').href = src)
-        .catch(function (error) {
-            console.log('Request failed', error);
-        });
-    // document.getElementById('send_button').click();
-});
+    sendImageReview.addEventListener('click', function sendImageToReview() {
+        let image_review = editor.canv.toJSON();
+        let image_base64 = editor.canv.toDataURL("image/png", 1.0);
+        let random_name = Math.random().toString(36).substr(2, 10) + '.png';
+        const data = {
+            file: image_base64,
+            name: random_name,
+            file_json: image_review
+        };
+        fetch('/api/review/', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then((res) => res.json(), console.log("It arrived to flask"))
+            .then(({src}) => document.getElementById('resulting').src = src)
+            .catch(function (error) {
+                console.log('Request failed', error);
+            });
+    });
 
 //deletes custom object from canvas
 deleteFabricItem.addEventListener('click', function () {
