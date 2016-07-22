@@ -1,6 +1,6 @@
 import flask
 
-from flask_bootstrap import Bootstrap
+# from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate, MigrateCommand
 from flask_login import LoginManager
 from server.utils.auth import load_user
@@ -9,7 +9,7 @@ from server.routes import setup_routes
 from server.db import db
 
 
-bootstrap = Bootstrap()
+# bootstrap = Bootstrap()
 
 
 def create_app():
@@ -21,7 +21,7 @@ def create_app():
     app.config.from_object('server.config')
     app.config.from_pyfile('config.py', silent=True)
 
-    bootstrap.init_app(app)
+    # bootstrap.init_app(app)
     db.init_app(app)
 
     # auth init

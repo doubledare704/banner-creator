@@ -1,11 +1,12 @@
 import base64
 import os
 import uuid
-from flask_login import login_required
 import json
 
+from flask_login import login_required
 from flask import render_template, redirect, current_app, flash, request, url_for, jsonify
 from io import BytesIO
+
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
@@ -105,6 +106,7 @@ def review():
         json_hist=request.json['file_json']
     )
     db.session.add(history)
+    db.session.flush()
     review_jsoned = {
         "src": url_for('uploaded_file', filename=filename),
         "rev": history.review_image
@@ -113,6 +115,11 @@ def review():
 
 
 def continue_edit(history_image_id):
-    edit_history = ImageHistory.query.get_or_404(history_image_id)
+    ImageHistory.query.filter_by(review_image=history_image_id).first_or_404()
+    return render_template('editor_history.html')
 
-    return render_template('editor_markuped.html')
+
+def history_image(history_image_id):
+    edit_history = ImageHistory.query.filter_by(review_image=history_image_id).first_or_404()
+
+    return {'fetch_history': edit_history.json_hist}

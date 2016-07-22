@@ -35,6 +35,7 @@ window.onclick = (e) => {
 
 //send image to review model
 sendImageReview.addEventListener('click', function sendImageToReview() {
+    document.getElementById('continue').href = '';
     let image_review = editor.canv.toJSON();
     let image_base64 = editor.canv.toDataURL("image/png", 1.0);
     let random_name = Math.random().toString(36).substr(2, 10) + '.png';
