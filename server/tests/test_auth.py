@@ -1,20 +1,11 @@
 import unittest
+
 from flask import session, url_for, request
 
 from server.main import create_app
 from server.db import db
 
 app = create_app()
-
-
-def setUpModule():
-    """
-    Initializes a test environment
-    """
-    app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_TEST_DATABASE_URI']
-    app.config['SERVER_NAME'] = 'localhost'
-    app.config['TESTING'] = True
-    app.config['DEBUG'] = False
 
 
 class TestAuth(unittest.TestCase):

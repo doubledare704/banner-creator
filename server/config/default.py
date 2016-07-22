@@ -1,7 +1,8 @@
 import os
 import logging
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+CUR_DIR = os.path.abspath(os.path.dirname(__file__))  # directory with config files
+BASE_DIR = os.path.abspath(os.path.dirname(CUR_DIR))  # server directory
 
 # Set debug to False in production
 DEBUG = True
