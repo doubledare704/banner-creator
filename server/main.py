@@ -1,7 +1,7 @@
 import flask
 
 from flask_bootstrap import Bootstrap
-from flask_migrate import Migrate, MigrateCommand
+from flask_migrate import Migrate
 from flask_login import LoginManager
 from server.utils.auth import load_user
 
