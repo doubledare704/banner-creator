@@ -26,7 +26,7 @@ def oauth_callback(social_network_name):
         user = User(
             first_name=user_data[user_fields['first_name']],
             last_name=user_data[user_fields['last_name']],
-            gender=user_data['gender'],
+            gender=user_data.get('gender', None),
             social_id=user_data['id'],
             email=user_data['email'],
             role='user',
