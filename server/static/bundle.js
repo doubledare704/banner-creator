@@ -62,11 +62,11 @@
 
 	var _renderImages2 = _interopRequireDefault(_renderImages);
 
-	var _deleteBtn = __webpack_require__(178);
+	var _deleteBtn = __webpack_require__(176);
 
 	var _deleteBtn2 = _interopRequireDefault(_deleteBtn);
 
-	var _renameBtn = __webpack_require__(179);
+	var _renameBtn = __webpack_require__(177);
 
 	var _renameBtn2 = _interopRequireDefault(_renameBtn);
 
@@ -75,8 +75,8 @@
 	// var editor = require('./editor.js');
 
 	//import fabric from './fabmain';
-	var styluses = __webpack_require__(180);
-	var Baz = __webpack_require__(176);
+	var styluses = __webpack_require__(178);
+	var Baz = __webpack_require__(182);
 
 	Baz.register({
 	    'inactiveImg': _inactiveImg2.default,
@@ -21254,7 +21254,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _bazooka = __webpack_require__(176);
+	var _bazooka = __webpack_require__(182);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21426,72 +21426,275 @@
 	    return Image;
 	}(_react2.default.Component);
 
-	var ImagesList = _react2.default.createClass({
-	    displayName: 'ImagesList',
+	var ImagesList = function (_React$Component4) {
+	    _inherits(ImagesList, _React$Component4);
 
-	    getInitialState: function getInitialState() {
-	        return {
-	            displayedImages: this.props.imageArray
+	    function ImagesList(props) {
+	        _classCallCheck(this, ImagesList);
+
+	        var _this4 = _possibleConstructorReturn(this, Object.getPrototypeOf(ImagesList).call(this, props));
+
+	        _this4.state = {
+	            displayedImages: _this4.props.imageArray
 	        };
-	    },
-
-	    handleSearch: function handleSearch(event) {
-	        console.log('it works');
-	        var searchQuery = event.target.value.toLowerCase();
-	        var displayedImages = this.props.imageArray.filter(function (el) {
-	            var searchValue = el.title.toLowerCase();
-	            return searchValue.indexOf(searchQuery) !== -1;
-	        });
-
-	        this.setState({
-	            displayedImages: displayedImages
-	        });
-	    },
-	    // handleDel: function (event) {
-	    //     console.log('syka');
-	    //     alert('syka');
-	    //     return () => {
-	    //         console.log('syka');
-	    //         const displayedImages = displayedImages.filter((el) => el.id != id);
-	    //         alert('syka');
-	    //         this.setState({
-	    //             displayedImages: displayedImages
-	    //         });
-	    //     }
-	    // },
-
-	    render: function render() {
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'form-inline' },
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'form-group' },
-	                'Search ',
-	                _react2.default.createElement('input', { type: 'text', className: 'search-field', onChange: this.handleSearch })
-	            ),
-	            _react2.default.createElement('hr', null),
-	            _react2.default.createElement(
-	                'ul',
-	                null,
-	                this.state.displayedImages.map(function (el) {
-	                    return _react2.default.createElement(Image, {
-	                        key: el.id,
-	                        title: el.title,
-	                        url: el.url,
-	                        preview: el.preview,
-	                        'delete': el.delete,
-	                        rename: el.rename
-
-	                    }); // eventStream={this.props.eventStream}
-	                })
-	            )
-	        );
+	        _this4.handleSearch = _this4.handleSearch.bind(_this4);
+	        return _this4;
 	    }
-	});
+
+	    _createClass(ImagesList, [{
+	        key: 'handleSearch',
+	        value: function handleSearch(event) {
+	            console.log('it works');
+	            var searchQuery = event.target.value.toLowerCase();
+	            var displayedImages = this.props.imageArray.filter(function (el) {
+	                var searchValue = el.title.toLowerCase();
+	                return searchValue.indexOf(searchQuery) !== -1;
+	            });
+
+	            this.setState({
+	                displayedImages: displayedImages
+	            });
+	        }
+	        // handleDel: function (event) {
+	        //     console.log('syka');
+	        //     alert('syka');
+	        //     return () => {
+	        //         console.log('syka');
+	        //         const displayedImages = displayedImages.filter((el) => el.id != id);
+	        //         alert('syka');
+	        //         this.setState({
+	        //             displayedImages: displayedImages
+	        //         });
+	        //     }
+	        // },
+
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'form-inline' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'form-group' },
+	                    'Search ',
+	                    _react2.default.createElement('input', { type: 'text', className: 'search-field', onChange: this.handleSearch })
+	                ),
+	                _react2.default.createElement('hr', null),
+	                _react2.default.createElement(
+	                    'ul',
+	                    null,
+	                    this.state.displayedImages.map(function (el) {
+	                        return _react2.default.createElement(Image, {
+	                            key: el.id,
+	                            title: el.title,
+	                            url: el.url,
+	                            preview: el.preview,
+	                            'delete': el.delete,
+	                            rename: el.rename
+
+	                        }); // eventStream={this.props.eventStream}
+	                    })
+	                )
+	            );
+	        }
+	    }]);
+
+	    return ImagesList;
+	}(_react2.default.Component);
 
 /***/ },
 /* 176 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	exports.default = function (node) {
+	    var DeleteButton = function (_React$Component) {
+	        _inherits(DeleteButton, _React$Component);
+
+	        function DeleteButton() {
+	            _classCallCheck(this, DeleteButton);
+
+	            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DeleteButton).call(this));
+
+	            _this.state = {
+	                deleted: false
+	            };
+	            _this.handleClick = _this.handleClick.bind(_this);
+	            return _this;
+	        }
+
+	        _createClass(DeleteButton, [{
+	            key: 'handleClick',
+	            value: function handleClick() {
+	                this.setState({ deleted: !this.state.deleted });
+	            }
+	        }, {
+	            key: 'render',
+	            value: function render() {
+	                var text = this.state.deleted ? 'deleted' : 'haven\'t deleted';
+	                return _react2.default.createElement(
+	                    'div',
+	                    { className: 'btn btn-default modal-toggle', role: 'button', onClick: this.handleClick },
+	                    _react2.default.createElement('i', { className: 'glyphicon glyphicon-trash' }),
+	                    _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        'U ',
+	                        text
+	                    )
+	                );
+	            }
+	        }]);
+
+	        return DeleteButton;
+	    }(_react2.default.Component);
+
+	    _reactDom2.default.render(_react2.default.createElement(DeleteButton, null), node);
+	};
+
+	var _react = __webpack_require__(4);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(36);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	// export default function () {
+	//     class Rename extends React.Component{
+	//         constructor(){
+	//             super();
+	//             this.state = {
+	//                 renamed:false
+	//             };
+	//             this.handleClick = this.HandleClick.bind(this);
+	//         }
+	//         handleClick(){
+	//             this.setState({renamed: !this.state.renamed});
+	//         }
+	//         render (){
+	//             return(
+	//                 <div>
+	//                         <input type="submit" value="Rename" onClick={this.onClick} />
+	//                         { this.state.showResults ? <Results /> : null }
+	//                     </div>
+	//             )
+	//         }
+	//     }
+	//
+	//
+	// }
+	// var Rename = React.createClass({
+	//         getInitialState: function() {
+	//             return { showResults: false };
+	//         },
+	//         onClick: function() {
+	//             this.setState({ showResults: true });
+	//         },
+	//         render: function() {
+	//             return (
+	//                 <div>
+	//                     <input type="submit" value="Rename" onClick={this.onClick} />
+	//                     { this.state.showResults ? <Results /> : null }
+	//                 </div>
+	//             );
+	//         }
+	//     });
+	//
+	//      var Results = React.createClass({
+	//         render: function() {
+	//             return (
+	//                 <div id="results" className="Rename-results">
+	//                     Rename <input type="text" name="rename"/>
+	//                     <input type="submit" value="Rename"  role="button"/>
+	//                 </div>
+	//             );
+	//         }
+	//     });
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/***/ },
+/* 177 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	exports.default = function (node) {
+	    var Rename = _react2.default.createClass({
+	        displayName: 'Rename',
+
+	        getInitialState: function getInitialState() {
+	            return { showResults: false };
+	        },
+	        onClick: function onClick() {
+	            this.setState({ showResults: true });
+	        },
+	        render: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement('input', { type: 'submit', value: 'Rename', onClick: this.onClick }),
+	                this.state.showResults ? _react2.default.createElement(Results, null) : null
+	            );
+	        }
+	    });
+
+	    var Results = _react2.default.createClass({
+	        displayName: 'Results',
+
+	        render: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                { id: 'resultsss', className: 'Rename-results' },
+	                'Rename ',
+	                _react2.default.createElement('input', { type: 'text', name: 'rename' }),
+	                _react2.default.createElement('input', { type: 'submit', value: 'Rename', action: 'rename', role: 'button' })
+	            );
+	        }
+	    });
+	    _reactDom2.default.render(_react2.default.createElement(Rename, null), node);
+	};
+
+	var _react = __webpack_require__(4);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(36);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
+/* 178 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 179 */,
+/* 180 */,
+/* 181 */,
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21652,7 +21855,7 @@
 	 */
 	Bazooka.BazookaWrapper = BazookaWrapper;
 
-	Bazooka.h = __webpack_require__(177);
+	Bazooka.h = __webpack_require__(183);
 
 	/**
 	 * Register components names
@@ -21723,7 +21926,7 @@
 
 
 /***/ },
-/* 177 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -21849,193 +22052,6 @@
 	};
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
-
-/***/ },
-/* 178 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	exports.default = function (node) {
-	    var DeleteButton = function (_React$Component) {
-	        _inherits(DeleteButton, _React$Component);
-
-	        function DeleteButton() {
-	            _classCallCheck(this, DeleteButton);
-
-	            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DeleteButton).call(this));
-
-	            _this.state = {
-	                deleted: false
-	            };
-	            _this.handleClick = _this.handleClick.bind(_this);
-	            return _this;
-	        }
-
-	        _createClass(DeleteButton, [{
-	            key: 'handleClick',
-	            value: function handleClick() {
-	                this.setState({ deleted: !this.state.deleted });
-	            }
-	        }, {
-	            key: 'render',
-	            value: function render() {
-	                var text = this.state.deleted ? 'deleted' : 'haven\'t deleted';
-	                return _react2.default.createElement(
-	                    'div',
-	                    { className: 'btn btn-default modal-toggle', role: 'button', onClick: this.handleClick },
-	                    _react2.default.createElement('i', { className: 'glyphicon glyphicon-trash' }),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        'U ',
-	                        text
-	                    )
-	                );
-	            }
-	        }]);
-
-	        return DeleteButton;
-	    }(_react2.default.Component);
-
-	    _reactDom2.default.render(_react2.default.createElement(DeleteButton, null), node);
-	};
-
-	var _react = __webpack_require__(4);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(36);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	// export default function () {
-	//     class Rename extends React.Component{
-	//         constructor(){
-	//             super();
-	//             this.state = {
-	//                 renamed:false
-	//             };
-	//             this.handleClick = this.HandleClick.bind(this);
-	//         }
-	//         handleClick(){
-	//             this.setState({renamed: !this.state.renamed});
-	//         }
-	//         render (){
-	//             return(
-	//                 <div>
-	//                         <input type="submit" value="Rename" onClick={this.onClick} />
-	//                         { this.state.showResults ? <Results /> : null }
-	//                     </div>
-	//             )
-	//         }
-	//     }
-	//
-	//
-	// }
-	// var Rename = React.createClass({
-	//         getInitialState: function() {
-	//             return { showResults: false };
-	//         },
-	//         onClick: function() {
-	//             this.setState({ showResults: true });
-	//         },
-	//         render: function() {
-	//             return (
-	//                 <div>
-	//                     <input type="submit" value="Rename" onClick={this.onClick} />
-	//                     { this.state.showResults ? <Results /> : null }
-	//                 </div>
-	//             );
-	//         }
-	//     });
-	//
-	//      var Results = React.createClass({
-	//         render: function() {
-	//             return (
-	//                 <div id="results" className="Rename-results">
-	//                     Rename <input type="text" name="rename"/>
-	//                     <input type="submit" value="Rename"  role="button"/>
-	//                 </div>
-	//             );
-	//         }
-	//     });
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/***/ },
-/* 179 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	exports.default = function (node) {
-	    var Rename = _react2.default.createClass({
-	        displayName: 'Rename',
-
-	        getInitialState: function getInitialState() {
-	            return { showResults: false };
-	        },
-	        onClick: function onClick() {
-	            this.setState({ showResults: true });
-	        },
-	        render: function render() {
-	            return _react2.default.createElement(
-	                'div',
-	                null,
-	                _react2.default.createElement('input', { type: 'submit', value: 'Rename', onClick: this.onClick }),
-	                this.state.showResults ? _react2.default.createElement(Results, null) : null
-	            );
-	        }
-	    });
-
-	    var Results = _react2.default.createClass({
-	        displayName: 'Results',
-
-	        render: function render() {
-	            return _react2.default.createElement(
-	                'div',
-	                { id: 'resultsss', className: 'Rename-results' },
-	                'Rename ',
-	                _react2.default.createElement('input', { type: 'text', name: 'rename' }),
-	                _react2.default.createElement('input', { type: 'submit', value: 'Rename', action: 'rename', role: 'button' })
-	            );
-	        }
-	    });
-	    _reactDom2.default.render(_react2.default.createElement(Rename, null), node);
-	};
-
-	var _react = __webpack_require__(4);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(36);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/***/ },
-/* 180 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
 
 /***/ }
 /******/ ]);

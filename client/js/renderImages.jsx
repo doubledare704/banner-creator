@@ -102,14 +102,17 @@ class Image extends React.Component {
     }
 }
 
-var ImagesList = React.createClass({
-    getInitialState: function() {
-        return {
-            displayedImages: this.props.imageArray
-        };
-    },
+class ImagesList extends React.Component{
 
-    handleSearch: function(event) {
+    constructor(props) {
+        super(props);
+        this.state = {
+        displayedImages: this.props.imageArray
+        };
+        this.handleSearch = this.handleSearch.bind(this);
+    }
+
+    handleSearch(event) {
         console.log('it works');
         var searchQuery = event.target.value.toLowerCase();
         var displayedImages = this.props.imageArray.filter(function(el) {
@@ -120,7 +123,7 @@ var ImagesList = React.createClass({
         this.setState({
             displayedImages: displayedImages
         });
-    },
+    }
     // handleDel: function (event) {
     //     console.log('syka');
     //     alert('syka');
@@ -160,7 +163,7 @@ var ImagesList = React.createClass({
             </div>
         );
     }
-});
+}
 
 
 export default function (node) {
