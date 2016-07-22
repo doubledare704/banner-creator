@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template,json, url_for, redirect
 from server.models import Image
 from server.db import db
 
@@ -8,9 +8,15 @@ def admin():
 
 
 def backgrounds():
-    act_backgrounds = Image.query.filter(Image.active == 't').order_by(Image.name.asc()).all()
-    del_backgrounds = Image.query.filter(Image.active == 'f').order_by(Image.name.asc()).all()
-    return render_template('admin/backgrounds.html', act_backgrounds=act_backgrounds, del_backgrounds=del_backgrounds)
+    backgrounds = Image.query.order_by(Image.name.asc()).all()
+
+    back_im = [{"id": act_background.id, 'title': act_background.title,
+                'preview': '/uploads/' + act_background.preview,
+                "title": act_background.title, "active": str(act_background.active)}
+               for act_background in backgrounds]
+    back_im = json.dumps(back_im)
+
+    return render_template('admin/backgrounds.html', back_im=back_im)
 
 
 def inactiveImg(id):
