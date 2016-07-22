@@ -17,22 +17,28 @@ function makeBackgroundImagesLoader() {
     return function () {
         if (!blocked) {
             blocked = true;
-            fetch(`/api/backgrounds/${page}`)
-                .then(function (response) {
-                {console.log(response.text)}
-                if (response.status == 200) {
-                    response.json().then(function (data) {
-                        populateBackgroundsList(data.backgroundImages);
-                        backgroundsList.style.display = 'block';
-                        page += 1;
-                        blocked = false;
-                    })
-                }
-                else {
-                    backgroundsList.style.display = 'block';
-                    blocked = false;
+            fetch(`/api/backgrounds/${page}`, {
+                credentials: 'same-origin', headers: {
+                    'Content-Type': 'application/json'
                 }
             })
+                .then(function (response) {
+                    {
+                        // console.log(response.text)
+                    }
+                    if (response.status == 200) {
+                        response.json().then(function (data) {
+                            populateBackgroundsList(data.backgroundImages);
+                            backgroundsList.style.display = 'block';
+                            page += 1;
+                            blocked = false;
+                        })
+                    }
+                    else {
+                        backgroundsList.style.display = 'block';
+                        blocked = false;
+                    }
+                })
         }
     }
 }

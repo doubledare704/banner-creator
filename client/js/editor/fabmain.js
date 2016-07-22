@@ -27,35 +27,38 @@ result_preview.addEventListener('click', () => {
 span.onclick = ()=> {
     modals.style.display = "none";
 };
-window.onclick = (e) =>{
-    if(e.target == modals){
+window.onclick = (e) => {
+    if (e.target == modals) {
         modals.style.display = "none";
     }
 };
 
 //send image to review model
-    sendImageReview.addEventListener('click', function sendImageToReview() {
-        let image_review = editor.canv.toJSON();
-        let image_base64 = editor.canv.toDataURL("image/png", 1.0);
-        let random_name = Math.random().toString(36).substr(2, 10) + '.png';
-        const data = {
-            file: image_base64,
-            name: random_name,
-            file_json: image_review
-        };
-        fetch('/api/review/', {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+sendImageReview.addEventListener('click', function sendImageToReview() {
+    let image_review = editor.canv.toJSON();
+    let image_base64 = editor.canv.toDataURL("image/png", 1.0);
+    let random_name = Math.random().toString(36).substr(2, 10) + '.png';
+    const data = {
+        file: image_base64,
+        name: random_name,
+        file_json: image_review
+    };
+    fetch('/api/review/', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then((res) => res.json(), console.log("It arrived to flask"))
+        .then(function ({result}) {
+            document.getElementById('resulting').src = result.src;
+            document.getElementById('continue').href += result.rev
         })
-            .then((res) => res.json(), console.log("It arrived to flask"))
-            .then(({src}) => document.getElementById('resulting').src = src)
-            .catch(function (error) {
-                console.log('Request failed', error);
-            });
-    });
+        .catch(function (error) {
+            console.log('Request failed', error);
+        });
+});
 
 //deletes custom object from canvas
 deleteFabricItem.addEventListener('click', function () {

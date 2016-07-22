@@ -1,4 +1,4 @@
-from flask import render_template,json, url_for, redirect
+from flask import render_template, json, url_for, redirect
 from server.models import Image
 from server.db import db
 

@@ -54,12 +54,14 @@ def index():
 
     return render_template('list.html', images=images, image_json=image_json)
 
+
 @login_required
 def image_delete(id):
     image = Image.query.get_or_404(id)
     image.active = False
     flash('File is deleted you are really brave person !')
     return redirect(url_for('index'))
+
 
 @login_required
 def image_rename(id):
@@ -68,13 +70,11 @@ def image_rename(id):
     flash('Image renamed')
     return redirect(url_for('index'))
 
+
 @login_required
 def editor():
-    if request.method == 'POST':
-        pass
-    else:
-        pass
     return render_template('editor_markuped.html')
+
 
 @login_required
 def background_images(page=1):
@@ -105,5 +105,14 @@ def review():
         json_hist=request.json['file_json']
     )
     db.session.add(history)
+    review_jsoned = {
+        "src": url_for('uploaded_file', filename=filename),
+        "rev": history.review_image
+    }
+    return jsonify({'result': review_jsoned})
 
-    return jsonify({'src': url_for('uploaded_file', filename=filename)})
+
+def continue_edit(history_image_id):
+    edit_history = ImageHistory.query.get_or_404(history_image_id)
+
+    return render_template('editor_markuped.html')
