@@ -35,12 +35,12 @@ class User(db.Model):
 
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
-    social_id = db.Column(db.String(255), index=True)
+    social_id = db.Column(db.String(255))
     social_type = db.Column(Enum(SocialNetwork), nullable=False)
     first_name = db.Column(db.String(255))
     last_name = db.Column(db.String(255))
-    gender = db.Column(Enum(Gender), nullable=False)
-    email = db.Column(db.String(255), index=True, unique=True)
+    gender = db.Column(Enum(Gender))
+    email = db.Column(db.String(255), unique=True)
     role = db.Column(Enum(UserRole), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
