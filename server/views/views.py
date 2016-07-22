@@ -1,6 +1,7 @@
 import base64
 import os
 import uuid
+from flask_login import login_required
 import json
 
 from flask import render_template, redirect, current_app, flash, request, url_for, jsonify
@@ -13,6 +14,7 @@ from server.db import db
 from server.utils.image import allowed_file, image_resize, image_preview
 
 
+@login_required
 def index():
     images = Image.query.filter_by(active=True)
     if request.method == 'POST':
@@ -52,21 +54,21 @@ def index():
 
     return render_template('list.html', images=images, image_json=image_json)
 
-
+@login_required
 def image_delete(id):
     image = Image.query.get_or_404(id)
     image.active = False
     flash('File is deleted you are really brave person !')
     return redirect(url_for('index'))
 
-
+@login_required
 def image_rename(id):
     image = Image.query.get_or_404(id)
     image.title = request.form['rename']
     flash('Image renamed')
     return redirect(url_for('index'))
 
-
+@login_required
 def editor():
     if request.method == 'POST':
         pass
@@ -74,7 +76,7 @@ def editor():
         pass
     return render_template('editor_markuped.html')
 
-
+@login_required
 def background_images(page=1):
     paginated_images = Image.query.paginate(page, 4)
     serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active,

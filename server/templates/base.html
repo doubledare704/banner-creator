@@ -3,6 +3,7 @@
 <head>
     {% block head %}
         <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
         <link rel="shortcut icon" href="{{ url_for('static', filename='fav/favicon.ico') }}">
         <title>{% block title %}{% endblock %} - EVO</title>
     {% endblock %}
@@ -25,6 +26,14 @@
                     <li><a href="/">Home</a></li>
                     <li><a href="{{ url_for ('editor') }}">Editor</a></li>
                     <li><a href="{{ url_for ('admin') }}">Admin</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/">{{current_user.first_name}} {{current_user.last_name}}</a></li>
+                    <li>
+                        <form method="post" action="{{ url_for ('log_out') }}" class="form-inline">
+                            <button class="btn btn-link logout" type="submit">Logout</button>
+                        </form>
+                    </li>
                 </ul>
             </div>
         </div>
