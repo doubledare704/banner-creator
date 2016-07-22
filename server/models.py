@@ -31,7 +31,7 @@ class Review(db.Model):
         return 'Review image {0}'.format(self.name)
 
 
-class Image_history(db.Model):
+class ImageHistory(db.Model):
     __tablename__ = 'image_history'
     id = db.Column(db.Integer, primary_key=True)
     review_image = db.Column(db.Integer, db.ForeignKey('review.id'), nullable=False)
@@ -40,7 +40,6 @@ class Image_history(db.Model):
 
     def __str__(self):
         return 'History for image {0} created at {1}'.format(self.review_image, self.created)
-
 
 
 class User(db.Model):

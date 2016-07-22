@@ -9,7 +9,7 @@ from io import BytesIO
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
-from server.models import Image, Review, Image_history
+from server.models import Image, Review, ImageHistory
 from server.db import db
 from server.utils.image import allowed_file, image_resize, image_preview
 
@@ -100,7 +100,7 @@ def review():
     db.session.add(rev)
     db.session.flush()
 
-    history = Image_history(
+    history = ImageHistory(
         review_image=rev.id,
         json_hist=request.json['file_json']
     )
