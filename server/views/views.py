@@ -10,8 +10,6 @@ from server.db import db
 from server.utils.image import allowed_file,image_resize, image_preview
 
 
-
-
 def index():
     images = Image.query.filter_by(active=True)
     if request.method == 'POST':
@@ -51,7 +49,7 @@ def index():
          for image in images
          ])
 
-    return render_template('list.html', images=images, image_json=image_json)
+    return render_template('list.html', image_json=image_json)
 
 
 def image_delete():
@@ -77,8 +75,16 @@ def image_rename():
     image = Image.query.get_or_404(img_id)
     image.title = request.json['name']
     flash('Image renamed')
-    image_json = {'message':'xyu !!!'}
-    return json.dumps(image_json)
+    images = Image.query.filter_by(active=True)
+    image_json = json.dumps(
+        [{'id': image.id,
+          'url': '/uploads/' + image.name,
+          'title': image.title,
+          'preview': '/uploads/' + image.preview,
+          'delete': '/delete/' + str(image.id)}
+         for image in images
+         ])
+    return image_json
 
 
 def editor():

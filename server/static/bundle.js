@@ -62,31 +62,19 @@
 
 	var _renderImages2 = _interopRequireDefault(_renderImages);
 
-	var _deleteBtn = __webpack_require__(176);
-
-	var _deleteBtn2 = _interopRequireDefault(_deleteBtn);
-
-	var _renameBtn = __webpack_require__(177);
-
-	var _renameBtn2 = _interopRequireDefault(_renameBtn);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// var editor = require('./editor.js');
 
 	//import fabric from './fabmain';
 	var styluses = __webpack_require__(178);
-	var Baz = __webpack_require__(182);
+	var Baz = __webpack_require__(176);
 
 	Baz.register({
 	    'inactiveImg': _inactiveImg2.default,
 	    'deleteImg': _deleteFromDB2.default,
 	    'header': _header2.default,
-	    'renderImages': _renderImages2.default,
-	    'deleteBtn': _deleteBtn2.default,
-	    'renameBtn': _renameBtn2.default
-	    //'fabric': fabric
-
+	    'renderImages': _renderImages2.default
 	});
 
 	var unwatch = Baz.watch();
@@ -21229,6 +21217,7 @@
 	    var _h$getAttrs = _bazooka.h.getAttrs(BAZOOKA_PREFIX, node);
 
 	    var imageArray = _h$getAttrs.imageArray;
+
 	    //const eventStream = Rx.Subject();
 
 	    _reactDom2.default.render(_react2.default.createElement(ImagesList, { imageArray: imageArray }), // eventStream={eventStream}
@@ -21254,7 +21243,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _bazooka = __webpack_require__(182);
+	var _bazooka = __webpack_require__(176);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21271,10 +21260,10 @@
 	var Rename = function (_React$Component) {
 	    _inherits(Rename, _React$Component);
 
-	    function Rename() {
+	    function Rename(props) {
 	        _classCallCheck(this, Rename);
 
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Rename).call(this));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Rename).call(this, props));
 
 	        _this.state = {
 	            renamed: false
@@ -21299,14 +21288,17 @@
 	            ) : 'Rename';
 	            return _react2.default.createElement(
 	                'div',
-	                { onClick: this.handleRename, className: 'btn btn-default' },
+	                { className: 'btn btn-default' },
 	                _react2.default.createElement('i', { className: 'glyphicon glyphicon-pencil' }),
 	                _react2.default.createElement(
 	                    'span',
 	                    { onClick: this.onClick },
 	                    text
 	                ),
-	                this.state.renamed ? _react2.default.createElement(ToRename, null) : null
+	                this.state.renamed ? _react2.default.createElement(ToRename, {
+	                    title: this.props.title,
+	                    id: this.props.id
+	                }) : null
 	            );
 	        }
 	    }]);
@@ -21317,45 +21309,54 @@
 	var ToRename = function (_React$Component2) {
 	    _inherits(ToRename, _React$Component2);
 
-	    function ToRename() {
+	    function ToRename(props) {
 	        _classCallCheck(this, ToRename);
 
-	        var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(ToRename).call(this));
+	        var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(ToRename).call(this, props));
 
 	        _this2.handleRename = _this2.handleRename.bind(_this2);
+	        _this2.handleTitleChange = _this2.handleTitleChange.bind(_this2);
 	        return _this2;
 	    }
 
 	    _createClass(ToRename, [{
-	        key: 'handleRename',
-	        value: function handleRename() {
-
-	            console.log('xyu');
-	            //const data = {file: canvas.toDataURL()};
-	            var renameName = this.value;
-	            var form = { id: 47, name: renameName };
-	            console.log(JSON.stringify(form), this.props.img_rename);
-	            fetch("/rename/", {
-	                method: "POST", headers: {
-	                    'Content-Type': 'application/json'
-	                },
-	                body: JSON.stringify(form)
-	            }).then(function (response) {
-	                if (response.status !== 200) {
-	                    console.log('Looks like there was a problem. Status Code: ' + response.status);
-	                }
-	                response.json().then(function (data) {
-	                    console.log(data);
-	                });
+	        key: 'handleTitleChange',
+	        value: function handleTitleChange(e) {
+	            this.setState({
+	                name: e.target.value
 	            });
 	        }
+
+	        // handleRename(event){
+	        //
+	        //     const renameName = this.state.name;
+	        //     const Id = this.props.id;
+	        //     const form = {id: Id, name: renameName};
+	        //
+	        //     fetch("/rename/",{
+	        //         method: "POST",headers: {
+	        //             'Content-Type': 'application/json'
+	        //     },
+	        //     body: JSON.stringify(form)
+	        //     }).then((response) => {
+	        //         if(response.status !== 200){
+	        //             console.log('Looks like there was a problem. Status Code: ' +
+	        //                 response.status);
+	        //         }
+	        //         response.json().then((data) => {
+	        //         this.state.newImageArray.setAttribute("data-header-image-array",JSON.stringify(data));
+	        //             alert("ok");
+	        //         })
+	        //     })
+	        // }
+
 	    }, {
 	        key: 'render',
 	        value: function render() {
 	            return _react2.default.createElement(
 	                'div',
 	                null,
-	                _react2.default.createElement('input', { type: 'text', 'data-name': 'rename', onClick: this.handleRename, required: true }),
+	                _react2.default.createElement('input', { type: 'text', 'data-name': 'rename', onChange: this.handleTitleChange, required: true }),
 	                _react2.default.createElement('input', { type: 'submit', value: 'Rename', onClick: this.handleRename, role: 'button' })
 	            );
 	        }
@@ -21370,11 +21371,38 @@
 	    function Image() {
 	        _classCallCheck(this, Image);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Image).call(this));
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Image).apply(this, arguments));
 	    }
 
 	    _createClass(Image, [{
 	        key: 'render',
+
+	        //
+	        // constructor(props){
+	        //     super();
+	        // }
+
+	        // handleDelete(){
+	        //     const Id = this.props.id;
+	        //     const form = {id: Id};
+	        //
+	        //     fetch("/delete/",{
+	        //         method: "POST",headers: {
+	        //             'Content-Type': 'application/json'
+	        //     },
+	        //     body: JSON.stringify(form)
+	        //     }).then((response) => {
+	        //         if(response.status !== 200){
+	        //             console.log('Looks like there was a problem. Status Code: ' +
+	        //                 response.status);
+	        //         }
+	        //         response.json().then((data) => {
+	        //         this.state.newImageArray.setAttribute("data-header-image-array",JSON.stringify(data));
+	        //             alert("ok");
+	        //         })
+	        //     })
+	        // }
+
 	        value: function render() {
 
 	            return _react2.default.createElement(
@@ -21403,7 +21431,7 @@
 	                        ),
 	                        _react2.default.createElement(
 	                            'a',
-	                            { href: this.props.delete, className: 'btn btn-default modal-toggle', role: 'button' },
+	                            { onClick: this.props.handleDelete(this.props.id), className: 'btn btn-default modal-toggle', role: 'button' },
 	                            _react2.default.createElement('i', { className: 'glyphicon glyphicon-trash' }),
 	                            _react2.default.createElement(
 	                                'span',
@@ -21416,7 +21444,10 @@
 	                            { href: this.props.url, className: 'btn btn-default', role: 'button' },
 	                            'Preview'
 	                        ),
-	                        _react2.default.createElement(Rename, { img_rename: this.props.rename })
+	                        _react2.default.createElement(Rename, {
+	                            title: this.props.title,
+	                            id: this.props.id
+	                        })
 	                    )
 	                )
 	            );
@@ -21434,46 +21465,64 @@
 
 	        var _this4 = _possibleConstructorReturn(this, Object.getPrototypeOf(ImagesList).call(this, props));
 
-	        _this4.state = {
-	            displayedImages: _this4.props.imageArray
+	        _this4.handleDelete = function (id) {
+	            return function () {
+	                console.log("Hello", id);
+	                var displayedImages = _this4.state.displayedImages.filter(function (el) {
+	                    return el.id != id;
+	                });
+	                _this4.setState({
+	                    displayedImages: displayedImages
+	                });
+	            };
 	        };
-	        _this4.handleSearch = _this4.handleSearch.bind(_this4);
-	        return _this4;
-	    }
 
-	    _createClass(ImagesList, [{
-	        key: 'handleSearch',
-	        value: function handleSearch(event) {
-	            console.log('it works');
+	        _this4.handleRename = function (id) {
+	            return function () {
+	                console.log("Rename", id);
+	                fetch("/rename/", {
+	                    method: "POST",
+	                    headers: {
+	                        'Content-Type': 'application/json'
+	                    },
+	                    body: JSON.stringify({ id: id })
+	                }).then(function (response) {
+	                    if (response.status != 200) {
+	                        console.log('Looks like there was a problem. Status Code: ' + response.status);
+	                    }
+	                    response.json().then(function (data) {
+	                        console.log(JSON.stringify(data));
+	                    });
+	                });
+	            };
+	        };
+
+	        _this4.handleSearch = function (event) {
 	            var searchQuery = event.target.value.toLowerCase();
-	            var displayedImages = this.props.imageArray.filter(function (el) {
+	            var displayedImages = _this4.props.imageArray.filter(function (el) {
 	                var searchValue = el.title.toLowerCase();
 	                return searchValue.indexOf(searchQuery) !== -1;
 	            });
 
-	            this.setState({
+	            _this4.setState({
 	                displayedImages: displayedImages
 	            });
-	        }
-	        // handleDel: function (event) {
-	        //     console.log('syka');
-	        //     alert('syka');
-	        //     return () => {
-	        //         console.log('syka');
-	        //         const displayedImages = displayedImages.filter((el) => el.id != id);
-	        //         alert('syka');
-	        //         this.setState({
-	        //             displayedImages: displayedImages
-	        //         });
-	        //     }
-	        // },
+	        };
 
-	    }, {
+	        _this4.state = {
+	            displayedImages: _this4.props.imageArray
+	        };
+	        return _this4;
+	    }
+
+	    _createClass(ImagesList, [{
 	        key: 'render',
 	        value: function render() {
+	            var _this5 = this;
+
 	            return _react2.default.createElement(
 	                'div',
-	                { className: 'form-inline' },
+	                { id: 'newImgList', className: 'form-inline' },
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'form-group' },
@@ -21487,12 +21536,14 @@
 	                    this.state.displayedImages.map(function (el) {
 	                        return _react2.default.createElement(Image, {
 	                            key: el.id,
+	                            id: el.id,
 	                            title: el.title,
 	                            url: el.url,
 	                            preview: el.preview,
 	                            'delete': el.delete,
-	                            rename: el.rename
-
+	                            rename: el.rename,
+	                            handleDelete: _this5.handleDelete,
+	                            handleRename: _this5.handleRename
 	                        }); // eventStream={this.props.eventStream}
 	                    })
 	                )
@@ -21505,196 +21556,6 @@
 
 /***/ },
 /* 176 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	exports.default = function (node) {
-	    var DeleteButton = function (_React$Component) {
-	        _inherits(DeleteButton, _React$Component);
-
-	        function DeleteButton() {
-	            _classCallCheck(this, DeleteButton);
-
-	            var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DeleteButton).call(this));
-
-	            _this.state = {
-	                deleted: false
-	            };
-	            _this.handleClick = _this.handleClick.bind(_this);
-	            return _this;
-	        }
-
-	        _createClass(DeleteButton, [{
-	            key: 'handleClick',
-	            value: function handleClick() {
-	                this.setState({ deleted: !this.state.deleted });
-	            }
-	        }, {
-	            key: 'render',
-	            value: function render() {
-	                var text = this.state.deleted ? 'deleted' : 'haven\'t deleted';
-	                return _react2.default.createElement(
-	                    'div',
-	                    { className: 'btn btn-default modal-toggle', role: 'button', onClick: this.handleClick },
-	                    _react2.default.createElement('i', { className: 'glyphicon glyphicon-trash' }),
-	                    _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        'U ',
-	                        text
-	                    )
-	                );
-	            }
-	        }]);
-
-	        return DeleteButton;
-	    }(_react2.default.Component);
-
-	    _reactDom2.default.render(_react2.default.createElement(DeleteButton, null), node);
-	};
-
-	var _react = __webpack_require__(4);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(36);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	// export default function () {
-	//     class Rename extends React.Component{
-	//         constructor(){
-	//             super();
-	//             this.state = {
-	//                 renamed:false
-	//             };
-	//             this.handleClick = this.HandleClick.bind(this);
-	//         }
-	//         handleClick(){
-	//             this.setState({renamed: !this.state.renamed});
-	//         }
-	//         render (){
-	//             return(
-	//                 <div>
-	//                         <input type="submit" value="Rename" onClick={this.onClick} />
-	//                         { this.state.showResults ? <Results /> : null }
-	//                     </div>
-	//             )
-	//         }
-	//     }
-	//
-	//
-	// }
-	// var Rename = React.createClass({
-	//         getInitialState: function() {
-	//             return { showResults: false };
-	//         },
-	//         onClick: function() {
-	//             this.setState({ showResults: true });
-	//         },
-	//         render: function() {
-	//             return (
-	//                 <div>
-	//                     <input type="submit" value="Rename" onClick={this.onClick} />
-	//                     { this.state.showResults ? <Results /> : null }
-	//                 </div>
-	//             );
-	//         }
-	//     });
-	//
-	//      var Results = React.createClass({
-	//         render: function() {
-	//             return (
-	//                 <div id="results" className="Rename-results">
-	//                     Rename <input type="text" name="rename"/>
-	//                     <input type="submit" value="Rename"  role="button"/>
-	//                 </div>
-	//             );
-	//         }
-	//     });
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/***/ },
-/* 177 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	exports.default = function (node) {
-	    var Rename = _react2.default.createClass({
-	        displayName: 'Rename',
-
-	        getInitialState: function getInitialState() {
-	            return { showResults: false };
-	        },
-	        onClick: function onClick() {
-	            this.setState({ showResults: true });
-	        },
-	        render: function render() {
-	            return _react2.default.createElement(
-	                'div',
-	                null,
-	                _react2.default.createElement('input', { type: 'submit', value: 'Rename', onClick: this.onClick }),
-	                this.state.showResults ? _react2.default.createElement(Results, null) : null
-	            );
-	        }
-	    });
-
-	    var Results = _react2.default.createClass({
-	        displayName: 'Results',
-
-	        render: function render() {
-	            return _react2.default.createElement(
-	                'div',
-	                { id: 'resultsss', className: 'Rename-results' },
-	                'Rename ',
-	                _react2.default.createElement('input', { type: 'text', name: 'rename' }),
-	                _react2.default.createElement('input', { type: 'submit', value: 'Rename', action: 'rename', role: 'button' })
-	            );
-	        }
-	    });
-	    _reactDom2.default.render(_react2.default.createElement(Rename, null), node);
-	};
-
-	var _react = __webpack_require__(4);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(36);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/***/ },
-/* 178 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 179 */,
-/* 180 */,
-/* 181 */,
-/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21855,7 +21716,7 @@
 	 */
 	Bazooka.BazookaWrapper = BazookaWrapper;
 
-	Bazooka.h = __webpack_require__(183);
+	Bazooka.h = __webpack_require__(177);
 
 	/**
 	 * Register components names
@@ -21926,7 +21787,7 @@
 
 
 /***/ },
-/* 183 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -22052,6 +21913,12 @@
 	};
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+
+/***/ },
+/* 178 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
 
 /***/ }
 /******/ ]);
