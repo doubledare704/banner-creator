@@ -1,4 +1,5 @@
 from server.views.views import index, editor, image_delete, image_rename, background_images, review
+from server.views.auth import login_page, authorize,oauth_callback, log_out
 from server.views.admin import admin, backgrounds, inactiveImg, image_delete_from_DB
 from server.utils.image import uploaded_file
 
@@ -16,3 +17,9 @@ def setup_routes(app):
     app.add_url_rule('/admin/deleteImg/<int:id>', methods=['POST'], view_func=image_delete_from_DB)
     app.add_url_rule('/api/review/', methods=['POST'], view_func=review)
     app.add_url_rule('/api/backgrounds/<int:page>', view_func=background_images)
+
+    # auth routs
+    app.add_url_rule('/login', view_func=login_page)
+    app.add_url_rule('/login/<social_network_name>', view_func=authorize)
+    app.add_url_rule('/login/authorized/<social_network_name>/', view_func=oauth_callback)
+    app.add_url_rule('/logout', methods=['POST'], view_func=log_out)

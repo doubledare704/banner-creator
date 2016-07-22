@@ -41,7 +41,7 @@ class TestViews(unittest.TestCase):
     def test_index_page(self):
         with app.app_context():
             response = self.client.get(url_for('index'))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
     def test_can_upload_an_image(self):
         with app.app_context():
