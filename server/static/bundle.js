@@ -66,7 +66,7 @@
 
 	var _deleteBtn2 = _interopRequireDefault(_deleteBtn);
 
-	var _renameBtn = __webpack_require__(179);
+	var _renameBtn = __webpack_require__(183);
 
 	var _renameBtn2 = _interopRequireDefault(_renameBtn);
 
@@ -75,7 +75,7 @@
 	// var editor = require('./editor.js');
 
 	//import fabric from './fabmain';
-	var styluses = __webpack_require__(180);
+	var styluses = __webpack_require__(179);
 	var Baz = __webpack_require__(176);
 
 	Baz.register({
@@ -21374,6 +21374,11 @@
 	    }
 
 	    _createClass(Image, [{
+	        key: 'handleTitleChange',
+	        value: function handleTitleChange(event) {
+	            this.setState({ name: e.target.value });
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 
@@ -21416,10 +21421,31 @@
 	                            { href: this.props.url, className: 'btn btn-default', role: 'button' },
 	                            'Preview'
 	                        ),
-	                        _react2.default.createElement(Rename, { img_rename: this.props.rename })
+	                        _react2.default.createElement(Rename, null)
 	                    )
 	                )
 	            );
+	        }
+	    }, {
+	        key: 'handleRename',
+	        value: function handleRename() {
+	            console.log("Id: " + this.state.id);
+	            console.log("Name: " + this.state.name);
+	            var form = { id: this.props.id, name: this.props.title };
+	            console.log(JSON.stringify(form));
+	            fetch("/rename/", {
+	                method: "POST", headers: {
+	                    'Content-Type': 'application/json'
+	                },
+	                body: JSON.stringify(form)
+	            }).then(function (response) {
+	                if (response.status !== 200) {
+	                    console.log('Looks like there was a problem. Status Code: ' + response.status);
+	                }
+	                response.json().then(function (data) {
+	                    console.log(data);
+	                });
+	            });
 	        }
 	    }]);
 
@@ -21977,6 +22003,15 @@
 
 /***/ },
 /* 179 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 180 */,
+/* 181 */,
+/* 182 */,
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22030,12 +22065,6 @@
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/***/ },
-/* 180 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
 
 /***/ }
 /******/ ]);

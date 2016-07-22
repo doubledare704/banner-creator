@@ -78,6 +78,9 @@ class Image extends React.Component {
         super();
 
     }
+    handleTitleChange(event){
+        this.setState({name: e.target.value });
+    }
     render(){
 
         return (
@@ -94,12 +97,32 @@ class Image extends React.Component {
             <a href={this.props.url} className="btn btn-default" role="button">
             Preview
             </a>
-            <Rename img_rename = {this.props.rename}/>
+            <Rename />
             </div>
             </div>
             </div>
         );
     }
+    handleRename(){
+        console.log("Id: " + this.state.id);
+        console.log("Name: " + this.state.name);
+        const form = {id: this.props.id, name: this.props.title};
+        console.log(JSON.stringify(form));
+        fetch("/rename/",{
+            method: "POST",headers: {
+                'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(form)
+        }).then((response) => {
+            if(response.status !== 200){
+                console.log('Looks like there was a problem. Status Code: ' +
+                    response.status);
+            }
+            response.json().then((data) => {
+            console.log(data); });
+        })
+    }
+
 }
 
 var ImagesList = React.createClass({
