@@ -1,4 +1,6 @@
 import flask
+import logging
+from logging import handlers
 
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
@@ -33,5 +35,14 @@ def create_app():
     from server import models
 
     migrate = Migrate(app, db, directory='server/migrations')
+
+    # logging config
+    handler = handlers.RotatingFileHandler(filename=app.config['LOGGING_LOCATION'],
+                                           maxBytes=app.config['LOGGING_FILE_SIZE'],
+                                           backupCount=1)
+    handler.setLevel(app.config['LOGGING_LEVEL'])
+    formatter = logging.Formatter(app.config['LOGGING_FORMAT'])
+    handler.setFormatter(formatter)
+    app.logger.addHandler(handler)
 
     return app
