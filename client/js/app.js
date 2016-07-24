@@ -1,5 +1,3 @@
-import inactiveImg from './admin/inactiveImg.js';
-import deleteImg from './admin/deleteFromDB.js';
 import header from './header.jsx';
 import renderImages from './renderImages.jsx';
 import reactTab from './admin/reactTab.jsx'
@@ -9,11 +7,9 @@ var Baz = require('bazooka');
 
 
 Baz.register({
-    'inactiveImg': inactiveImg,
-    'deleteImg': deleteImg,
+    'reactTab': reactTab,
     'header': header,
-    'renderImages':renderImages, 
-    'reactTab': reactTab
+    'renderImages':renderImages
 });
 
 
