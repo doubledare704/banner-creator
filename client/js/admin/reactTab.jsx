@@ -2,86 +2,117 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
 
+
 const BAZOOKA_PREFIX = 'header';
 
 
 export default function (node) {
     let {backgroundsArray} = h.getAttrs(BAZOOKA_PREFIX, node);
+    
 
-    const ActivePictures = React.createClass({displayName: 'active_section',
+    let Tab = React.createClass({
         render: function() {
-            console.log('click');
             return (
-                <li className="active" onClick={this.props.onClickAct}><a data-toggle="tab" href="#active-pictures">Активные картинки</a></li>
+                <li className={this.props.name} onClick={this.props.onClick}><a data-toggle="tab" href={'#'+this.props.name}>{this.props.title}</a></li>
+            );
+        }
+    });
+
+        let ActivePictures = React.createClass({displayName: 'active_section',
+        render: function() {
+            return (
+                <li className="active" onClick={this.props.onClick}><a data-toggle="tab" href="#active-pictures">Активные картинки</a></li>
             );
         }
     });
 
 
-    const InactivePictures = React.createClass({displayName: 'active_section',
+    let InactivePictures = React.createClass({displayName: 'active_section',
         render: function() {
             return (
-                <li className="inactive" onClick={this.props.onClickInAct}><a data-toggle="tab" href="#inactive-pictures">Неактивные картинки</a></li>
+                <li className="inactive" onClick={this.props.onClick}><a data-toggle="tab" href="#inactive-pictures">Неактивные картинки</a></li>
             );
         }
     });
 
 
-    const Table = React.createClass({displayName: 'table',
+    let TableRow = React.createClass({
+
+        handleTableRowRemove: function() {
+          this.props.onTableRowDelete( this.props.tablerow );
+          return false;
+        },
+
         render: function() {
+            let onClickAction = this.onClickDel;
+
+            return (
+                <tr className={this.props.tablerow.active} >
+                    <td>
+                        {this.props.tablerow.title}{this.props.tablerow.active}
+                    </td>
+                    <td>
+                        <img src={this.props.tablerow.preview} alt="cat" />
+                    </td>
+                    <td>
+                        <button className="btn btn-default" onClick={this.handleTableRowRemove}>
+                            <i className="glyphicon glyphicon-trash"/>
+                            <i>Delete</i>
+                        </button>
+                    </td>
+               </tr>
+            );
+        }
+    });
+
+
+    let Table = React.createClass({displayName: 'table',
+
+        handleTableRowRemove: function(tablerow){
+          this.props.onTableRowRemove( tablerow );
+        },
+
+        render: function() {
+            let tablerows = [];
+            let that = this;
+            this.props.backgrounds.forEach(function(tablerow) {
+                tablerows.push(<TableRow key={tablerow.id} tablerow={tablerow} onTableRowDelete={that.handleTableRowRemove} /> );
+            });
+
             return (
                 <table className="table">
                     <thead>
                         <tr>
                             <th>Name</th>
                             <th>Image</th>
-                            <th></th>
+                            <th>
+                            </th>
                         </tr>
                     </thead>
-                    <tbody>
-                    {
-                       this.props.backgrounds.map(function(el) {
-                            return
-                            <tr className={el.title}>
-                                <td>
-                                    {el.title}{el.active}
-                                </td>
-                                <td>
-                                    <img className="img-responsive" src={el.url} alt="cat" width="150" height="100" />
-                                </td>
-                                <td>
-
-                                    <button className="btn btn-default">
-                                        <i className="glyphicon glyphicon-trash"/>
-                                        <i>Delete</i>
-                                    </button>
-                                </td>
-                           </tr>;
-                        })
-                    }
-                    </tbody>
+                    <tbody>{tablerows}</tbody>
                 </table>
             );
         }
     });
 
 
-    const Head = React.createClass({
+    let Head = React.createClass({
 
         getInitialState: function() {
-            var backgrounds = backgroundsArray.filter(function(el) {
+            let backgrounds = backgroundsArray.filter(function(el) {
                 if ( el.active == 'True' ) {
                     return el;
                 }
             });
 
-            return { backgrounds : backgrounds
+            return {
+                backgrounds : backgrounds
             };
         },
 
 
         inactiveTabClick: function() {
-            var backgrounds = backgroundsArray.filter(function(el) {
+            let backgrounds = backgroundsArray.filter(function(el) {
                 if ( el.active == 'False' ) {
                     return el;
                 }
@@ -94,7 +125,7 @@ export default function (node) {
 
 
         activeTabClick: function() {
-            var backgrounds = backgroundsArray.filter(function(el) {
+            let backgrounds = backgroundsArray.filter(function(el) {
                 if ( el.active == 'True' ) {
                     return el;
                 }
@@ -107,14 +138,11 @@ export default function (node) {
 
 
         render: function() {
-            var activeTabClick = this.activeTabClick;
-            var inactiveTabClick = this.inactiveTabClick;
-
             return (
                 <div>
                     <ul className= "nav nav-tabs">
-                        <ActivePictures onClickAct={activeTabClick}/>
-                        <InactivePictures onClickInAct={inactiveTabClick}/>
+                        <Tab onClick={this.activeTabClick} name="active" title="Активные фоны"/>
+                        <Tab onClick={this.inactiveTabClick} name="inactive" title="Неактивные фоны"/>
                     </ul>
                     <Table backgrounds={this.state.backgrounds}/>
                 </div>
