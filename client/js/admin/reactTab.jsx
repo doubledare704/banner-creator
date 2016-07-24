@@ -6,44 +6,28 @@ import {h} from 'bazooka';
 const BAZOOKA_PREFIX = 'header';
 
 
-export default function (node) {
-    let {backgroundsArray} = h.getAttrs(BAZOOKA_PREFIX, node);
-    
-
-    let Tab = React.createClass({
-        render: function() {
+ class Tab extends React.Component {
+        render() {
             return (
                 <li className={this.props.name} onClick={this.props.onClick}><a data-toggle="tab" href={'#'+this.props.name}>{this.props.title}</a></li>
             );
         }
-    });
+    }
 
-        let ActivePictures = React.createClass({displayName: 'active_section',
-        render: function() {
-            return (
-                <li className="active" onClick={this.props.onClick}><a data-toggle="tab" href="#active-pictures">Активные картинки</a></li>
-            );
+
+    class TableRow extends React.Component {
+        constructor(props) {
+            super(props);
+
+            this.handleTableRowRemove = this.handleTableRowRemove.bind(this);
         }
-    });
 
-
-    let InactivePictures = React.createClass({displayName: 'active_section',
-        render: function() {
-            return (
-                <li className="inactive" onClick={this.props.onClick}><a data-toggle="tab" href="#inactive-pictures">Неактивные картинки</a></li>
-            );
-        }
-    });
-
-
-    let TableRow = React.createClass({
-
-        handleTableRowRemove: function() {
+        handleTableRowRemove() {
           this.props.onTableRowDelete( this.props.tablerow );
           return false;
-        },
+        }
 
-        render: function() {
+        render() {
             let onClickAction = this.onClickDel;
 
             return (
@@ -63,16 +47,22 @@ export default function (node) {
                </tr>
             );
         }
-    });
+    }
 
 
-    let Table = React.createClass({displayName: 'table',
+    class Table extends React.Component {
 
-        handleTableRowRemove: function(tablerow){
+        constructor(props) {
+            super(props);
+
+            this.handleTableRowRemove = this.handleTableRowRemove.bind(this);
+        }
+
+        handleTableRowRemove(tablerow){
           this.props.onTableRowRemove( tablerow );
-        },
+        }
 
-        render: function() {
+        render() {
             let tablerows = [];
             let that = this;
             this.props.backgrounds.forEach(function(tablerow) {
@@ -93,51 +83,64 @@ export default function (node) {
                 </table>
             );
         }
-    });
+    }
 
 
-    let Head = React.createClass({
-
-        getInitialState: function() {
-            let backgrounds = backgroundsArray.filter(function(el) {
+    class Head extends React.Component {
+        activeBackgrounds() {
+            return this.props.backgroundsArray.filter(function(el) {
                 if ( el.active == 'True' ) {
                     return el;
                 }
             });
-
-            return {
-                backgrounds : backgrounds
-            };
-        },
+        }
 
 
-        inactiveTabClick: function() {
-            let backgrounds = backgroundsArray.filter(function(el) {
+        inactiveBackgrounds() {
+            return this.props.backgroundsArray.filter(function(el) {
                 if ( el.active == 'False' ) {
                     return el;
                 }
             });
+        }
+
+
+        constructor(props) {
+            super(props);
+
+            this.inactiveTabClick = this.inactiveTabClick.bind(this);
+            this.activeTabClick = this.activeTabClick.bind(this);
+        }
+
+
+        getInitialState() {
+            let backgrounds = activeBackgrounds();
+
+            this.state = {
+                backgrounds: backgrounds
+            };
+        }
+
+
+        inactiveTabClick() {
+            let backgrounds = inactiveBackgrounds();
+
             this.setState({
                 backgrounds: backgrounds
             });
+        }
 
-        },
 
+        activeTabClick() {
+            let backgrounds = activeBackgrounds();
 
-        activeTabClick: function() {
-            let backgrounds = backgroundsArray.filter(function(el) {
-                if ( el.active == 'True' ) {
-                    return el;
-                }
-            });
             this.setState({
                 backgrounds: backgrounds
             });
+        }
 
-        },
 
-
-        render: function() {
+        render() {
             return (
                 <div>
                     <ul className= "nav nav-tabs">
@@ -148,11 +151,14 @@ export default function (node) {
                 </div>
             );
         }
-    });
+    }
 
+
+export default function (node) {
+    let {backgroundsArray} = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
-        <Head />,
+        <Head backgroundsArray = {backgroundsArray} />,
         node
     );
 }
