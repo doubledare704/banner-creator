@@ -58,17 +58,11 @@ class Table extends React.Component {
         this.handleTableRowRemove = this.handleTableRowRemove.bind(this);
     }
 
-    handleTableRowRemove(tablerow){
-      this.props.onTableRowRemove( tablerow );
+    handleTableRowRemove(tablerow) {
+      this.props.onTableRowRemove(tablerow);
     }
 
     render() {
-        let tablerows = [];
-        let that = this;
-        this.props.backgrounds.forEach(function(tablerow) {
-            tablerows.push(<TableRow key={tablerow.id} tablerow={tablerow} onTableRowDelete={that.handleTableRowRemove} inactiveOrDelete={that.props.inactiveOrDelete}/> );
-        });
-
         return (
             <table className="table">
                 <thead>
@@ -77,9 +71,22 @@ class Table extends React.Component {
                         <th>Image</th>
                         <th>
                         </th>
+                        <th>
+                        </th>
                     </tr>
                 </thead>
-                <tbody>{tablerows}</tbody>
+                <tbody>
+                {
+                    this.props.backgrounds.map((tablerow) => {
+                        return <TableRow
+                            key={tablerow.id}
+                            tablerow={tablerow}
+                            onTableRowDelete={this.handleTableRowRemove}
+                            inactiveOrDelete={this.props.inactiveOrDelete}
+                        />
+                    })
+                }
+                </tbody>
             </table>
         );
     }
@@ -99,7 +106,7 @@ class BackgroundsAdmin extends React.Component {
         this.state = {
             globalBackgrounds: this.props.backgroundsArray,
             backgrounds: this.props.backgroundsArray.filter(function(el) {
-                if ( el.active == 'True' ) {
+                if ( el.active === true ) {
                     return el;
                 }
             }),
@@ -112,7 +119,7 @@ class BackgroundsAdmin extends React.Component {
 
     activeBackgrounds() {
         return this.state.globalBackgrounds.filter(function(el) {
-            if ( el.active == 'True' ) {
+            if ( el.active === true ) {
                 return el;
             }
         });
@@ -120,7 +127,7 @@ class BackgroundsAdmin extends React.Component {
 
     inactiveBackgrounds() {
         return this.state.globalBackgrounds.filter(function(el) {
-            if ( el.active == 'False' ) {
+            if ( el.active === false ) {
                 return el;
             }
         });
@@ -148,8 +155,8 @@ class BackgroundsAdmin extends React.Component {
         let index = -1;
         let clength = this.state.backgrounds.length;
 
-        for( var i = 0; i < clength; i++ ) {
-            if( this.state.backgrounds[i].id === tablerow.id ) {
+        for ( var i = 0; i < clength; i++ ) {
+            if (this.state.backgrounds[i].id === tablerow.id) {
                 index = i;
                 break;
             }
@@ -157,27 +164,29 @@ class BackgroundsAdmin extends React.Component {
 
         let that = this;
 
-        if ( tablerow.active == 'True' ) {
+        //if the background is active, we change status on inactive
+        if (tablerow.active === true) {
             fetch(
                 `/admin/inactiveImg/` + that.state.backgrounds[index].id,
-                { method: "POST" }
+                {method: "POST"}
             ).then(function (response) {
-                if ( response.status == 200 ) {
-                    that.state.backgrounds[index].active = "False";
-                    that.state.backgrounds.splice( index, 1 );
-                    that.setState( {backgrounds: that.state.backgrounds} );
+                if (response.status === 200) {
+                    that.state.backgrounds[index].active = false;
+                    that.state.backgrounds.splice(index, 1);
+                    that.setState({backgrounds: that.state.backgrounds});
                 }
             });
 
+        //if the background is inactive we delete this background from DB
         } else {
             fetch(
                 `/admin/deleteImg/` + that.state.backgrounds[index].id,
-                { method: "POST" }
+                {method: "POST"}
             ).then(function (response) {
-                if ( response.status == 204 ) {
+                if (response.status === 204) {
                     let clength = that.state.globalBackgrounds.length;
 
-                    for (var i = 0; i < clength; i++) {
+                    for ( var i = 0; i < clength; i++ ) {
                         if (that.state.globalBackgrounds[i].id === tablerow.id) {
                             that.state.globalBackgrounds.splice(i, 1);
                             break;
@@ -195,7 +204,6 @@ class BackgroundsAdmin extends React.Component {
 
     }
 
-
     render() {
         return (
             <div>
@@ -203,7 +211,11 @@ class BackgroundsAdmin extends React.Component {
                     <Tab onClick={this.activeTabClick} name={this.state.firstTabClassName} title="Активные фоны"/>
                     <Tab onClick={this.inactiveTabClick} name={this.state.secondTabClassName} title="Неактивные фоны"/>
                 </ul>
-                <Table backgrounds={this.state.backgrounds} onTableRowRemove={this.handleTableRowRemove} inactiveOrDelete={this.state.inactiveOrDelete}/>
+                <Table
+                    backgrounds={this.state.backgrounds}
+                    onTableRowRemove={this.handleTableRowRemove}
+                    inactiveOrDelete={this.state.inactiveOrDelete}
+                />
             </div>
         );
     }

@@ -8,13 +8,13 @@ def admin():
 
 
 def backgrounds():
-    backgrounds = Image.query.order_by(Image.name.asc()).all()
+    backgrounds = Image.query.order_by(Image.name.asc())
 
     back_im = [{
                    "id": act_background.id,
                    'title': act_background.title,
                    'preview': '/uploads/' + act_background.preview,
-                   "active": str(act_background.active)
+                   "active": act_background.active
                }
                for act_background in backgrounds]
 
