@@ -1,13 +1,13 @@
 import header from './header.jsx';
 import renderImages from './renderImages.jsx';
-import reactTab from './admin/reactTab.jsx'
+import backgroundsAdmin from './admin/backgroundsAdmin.jsx'
 
 var styluses = require('./../css/main.styl');
 var Baz = require('bazooka');
 
 
 Baz.register({
-    'reactTab': reactTab,
+    'backgroundsAdmin': backgroundsAdmin,
     'header': header,
     'renderImages':renderImages
 });

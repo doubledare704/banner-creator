@@ -86,7 +86,7 @@ class Table extends React.Component {
 }
 
 
-class Head extends React.Component {
+class BackgroundsAdmin extends React.Component {
     constructor(props) {
         super(props);
 
@@ -214,7 +214,7 @@ export default function (node) {
     let {backgroundsArray} = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
-        <Head backgroundsArray = {backgroundsArray} />,
+        <BackgroundsAdmin backgroundsArray = {backgroundsArray} />,
         node
     );
 }
