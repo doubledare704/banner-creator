@@ -1,4 +1,4 @@
-from flask import render_template, json, url_for, redirect
+from flask import render_template,json,flash
 from server.models import Image
 from server.db import db
 
@@ -8,12 +8,16 @@ def admin():
 
 
 def backgrounds():
-    backgrounds = Image.query.order_by(Image.name.asc()).all()
+    backgrounds = Image.query.order_by(Image.name.asc())
 
-    back_im = [{"id": act_background.id, 'title': act_background.title,
-                'preview': '/uploads/' + act_background.preview,
-                "title": act_background.title, "active": str(act_background.active)}
+    back_im = [{
+                   "id": act_background.id,
+                   'title': act_background.title,
+                   'preview': '/uploads/' + act_background.preview,
+                   "active": act_background.active
+               }
                for act_background in backgrounds]
+
     back_im = json.dumps(back_im)
 
     return render_template('admin/backgrounds.html', back_im=back_im)
