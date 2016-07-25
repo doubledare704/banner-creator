@@ -9,7 +9,7 @@
                 <strong class="error text-danger" data-dz-errormessage></strong>
             </div>
             <hr>
-             <div data-bazooka="header"></div>
+             <div><h1>Upload new File</h1></div>
                     <form class="form-inline" action="" method=post enctype=multipart/form-data>
                         <div class="form-group">
                            Width: <input type="number" name="width">
@@ -27,7 +27,7 @@
 
         </div>
     <div class="row">
-        <div id="newImageArray" data-bazooka="renderImages" data-header-image-array='{{ image_json }}'></div>
+        <div  data-bazooka="renderImages" data-header-image-array='{{ image_json }}'></div>
         </div>
     </div>
 
@@ -35,5 +35,4 @@
 {% block scripts %}
 {{ super() }}
 <script src="../static/bundle.js"></script>
-<script src="../static/js/deleteImage.js"></script>
 {% endblock %}

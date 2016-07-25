@@ -23,9 +23,9 @@ def index():
         if file and allowed_file(file.filename):
             filename = str(uuid.uuid1()).replace("-","") + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
             preview_name = 'preview_' + filename
-            file = image_resize(file)
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
             preview_file = image_preview(file)
+            original_file = image_resize(file)
+            original_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
             preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
             title = request.form['title']
             image = Image(
@@ -41,8 +41,8 @@ def index():
         [{'id':image.id,
           'url':'/uploads/'+image.name,
           'title':image.title,
-          'preview':'/uploads/'+image.preview,
-          'delete':'/delete/'+ str(image.id)}
+          'preview':'/uploads/'+image.preview
+          }
          for image in images
          ])
 
