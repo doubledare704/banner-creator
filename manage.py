@@ -1,3 +1,5 @@
+import sys
+
 from flask_script import Manager
 from flask_migrate import MigrateCommand
 
@@ -16,7 +18,9 @@ def test():
     """
     import unittest
     tests = unittest.TestLoader().discover('server/tests')
-    unittest.TextTestRunner(verbosity=2).run(tests)
+    result = unittest.TextTestRunner(verbosity=2).run(tests)
+    if not result.wasSuccessful():
+        sys.exit(1)
 
 
 if __name__ == '__main__':
