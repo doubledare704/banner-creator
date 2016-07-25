@@ -3,7 +3,7 @@
     <head>
         {% block head %}
             <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-            <link rel="stylesheet" type="text/css" href="static/styles.css">
+            <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
             <title>{% block title %}{% endblock %} - EVO</title>
         {% endblock %}
     </head>

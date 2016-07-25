@@ -1,7 +1,9 @@
 from server.views.views import index, editor,image_delete, image_rename, background_images
 from server.views.auth import login_page, authorize,oauth_callback, log_out
-from server.views.admin import admin, backgrounds, inactiveImg, image_delete_from_DB
 from server.utils.image import uploaded_file
+from server.views.admin import admin, backgrounds, inactiveImg, image_delete_from_DB, get_users, users_page, remove_user, \
+    users_json
+
 
 def setup_routes(app):
     """Here we map routes to handlers."""
@@ -14,10 +16,14 @@ def setup_routes(app):
     app.add_url_rule('/admin/backgrounds/', view_func=backgrounds)
     app.add_url_rule('/admin/inactiveImg/<int:id>', methods=['POST'], view_func=inactiveImg)
     app.add_url_rule('/admin/deleteImg/<int:id>', methods=['POST'], view_func=image_delete_from_DB)
-    app.add_url_rule('/api/backgrounds/', view_func=background_images)
+    app.add_url_rule('/api/backgrounds/<int:page>', view_func=background_images)
 
     # auth routs
     app.add_url_rule('/login', view_func=login_page)
     app.add_url_rule('/login/<social_network_name>', view_func=authorize)
     app.add_url_rule('/login/authorized/<social_network_name>/', view_func=oauth_callback)
     app.add_url_rule('/logout', methods=['POST'], view_func=log_out)
+
+    app.add_url_rule('/admin/users', view_func=users_page)
+    app.add_url_rule('/admin/users.json', view_func=users_json)
+    app.add_url_rule('/admin/users/<int:user_id>', methods=['DELETE'], view_func=remove_user)
