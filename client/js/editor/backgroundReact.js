@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { h } from 'bazooka';
 
-import {editor} from './fabmain.js';
+import { editor } from './fabmain.js';
 
 const BAZOOKA_PREFIX = 'bg';
 
@@ -66,7 +66,7 @@ const BackgroundsList = React.createClass({
   render: function () {
     const { imgUrl } = this.props.urls;
     return (
-      <ul onScroll={this.onListScroll} style={this.props.visibility} id="backgroundsList2">
+      <ul onScroll={this.onListScroll} id="backgroundsList2">
         {this.state.images.map(function(image, i) {
           return <BackgroundImage imagePreview={imgUrl + image.preview} key={i}
                                   imageOriginal={imgUrl + image.name}/>
@@ -90,12 +90,14 @@ const BackgroundsContainer = React.createClass({
   },
   render: function () {
     return (
-      <div id="backgroundsContainer2">
-        <a onClick={this.changeDisplay}>
+      <div>
+        <a href="#" onClick={this.changeDisplay}>
           <i className="material-icons">image</i>
           <span className="detail">Фоны</span>
         </a>
-        {this.state.displayList ? <BackgroundsList visibility={{background: 'yellow'}} urls={this.props.urls} /> : null}
+        <div className={!this.state.displayList ? 'hidden': ''} id="backgroundsContainer2">
+          <BackgroundsList urls={this.props.urls} />
+        </div>
       </div>
     )
   }
