@@ -7,6 +7,7 @@ from flask_login import login_required
 from flask import render_template, redirect, current_app, flash, request, url_for, jsonify
 from io import BytesIO
 
+from sqlalchemy import desc, asc
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
@@ -115,11 +116,24 @@ def review():
 
 
 def continue_edit(history_image_id):
-    ImageHistory.query.filter_by(review_image=history_image_id).first_or_404()
-    return render_template('editor_history.html')
+    edit = ImageHistory.query.filter_by(review_image=history_image_id).first_or_404()
+    return render_template('editor_history.html', id_review=edit.review_image)
 
 
 def history_image(history_image_id):
-    edit_history = ImageHistory.query.filter_by(review_image=history_image_id).first_or_404()
+    if request.method == 'POST':
+        hist_id = request.json['hist_id']
+        new_history_json = request.method['jsn']
+        history = ImageHistory(
+            review_image=hist_id,
+            json_hist=new_history_json
+        )
+        db.session.add(history)
+        db.session.flush()
 
-    return {'fetch_history': edit_history.json_hist}
+        return jsonify({'result': 'ok'})
+    else:
+        edit_history = ImageHistory.query.filter_by(
+            review_image=history_image_id).order_by(asc(ImageHistory.created)).first_or_404()
+        print(edit_history.json_hist)
+        return jsonify({'fetch_history': edit_history.json_hist})

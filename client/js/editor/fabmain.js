@@ -15,6 +15,8 @@ const deleteFabricItem = document.getElementById('del_item');
 const sendImageReview = document.getElementById('to_send');
 const result_preview = document.getElementById('result_review');
 const modals = document.getElementById('myModal');
+const continueButton = document.getElementById('continue');
+
 const span = document.getElementsByClassName("close")[0];
 
 
@@ -33,8 +35,9 @@ window.onclick = (e) => {
     }
 };
 
-//send image to review model
-sendImageReview.addEventListener('click', function sendImageToReview() {
+
+// send image to review model
+function sendImageForReview() {
     document.getElementById('continue').href = '';
     let image_review = editor.canv.toJSON();
     let image_base64 = editor.canv.toDataURL("image/png", 1.0);
@@ -54,14 +57,16 @@ sendImageReview.addEventListener('click', function sendImageToReview() {
         .then((res) => res.json(), console.log("It arrived to flask"))
         .then(function ({result}) {
             document.getElementById('resulting').src = result.src;
-            document.getElementById('continue').href += result.rev
+            continueButton.href += result.rev;
+            continueButton.style.display = "block";
+            result_preview.style.display = "block";
         })
         .catch(function (error) {
             console.log('Request failed', error);
         });
-});
+}
 
-//deletes custom object from canvas
+// deletes custom object from canvas
 deleteFabricItem.addEventListener('click', function () {
     let activeObject = editor.canv.getActiveObject(),
         activeGroup = editor.canv.getActiveGroup();
@@ -87,6 +92,7 @@ for (var i = 0; i < addtexts.length; i++) {
         }
     });
 }
+
 fileInput.addEventListener('click', function () {
     document.getElementById('inputted').click();
     return false;
@@ -116,4 +122,12 @@ downloadLink.addEventListener('click', function () {
     editor.downloadImage(link);
 }, false);
 
-module.exports = {'editor': editor};
+
+function sendingReview(node) {
+    node.addEventListener('click', sendImageForReview);
+}
+
+module.exports = {
+    'editor': editor,
+    'sendingReview': sendingReview
+};

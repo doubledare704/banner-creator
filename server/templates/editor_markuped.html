@@ -80,14 +80,11 @@
         <section class="container">
             {% block nav_edit %}
                 <nav class="navigation">
-                    <a href="" id="progress_saver"><i class="material-icons">beenhere</i>Сохранить</a>
-                    <a href="#" id="to_send" {% if request.url_rule.endpoint == "continue_edit" %}
-                       class="gone"{% endif %}><i class="material-icons">done_all</i> Отправить на ревью</a>
-                    <a href="#" {% if request.url_rule.endpoint == "continue_edit" %} class="gone"{% endif %}><i
+                    <a href="#" id="to_send" data-bazooka="sendingReview"><i class="material-icons">done_all</i> Отправить на ревью</a>
+                    <a href="#"><i
                             class="material-icons">insert_comment</i> Добавить коментарий для ревьюера</a>
                     <a href="#" id="result_review"><i class="material-icons">description</i>Просмотреть результат</a>
-                    <a href="" id="continue" {% if request.url_rule.endpoint == "continue_edit" %}
-                       class="gone"{% endif %}><i class="material-icons">flip_to_back</i>Продолжить редактировать</a>
+                    <a href="" id="continue"><i class="material-icons">flip_to_back</i>Продолжить редактировать</a>
                     <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i> Скачать
                         баннер</a>
                 </nav>
