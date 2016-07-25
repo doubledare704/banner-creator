@@ -2,7 +2,7 @@ import os
 import uuid
 import json
 
-from flask import render_template, redirect, current_app, flash, request, url_for, jsonify
+from flask import render_template, redirect, current_app, request, jsonify
 from werkzeug.utils import secure_filename
 
 from server.models import Image
@@ -11,20 +11,17 @@ from server.utils.image import allowed_file,image_resize, image_preview
 
 
 def index():
-    images = Image.query.filter_by(active=True)
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
+            return json.dumps([{'message': 'No file part !'}])
         file = request.files['file']
         # if user does not select file, browser also
         # submit a empty part without filename
         if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
+            return json.dumps([{'message': 'No selected file'}])
         if file and allowed_file(file.filename):
-            filename = str(uuid.uuid1()).replace("-","")+'.'+secure_filename(file.filename).rsplit('.', 1)[1]
+            filename = str(uuid.uuid1()).replace("-","") + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
             preview_name = 'preview_' + filename
             file = image_resize(file)
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
@@ -37,9 +34,9 @@ def index():
                 preview = preview_name
             )
             db.session.add(image)
-
             return redirect(request.url)
 
+    images = Image.query.filter_by(active=True)
     image_json = json.dumps(
         [{'id':image.id,
           'url':'/uploads/'+image.name,
@@ -56,35 +53,14 @@ def image_delete():
     img_id = request.json['id']
     image = Image.query.get_or_404(img_id)
     image.active = False
-    flash('File is deleted you are really brave person !')
-    images = Image.query.filter_by(active=True)
-    image_json = json.dumps(
-        [{'id': image.id,
-          'url': '/uploads/' + image.name,
-          'title': image.title,
-          'preview': '/uploads/' + image.preview,
-          'delete': '/delete/' + str(image.id),
-          'rename': '/rename/' + str(image.id)}
-         for image in images
-         ])
-    return json.dumps(image_json)
+    return json.dumps([{'message': 'Image is Deleted !'}])
 
 
 def image_rename():
     img_id = request.json['id']
     image = Image.query.get_or_404(img_id)
     image.title = request.json['name']
-    flash('Image renamed')
-    images = Image.query.filter_by(active=True)
-    image_json = json.dumps(
-        [{'id': image.id,
-          'url': '/uploads/' + image.name,
-          'title': image.title,
-          'preview': '/uploads/' + image.preview,
-          'delete': '/delete/' + str(image.id)}
-         for image in images
-         ])
-    return image_json
+    return json.dumps([{'message': 'Image is Renamed !'}])
 
 
 def editor():
