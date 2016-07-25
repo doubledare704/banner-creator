@@ -17,7 +17,7 @@ function makeBackgroundImagesLoader() {
     return function () {
         if (!blocked) {
             blocked = true;
-            fetch(`/api/backgrounds/${page}`).then(function (response) {
+            fetch(`/api/backgrounds/${page}`, {credentials: 'same-origin'}).then(function (response) {
                 if (response.status == 200) {
                     response.json().then(function (data) {
                         populateBackgroundsList(data.backgroundImages);
