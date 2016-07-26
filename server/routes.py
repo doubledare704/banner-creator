@@ -12,6 +12,7 @@ def setup_routes(app):
     app.add_url_rule('/delete/<int:id>', methods=['GET', 'POST'], view_func=image_delete)
     app.add_url_rule('/rename/<int:id>', methods=['GET', 'POST'], view_func=image_rename)
     app.add_url_rule('/editor/', view_func=editor)
+    app.add_url_rule('/api/backgrounds/', view_func=background_images)
     app.add_url_rule('/api/backgrounds/<int:page>', view_func=background_images)
 
     # admin
@@ -20,7 +21,6 @@ def setup_routes(app):
     app.add_url_rule('/admin/inactiveImg/<int:id>', methods=['POST'], view_func=inactiveImg)
     app.add_url_rule('/admin/deleteImg/<int:id>', methods=['POST'], view_func=image_delete_from_DB)
     app.add_url_rule('/api/review/', methods=['POST'], view_func=review)
-    app.add_url_rule('/api/backgrounds/<int:page>', view_func=background_images)
     app.add_url_rule('/editor/<int:history_image_id>', view_func=continue_edit)
     app.add_url_rule('/editor/history/<int:history_image_id>', methods=['GET', 'POST'], view_func=history_image)
 

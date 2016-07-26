@@ -1,101 +1,121 @@
-import {editor} from './fabmain.js';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { h } from 'bazooka';
 
-const backgroundsBtn = document.getElementById('backgroundsBtn');
-const backgroundsList = document.getElementById('backgroundsList');
-const backgroundImagesLoader = makeBackgroundImagesLoader();
+import { editor } from './fabmain.js';
 
-// check visibility helper
-function isHidden(el) {
-    const style = window.getComputedStyle(el);
-    return (style.display === 'none')
+
+const BAZOOKA_PREFIX = 'bg';
+
+class BackgroundImage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.setBackground = this.setBackground.bind(this)
+  }
+  setBackground() {
+    editor.setBackground(this.props.imageOriginal)
+  }
+  render() {
+    return (
+      <li onClick={this.setBackground}>
+        <img src={this.props.imagePreview}/>
+      </li>
+    )
+  }
 }
 
-// synchronous loader for making requests and tracking page numbers
-function makeBackgroundImagesLoader() {
-    let page = 1;
-    let blocked = false;
-    return function () {
-        if (!blocked) {
-            blocked = true;
-            fetch(`/api/backgrounds/${page}`, {
-                credentials: 'same-origin', headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(function (response) {
-                    {
-                        // console.log(response.text)
-                    }
-                    if (response.status == 200) {
-                        response.json().then(function (data) {
-                            populateBackgroundsList(data.backgroundImages);
-                            backgroundsList.style.display = 'block';
-                            page += 1;
-                            blocked = false;
-                        })
-                    }
-                    else {
-                        backgroundsList.style.display = 'block';
-                        blocked = false;
-                    }
-                })
-        }
+class BackgroundsList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      images: [],
+      page: 1,
+      isBlocked: false
+    };
+    this.getImages = this.getImages.bind(this);
+    this.onListScroll = this.onListScroll.bind(this);
+  }
+
+  getImages() {
+    const { viewUrl } = this.props.urls;
+
+    if (this.state.isBlocked) {
+      return;
     }
-}
+    this.setState({
+      isBlocked: true
+    });
+    fetch(viewUrl + this.state.page, {credentials: 'same-origin'})
+    .then((response) => {
+      if (response.status == 200) {
+        response.json().then(({ backgroundImages }) => {
+          this.setState({
+            images: this.state.images.concat(backgroundImages),
+            isBlocked: false,
+            page: this.state.page + 1})
+        })
+      }
+      else {
+        this.setState({
+          isBlocked: false
+        })
+      }
+    })
+  }
 
-function populateBackgroundsList(images) {
-    // creates appropriate liNodes with an images inside and appends them to the list
-    for (const img of images) {
-        const liNode = document.createElement('li');
-        liNode.innerHTML = `<img src='/uploads/${img.preview}' origin-src="/uploads/${img.name}"/>`;
-        liNode.setAttribute('data-bazooka', 'setBackground');
-        backgroundsList.appendChild(liNode);
+  componentDidMount() {
+    this.getImages()
+  }
+
+  onListScroll(e) {
+    if (e.target.scrollTop == (e.target.scrollHeight - e.target.offsetHeight)) {
+      this.getImages();
     }
+  }
+
+  render() {
+    const { imgUrl } = this.props.urls;
+    return (
+      <ul onScroll={this.onListScroll} id="backgroundsList">
+        {this.state.images.map(function(image, i) {
+          return <BackgroundImage imagePreview={imgUrl + image.preview} key={i}
+                                  imageOriginal={imgUrl + image.name}/>
+        })}
+      </ul>
+    )
+  }
 }
 
-function loadBackgroundImages() {
-    if (!isHidden(backgroundsList)) {
-        // if it is visible then just hide it and change section's background color
-        backgroundsList.style.display = 'none';
-        this.parentNode.style.backgroundColor = 'white';
-    }
-    else {
-        // change section's background color
-        this.parentNode.style.backgroundColor = 'grey';
-        // if it's not visible then load images
-        backgroundImagesLoader();
-    }
-}
+class BackgroundsContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { displayList: false };
+    this.changeDisplay = this.changeDisplay.bind(this)
+  }
 
-function setBackground() {
-    // sets image as a background on the canvas
-    const imgSrc = this.firstElementChild.getAttribute('origin-src');
-    editor.setBackground(imgSrc);
-}
+  changeDisplay() {
+    this.setState({
+      displayList: !this.state.displayList
+    })
+  }
 
-function loadImagesOnScroll() {
-    // loads images if a bottom of the list is reached
-    if (backgroundsList.scrollTop == (backgroundsList.scrollHeight - backgroundsList.offsetHeight)) {
-        backgroundImagesLoader();
-    }
-}
-
-// bazooka
-function openBackgroundsList(node) {
-    node.addEventListener('click', loadBackgroundImages);
-}
-
-function loadBackgroundImagesOnScroll(node) {
-    node.addEventListener('scroll', loadImagesOnScroll)
-}
-
-function setBackgroundOnClick(node) {
-    node.addEventListener('click', setBackground)
+  render() {
+    return (
+      <div>
+        <a href="#" onClick={this.changeDisplay}>
+          <i className="material-icons">image</i>
+          <span className="detail">Фоны</span>
+        </a>
+        <div className={!this.state.displayList ? 'hidden': ''} id="backgroundsContainer">
+          <BackgroundsList urls={this.props.urls} />
+        </div>
+      </div>
+    )
+  }
 }
 
 
-module.exports = {
-    'openBackgroundsList': openBackgroundsList,
-    'setBackground': setBackgroundOnClick,
-    'loadBackgroundImages': loadBackgroundImagesOnScroll
+module.exports = function(node) {
+  const VIEW_URLS = h.getAttrs(BAZOOKA_PREFIX, node);
+  ReactDOM.render(<BackgroundsContainer urls={VIEW_URLS} />, node);
 };

@@ -57,14 +57,8 @@
                 </a>
             </section>
 
-            <section>
-                <a href="#" id="backgroundsBtn" data-bazooka="openBackgroundsList">
-                    <i class="material-icons">image</i>
-                    <span class="detail">Фоны</span>
-                </a>
-                <div id="backgroundsContainer">
-                    <ul id="backgroundsList" data-bazooka="loadBackgroundImages"></ul>
-                </div>
+            <section id="backgroundSection" data-bazooka="backgroundsList" data-bg-view-url="{{ url_for('background_images') }}"
+            data-bg-img-url="{{ url_for('uploaded_file', filename='') }}">
             </section>
 
             <section class="last-sec">
