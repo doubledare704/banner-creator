@@ -1,4 +1,5 @@
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+const webpack = require('webpack');
 module.exports = {
     entry: {
         admin: "./client/js/app.js",
@@ -8,7 +9,13 @@ module.exports = {
         path: __dirname,
         filename: "server/static/[name]bundle.js"
     },
+    eslint: {
+        configFile: '.eslintrc.json'
+    },
     module: {
+        preLoaders: [
+            {test: /\.jsx?$/, loader: "eslint-loader", exclude: /node_modules/}
+        ],
         loaders: [
             {
                 test: /\.styl$/,
@@ -17,6 +24,7 @@ module.exports = {
             },
             {
                 test: /\.jsx?$/,
+
                 exclude: /(node_modules|bower_components)/,
                 loader: 'babel-loader',
                 query: {
@@ -26,6 +34,14 @@ module.exports = {
         ]
     },
     plugins: [
-        new ExtractTextPlugin("server/static/styles.css")
+        new ExtractTextPlugin("server/static/styles.css"),
+
+        new webpack.DefinePlugin({
+            'process.env': {
+                'NODE_ENV': JSON.stringify('production')
+            }
+        })
+
     ]
-};
+}
+;

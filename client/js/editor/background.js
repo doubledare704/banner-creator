@@ -119,4 +119,3 @@ module.exports = function(node) {
   const VIEW_URLS = h.getAttrs(BAZOOKA_PREFIX, node);
   ReactDOM.render(<BackgroundsContainer urls={VIEW_URLS} />, node);
 };
-

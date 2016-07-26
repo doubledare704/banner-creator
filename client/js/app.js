@@ -5,11 +5,10 @@ import backgroundsAdmin from './admin/backgroundsAdmin.jsx'
 var styluses = require('./../css/main.styl');
 var Baz = require('bazooka');
 
-
 Baz.register({
     'backgroundsAdmin': backgroundsAdmin,
     'header': header,
-    'renderImages':renderImages
+    'renderImages': renderImages
 });
 
 

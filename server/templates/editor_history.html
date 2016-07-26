@@ -1,0 +1,12 @@
+{% extends "editor_markuped.html" %}
+{% block nav_edit %}
+    <nav class="navigation" data-bazooka="reloadHistory">
+        <a href="" id="progress_saver" data-bazooka="saveToHistory" data-review="{{ id_review }}"><i class="material-icons">beenhere</i>Сохранить</a>
+        <a href="#" id="result_review"><i class="material-icons">description</i>Просмотреть результат</a>
+        <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i> Скачать
+            баннер</a>
+    </nav>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+{% endblock %}
