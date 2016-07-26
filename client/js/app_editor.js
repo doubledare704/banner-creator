@@ -1,17 +1,12 @@
-import {openBackgroundsList, setBackground, loadBackgroundImages} from './editor/background';
 import fabric from './editor/fabmain';
-import bg from './editor/backgroundReact';
+import bg from './editor/background';
 
 require('./editor/fabmain.js');
-// require('./editor/backgroundReact.js');
 
 const Baz = require('bazooka');
 
 Baz.register({
     'fabric': fabric,
-    'openBackgroundsList': openBackgroundsList,
-    'setBackground': setBackground,
-    'loadBackgroundImages': loadBackgroundImages,
     'bg': bg
     
 });
