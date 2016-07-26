@@ -11,6 +11,7 @@ class User extends React.Component {
         super(props);
 
         this.state = {
+            active: true,
             user: this.props.user
         };
 
@@ -28,7 +29,9 @@ class User extends React.Component {
                 }
             })
             .then(() => {
-                this.props.update();
+                this.setState({
+                    active: false
+                });
             })
             .catch(response => {
                 console.log(response.statusText)
@@ -37,15 +40,17 @@ class User extends React.Component {
 
     render() {
         return (
-            <tr>
+            <tr className={this.state.active ? '' : 'danger'}>
                 <td>{this.state.user.first_name} {this.state.user.last_name}</td>
                 <td>{this.state.user.email}</td>
                 <td>{this.state.user.role}</td>
                 <td>{moment(this.state.user.registration_date).format("DD-MM-YYYY HH:mm")}</td>
                 <td>{this.state.user.auth_by}</td>
                 <td>
-                    <button className="btn btn-default"><i className="glyphicon glyphicon-pencil"/> Edit</button>
-                    <a href="#openModal" className="btn btn-default" onClick={this.remove_user}><i
+                    <a className={this.state.active ? "btn btn-default" : "btn btn-default disabled"}><i
+                        className="glyphicon glyphicon-pencil"/> Edit</a>
+                    <a className={this.state.active ? "btn btn-default" : "btn btn-default disabled"}
+                       onClick={this.remove_user}><i
                         className="glyphicon glyphicon-trash"/> Delete
                     </a>
                 </td>
@@ -54,6 +59,7 @@ class User extends React.Component {
     }
 }
 
+// will contain not only table, 2 popups (for user editing and remove confirm) too
 class UsersList extends React.Component {
     constructor(props) {
         super(props);
@@ -98,6 +104,7 @@ class UsersList extends React.Component {
             {
                 this.state.users.map(user => {
                     return <User
+                        key={`user_${user.id}`}
                         update={this.updateList}
                         user={user}
                     />;
@@ -108,23 +115,36 @@ class UsersList extends React.Component {
     }
 }
 
+
+class UsersPanel extends React.Component {
+    render() {
+        return (
+            <div>
+                <table className="table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>E-mail</th>
+                        <th>Role</th>
+                        <th>Registration date</th>
+                        <th>Auth by</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <UsersList
+                        usersList={this.props.usersList}
+                    />
+                </table>
+            </div>
+        );
+    }
+}
+
 export default function (node) {
     let {usersList} = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
-        <table className="table">
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>E-mail</th>
-                <th>Role</th>
-                <th>Registration date</th>
-                <th>Auth by</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <UsersList usersList={usersList}/>
-        </table>,
+        <UsersPanel usersList={usersList}/>,
         node
     );
 }
