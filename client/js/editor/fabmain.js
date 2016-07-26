@@ -47,6 +47,7 @@ function sendImageForReview() {
         name: random_name,
         file_json: image_review
     };
+    console.log(image_review);
     fetch('/api/review/', {
         method: 'post',
         credentials: 'same-origin',

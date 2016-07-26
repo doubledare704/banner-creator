@@ -10,7 +10,12 @@ module.exports = {
         filename: "server/static/[name]bundle.js"
     },
     eslint: {
-        configFile: '.eslintrc.json'
+        configFile: '.eslintrc.json',
+        quiet: true,
+        failOnError: false,
+        failOnWarning: false,
+        emitError: false,
+        emitWarning: false
     },
     module: {
         preLoaders: [

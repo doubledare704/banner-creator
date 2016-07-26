@@ -89,7 +89,7 @@ fabric.Tag = fabric.util.createClass(fabric.Group, {
             };
 
             objects[0] = new fabric.Rect(extend({}, defaults, {
-                fill: 'rgba(0,0,0,0)',
+                fill: 'transparent',
                 stroke: '#000',
                 strokewidth: 4,
                 rx: 5,
@@ -99,7 +99,8 @@ fabric.Tag = fabric.util.createClass(fabric.Group, {
             objects[1] = new fabric.IText('Смотреть     >', extend({}, defaults, {
                 textAlign: 'center',
                 fontFamily: 'Roboto',
-                fontSize: 20
+                fontSize: 20,
+                fill: '#000'
             }));
         }
         leftCoords += objects[0].width + padding_buttons;
