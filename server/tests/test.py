@@ -11,16 +11,6 @@ from server.models import Image
 app = create_app()
 
 
-def setUpModule():
-    """
-    Initializes a test environment
-    """
-    app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_TEST_DATABASE_URI']
-    app.config['SERVER_NAME'] = 'localhost'
-    app.config['TESTING'] = True
-    app.config['DEBUG'] = False
-
-
 class TestViews(unittest.TestCase):
     def setUp(self):
         """
@@ -41,7 +31,7 @@ class TestViews(unittest.TestCase):
     def test_index_page(self):
         with app.app_context():
             response = self.client.get(url_for('index'))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
     def test_can_upload_an_image(self):
         with app.app_context():

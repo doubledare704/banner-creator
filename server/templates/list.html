@@ -8,7 +8,7 @@
                 <p class="name" data-dz-name></p>
                 <strong class="error text-danger" data-dz-errormessage></strong>
             </div>
-            <hr>
+                <hr>
              <div><h1>Upload new File</h1></div>
                     <form class="form-inline" action="" method=post enctype=multipart/form-data>
                         <div class="form-group">
@@ -26,13 +26,11 @@
                 <hr>
 
         </div>
-    <div class="row">
-        <div  data-bazooka="renderImages" data-header-image-array='{{ image_json }}'></div>
+        <div class="row">
+            <div  data-bazooka="renderImages" data-body-image-array='{{ image_json }}'></div>
         </div>
-    </div>
-
 {% endblock %}
 {% block scripts %}
-{{ super() }}
-<script src="../static/bundle.js"></script>
+    {{ super() }}
+    <script src="{{ url_for('static', filename='adminbundle.js') }}"></script>
 {% endblock %}

@@ -40,28 +40,25 @@ def image_resize(file):
 
 
 def image_preview(file, position=('center', 'center'), fill='contain'):
-
     try:
         image = pil.open(file)
         owidth = image.size[0]
         oheight = image.size[1]
-        print(owidth, oheight, type(owidth), type(oheight))
         width = 250
-        height = (width/owidth)*oheight
-        wr, hr = 1.0*width/owidth, 1.0*height/oheight
+        height = (width / owidth) * oheight
+        wr, hr = 1.0 * width / owidth, 1.0 * height / oheight
         size = owidth, oheight
         x, y = position
-        # back = Image.new('RGBA', (width, height), (125, 125, 125, 0))
         if fill == 'cover':
             if wr < hr:
-                size = owidth*height/oheight, height
+                size = owidth * height / oheight, height
             else:
-                size = width, oheight*width/owidth
+                size = width, oheight * width / owidth
         else:
             if wr > hr:
-                size = owidth*height/oheight, height
+                size = owidth * height / oheight, height
             else:
-                size = width, oheight*width/owidth
+                size = width, oheight * width / owidth
 
         if x == 'center':
             x = (size[0] - width) / 2
@@ -76,9 +73,9 @@ def image_preview(file, position=('center', 'center'), fill='contain'):
             y = size[1] - height
         else:
             y = 0
-        size = ceil(size[0]),ceil(size[1])
+        size = ceil(size[0]), ceil(size[1])
         image = image.resize(size, pil.ANTIALIAS)
-        image = image.crop((x, y, x+width, y+height))
+        image = image.crop((x, y, x + width, y + height))
         return image
 
     except IOError as e:
