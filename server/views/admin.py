@@ -8,19 +8,20 @@ def admin():
 
 
 def backgrounds():
-    backgrounds = Image.query.order_by(Image.name.asc())
+    query = Image.query.order_by(Image.name.asc())
 
-    back_im = [{
-                   "id": act_background.id,
-                   'title': act_background.title,
-                   'preview': '/uploads/' + act_background.preview,
-                   "active": act_background.active
-               }
-               for act_background in backgrounds]
+    backgrounds = [
+        {
+           "id": background.id,
+           'title': background.title,
+           'preview': '/uploads/' + background.preview,
+           "active": background.active
+        } for background in query.all()
+    ]
 
-    back_im = json.dumps(back_im)
+    backgrounds = json.dumps(backgrounds)
 
-    return render_template('admin/backgrounds.html', back_im=back_im)
+    return render_template('admin/backgrounds.html', backgrounds=backgrounds)
 
 
 def inactiveImg(id):
