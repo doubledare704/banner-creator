@@ -7,35 +7,43 @@ import { editor } from './fabmain.js';
 
 const BAZOOKA_PREFIX = 'bg';
 
-const BackgroundImage = React.createClass({
-  setBackground: function () {
+class BackgroundImage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.setBackground = this.setBackground.bind(this)
+  }
+  setBackground() {
     editor.setBackground(this.props.imageOriginal)
-  },
-  render: function () {
+  }
+  render() {
     return (
       <li onClick={this.setBackground}>
         <img src={this.props.imagePreview}/>
       </li>
     )
   }
-});
+}
 
-const BackgroundsList = React.createClass({
-  getInitialState: function () {
-    return {
+class BackgroundsList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       images: [],
       page: 1,
-      blocked: false
-    }
-  },
-  getImages: function() {
+      isBlocked: false
+    };
+    this.getImages = this.getImages.bind(this);
+    this.onListScroll = this.onListScroll.bind(this);
+  }
+
+  getImages() {
     const { viewUrl } = this.props.urls;
 
-    if (this.state.blocked) {
+    if (this.state.isBlocked) {
       return;
     }
     this.setState({
-      blocked: true
+      isBlocked: true
     });
     fetch(viewUrl + this.state.page, {credentials: 'same-origin'})
     .then((response) => {
@@ -43,26 +51,29 @@ const BackgroundsList = React.createClass({
         response.json().then(({ backgroundImages }) => {
           this.setState({
             images: this.state.images.concat(backgroundImages),
-            blocked: false,
+            isBlocked: false,
             page: this.state.page + 1})
         })
       }
       else {
         this.setState({
-          blocked: false
+          isBlocked: false
         })
       }
     })
-  },
-  componentDidMount: function() {
+  }
+
+  componentDidMount() {
     this.getImages()
-  },
-  onListScroll: function (e) {
+  }
+
+  onListScroll(e) {
     if (e.target.scrollTop == (e.target.scrollHeight - e.target.offsetHeight)) {
       this.getImages();
     }
-  },
-  render: function () {
+  }
+
+  render() {
     const { imgUrl } = this.props.urls;
     return (
       <ul onScroll={this.onListScroll} id="backgroundsList">
@@ -73,20 +84,22 @@ const BackgroundsList = React.createClass({
       </ul>
     )
   }
-});
+}
 
-const BackgroundsContainer = React.createClass({
-  getInitialState: function () {
-    return {
-      displayList: false
-    }
-  },
-  changeDisplay: function () {
+class BackgroundsContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { displayList: false };
+    this.changeDisplay = this.changeDisplay.bind(this)
+  }
+
+  changeDisplay() {
     this.setState({
       displayList: !this.state.displayList
     })
-  },
-  render: function () {
+  }
+
+  render() {
     return (
       <div>
         <a href="#" onClick={this.changeDisplay}>
@@ -99,7 +112,7 @@ const BackgroundsContainer = React.createClass({
       </div>
     )
   }
-});
+}
 
 
 module.exports = function(node) {
