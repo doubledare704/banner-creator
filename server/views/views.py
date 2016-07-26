@@ -88,6 +88,7 @@ def background_images(page=1):
     return jsonify({"backgroundImages": serialized_images})
 
 
+@login_required
 def review():
     _, b64data = request.json['file'].split(',')
     random_name = request.json['name']
@@ -115,11 +116,13 @@ def review():
     return jsonify({'result': review_jsoned})
 
 
+@login_required
 def continue_edit(history_image_id):
     edit = ImageHistory.query.filter_by(review_image=history_image_id).first_or_404()
     return render_template('editor_history.html', id_review=edit.review_image)
 
 
+@login_required
 def history_image(history_image_id):
     if request.method == 'POST':
         hist_id = request.json['hist_id']
@@ -135,5 +138,4 @@ def history_image(history_image_id):
     else:
         edit_history = ImageHistory.query.filter_by(
             review_image=history_image_id).order_by(asc(ImageHistory.created)).first_or_404()
-        print(edit_history.json_hist)
         return jsonify({'fetch_history': edit_history.json_hist})

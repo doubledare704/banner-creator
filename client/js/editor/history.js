@@ -5,6 +5,7 @@ function loadHist() {
     const previewId = saver.getAttribute('data-review');
     fetch('/editor/history/' + previewId, {
             method: 'get',
+            credentials: 'same-origin',
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -29,6 +30,7 @@ function sendTohistory() {
     };
     fetch('/editor/history/' + id, {
         method: 'post',
+        credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -37,7 +39,7 @@ function sendTohistory() {
         .then((res) => res.json(), console.log("It arrived to flask"))
         .then(function ({result}) {
             console.log({result});
-            
+
         })
         .catch(function (error) {
             console.log('Request failed', error);

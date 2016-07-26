@@ -49,6 +49,7 @@ function sendImageForReview() {
     };
     fetch('/api/review/', {
         method: 'post',
+        credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json'
         },
