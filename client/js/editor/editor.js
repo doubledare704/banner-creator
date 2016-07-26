@@ -1,6 +1,6 @@
 // main logic for our editor by constructtor
 
-//in array http://stackoverflow.com/questions/784012/javascript-equivalent-of-phps-in-array
+// in array http://stackoverflow.com/questions/784012/javascript-equivalent-of-phps-in-array
 function inArray(needle, haystack) {
     var length = haystack.length;
     for (var i = 0; i < length; i++) {
@@ -10,7 +10,7 @@ function inArray(needle, haystack) {
 }
 
 
-//extend function without jquery https://gist.github.com/cfv1984/6319681685f78333d98a
+// extend function without jquery https://gist.github.com/cfv1984/6319681685f78333d98a
 var extend = function () {
 
     function isFunction(fn) {
@@ -63,12 +63,61 @@ var extend = function () {
 // initial fabric
 let fabric = require('fabric').fabric;
 
-//this is used to align buttons by bottom. When we add new button - dynamic left coord changes
-let left_coords = 0;
-//padding between buttons
+// this is used to align buttons by bottom. When we add new button - dynamic left coord changes
+let leftCoords = 0;
+// padding between buttons
 let padding_buttons = 65;
 
-//make editor
+
+// initial tag type for fabric
+
+fabric.Tag = fabric.util.createClass(fabric.Group, {
+    type: 'Tag',
+
+    initialize: function (options, objects, isAlreadyGrouped) {
+        if (!options) {
+            objects = [];
+            options = {};
+            options.top = 20;
+            options.left = 10 + leftCoords;
+
+            var defaults = {
+                width: 200,
+                height: 40,
+                originX: 'center',
+                originY: 'center'
+            };
+
+            objects[0] = new fabric.Rect(extend({}, defaults, {
+                fill: 'rgba(0,0,0,0)',
+                stroke: '#000',
+                strokewidth: 4,
+                rx: 5,
+                ry: 5
+            }));
+
+            objects[1] = new fabric.IText('Смотреть     >', extend({}, defaults, {
+                textAlign: 'center',
+                fontFamily: 'Roboto',
+                fontSize: 20
+            }));
+        }
+        leftCoords += objects[0].width + padding_buttons;
+        this.callSuper('initialize', objects, options, isAlreadyGrouped);
+    }
+});
+
+fabric.Tag.fromObject = function (object, callback) {
+    var _enlivenedObjects;
+    fabric.util.enlivenObjects(object.objects, function (enlivenedObjects) {
+        delete object.objects;
+        _enlivenedObjects = enlivenedObjects;
+    });
+    return new fabric.Tag(object, _enlivenedObjects);
+};
+fabric.Tag.async = false;
+
+// make editor
 export default class Editor {
     constructor(canvas, width, height) {
         this.canvas_id = canvas;
@@ -138,57 +187,13 @@ export default class Editor {
         this.canv.renderAll();
     }
 
-    addImage(img_for_add) {
-        fabric.Image.fromURL(img_for_add, (img) => {
+    addImage(imgForAdd) {
+        fabric.Image.fromURL(imgForAdd, (img) => {
             this.canv.add(img);
         });
     }
 
-    addButton(radius) {
-        fabric.Tag = fabric.util.createClass(fabric.Group, {
-            type: 'Tag',
-
-            initialize: function (options, objects, isAlreadyGrouped) {
-                if (!options) {
-                    objects = [];
-                    options = {};
-                    options.top = 20;
-                    options.left = 10 + left_coords;
-
-                    var defaults = {
-                        width: 200,
-                        height: 40,
-                        originX: 'center',
-                        originY: 'center'
-                    };
-
-                    objects[0] = new fabric.Rect(extend({}, defaults, {
-                        fill: 'transparent',
-                        stroke: '#000',
-                        strokewidth: 4,
-                        rx: radius,
-                        ry: radius
-                    }));
-
-                    objects[1] = new fabric.IText('Смотреть     >', extend({}, defaults, {
-                        textAlign: 'center',
-                        fontFamily: 'Roboto',
-                        fontSize: 20
-                    }));
-                }
-                left_coords += defaults.width + padding_buttons;
-                this.callSuper('initialize', objects, options, isAlreadyGrouped);
-            }
-        });
-        fabric.Tag.fromObject = function (object, callback) {
-            var _enlivenedObjects;
-            fabric.util.enlivenObjects(object.objects, function (enlivenedObjects) {
-                delete object.objects;
-                _enlivenedObjects = enlivenedObjects;
-            });
-            return new fabric.Tag(object, _enlivenedObjects);
-        };
-        fabric.Tag.async = false;
+    addButton() {
         this.canv.add(new fabric.Tag())
     }
 
@@ -205,8 +210,8 @@ export default class Editor {
     deleteObject(obj, group) {
         let canvaser = this.canv;
         if (obj) {
-            if (this.canv.getActiveObject().get('type') == 'Tag') {
-                left_coords = 0;
+            if (this.canv.getActiveObject().get('type') === 'Tag') {
+                leftCoords = 0;
             }
             canvaser.remove(obj);
         }
@@ -217,12 +222,12 @@ export default class Editor {
             for (var i = 0; i < objectsInGroup.length; i++) {
                 del_types.push(objectsInGroup[i].get('type'));
             }
-            if (inArray('Tag', del_types)){
-                left_coords = 0;
+            if (inArray('Tag', del_types)) {
+                leftCoords = 0;
             }
-                objectsInGroup.forEach(function (object) {
-                    canvaser.remove(object);
-                });
+            objectsInGroup.forEach(function (object) {
+                canvaser.remove(object);
+            });
         }
 
     }

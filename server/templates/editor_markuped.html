@@ -2,7 +2,7 @@
 
 {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='fav/favicon.ico')  }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='fav/favicon.ico') }}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab|Roboto:400,500|Lobster&subset=latin,cyrillic'
@@ -78,24 +78,46 @@
             </section>
         </aside>
         <section class="container">
-            <nav class="navigation">
-                <a href="#"><i class="material-icons">done_all</i> Отправить на ревью</a>
-                <a href="#"><i class="material-icons">insert_comment</i> Добавить коментарий для ревьюера</a>
-                <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i> Скачать
-                    баннер</a>
-            </nav>
+            {% block nav_edit %}
+                <nav class="navigation">
+                    <a href="#" id="to_send" data-bazooka="sendingReview"><i class="material-icons">done_all</i> Отправить на ревью</a>
+                    <a href="#"><i
+                            class="material-icons">insert_comment</i> Добавить коментарий для ревьюера</a>
+                    <a href="#" id="result_review"><i class="material-icons">description</i>Просмотреть результат</a>
+                    <a href="" id="continue"><i class="material-icons">flip_to_back</i>Продолжить редактировать</a>
+                    <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i> Скачать
+                        баннер</a>
+                </nav>
+            {% endblock %}
             <main class="container-content">
                 <div class="button-group">
                     <a href="#" id="del_item">
                         <i class="material-icons">delete</i>
                     </a>
                 </div>
-                <canvas id="main" data-bazooka="fabric">
+                <canvas id="main">
                 </canvas>
             </main>
         </section>
     </div>
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">×</span>
+                <h2>Результат</h2>
+            </div>
+            <div class="modal-body">
+                <img src="" alt="result of canvas" id="resulting">
+            </div>
+            <div class="modal-footer">
+                <h3>Этот вариант сохранён.</h3>
+            </div>
+        </div>
+
+    </div>
 {% endblock %}
 {% block scripts %}
-    <script src="{{ url_for('static', filename='editorbundle.js')  }}"></script>
+    <script src="{{ url_for('static', filename='editorbundle.js') }}"></script>
 {% endblock %}

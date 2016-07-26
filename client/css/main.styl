@@ -1,7 +1,6 @@
 @require '~normalize-styl'
 
-
-html,body
+html, body
   height 100%
 
 box-shadow(args...)
@@ -42,7 +41,6 @@ canvas#c
   border 2px solid #000000
   position relative
 
-
   section
     flex-basis 11%
     text-align center
@@ -62,7 +60,6 @@ section.last-sec
 
 section.with_menu:hover > #rightcol
   display block
-
 
 .container
   order: 2
@@ -141,7 +138,6 @@ canvas#main
   ul
     list-style-type none
 
-
   li
     line-height 200%
     cursor pointer
@@ -169,3 +165,88 @@ canvas#main
   padding-top: 12px
   padding-bottom: 10px
 
+.modal
+  display none
+  position fixed
+  z-index 1
+  padding-top 100px
+  left 0
+  top 0
+  width 100%
+  height 100%
+  overflow auto
+  background-color rgb(0, 0, 0)
+  background-color rgba(0, 0, 0, 0.4)
+
+.modal-content
+  position: relative
+  background-color: #fefefe
+  margin: auto
+  padding: 0
+  border: 1px solid #888
+  width: 80%
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+  -webkit-animation-name: animatetop
+  -webkit-animation-duration: 0.4s
+  animation-name: animatetop
+  animation-duration: 0.4s
+
+  img
+    display block
+    margin 0 auto
+
+/* Add Animation */
+@-webkit-keyframes animatetop
+  from {
+    top: -300px
+    opacity: 0
+  }
+  to {
+    top: 0
+    opacity: 1
+  }
+
+
+@keyframes animatetop
+  from {
+    top: -300px
+    opacity: 0
+  }
+  to {
+    top: 0
+    opacity: 1
+  }
+
+
+/* The Close Button */
+.close
+  color: white
+  float: right
+  font-size: 28px
+  font-weight: bold
+
+
+.close:hover,
+.close:focus
+  color: #000
+  text-decoration: none
+  cursor: pointer
+
+
+.modal-header
+  padding: 2px 16px
+  background-color: #5cb85c
+  color: white
+
+
+.modal-body
+  padding: 2px 16px
+
+
+.modal-footer
+  padding: 2px 16px
+  background-color: #5cb85c
+  color: white
+
+#result_review, #continue
+  display none
