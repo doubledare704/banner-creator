@@ -7,9 +7,23 @@ const BAZOOKA_PREFIX = 'backgrounds-admin';
 
 
 class Tab extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.click = this.click.bind(this);
+    }
+
+    click() {
+      this.props.onClick( this.props.name );
+      return false;
+    }
+
     render() {
+        const activeClass = (this.props.isSelected ? 'active' : '');
+
         return (
-            <li className={this.props.name} onClick={this.props.onClick}><a data-toggle="tab" href={'#'+this.props.name}>{this.props.title}</a></li>
+            <li className={activeClass} onClick={this.click}><a data-toggle="tab" href={'#'+this.props.name}>{this.props.title}</a></li>
+
         );
     }
 }
@@ -28,8 +42,6 @@ class TableRow extends React.Component {
     }
 
     render() {
-        let onClickAction = this.onClickDel;
-
         return (
             <tr className={this.props.tablerow.active} >
                 <td>
@@ -41,7 +53,7 @@ class TableRow extends React.Component {
                 <td>
                     <button className="btn btn-default" onClick={this.handleTableRowRemove}>
                         <i className="glyphicon glyphicon-trash"/>
-                        <i>{this.props.inactiveOrDelete}</i>
+                        <i>{this.props.inactiveOrDeleteButton}</i>
                     </button>
                 </td>
            </tr>
@@ -54,15 +66,11 @@ class Table extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.handleTableRowRemove = this.handleTableRowRemove.bind(this);
-    }
-
-    handleTableRowRemove(tablerow) {
-      this.props.onTableRowRemove(tablerow);
     }
 
     render() {
+        const buttonName = this.props.backgroundStatus ? "Inactive" : "Delete";
+
         return (
             <table className="table">
                 <thead>
@@ -77,17 +85,14 @@ class Table extends React.Component {
                 </thead>
                 <tbody>
                 {
-                    this.props.backgrounds.map((tablerow) => {
-                        if ( tablerow.active === this.props.backgroundStatus ) {
-                            return <TableRow
+                    this.props.backgrounds.map((tablerow) =>
+                            <TableRow
                                 key={tablerow.id}
                                 tablerow={tablerow}
-                                onTableRowDelete={this.handleTableRowRemove}
-                                inactiveOrDelete={this.props.inactiveOrDelete}
+                                onTableRowDelete={this.props.onTableRowRemove}
+                                inactiveOrDeleteButton={buttonName}
                             />
-                        }
-
-                    })
+                    )
                 }
                 </tbody>
             </table>
@@ -100,34 +105,18 @@ class BackgroundsAdmin extends React.Component {
     constructor(props) {
         super(props);
 
-        this.inactiveTabClick = this.inactiveTabClick.bind(this);
-        this.activeTabClick = this.activeTabClick.bind(this);
         this.handleTableRowRemove = this.handleTableRowRemove.bind(this);
+        this.tabClick = this.tabClick.bind(this);
 
         this.state = {
             backgrounds: this.props.backgroundsArray,
-            backgroundStatus: true,
-            firstTabClassName: "active",
-            secondTabClassName: "inactive",
-            inactiveOrDelete: " Inactive"
+            selectedTab: "active"
         };
     }
 
-    inactiveTabClick() {
+    tabClick(key) {
         this.setState({
-            backgroundStatus: false,
-            firstTabClassName: "inactive",
-            secondTabClassName: "active",
-            inactiveOrDelete: " Delete"
-        });
-    }
-
-    activeTabClick() {
-        this.setState({
-            backgroundStatus: true,
-            firstTabClassName: "active",
-            secondTabClassName: "inactive",
-            inactiveOrDelete: " Inactive"
+            selectedTab: key
         });
     }
 
@@ -162,23 +151,29 @@ class BackgroundsAdmin extends React.Component {
     }
 
     render() {
+        const TABS = {
+             active: "Активные фоны",
+            unactive: "Неактивные фоны"
+        };
+
         return (
             <div>
                 <ul className= "nav nav-tabs">
-                    <Tab onClick={this.activeTabClick} name={this.state.firstTabClassName} title="Активные фоны"/>
-                    <Tab onClick={this.inactiveTabClick} name={this.state.secondTabClassName} title="Неактивные фоны"/>
+                    {Object.keys(TABS).map((key) =>
+                            <Tab key={key} onClick={this.tabClick} name={key} title={TABS[key]} isSelected={this.state.selectedTab === key}/>
+                    )}
                 </ul>
                 <Table
-                    backgroundStatus={this.state.backgroundStatus}
-                    backgrounds={this.state.backgrounds}
+                    backgroundStatus={this.state.selectedTab === 'active'}
+                    backgrounds={this.state.backgrounds.filter((background) => {
+                         return  background.active === (this.state.selectedTab === 'active');
+                    })}
                     onTableRowRemove={this.handleTableRowRemove}
-                    inactiveOrDelete={this.state.inactiveOrDelete}
                 />
             </div>
         );
     }
 }
-
 
 export default (node) => {
     let {backgrounds} = h.getAttrs(BAZOOKA_PREFIX, node);
