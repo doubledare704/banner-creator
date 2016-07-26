@@ -126,7 +126,7 @@ def continue_edit(history_image_id):
 def history_image(history_image_id):
     if request.method == 'POST':
         hist_id = request.json['hist_id']
-        new_history_json = request.method['jsn']
+        new_history_json = request.json['jsn']
         history = ImageHistory(
             review_image=hist_id,
             json_hist=new_history_json
@@ -137,5 +137,5 @@ def history_image(history_image_id):
         return jsonify({'result': 'ok'})
     else:
         edit_history = ImageHistory.query.filter_by(
-            review_image=history_image_id).order_by(asc(ImageHistory.created)).first_or_404()
+            review_image=history_image_id).order_by(desc(ImageHistory.created)).first_or_404()
         return jsonify({'fetch_history': edit_history.json_hist})
