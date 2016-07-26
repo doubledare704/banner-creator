@@ -23,9 +23,9 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="/">Home</a></li>
-                    <li><a href="{{ url_for ('editor') }}">Editor</a></li>
-                    <li><a href="{{ url_for ('admin') }}">Admin</a></li>
+                    <li{% if request.url_rule.endpoint == "index" %} class="active"{% endif %}><a href="/">Home</a></li>
+                    <li {% if request.url_rule.endpoint == "editor" %} class="active"{% endif %}><a href="{{ url_for ('editor') }}">Editor</a></li>
+                    <li {% if request.url_rule.endpoint == "admin" %} class="active"{% endif %}><a href="{{ url_for ('admin') }}">Admin</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/">{{current_user.first_name}} {{current_user.last_name}}</a></li>

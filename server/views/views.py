@@ -1,11 +1,13 @@
 import base64
 import os
 import uuid
-from flask_login import login_required
 import json
 
+from flask_login import login_required
 from flask import render_template, redirect, current_app, flash, request, url_for, jsonify
 from io import BytesIO
+
+from sqlalchemy import desc, asc
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
@@ -54,12 +56,14 @@ def index():
 
     return render_template('list.html', images=images, image_json=image_json)
 
+
 @login_required
 def image_delete(id):
     image = Image.query.get_or_404(id)
     image.active = False
     flash('File is deleted you are really brave person !')
     return redirect(url_for('index'))
+
 
 @login_required
 def image_rename(id):
@@ -68,13 +72,11 @@ def image_rename(id):
     flash('Image renamed')
     return redirect(url_for('index'))
 
+
 @login_required
 def editor():
-    if request.method == 'POST':
-        pass
-    else:
-        pass
     return render_template('editor_markuped.html')
+
 
 @login_required
 def background_images(page=1):
@@ -105,5 +107,33 @@ def review():
         json_hist=request.json['file_json']
     )
     db.session.add(history)
+    db.session.flush()
+    review_jsoned = {
+        "src": url_for('uploaded_file', filename=filename),
+        "rev": history.review_image
+    }
+    return jsonify({'result': review_jsoned})
 
-    return jsonify({'src': url_for('uploaded_file', filename=filename)})
+
+def continue_edit(history_image_id):
+    edit = ImageHistory.query.filter_by(review_image=history_image_id).first_or_404()
+    return render_template('editor_history.html', id_review=edit.review_image)
+
+
+def history_image(history_image_id):
+    if request.method == 'POST':
+        hist_id = request.json['hist_id']
+        new_history_json = request.method['jsn']
+        history = ImageHistory(
+            review_image=hist_id,
+            json_hist=new_history_json
+        )
+        db.session.add(history)
+        db.session.flush()
+
+        return jsonify({'result': 'ok'})
+    else:
+        edit_history = ImageHistory.query.filter_by(
+            review_image=history_image_id).order_by(asc(ImageHistory.created)).first_or_404()
+        print(edit_history.json_hist)
+        return jsonify({'fetch_history': edit_history.json_hist})
