@@ -117,6 +117,60 @@ fabric.Tag.fromObject = function (object, callback) {
 };
 fabric.Tag.async = false;
 
+// Additional functions for review tool
+
+function setLineControls(line) {
+    line.setControlVisible("tr",false);
+    line.setControlVisible("tl",false);
+    line.setControlVisible("br",false);
+    line.setControlVisible("bl",false);
+    line.setControlVisible("ml",false);
+    line.setControlVisible("mr",false);
+}
+
+function createArrowHead(points) {
+    let headLength = 15,
+        x1 = points[0],
+        y1 = points[1],
+        x2 = points[2],
+        y2 = points[3],
+
+        dx = x2 - x1,
+        dy = y2 - y1,
+
+        angle = Math.atan2(dy, dx);
+
+        angle *= 180 / Math.PI;
+        angle += 90;
+
+        let triangle = new fabric.Triangle({
+            angle: angle,
+            fill: 'red',
+            top: y2,
+            left: x2,
+            height: headLength,
+            width: headLength,
+            originX: 'center',
+            originY: 'center'
+        });
+
+        return triangle;
+}
+
+function createLine(points) {
+    let line = new fabric.Line(points,
+        {
+            strokeWidth: 5,
+            stroke: 'red',
+            originX: 'center',
+            originY: 'center',
+            lockScalingX:true
+        });
+        setLineControls(line);
+        return line;
+}
+// end
+
 // make editor
 export default class Editor {
     constructor(canvas, width, height) {
@@ -231,4 +285,29 @@ export default class Editor {
         }
 
     }
+    addArrow() {
+        let pts = [100,100,100,200];
+        let triangle = createArrowHead(pts);
+        let line = createLine(pts);
+        let grp = new fabric.Group([triangle,line]);
+        setLineControls(grp);
+        this.canv.add(grp);
+    }
+    addRectangle(){
+        this.canv.add(new fabric.Rect({
+            width: 100,
+            height: 200,
+            stroke: 'red',
+            fill: undefined
+        }))
+    }
+    addEllipse(){
+        this.canv.add(new fabric.Circle({
+            radius: 100,
+            stroke: 'red',
+            fill: undefined,
+            scaleY: 0.5,
+        }))
+    }
+
 }
