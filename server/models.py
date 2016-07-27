@@ -1,16 +1,16 @@
 import datetime
+import enum
 
 from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy.schema import Index
+from sqlalchemy.types import Enum
 from flask_login import unicode
 
 from server.db import db
-from sqlalchemy.schema import Index
-from sqlalchemy.types import Enum
-import enum
 
 
-class Image(db.Model):
-    __tablename__ = 'image'
+class BaseImage(db.Model):
+    __abstract__ = True
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     title = db.Column(db.String(120), unique=False)
@@ -19,6 +19,32 @@ class Image(db.Model):
 
     def __repr__(self):
         return '<Image %r>' % self.name
+
+
+class Banner(BaseImage):
+    user = db.Column(db.Integer, db.ForeignKey('user.id'))
+    review = db.relationship('BannerReview', backref='banner',
+                             lazy='dynamic', uselist=False)
+
+
+class Image(BaseImage):
+    description = db.Column(db.Text, nullable=True)
+
+
+class BackgroundImage(BaseImage):
+    project = db.Column(db.Integer, db.ForeignKey('project.id'))
+
+
+class Project(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250), unique=True)
+    background_images = db.relationship('Image', backref='project', lazy='dynamic')
+
+
+class BannerReview(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    banner_id = db.Column(db.Integer, db.ForeignKey('banner.id'))
+    reviewed = db.Column(db.Boolean, default=False)
 
 
 class Review(db.Model):
@@ -66,6 +92,7 @@ class User(db.Model):
     email = db.Column(db.String(255), unique=True)
     role = db.Column(Enum(UserRole), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    banners = db.relationship('Banner', backref='user', lazy='dynamic', uselist=False)
 
     __table_args__ = (Index('ix_user_id_social_type', "social_type", "id"),)
 
