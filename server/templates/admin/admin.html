@@ -3,29 +3,29 @@
 {% block title %}Admin{% endblock %}
 
 {% block page_content %}
-<div id="popup"></div>
+    <div id="popup"></div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-sm-3 col-md-6 col-lg-3">
-             <h2>Navigation</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3 col-md-6 col-lg-3">
+                <h2>Navigation</h2>
                 <ul class="nav nav-pills nav-stacked" role="tablist">
-                    <li><a href="{{ url_for ('backgrounds')}}">Backgrounds</a></li>
+                    <li><a href="{{ url_for ('backgrounds') }}">Backgrounds</a></li>
                     <li><a href="#">Users</a></li>
                     <li><a href="#">Images</a></li>
                 </ul>
-        </div>
+            </div>
 
-        <div class="col-sm-9 col-md-6 col-lg-9">
-            {% block admin_content %}{% endblock %}
+            <div class="col-sm-9 col-md-6 col-lg-9">
+                {% block admin_content %}{% endblock %}
+            </div>
         </div>
     </div>
-</div>
 
 {% endblock %}
 
 {% block scripts %}
-{{ super() }}
-<script src="/static/bundle.js"></script>
+    {{ super() }}
+    <script src="{{ url_for('static', filename='adminbundle.js') }}"></script>
 {% endblock %}
 

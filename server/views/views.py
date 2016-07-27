@@ -1,14 +1,22 @@
+import base64
 import os
 import uuid
+import json
 
+from flask_login import login_required
 from flask import render_template, redirect, current_app, flash, request, url_for, jsonify
+from io import BytesIO
+
+from sqlalchemy import desc, asc
+from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
-from server.models import Image
+from server.models import Image, Review, ImageHistory
 from server.db import db
-from server.utils.image import allowed_file,image_resize, image_preview
+from server.utils.image import allowed_file, image_resize, image_preview
 
 
+@login_required
 def index():
     images = Image.query.filter_by(active=True)
     if request.method == 'POST':
@@ -23,7 +31,7 @@ def index():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = str(uuid.uuid1()).replace("-","")+'.'+secure_filename(file.filename).rsplit('.', 1)[1]
+            filename = str(uuid.uuid1()).replace("-", "") + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
             preview_name = 'preview_' + filename
             file = image_resize(file)
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
@@ -32,15 +40,24 @@ def index():
             title = request.form['title']
             image = Image(
                 name=filename,
-                title = title,
-                preview = preview_name
+                title=title,
+                preview=preview_name
             )
             db.session.add(image)
 
             return redirect(request.url)
-    return render_template('list.html', images=images)
+
+    image_json = []
+    for image in images:
+        y = {'id': image.id, 'url': '/uploads/' + image.name, 'title': image.title,
+             'preview': '/uploads/' + image.preview, 'delete': '/delete/' + str(image.id)}
+        image_json.append(y)
+    image_json = json.dumps(image_json)
+
+    return render_template('list.html', images=images, image_json=image_json)
 
 
+@login_required
 def image_delete(id):
     image = Image.query.get_or_404(id)
     image.active = False
@@ -48,6 +65,7 @@ def image_delete(id):
     return redirect(url_for('index'))
 
 
+@login_required
 def image_rename(id):
     image = Image.query.get_or_404(id)
     image.title = request.form['rename']
@@ -55,12 +73,69 @@ def image_rename(id):
     return redirect(url_for('index'))
 
 
+@login_required
 def editor():
     return render_template('editor_markuped.html')
 
 
-def background_images():
-    background_images = Image.query.all()
-    serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active}
-                         for image in background_images]
+@login_required
+def background_images(page=1):
+    paginated_images = Image.query.paginate(page, 4)
+    serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active,
+                          "preview": image.preview}
+                         for image in paginated_images.items]
+
     return jsonify({"backgroundImages": serialized_images})
+
+
+@login_required
+def review():
+    _, b64data = request.json['file'].split(',')
+    random_name = request.json['name']
+    decoded_data = base64.b64decode(b64data)
+    file = FileStorage(BytesIO(decoded_data), filename=random_name)
+    filename = secure_filename(file.filename)
+    file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+
+    rev = Review(
+        name=filename
+    )
+    db.session.add(rev)
+    db.session.flush()
+
+    history = ImageHistory(
+        review_image=rev.id,
+        json_hist=request.json['file_json']
+    )
+    db.session.add(history)
+    db.session.flush()
+    review_jsoned = {
+        "src": url_for('uploaded_file', filename=filename),
+        "rev": history.review_image
+    }
+    return jsonify({'result': review_jsoned})
+
+
+@login_required
+def continue_edit(history_image_id):
+    edit = ImageHistory.query.filter_by(review_image=history_image_id).first_or_404()
+    return render_template('editor_history.html', id_review=edit.review_image)
+
+
+@login_required
+def history_image(history_image_id):
+    if request.method == 'POST':
+        hist_id = request.json['hist_id']
+        new_history_json = request.json['jsn']
+        history = ImageHistory(
+            review_image=hist_id,
+            json_hist=new_history_json
+        )
+        db.session.add(history)
+        db.session.flush()
+
+        return jsonify({'result': 'ok'})
+    else:
+        edit_history = ImageHistory.query.filter_by(
+            review_image=history_image_id).order_by(desc(ImageHistory.created)).first_or_404()
+        return jsonify({'fetch_history': edit_history.json_hist})
