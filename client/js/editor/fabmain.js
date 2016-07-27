@@ -12,7 +12,6 @@ const addbutton = document.getElementById('addButt');
 const addtexts = document.querySelectorAll('#rightcol ul li');
 const filetoeditor = document.getElementById('inputted');
 const deleteFabricItem = document.getElementById('del_item');
-const sendImageReview = document.getElementById('to_send');
 const result_preview = document.getElementById('result_review');
 const modals = document.getElementById('myModal');
 const continueButton = document.getElementById('continue');
@@ -47,7 +46,7 @@ function sendImageForReview() {
         name: random_name,
         file_json: image_review
     };
-    console.log(image_review);
+    console.log(JSON.stringify(image_review));
     fetch('/api/review/', {
         method: 'post',
         credentials: 'same-origin',
@@ -131,5 +130,6 @@ function sendingReview(node) {
 
 module.exports = {
     'editor': editor,
-    'sendingReview': sendingReview
+    'sendingReview': sendingReview,
+    'fabric': fabric
 };

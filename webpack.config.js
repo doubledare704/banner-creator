@@ -9,18 +9,20 @@ module.exports = {
         path: __dirname,
         filename: "server/static/[name]bundle.js"
     },
-    eslint: {
-        configFile: '.eslintrc.json',
-        quiet: true,
-        failOnError: false,
-        failOnWarning: false,
-        emitError: false,
-        emitWarning: false
-    },
+    // uncomment to start using eslint
+    // eslint: {
+    //     quiet: true,
+    //     failOnError: false,
+    //     failOnWarning: false,
+    //     emitError: false,
+    //     emitWarning: false,
+    //     configFile: '.eslintrc.json'
+    // },
     module: {
-        preLoaders: [
-            {test: /\.jsx?$/, loader: "eslint-loader", exclude: /node_modules/}
-        ],
+        // uncomment to start using eslint
+        // preLoaders: [
+        //     {test: /\.jsx?$/, loader: "eslint-loader", exclude: /node_modules/}
+        // ],
         loaders: [
             {
                 test: /\.styl$/,

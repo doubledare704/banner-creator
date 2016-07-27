@@ -4,7 +4,6 @@ import {h} from 'bazooka';
 
 const BAZOOKA_PREFIX = 'header';
 
-
 export default function (node) {
     let {imageArray} = h.getAttrs(BAZOOKA_PREFIX, node);
     var Image = React.createClass({
@@ -13,7 +12,7 @@ export default function (node) {
                     <div className="col-sm-6 col-md-4">
                         <div className="thumbnail">
 
-                        <img src={this.props.preview}  />
+                        <img src={this.props.preview}/>
                         <div className="caption">
                             <h3> {this.props.title} </h3>
                             <p> {this.props.url} </p>
@@ -21,7 +20,7 @@ export default function (node) {
                                 <i className="glyphicon glyphicon-trash"/>
                                 <span>Delete</span>
                             </a>
-                            <a href="#"  className="btn btn-default " role="button">
+                            <a href="#" className="btn btn-default " role="button">
                         <i className="glyphicon glyphicon-pencil"/>
                          <span>Rename</span></a>
                     <a href={this.props.url} className="btn btn-default" role="button">

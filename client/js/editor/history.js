@@ -13,7 +13,7 @@ function loadHist() {
     )
         .then((result) => result.json(), console.log('Json accepted'))
         .then(function ({fetch_history}) {
-            console.log(fetch_history);
+            console.log(JSON.stringify(fetch_history));
             console.log(fetch_history.objects);
             editor.canv.loadFromJSON(fetch_history, editor.canv.renderAll.bind(editor.canv))
         })
