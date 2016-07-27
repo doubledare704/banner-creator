@@ -17,4 +17,4 @@ Baz.register({
     'saveToHistory': saveToHistory
 });
 
-var unwatch = Baz.watch();
+const unwatch = Baz.watch();

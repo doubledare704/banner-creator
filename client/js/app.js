@@ -1,15 +1,13 @@
-import header from './header.jsx';
-import renderImages from './renderImages.jsx';
-import backgroundsAdmin from './admin/backgroundsAdmin.jsx'
+import renderImages from './images/renderImages.jsx';
+import backgroundsAdmin from './admin/backgroundsAdmin.jsx';
 
-var styluses = require('./../css/main.styl');
-var Baz = require('bazooka');
+const styluses = require('./../css/main.styl');
+const Baz = require('bazooka');
 
 Baz.register({
     'backgroundsAdmin': backgroundsAdmin,
-    'header': header,
     'renderImages': renderImages
 });
 
 
-var unwatch = Baz.watch();
+const unwatch = Baz.watch();
