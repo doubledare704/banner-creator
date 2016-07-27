@@ -4,6 +4,8 @@ from server.views.auth import login_page, authorize, oauth_callback, log_out
 from server.views.admin import admin, backgrounds, inactivate_image, image_delete_from_DB, activate_image
 from server.utils.image import uploaded_file
 
+from server.views.views import make_review
+
 
 def setup_routes(app):
     """Here we map routes to handlers."""
@@ -14,6 +16,7 @@ def setup_routes(app):
     app.add_url_rule('/editor/', view_func=editor)
     app.add_url_rule('/api/backgrounds/', view_func=background_images)
     app.add_url_rule('/api/backgrounds/<int:page>', view_func=background_images)
+    app.add_url_rule('/api/review',methods=['GET', 'POST'], view_func=make_review)
 
     # admin
     app.add_url_rule('/admin/', view_func=admin)

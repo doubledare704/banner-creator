@@ -138,3 +138,14 @@ def history_image(history_image_id):
         edit_history = ImageHistory.query.filter_by(
             review_image=history_image_id).order_by(desc(ImageHistory.created)).first_or_404()
         return jsonify({'fetch_history': edit_history.json_hist})
+
+
+@login_required
+def make_review():
+    _, file = request.json['file'].split(',')
+    name = 'test1'
+    decoded_data = base64.b64decode(file)
+    save_file = FileStorage(BytesIO(decoded_data), filename=name)
+    filename = secure_filename(save_file.filename)
+    save_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+    return '', 201
