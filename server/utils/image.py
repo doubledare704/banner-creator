@@ -44,13 +44,11 @@ def image_preview(file, position=('center', 'center'), fill='contain'):
         image = pil.open(file)
         owidth = image.size[0]
         oheight = image.size[1]
-        print(owidth, oheight, type(owidth), type(oheight))
         width = 250
         height = (width / owidth) * oheight
         wr, hr = 1.0 * width / owidth, 1.0 * height / oheight
         size = owidth, oheight
         x, y = position
-        # back = Image.new('RGBA', (width, height), (125, 125, 125, 0))
         if fill == 'cover':
             if wr < hr:
                 size = owidth * height / oheight, height

@@ -24,7 +24,7 @@ def backgrounds():
     return render_template('admin/backgrounds.html', backgrounds=backgrounds)
 
 
-def inactiveImg(id):
+def inactivate_image(id):
     image = Image.query.get_or_404(id)
     image.active = False
     return '', 200
@@ -35,3 +35,8 @@ def image_delete_from_DB(id):
     db.session.delete(image)
     db.session.commit()
     return '', 204
+
+def activate_image(id):
+    image = Image.query.get_or_404(id)
+    image.active = True
+    return '', 200
