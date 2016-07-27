@@ -138,3 +138,17 @@ def history_image(history_image_id):
         edit_history = ImageHistory.query.filter_by(
             review_image=history_image_id).order_by(desc(ImageHistory.created)).first_or_404()
         return jsonify({'fetch_history': edit_history.json_hist})
+
+
+@login_required
+def review_tool():
+    images = Image.query.filter_by(active=True)
+    image_json = json.dumps(
+        [{'id': image.id,
+          'url': '/uploads/' + image.name,
+          'title': image.title,
+          'preview': '/uploads/' + image.preview
+          }
+         for image in images
+         ])
+    return render_template('review.html', image_json=image_json)
