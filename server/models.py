@@ -22,9 +22,9 @@ class BaseImage(db.Model):
 
 
 class Banner(BaseImage):
-    user = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     review = db.relationship('BannerReview', backref='banner',
-                             lazy='dynamic', uselist=False)
+                             uselist=False)
 
 
 class Image(BaseImage):
@@ -32,18 +32,19 @@ class Image(BaseImage):
 
 
 class BackgroundImage(BaseImage):
-    project = db.Column(db.Integer, db.ForeignKey('project.id'))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
 
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), unique=True)
-    background_images = db.relationship('Image', backref='project', lazy='dynamic')
+    background_images = db.relationship('BackgroundImage', backref='project', lazy='dynamic')
 
 
 class BannerReview(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     banner_id = db.Column(db.Integer, db.ForeignKey('banner.id'))
+    comment = db.Column(db.Text, nullable=True)
     reviewed = db.Column(db.Boolean, default=False)
 
 
@@ -92,7 +93,7 @@ class User(db.Model):
     email = db.Column(db.String(255), unique=True)
     role = db.Column(Enum(UserRole), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
-    banners = db.relationship('Banner', backref='user', lazy='dynamic', uselist=False)
+    banners = db.relationship('Banner', backref='user', uselist=False)
 
     __table_args__ = (Index('ix_user_id_social_type', "social_type", "id"),)
 
