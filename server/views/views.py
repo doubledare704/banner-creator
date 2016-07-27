@@ -2,18 +2,18 @@ import base64
 import os
 import uuid
 import json
-
-from flask_login import login_required
 from io import BytesIO
 
-from sqlalchemy import desc, asc
-from werkzeug.datastructures import FileStorage
 from flask import render_template, redirect, current_app, request, jsonify,url_for
-from werkzeug.utils import secure_filename
 
-from server.models import Image, Review, ImageHistory
+from flask_login import login_required, current_user
+from werkzeug.datastructures import FileStorage
+from werkzeug.utils import secure_filename
+from sqlalchemy import desc, asc
+
 from server.db import db
 from server.utils.image import allowed_file, image_resize, image_preview
+from server.models import Image, Review, ImageHistory, Banner, BannerReview
 
 
 @login_required
@@ -142,10 +142,39 @@ def history_image(history_image_id):
 
 @login_required
 def make_review():
-    _, file = request.json['file'].split(',')
-    name = 'test1'
-    decoded_data = base64.b64decode(file)
-    save_file = FileStorage(BytesIO(decoded_data), filename=name)
-    filename = secure_filename(save_file.filename)
-    save_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+    _, b64data = request.json['file'].split(',')
+    name = str(uuid.uuid4()) + '.png'
+    decoded_data = base64.b64decode(b64data)
+    file = FileStorage(BytesIO(decoded_data), filename=name)
+    filename = secure_filename(file.filename)
+    # make a preview for a file
+    preview_name = 'preview_' + filename
+    preview_file = image_preview(file)
+    preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
+
+    # TODO check whether it can raise any exceptions
+    file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+
+    banner = Banner(
+        name=filename,
+        title='default',
+        preview=preview_name,
+        user=current_user
+    )
+    db.session.add(banner)
+    db.session.flush()
+
+    review = BannerReview(
+        banner_id = banner.id,
+        user=current_user
+    )
+    print(current_user.id)
+    db.session.add(review)
+
     return '', 201
+
+
+@login_required
+def user_dashboard():
+    reviews = Banner.query.filter_by(user_id=current_user.id)
+    return render_template('user/index.html', reviews=reviews)
