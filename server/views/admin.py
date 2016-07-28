@@ -1,6 +1,7 @@
-from flask import render_template, json, flash
 from server.models import Image, Review
+from flask import render_template,json, current_app
 from server.db import db
+import os
 
 
 def admin():
@@ -32,6 +33,8 @@ def inactivate_image(id):
 
 def image_delete_from_DB(id):
     image = Image.query.get_or_404(id)
+    os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.name))
+    os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.preview))
     db.session.delete(image)
     db.session.commit()
     return '', 204
