@@ -147,18 +147,11 @@ def make_review():
     decoded_data = base64.b64decode(b64data)
     file = FileStorage(BytesIO(decoded_data), filename=name)
     filename = secure_filename(file.filename)
-    # make a preview for a file
-    preview_name = 'preview_' + filename
-    preview_file = image_preview(file)
-    preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
-
-    # TODO check whether it can raise any exceptions
     file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
 
     banner = Banner(
         name=filename,
         title='default',
-        preview=preview_name,
         user=current_user
     )
     db.session.add(banner)
@@ -166,15 +159,16 @@ def make_review():
 
     review = BannerReview(
         banner_id = banner.id,
-        user=current_user
+        user=current_user,
+        designer=current_user # will be changed
     )
-    print(current_user.id)
     db.session.add(review)
+    db.session.flush()
 
     return '', 201
 
 
 @login_required
 def user_dashboard():
-    reviews = Banner.query.filter_by(user_id=current_user.id)
-    return render_template('user/index.html', reviews=reviews)
+    reviews = BannerReview.query.filter_by(user_id=current_user.id).order_by(BannerReview.created_at.desc())
+    return render_template('user/user_dashboard.html', reviews=reviews)
