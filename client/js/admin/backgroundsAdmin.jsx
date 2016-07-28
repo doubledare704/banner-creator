@@ -43,12 +43,12 @@ class TableRow extends React.Component {
     //if background is inactive, we add the button which activate them
     addActivateButton() {
         if ( !this.props.tablerow.active ) {
-            return <Button name="Activate" clickAction={this.props.onRowActivate(this.props.tablerow)}/>
+            return <Button name="Активировать" clickAction={this.props.onRowActivate(this.props.tablerow)}/>
         }
     }
 
     render() {
-        const buttonName = this.props.backgroundStatus ? "Inactivate" : "Delete";
+        const buttonName = this.props.backgroundStatus ? "Деактивировать" : "Удалить";
 
         return (
             <tr className={this.props.tablerow.active} >
@@ -76,8 +76,8 @@ class Table extends React.Component {
             <table className="table">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Image</th>
+                        <th>Название</th>
+                        <th>Картинка</th>
                         <th>
                         </th>
                         <th>
