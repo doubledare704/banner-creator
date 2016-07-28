@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
+import {popup} from './popUp.js';
 
 
 const BAZOOKA_PREFIX = 'backgrounds-admin';
@@ -8,7 +9,6 @@ const TABS = {
      active: "Активные фоны",
     inactive: "Неактивные фоны"
 };
-
 
 class Button extends React.Component {
     render() {
@@ -43,12 +43,12 @@ class TableRow extends React.Component {
     //if background is inactive, we add the button which activate them
     addActivateButton() {
         if ( !this.props.tablerow.active ) {
-            return <Button name="Activate" clickAction={this.props.onRowActivate(this.props.tablerow)}/>
+            return <Button name="Активировать" clickAction={this.props.onRowActivate(this.props.tablerow)}/>
         }
     }
 
     render() {
-        const buttonName = this.props.backgroundStatus ? "Inactivate" : "Delete";
+        const buttonName = this.props.backgroundStatus ? "Деактивировать" : "Удалить";
 
         return (
             <tr className={this.props.tablerow.active} >
@@ -76,8 +76,8 @@ class Table extends React.Component {
             <table className="table">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Image</th>
+                        <th>Название</th>
+                        <th>Картинка</th>
                         <th>
                         </th>
                         <th>
@@ -132,6 +132,9 @@ class BackgroundsAdmin extends React.Component {
                     {method: "POST"}
                 ).then((response) => {
                     if (response.status === 200) {
+                        popup({
+                            data: "Фон стал неактивным"
+                        });
                         this.state.backgrounds[index].active = false;
                         this.setState({backgrounds: this.state.backgrounds});
                     }
@@ -139,15 +142,23 @@ class BackgroundsAdmin extends React.Component {
 
                 //if the background is inactive we delete this background from DB
             } else {
-                fetch(
-                    `/admin/delete_image/` + this.state.backgrounds[index].id,
-                    {method: "POST"}
-                ).then((response) => {
-                    if (response.status === 204) {
-                        this.state.backgrounds.splice(index, 1);
-                        this.setState({backgrounds: this.state.backgrounds});
-                    }
+                popup({
+                        data: "Вы действительно хотите удалить картинку?",
+                        confirm: true,
+                        confirmAction:
+                            () => {
+                                fetch(
+                                    `/admin/delete_image/` + this.state.backgrounds[index].id,
+                                    {method: "POST"}
+                                ).then((response) => {
+                                    if (response.status === 204) {
+                                        this.state.backgrounds.splice(index, 1);
+                                        this.setState({backgrounds: this.state.backgrounds});
+                                    }
+                                });
+                            }
                 });
+
             }
         }
     };
@@ -162,6 +173,9 @@ class BackgroundsAdmin extends React.Component {
                 {method: "POST"}
             ).then((response) => {
                 if (response.status === 200) {
+                    popup({
+                        data: "Фон стал активным"
+                    });
                     this.state.backgrounds[index].active = true;
                     this.setState({backgrounds: this.state.backgrounds});
                 }
@@ -171,7 +185,6 @@ class BackgroundsAdmin extends React.Component {
 
     render() {
         const status = (this.state.selectedTab === 'active');
-
         return (
             <div>
                 <ul className= "nav nav-tabs">
