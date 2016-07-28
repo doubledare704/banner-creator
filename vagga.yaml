@@ -5,6 +5,13 @@ containers:
     - !Install [libpq-dev]
     - !Py3Requirements requirements.txt
 
+  static:
+    setup:
+    - !Ubuntu xenial
+    - !NpmDependencies
+    environ:
+      NODE_PATH: /usr/local/lib/node_modules
+
   postgres:
     setup:
     - !Ubuntu xenial
@@ -64,4 +71,9 @@ commands:
       chpst -u postgres $PG_BIN/postgres -D "$PG_DATA" \
         -F --port=$PG_PORT \
         -k /tmp >/dev/null
+
+  webpack: !Command
+    description: Run webpack
+    container: static
+    run: [webpack, --progress]
 

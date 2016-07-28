@@ -1,6 +1,12 @@
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
     entry: "./client/js/app.js",
+    resolve: {
+        root: '/usr/local/lib/node_modules',
+    },
+    resolveLoader: {
+        root: '/usr/local/lib/node_modules',
+    },
     output: {
         path: __dirname,
         filename: "server/static/bundle.js"
