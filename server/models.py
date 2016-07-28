@@ -42,10 +42,15 @@ class Project(db.Model):
 
 
 class BannerReview(db.Model):
+    class Status(enum.Enum):
+        accepted = 0
+        not_accepted = 1
+
     id = db.Column(db.Integer, primary_key=True)
     banner_id = db.Column(db.Integer, db.ForeignKey('banner.id'))
     comment = db.Column(db.Text, nullable=True)
     reviewed = db.Column(db.Boolean, default=False)
+    status = db.Column(Enum(Status))
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     designer_id = db.Column(db.Integer, db.ForeignKey('user.id'))
