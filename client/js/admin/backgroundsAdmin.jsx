@@ -132,11 +132,11 @@ class BackgroundsAdmin extends React.Component {
                     {method: "POST"}
                 ).then((response) => {
                     if (response.status === 200) {
-                        this.state.backgrounds[index].active = false;
-                        this.setState({backgrounds: this.state.backgrounds});
                         popup({
                             data: "Фон стал неактивным"
                         });
+                        this.state.backgrounds[index].active = false;
+                        this.setState({backgrounds: this.state.backgrounds});
                     }
                 });
 
@@ -173,11 +173,11 @@ class BackgroundsAdmin extends React.Component {
                 {method: "POST"}
             ).then((response) => {
                 if (response.status === 200) {
-                    this.state.backgrounds[index].active = true;
-                    this.setState({backgrounds: this.state.backgrounds});
                     popup({
                         data: "Фон стал активным"
                     });
+                    this.state.backgrounds[index].active = true;
+                    this.setState({backgrounds: this.state.backgrounds});
                 }
             });
         }

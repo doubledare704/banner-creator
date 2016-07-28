@@ -42,7 +42,6 @@
 
 {% block content %}
     <div class="container">
-        <div id="popup"></div>
         {% for message in get_flashed_messages() %}
             <div class="alert alert-warning">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -53,12 +52,14 @@
         {% block page_content %}
 
         {% endblock %}
-
+        <div id="popup"></div>
     </div>
+
 {% endblock %}
 
 {% block scripts %}
 {% endblock %}
+
 </body>
 </html>
 
