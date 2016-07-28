@@ -1,15 +1,10 @@
 import json
 
-import decimal
-
-import datetime
-
-from flask import render_template, jsonify, request
+from flask import render_template, request
 from flask_paginate import Pagination
 
 from server.models import Image, User
 from server.db import db
-from server.utils.admin import date_serialize
 
 
 def admin():
@@ -17,43 +12,46 @@ def admin():
 
 
 def users_page():
-    q = request.args.get('search')
-    search = (True if q else False)
+    query_db = User.query
 
-    users_paginator = User.query.order_by(User.created_at.desc()).paginate(per_page=10)
+    search_query = request.args.get('search', None)
+    search = bool(search_query)
+
+    if search:
+        query_db = query_db.filter((User.first_name.contains(search_query))
+                                   | (User.last_name.contains(search_query))
+                                   | (User.email.contains(search_query)))
+
+    query_db = query_db.filter_by(active=request.args.get('active', True)).order_by(User.created_at.desc())
+
+    users_paginator = query_db.paginate(per_page=10)
     users_list = ([{'id': user.id,
                     'first_name': user.first_name,
                     'last_name': user.last_name,
                     'email': user.email,
                     'gender': user.gender.name,
                     'role': user.role.name,
-                    'registration_date': date_serialize(user.created_at),
+                    'registration_date': user.created_at.isoformat(),
                     'auth_by': user.social_type.name
                     }
                    for user in users_paginator.items])
 
     pagination = Pagination(per_page=10, page=users_paginator.page, total=users_paginator.total, search=search,
-                            record_name='users', css_framework='foundation', found=users_paginator.total)
+                            record_name='users', css_framework='bootstrap3', found=users_paginator.total)
 
     return render_template('admin/users.html',
                            users_list=json.dumps(users_list),
-                           pagination=pagination
+                           pagination=pagination,
+                           search_query=search_query
                            )
 
 
 def remove_user(user_id):
     user = User.query.get_or_404(user_id)
-    db.session.delete(user)
+    user.active = False
+    db.session.add(user)
     db.session.commit()
     return 'OK', 200
-
-
-def alchemyencoder(obj):
-    """JSON encoder function for SQLAlchemy special classes."""
-    if isinstance(obj, datetime.date):
-        return obj.isoformat()
-    elif isinstance(obj, decimal.Decimal):
-        return float(obj)
 
 
 def backgrounds():

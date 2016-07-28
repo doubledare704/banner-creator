@@ -43,6 +43,7 @@ class User(db.Model):
     email = db.Column(db.String(255), index=True, unique=True)
     role = db.Column(Enum(UserRole), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    active = db.Column(db.BOOLEAN, default=True, nullable=False)
 
     __table_args__ = (Index('ix_user_id_social_type', "social_type", "id"),)
 

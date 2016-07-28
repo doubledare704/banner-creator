@@ -17,6 +17,7 @@
   "dependencies": {
     "babel-preset-react": "^6.11.1",
     "bazooka": "^0.5.0",
+    "classnames": "^2.2.5",
     "fabric": "^1.6.3",
     "moment": "^2.14.1",
     "normalize-styl": "^3.0.3",

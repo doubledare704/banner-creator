@@ -6,6 +6,18 @@
 {{ pagination.info }}
 
 <div class="row">
+    <form method="get" action="{{ url_for('users_page') }}">
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="glyphicon glyphicon-search"></i>
+            </span>
+            {% if search_query %}
+                <input type="text" class="form-control" placeholder="Search" name="search" value="{{search_query}}">
+            {% else %}
+                <input type="text" class="form-control" placeholder="Search" name="search">
+            {% endif %}
+        </div>
+    </form>
     <div id="users" data-bazooka="usersList" data-users-users-list="{{ users_list }}"></div>
 </div>
 
