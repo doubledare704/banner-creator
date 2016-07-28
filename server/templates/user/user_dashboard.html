@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-lg-3">
+            <ul class="dashboard-menu">
+                <li><a href="#">Main</a></li>
+                <li><a href="#">Banners</a></li>
+            </ul>
+        </div>
+        <div class="col-lg-9">
+            {% for review in reviews %}
+            <div class="row">
+                <div class="review-section">
+                    <p><b>Отправлено на ревью пользователю <span class="dashboard-reviwer-name">{{ review.designer.last_name }} {{ review.designer.first_name }}</span></b>
+                        <span class="text-left">
+                            {% if review.created_at %}{{ review.created_at.strftime('%H:%M %Y-%m-%d') }}{% endif %}
+                        </span>
+                    </p>
+                    <p>{% if review.reviewed %}Просмотрено{% else %}Не просмотрено{% endif %}</p>
+                    <span style="cursor: pointer" onclick="{
+                        var imgContainer = document.getElementById({{ review.banner.id }});
+                            console.log(imgContainer);
+                            var imgSrc = imgContainer.firstElementChild.getAttribute('imgSrc');
+                            imgContainer.firstElementChild.setAttribute('src', imgSrc);
+                    }">Показать баннер</span>
+                    <span class="glyphicon glyphicon-arrow-down"></span>
+                    <div id="{{ review.banner.id }}"><img imgSrc="{{ url_for('uploaded_file', filename=review.banner.name) }}"/></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock page_content%}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='adminbundle.js') }}"></script>
+{% endblock scripts %}

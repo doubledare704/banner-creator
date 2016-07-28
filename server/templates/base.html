@@ -26,6 +26,7 @@
                     <li{% if request.url_rule.endpoint == "index" %} class="active"{% endif %}><a href="/">Home</a></li>
                     <li {% if request.url_rule.endpoint == "editor" %} class="active"{% endif %}><a href="{{ url_for ('editor') }}">Editor</a></li>
                     <li {% if request.url_rule.endpoint == "admin" %} class="active"{% endif %}><a href="{{ url_for ('admin') }}">Admin</a></li>
+                    <li {% if request.url_rule.endpoint == 'user_dashboard' %}class="active"{% endif %}><a href="{{ url_for('user_dashboard') }}">Dashboard</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/">{{current_user.first_name}} {{current_user.last_name}}</a></li>
