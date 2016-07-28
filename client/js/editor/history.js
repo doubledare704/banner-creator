@@ -15,6 +15,7 @@ function loadHist() {
         .then(function ({fetch_history}) {
             console.log(JSON.stringify(fetch_history));
             console.log(fetch_history.objects);
+            editor.canv.clear();
             editor.canv.loadFromJSON(fetch_history, editor.canv.renderAll.bind(editor.canv))
         })
         .catch(function (error) {

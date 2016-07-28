@@ -71,52 +71,35 @@ let padding_buttons = 65;
 
 // initial tag type for fabric
 
-fabric.Tag = fabric.util.createClass(fabric.Group, {
-    type: 'Tag',
-
-    initialize: function (options, objects, isAlreadyGrouped) {
-        if (!options) {
-            objects = [];
-            options = {};
-            options.top = 20;
-            options.left = 10 + leftCoords;
-
-            var defaults = {
-                width: 200,
-                height: 40,
-                originX: 'center',
-                originY: 'center'
-            };
-
-            objects[0] = new fabric.Rect(extend({}, defaults, {
-                fill: 'transparent',
-                stroke: '#000',
-                strokewidth: 4,
-                rx: 5,
-                ry: 5
-            }));
-
-            objects[1] = new fabric.IText('Смотреть     >', extend({}, defaults, {
-                textAlign: 'center',
-                fontFamily: 'Roboto',
-                fontSize: 20,
-                fill: '#000'
-            }));
-        }
-        leftCoords += objects[0].width + padding_buttons;
-        this.callSuper('initialize', objects, options, isAlreadyGrouped);
+fabric.LabeledRect = fabric.util.createClass(fabric.Rect, {
+    type: 'labeledRect',
+    initialize: function (options) {
+        options || (options = {});
+        this.callSuper('initialize', options);
+        this.set('label', options.label || '');
+    },
+    toObject: function () {
+        return fabric.util.object.extend(this.callSuper('toObject'), {
+            label: this.get('label')
+        });
+    },
+    _render: function (ctx) {
+        this.callSuper('_render', ctx);
+        ctx.font = '20px Helvetica';
+        ctx.fillStyle = '#333';
+        ctx.fillText(this.label, -this.width/2 + this.width/4, -this.height / 2 + this.height/1.6);
     }
 });
-
-fabric.Tag.fromObject = function (object, callback) {
+fabric.LabeledRect.fromObject = function (object, callback) {
     var _enlivenedObjects;
     fabric.util.enlivenObjects(object.objects, function (enlivenedObjects) {
         delete object.objects;
         _enlivenedObjects = enlivenedObjects;
     });
-    return new fabric.Tag(object, _enlivenedObjects);
+    return new fabric.LabeledRect(_enlivenedObjects, object);
 };
-fabric.Tag.async = false;
+
+fabric.LabeledRect.async = false;
 
 // make editor
 export default class Editor {
@@ -195,7 +178,19 @@ export default class Editor {
     }
 
     addButton() {
-        this.canv.add(new fabric.Tag())
+        let obj = new fabric.LabeledRect({
+            width: 220,
+            height: 45,
+            left: 100,
+            right: 100,
+            label: 'Смотреть     >',
+            fill: 'transparent',
+            stroke: '#000',
+            strokeWidth: 2,
+            rx: 5,
+            ry: 5
+        });
+        this.canv.add(obj)
     }
 
     //working now
