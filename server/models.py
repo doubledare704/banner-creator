@@ -46,7 +46,12 @@ class BannerReview(db.Model):
     banner_id = db.Column(db.Integer, db.ForeignKey('banner.id'))
     comment = db.Column(db.Text, nullable=True)
     reviewed = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    designer_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    user = db.relationship("User", foreign_keys=[user_id])
+    designer = db.relationship("User", foreign_keys=[designer_id])
 
 
 class Review(db.Model):
@@ -95,7 +100,6 @@ class User(db.Model):
     role = db.Column(Enum(UserRole), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
     banners = db.relationship('Banner', backref='user')
-    reviews = db.relationship('BannerReview', backref='user')
 
     __table_args__ = (Index('ix_user_id_social_type', "social_type", "id"),)
 
