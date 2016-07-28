@@ -7,6 +7,7 @@
           rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab|Roboto:400,500|Lobster&subset=latin,cyrillic'
           rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 {% endblock %}
 
 {% block navbar %}
@@ -62,7 +63,10 @@
             </section>
 
             <section>
-                <a href="#" data-bazooka="sendToReview"><i class="material-icons">done_all</i>Review</a>
+                <a href="#" data-bazooka="sendToReview">
+                    <i class="material-icons">done_all</i>
+                    <span class="detail">Отправить на ревью</span>
+                </a>
             </section>
 
             <section class="last-sec">
@@ -111,6 +115,46 @@
             </div>
             <div class="modal-footer">
                 <h3>Этот вариант сохранён.</h3>
+            </div>
+        </div>
+
+    </div>
+        <div id="reviewModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">×</span>
+                <h2>Отправить на ревью</h2>
+            </div>
+            <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-md-6">Добавить комментарий
+                                <textarea id="reviewComment" class="form-control"></textarea>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-md-6">Выберите, кому отправить
+                                <select class="form-control">
+                                    <option>Designer 1</option>
+                                    <option>Designer 2</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <button id="submitReview" class="btn btn-success">Отправить</button>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <h3></h3>
             </div>
         </div>
 

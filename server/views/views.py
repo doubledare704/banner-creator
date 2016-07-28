@@ -157,10 +157,12 @@ def make_review():
     db.session.add(banner)
     db.session.flush()
 
+    comment = request.json['comment']
     review = BannerReview(
         banner_id = banner.id,
         user=current_user,
-        designer=current_user # will be changed
+        designer=current_user, # will be changed
+        comment=comment
     )
     db.session.add(review)
     db.session.flush()
