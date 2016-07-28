@@ -3,16 +3,16 @@
 {% block title %}Admin{% endblock %}
 
 {% block page_content %}
-    <div id="popup"></div>
+
 
     <div class="container">
         <div class="row">
             <div class="col-sm-3 col-md-6 col-lg-3">
-                <h2>Navigation</h2>
+                <h2>Меню</h2>
                 <ul class="nav nav-pills nav-stacked" role="tablist">
-                    <li><a href="{{ url_for('backgrounds') }}">Backgrounds</a></li>
-                    <li><a href="{{ url_for('users_page')}}">Users</a></li>
-                    <li><a href="#">Images</a></li>
+                    <li><a href="{{ url_for('backgrounds') }}">Фоны</a></li>
+                    <li><a href="{{ url_for('users_page')}}">Пользователи</a></li>
+                    <li><a href="#">Проекты</a></li>
                 </ul>
             </div>
 

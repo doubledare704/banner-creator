@@ -1,12 +1,14 @@
 
+
 import json
 
 from flask_paginate import Pagination
 
 from server.models import Image, User
-from flask import render_template, json, request
+from flask import render_template, json, request, current_app
 
 from server.db import db
+import os
 
 
 def admin():
@@ -81,6 +83,8 @@ def inactivate_image(id):
 
 def image_delete_from_DB(id):
     image = Image.query.get_or_404(id)
+    os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.name))
+    os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.preview))
     db.session.delete(image)
     db.session.commit()
     return '', 204

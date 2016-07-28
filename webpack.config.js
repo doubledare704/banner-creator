@@ -9,13 +9,13 @@ module.exports = {
         path: __dirname,
         filename: "server/static/[name]bundle.js"
     },
-    eslint: {
-        configFile: '.eslintrc.json'
-    },
+    // eslint: {
+    //     configFile: '.eslintrc.json'
+    // },
     module: {
-        preLoaders: [
-            {test: /\.jsx?$/, loader: "eslint-loader", exclude: /node_modules/}
-        ],
+        // preLoaders: [
+        //     {test: /\.jsx?$/, loader: "eslint-loader", exclude: /node_modules/}
+        // ],
         loaders: [
             {
                 test: /\.styl$/,
