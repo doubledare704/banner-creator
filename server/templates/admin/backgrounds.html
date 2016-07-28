@@ -1,78 +1,13 @@
 {% extends "admin/admin.html" %}
 
+
 {% block admin_content %}
 
 
 <h2>Backgrounds</h2>
+<div data-bazooka="backgroundsAdmin" data-backgrounds-admin-backgrounds='{{ backgrounds }}' ></div>
 
-
-<div class="row">
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#active-pictures">Активные картинки</a></li>
-        <li><a data-toggle="tab" href="#deleted-pictures">Удалённые картинки</a></li>
-    </ul>
-
-    <div class="tab-content">
-        <div id="active-pictures" class="tab-pane fade in active">
-            <table class="table" id="activeImg">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Images</th>
-                    <th></th>
-
-
-                </thead>
-                <tbody>
-                    {% for actBackground in act_backgrounds %}
-                    <tr class= "{{actBackground.id}}">
-                        <td>
-                            <i>{{ actBackground.title }}</i>
-                        </td>
-                        <td>
-                            <div class="thumbnail" >
-                                <img class="img-responsive" src="{{ url_for('uploaded_file', filename=actBackground.name) }}" alt="cat" width="150" height="100" >
-                            </div>
-                        </td>
-                        <td>
-                            <button id= "{{actBackground.id}}" class="btn btn-default" data-bazooka="inactiveImg"><i class="glyphicon glyphicon-trash"></i> Delete</button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div id="deleted-pictures" class="tab-pane fade">
-            <table class="table" id="inactiveImg">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Images</th>
-                    <th></th>
-
-
-                </thead>
-                <tbody>
-                    {% for delBackground in del_backgrounds %}
-                    <tr class= "{{delBackground.id}}">
-                        <td>
-                            <i>{{ delBackground.title }}</i>
-                        </td>
-                        <td>
-                            <div class="thumbnail" >
-                                <img class="img-responsive" src="{{ url_for('uploaded_file', filename=delBackground.name) }}" alt="cat" width="150" height="100" >
-                            </div>
-                        </td>
-                        <td>
-                            <button id= "{{delBackground.id}}" class="btn btn-default" data-bazooka="deleteImg"><i class="glyphicon glyphicon-trash"></i> Delete</button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-</div>
 
 {% endblock %}
+
+

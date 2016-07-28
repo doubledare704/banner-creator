@@ -4,6 +4,7 @@
         {% block head %}
             <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
             <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+            <link rel="shortcut icon" href="{{ url_for('static', filename='fav/favicon.ico') }}">
             <title>{% block title %}{% endblock %} - EVO</title>
         {% endblock %}
     </head>
@@ -22,38 +23,44 @@
                     </div>
                     <div class="navbar-collapse collapse">
                         <ul class="nav navbar-nav">
-                            <li><a href="/">Home</a></li>
-                            <li><a href="{{ url_for('editor')}}">Editor</a></li>
-                            <li><a href="/admin">Admin</a></li>
+                            <li{% if request.url_rule.endpoint == "index" %} class="active"{% endif %}><a href="/">Home</a></li>
+                            <li {% if request.url_rule.endpoint == "editor" %} class="active"{% endif %}><a href="{{ url_for ('editor') }}">Editor</a></li>
+                            <li {% if request.url_rule.endpoint == "admin" %} class="active"{% endif %}><a href="{{ url_for ('admin') }}">Admin</a></li>
+                            <li {% if request.url_rule.endpoint == "review" %} class="active"{% endif %}><a href="{{ url_for ('review_tool') }}">Review</a></li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
-                            <li><a href="/">{{current_user.first_name}} {{current_user.last_name}}</a></li>
-                            <li>
-                                <form method="post" action="{{ url_for('log_out') }}" class="form-inline">
-                                    <button class="btn btn-link logout" type="submit">Logout</button>
-                                </form>
-                            </li>
+                            {% if current_user.is_authenticated %}
+                                <li><a href="/">{{current_user.first_name}} {{current_user.last_name}}</a></li>
+                                <li>
+                                    <form method="post" action="{{ url_for('log_out') }}" class="form-inline">
+                                        <button class="btn btn-link logout" type="submit">Logout</button>
+                                    </form>
+                                </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
             </div>
         {% endblock %}
-        {% block content %}
-            <div class="container">
-                {% for message in get_flashed_messages() %}
-                    <div class="alert alert-warning">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        {{ message }}
-                    </div>
-                {% endfor %}
 
-                {% block page_content %}
-
-                {% endblock %}
-
+{% block content %}
+    <div class="container">
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
             </div>
+        {% endfor %}
+
+        {% block page_content %}
+
         {% endblock %}
-        {% block scripts %}
-        {% endblock %}
-    </body>
+
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
+</body>
 </html>
+

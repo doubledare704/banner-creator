@@ -1,9 +1,11 @@
+
 import json
 
-from flask import render_template, request
 from flask_paginate import Pagination
 
 from server.models import Image, User
+from flask import render_template, json, request
+
 from server.db import db
 
 
@@ -55,12 +57,23 @@ def remove_user(user_id):
 
 
 def backgrounds():
-    act_backgrounds = Image.query.filter(Image.active == 't').order_by(Image.name.asc()).all()
-    del_backgrounds = Image.query.filter(Image.active == 'f').order_by(Image.name.asc()).all()
-    return render_template('admin/backgrounds.html', act_backgrounds=act_backgrounds, del_backgrounds=del_backgrounds)
+    query = Image.query.order_by(Image.name.asc())
+
+    backgrounds = [
+        {
+           "id": background.id,
+           'title': background.title,
+           'preview': '/uploads/' + background.preview,
+           "active": background.active
+        } for background in query.all()
+    ]
+
+    backgrounds = json.dumps(backgrounds)
+
+    return render_template('admin/backgrounds.html', backgrounds=backgrounds)
 
 
-def inactiveImg(id):
+def inactivate_image(id):
     image = Image.query.get_or_404(id)
     image.active = False
     return '', 200
@@ -71,3 +84,8 @@ def image_delete_from_DB(id):
     db.session.delete(image)
     db.session.commit()
     return '', 204
+
+def activate_image(id):
+    image = Image.query.get_or_404(id)
+    image.active = True
+    return '', 200

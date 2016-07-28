@@ -1,6 +1,8 @@
 import datetime
 
+from sqlalchemy.dialects.postgresql import JSON
 from flask_login import unicode
+
 from server.db import db
 from sqlalchemy.schema import Index
 from sqlalchemy.types import Enum
@@ -19,6 +21,27 @@ class Image(db.Model):
         return '<Image %r>' % self.name
 
 
+class Review(db.Model):
+    __tablename__ = 'review'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True)
+    status_review = db.Column(db.Boolean, default=False, nullable=False)
+
+    def __str__(self):
+        return 'Review image {0}'.format(self.name)
+
+
+class ImageHistory(db.Model):
+    __tablename__ = 'image_history'
+    id = db.Column(db.Integer, primary_key=True)
+    review_image = db.Column(db.Integer, db.ForeignKey('review.id'), nullable=False)
+    json_hist = db.Column(JSON, nullable=False)
+    created = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
+
+    def __str__(self):
+        return 'History for image {0} created at {1}'.format(self.review_image, self.created)
+
+
 class User(db.Model):
     class Gender(enum.Enum):
         male = 0
@@ -35,12 +58,12 @@ class User(db.Model):
 
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
-    social_id = db.Column(db.String(255), index=True)
+    social_id = db.Column(db.String(255))
     social_type = db.Column(Enum(SocialNetwork), nullable=False)
     first_name = db.Column(db.String(255))
     last_name = db.Column(db.String(255))
-    gender = db.Column(Enum(Gender), nullable=False)
-    email = db.Column(db.String(255), index=True, unique=True)
+    gender = db.Column(Enum(Gender))
+    email = db.Column(db.String(255), unique=True)
     role = db.Column(Enum(UserRole), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
     active = db.Column(db.BOOLEAN, default=True, nullable=False)
