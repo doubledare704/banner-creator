@@ -4,6 +4,7 @@ before_script:
 stages:
 - containers
 - test
+- deploy
 - cleanup
 
 containers:
@@ -15,6 +16,12 @@ test:
   stage: test
   script:
   - vagga test
+
+deploy-trunk:
+  stage: deploy
+  only: [master,deploy]
+  script:
+  - vagga -eRSYNC_USER -eRSYNC_PASSWORD deploy config/trunk.yaml
 
 cleanup:
   stage: cleanup
