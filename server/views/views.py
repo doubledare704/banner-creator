@@ -13,7 +13,7 @@ from sqlalchemy import desc, asc
 
 from server.db import db
 from server.utils.image import allowed_file, image_resize, image_preview
-from server.models import Image, Review, ImageHistory, Banner, BannerReview
+from server.models import Image, Review, ImageHistory, Banner, BannerReview, User
 
 
 @login_required
@@ -142,7 +142,8 @@ def history_image(history_image_id):
 
 @login_required
 def make_review():
-    _, b64data = request.json['file'].split(',')
+    form = request.form
+    _, b64data = form['file'].split(',')
     name = str(uuid.uuid4()) + '.png'
     decoded_data = base64.b64decode(b64data)
     file = FileStorage(BytesIO(decoded_data), filename=name)
@@ -151,18 +152,17 @@ def make_review():
 
     banner = Banner(
         name=filename,
-        title='default',
+        title=form.get('title', 'untitled'),
         user=current_user
     )
     db.session.add(banner)
     db.session.flush()
 
-    comment = request.json['comment']
     review = BannerReview(
         banner_id = banner.id,
         user=current_user,
         designer=current_user, # will be changed
-        comment=comment
+        comment=form.get('comment', '')
     )
     db.session.add(review)
     db.session.flush()
@@ -171,6 +171,10 @@ def make_review():
 
 
 @login_required
-def user_dashboard():
-    reviews = BannerReview.query.filter_by(user_id=current_user.id).order_by(BannerReview.created_at.desc())
-    return render_template('user/user_dashboard.html', reviews=reviews)
+def dashboard():
+    if current_user.role == User.UserRole.user:
+        reviews = BannerReview.query.filter_by(user_id=current_user.id).order_by(BannerReview.created_at.desc())
+        return render_template('user/user_dashboard.html', reviews=reviews)
+    elif current_user.role == User.UserRole.designer:
+        reviews = BannerReview.query.filter_by(designer_id=current_user.id).order_by(BannerReview.created_at.desc())
+        return render_template('user/designer_dashboard.html', reviews=reviews)
