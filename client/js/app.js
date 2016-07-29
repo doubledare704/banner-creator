@@ -1,15 +1,19 @@
-import header from './header.jsx';
-import renderImages from './renderImages.jsx';
-import backgroundsAdmin from './admin/backgroundsAdmin.jsx'
+require('./admin/popUp.js');
+import renderImages from './images/renderImages.jsx';
+import backgroundsAdmin from './admin/backgroundsAdmin.jsx';
+import loginClick from './auth_helper'
+import reviewTool from './images/reviewTool.jsx'
+import reviewAdmin from './admin/reviewsAdmin.jsx';
 
-var styluses = require('./../css/main.styl');
-var Baz = require('bazooka');
+require('./../css/main.styl');
+const Baz = require('bazooka');
 
 Baz.register({
-    'backgroundsAdmin': backgroundsAdmin,
-    'header': header,
-    'renderImages': renderImages
+    backgroundsAdmin: backgroundsAdmin,
+    renderImages: renderImages,
+    reviewAdmin: reviewAdmin,
+    'reviewTool': reviewTool,
+    'loginClick': loginClick
 });
 
-
-var unwatch = Baz.watch();
+Baz.watch();

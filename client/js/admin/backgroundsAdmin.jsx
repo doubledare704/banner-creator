@@ -1,28 +1,32 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
+import {popup} from './popUp.js';
 
 
 const BAZOOKA_PREFIX = 'backgrounds-admin';
+const TABS = {
+     active: "Активные фоны",
+    inactive: "Неактивные фоны"
+};
+
+class Button extends React.Component {
+    render() {
+        return (
+            <button className="btn btn-default" onClick={this.props.clickAction}>
+                <i>{this.props.name}</i>
+            </button>
+        )
+    }
+}
 
 
 class Tab extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.click = this.click.bind(this);
-    }
-
-    click() {
-      this.props.onClick( this.props.name );
-      return false;
-    }
-
     render() {
         const activeClass = (this.props.isSelected ? 'active' : '');
 
         return (
-            <li className={activeClass} onClick={this.click}><a data-toggle="tab" href={'#'+this.props.name}>{this.props.title}</a></li>
+            <li className={activeClass} onClick={this.props.onClick( this.props.name )}><a data-toggle="tab" href={'#'+this.props.name}>{this.props.title}</a></li>
 
         );
     }
@@ -33,15 +37,19 @@ class TableRow extends React.Component {
 
     constructor(props) {
         super(props);
-        this.handleTableRowRemove = this.handleTableRowRemove.bind(this);
+        this.addActivateButton = this.addActivateButton.bind(this);
     }
 
-    handleTableRowRemove() {
-      this.props.onTableRowDelete( this.props.tablerow );
-      return false;
+    //if background is inactive, we add the button which activate them
+    addActivateButton() {
+        if ( !this.props.tablerow.active ) {
+            return <Button name="Активировать" clickAction={this.props.onRowActivate(this.props.tablerow)}/>
+        }
     }
 
     render() {
+        const buttonName = this.props.backgroundStatus ? "Деактивировать" : "Удалить";
+
         return (
             <tr className={this.props.tablerow.active} >
                 <td>
@@ -51,10 +59,10 @@ class TableRow extends React.Component {
                     <img src={this.props.tablerow.preview} alt="cat" />
                 </td>
                 <td>
-                    <button className="btn btn-default" onClick={this.handleTableRowRemove}>
-                        <i className="glyphicon glyphicon-trash"/>
-                        <i>{this.props.inactiveOrDeleteButton}</i>
-                    </button>
+                    <Button name={buttonName} clickAction={this.props.onTableRowDelete(this.props.tablerow)}/>
+                </td>
+                <td>
+                    {this.addActivateButton()}
                 </td>
            </tr>
         );
@@ -63,20 +71,13 @@ class TableRow extends React.Component {
 
 
 class Table extends React.Component {
-
-    constructor(props) {
-        super(props);
-    }
-
     render() {
-        const buttonName = this.props.backgroundStatus ? "Inactive" : "Delete";
-
         return (
             <table className="table">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Image</th>
+                        <th>Название</th>
+                        <th>Картинка</th>
                         <th>
                         </th>
                         <th>
@@ -90,7 +91,8 @@ class Table extends React.Component {
                                 key={tablerow.id}
                                 tablerow={tablerow}
                                 onTableRowDelete={this.props.onTableRowRemove}
-                                inactiveOrDeleteButton={buttonName}
+                                backgroundStatus={this.props.backgroundStatus}
+                                onRowActivate={this.props.onTableRowActivate}
                             />
                     )
                 }
@@ -105,57 +107,84 @@ class BackgroundsAdmin extends React.Component {
     constructor(props) {
         super(props);
 
-        this.handleTableRowRemove = this.handleTableRowRemove.bind(this);
-        this.tabClick = this.tabClick.bind(this);
-
         this.state = {
             backgrounds: this.props.backgroundsArray,
             selectedTab: "active"
         };
     }
 
-    tabClick(key) {
-        this.setState({
-            selectedTab: key
-        });
-    }
-
-    handleTableRowRemove( tablerow ) {
-        const index = this.state.backgrounds.indexOf(tablerow);
-
-        //if the background is active, we change status on inactive
-        if (tablerow.active === true) {
-            fetch(
-                `/admin/inactiveImg/` + this.state.backgrounds[index].id,
-                {method: "POST"}
-            ).then( (response) => {
-                if (response.status === 200) {
-                    this.state.backgrounds[index].active = false;
-                    this.setState({backgrounds: this.state.backgrounds});
-                }
+    tabClick = (key) => {
+        return () => {
+            this.setState({
+                selectedTab: key
             });
+        }
+    };
 
-        //if the background is inactive we delete this background from DB
-        } else {
+    handleTableRowRemove = (tablerow) => {
+        return () => {
+            const index = this.state.backgrounds.indexOf(tablerow);
+
+            //if the background is active, we change status on inactive
+            if (tablerow.active === true) {
+                fetch(
+                    `/admin/inactivate_image/` + this.state.backgrounds[index].id,
+                    {method: "POST"}
+                ).then((response) => {
+                    if (response.status === 200) {
+                        popup({
+                            data: "Фон стал неактивным"
+                        });
+                        this.state.backgrounds[index].active = false;
+                        this.setState({backgrounds: this.state.backgrounds});
+                    }
+                });
+
+                //if the background is inactive we delete this background from DB
+            } else {
+                popup({
+                        data: "Вы действительно хотите удалить картинку?",
+                        confirm: true,
+                        confirmAction:
+                            () => {
+                                fetch(
+                                    `/admin/delete_image/` + this.state.backgrounds[index].id,
+                                    {method: "POST"}
+                                ).then((response) => {
+                                    if (response.status === 204) {
+                                        this.state.backgrounds.splice(index, 1);
+                                        this.setState({backgrounds: this.state.backgrounds});
+                                    }
+                                });
+                            }
+                });
+
+            }
+        }
+    };
+
+    //change the status of background to "active"
+    handleActivateRow = (tablerow) => {
+        return () => {
+            const index = this.state.backgrounds.indexOf(tablerow);
+
             fetch(
-                `/admin/deleteImg/` + this.state.backgrounds[index].id,
+                `/admin/activate_image/` + this.state.backgrounds[index].id,
                 {method: "POST"}
-            ).then( (response) => {
-                if (response.status === 204) {
-                    this.state.backgrounds.splice(index, 1);
+            ).then((response) => {
+                if (response.status === 200) {
+                    popup({
+                        data: "Фон стал активным"
+                    });
+                    this.state.backgrounds[index].active = true;
                     this.setState({backgrounds: this.state.backgrounds});
                 }
             });
         }
-
-    }
+    };
 
     render() {
-        const TABS = {
-             active: "Активные фоны",
-            unactive: "Неактивные фоны"
-        };
-
+        const status = (this.state.selectedTab === 'active');
         return (
             <div>
                 <ul className= "nav nav-tabs">
@@ -164,11 +193,12 @@ class BackgroundsAdmin extends React.Component {
                     )}
                 </ul>
                 <Table
-                    backgroundStatus={this.state.selectedTab === 'active'}
+                    backgroundStatus={status}
                     backgrounds={this.state.backgrounds.filter((background) => {
                          return  background.active === (this.state.selectedTab === 'active');
                     })}
                     onTableRowRemove={this.handleTableRowRemove}
+                    onTableRowActivate={this.handleActivateRow}
                 />
             </div>
         );

@@ -1,6 +1,7 @@
-from flask import render_template,json,flash
-from server.models import Image
+from server.models import Image, Review
+from flask import render_template,json, current_app
 from server.db import db
+import os
 
 
 def admin():
@@ -12,19 +13,19 @@ def backgrounds():
 
     backgrounds = [
         {
-           "id": background.id,
-           'title': background.title,
-           'preview': '/uploads/' + background.preview,
-           "active": background.active
+            "id": background.id,
+            'title': background.title,
+            'preview': '/uploads/' + background.preview,
+            "active": background.active
         } for background in query.all()
-    ]
+        ]
 
     backgrounds = json.dumps(backgrounds)
 
     return render_template('admin/backgrounds.html', backgrounds=backgrounds)
 
 
-def inactiveImg(id):
+def inactivate_image(id):
     image = Image.query.get_or_404(id)
     image.active = False
     return '', 200
@@ -32,6 +33,26 @@ def inactiveImg(id):
 
 def image_delete_from_DB(id):
     image = Image.query.get_or_404(id)
+    os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.name))
+    os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.preview))
     db.session.delete(image)
     db.session.commit()
     return '', 204
+
+
+def activate_image(id):
+    image = Image.query.get_or_404(id)
+    image.active = True
+    return '', 200
+
+
+def review_images():
+    banners = Review.query.order_by(Review.id.asc())
+
+    images = []
+    for banner in banners:
+        images.append({
+            'source': '/uploads/' + banner.name
+        })
+    images = json.dumps(images)
+    return render_template('admin/resultimages.html', images=images)

@@ -9,13 +9,20 @@ module.exports = {
         path: __dirname,
         filename: "server/static/[name]bundle.js"
     },
-    eslint: {
-        configFile: '.eslintrc.json'
-    },
+    // uncomment to start using eslint
+    // eslint: {
+    //     quiet: true,
+    //     failOnError: false,
+    //     failOnWarning: false,
+    //     emitError: false,
+    //     emitWarning: false,
+    //     configFile: '.eslintrc.json'
+    // },
     module: {
-        preLoaders: [
-            {test: /\.jsx?$/, loader: "eslint-loader", exclude: /node_modules/}
-        ],
+        // uncomment to start using eslint
+        // preLoaders: [
+        //     {test: /\.jsx?$/, loader: "eslint-loader", exclude: /node_modules/}
+        // ],
         loaders: [
             {
                 test: /\.styl$/,
@@ -28,7 +35,7 @@ module.exports = {
                 exclude: /(node_modules|bower_components)/,
                 loader: 'babel-loader',
                 query: {
-                    presets: ['es2015', 'react']
+                    presets: ['es2015', 'react', 'stage-0']
                 }
             }
         ]
