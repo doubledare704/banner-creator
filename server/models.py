@@ -52,6 +52,8 @@ class BannerReview(db.Model):
     reviewed = db.Column(db.Boolean, default=False)
     status = db.Column(Enum(Status))
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    designer_comment = db.Column(db.Text, nullable=True)
+    changed_at = db.Column(db.DateTime, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     designer_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
