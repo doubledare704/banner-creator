@@ -11,3 +11,5 @@ server/static/styles.css
 logs/
 .DS_Store
 server/.DS_Store
+/.vagga
+/server/static/bundle.js
