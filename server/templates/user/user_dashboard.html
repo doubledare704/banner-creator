@@ -13,6 +13,7 @@
         <div class="col-lg-9">
             {% for review in reviews %}
             <div class="row">
+                {% if review.status == None %}
                 <div class="review-section">
                     <p><b>Отправлено на ревью пользователю <span class="dashboard-reviwer-name">{{ review.designer.last_name }} {{ review.designer.first_name }}</span></b>
                         <span class="text-left">
@@ -21,11 +22,32 @@
                     </p>
                     <p>{% if review.reviewed %}Просмотрено{% else %}Не просмотрено{% endif %}</p>
                     <div>
-                        <span class="dashboard-show-banner" style="cursor: pointer" data-bazooka="showBanner">Показать баннер</span>
+                        <span class="dashboard-show-banner" data-bazooka="showBanner">Показать баннер</span>
                         <span class="glyphicon glyphicon-arrow-down"></span>
                         <img class="dashboard-review-banner" imgSrc="{{ url_for('uploaded_file', filename=review.banner.name) }}"/>
                     </div>
                 </div>
+
+                {% elif review.status == review.Status.accepted %}
+                <div class="review-section review-section-success">
+                    <p><b>Одобрено пользователем
+                        <span class="dashboard-reviwer-name">
+                            {{ review.designer.last_name }} {{ review.designer.first_name }}
+                        </span>
+                        </b>
+                    </p>
+                </div>
+                {% elif review.status == review.Status.not_accepted %}
+                <div class="review-section review-section-rejected">
+                    <p><b>Отклонено пользователем
+                        <span class="dashboard-reviwer-name">
+                            {{ review.designer.last_name }} {{ review.designer.first_name }}
+                        </span>
+                        </b>
+                    </p>
+                </div>
+
+                {% endif %}
             </div>
             {% endfor %}
         </div>
