@@ -20,14 +20,11 @@
                         </span>
                     </p>
                     <p>{% if review.reviewed %}Просмотрено{% else %}Не просмотрено{% endif %}</p>
-                    <span style="cursor: pointer" onclick="{
-                        var imgContainer = document.getElementById({{ review.banner.id }});
-                            console.log(imgContainer);
-                            var imgSrc = imgContainer.firstElementChild.getAttribute('imgSrc');
-                            imgContainer.firstElementChild.setAttribute('src', imgSrc);
-                    }">Показать баннер</span>
-                    <span class="glyphicon glyphicon-arrow-down"></span>
-                    <div id="{{ review.banner.id }}"><img imgSrc="{{ url_for('uploaded_file', filename=review.banner.name) }}"/></div>
+                    <div>
+                        <span class="dashboard-show-banner" style="cursor: pointer" data-bazooka="showBanner">Показать баннер</span>
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                        <img class="dashboard-review-banner" imgSrc="{{ url_for('uploaded_file', filename=review.banner.name) }}"/>
+                    </div>
                 </div>
             </div>
             {% endfor %}
