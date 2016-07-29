@@ -74,7 +74,8 @@ def image_rename():
 
 @login_required
 def editor():
-    return render_template('editor_markuped.html')
+    designers = User.query.filter_by(role=User.UserRole.designer)
+    return render_template('editor_markuped.html', designers=designers)
 
 
 @login_required
@@ -158,10 +159,11 @@ def make_review():
     db.session.add(banner)
     db.session.flush()
 
+    designer = User.query.get(form['designer'])
     review = BannerReview(
         banner_id = banner.id,
         user=current_user,
-        designer=current_user, # will be changed
+        designer=designer,
         comment=form.get('comment', '')
     )
     db.session.add(review)

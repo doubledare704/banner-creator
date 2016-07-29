@@ -24,8 +24,9 @@
                     <div class="form-group">
                         <label class="col-md-6">Выберите, кому отправить
                             <select name="designer" class="form-control">
-                                <option value="0">Designer 1</option>
-                                <option value="1">Designer 2</option>
+                                {% for designer in designers %}
+                                    <option value="{{ designer.id }}">{{ designer.last_name }} {{ designer.first_name }}</option>
+                                {% endfor %}
                             </select>
                         </label>
                     </div>
