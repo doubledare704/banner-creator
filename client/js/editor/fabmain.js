@@ -2,7 +2,7 @@
 let fabric = require('fabric').fabric;
 
 import Editor from './editor.js';
-
+import {disableControls} from './editor.js';
 
 let editor = new Editor('main', 960, 420);
 
@@ -39,6 +39,9 @@ window.onclick = (e) => {
 function sendImageForReview() {
     document.getElementById('continue').href = '';
     let imageReview = editor.canv.toJSON();
+    let o = editor.canv.getActiveObject(),
+        g = editor.canv.getActiveGroup();
+        disableControls(o,g);
     let image_base64 = editor.canv.toDataURL("image/png", 1.0);
     let random_name = Math.random().toString(36).substr(2, 10) + '.png';
     const data = {
@@ -76,7 +79,7 @@ deleteFabricItem.addEventListener('click', function () {
 
 
 addbutton.addEventListener('click', function () {
-    editor.addButton(5);
+    editor.addButton();
 });
 
 
@@ -120,7 +123,9 @@ filetoeditor.addEventListener('change', (e) => {
 
 downloadLink.addEventListener('click', function () {
     const link = this;
-    editor.downloadImage(link);
+    let activeObject = editor.canv.getActiveObject(),
+        activeGroup = editor.canv.getActiveGroup();
+    editor.downloadImage(link, activeObject, activeGroup);
 }, false);
 
 

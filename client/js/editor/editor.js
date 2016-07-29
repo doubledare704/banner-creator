@@ -9,7 +9,6 @@ function inArray(needle, haystack) {
     return false;
 }
 
-
 // extend function without jquery https://gist.github.com/cfv1984/6319681685f78333d98a
 var extend = function () {
 
@@ -200,11 +199,11 @@ export default class Editor {
     }
 
     addButton() {
-        let group = new fabric.Group([], {
-            top: 60,
-            left: 250
+        let gr = new fabric.Group([], {
+            left:100,
+            top:100
         });
-        group.add(new fabric.Rect({
+        gr.add(new fabric.Rect({
             width: 220,
             height: 45,
             fill: 'transparent',
@@ -213,30 +212,24 @@ export default class Editor {
             rx: 5,
             ry: 5
         }));
-        group.add(new fabric.IText('Смотреть   >', {
-            width: group.get('width'),
-            height: group.get('height'),
+        gr.add(new fabric.IText('Смотреть   >', {
+            width: gr.get('width'),
+            height: gr.get('height'),
             fontFamily: 'Roboto',
             fontSize: 20,
-            top: 10,
-            left: 70,
-            // top: -group.get('height') + 10,
-            // left: -group.get('width') + 48,
+            top: -gr.get('height') + 10,
+            left: -gr.get('width') + 48,
             originX: 'left',
             originY: 'top'
         }));
-        this.canv.add(group);
-        this.canv.renderAll();
-        let items = group.getObjects();
-        this.canv.remove(group);
-        for (var i = 0; i < items.length; i++) {
-            this.canv.add(items[i]);
-        }
+        this.canv.add(gr);
         this.canv.renderAll();
     }
 
     //working now
-    downloadImage(link) {
+    downloadImage(link, obj, groups) {
+        disableControls(obj, groups);
+
         link.href = this.canv.toDataURL({
                 format: 'png',
                 quality: 1.0
@@ -293,10 +286,12 @@ export default class Editor {
             radius: 100,
             stroke: 'red',
             fill: undefined,
-            scaleY: 0.5,
+            scaleY: 0.5
         }))
     }
 
+
+    // http://jsfiddle.net/kqfswu4b/1/
     addCommentCloud(textInCloud) {
         let canvaser = this.canv;
         var id = 0, MoveAll = false;
@@ -364,7 +359,7 @@ export default class Editor {
                 p.shape = shape;
             } else if (p.type === 'rect') {
                 var group = canvaser.item(id - 1);
-               canvaser.remove(group.shape);
+                canvaser.remove(group.shape);
 
                 var p1 = {x: group.getCenterPoint().x - 10, y: group.getCenterPoint().y},
                     p2 = {x: group.getCenterPoint().x + 10, y: group.getCenterPoint().y},
@@ -480,3 +475,16 @@ export default class Editor {
         }
     }
 }
+
+// export function disableControls(obj, groups) {
+//     if (obj) {
+//         obj.hasControls = obj.hasBorders = false;
+//     }
+//     else if (groups) {
+//         let items = groups.getObjects();
+//         groups.hasControls = groups.hasBorders = false;
+//         for (var i = 0; i < items.length; i++) {
+//             items[i].hasControls = items[i].hasBorders = false;
+//         }
+//     }
+// }
