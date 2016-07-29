@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Admin{% endblock %}
+
+{% block page_content %}
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3 col-md-6 col-lg-3">
+                <h2>Меню</h2>
+                <ul class="nav nav-pills nav-stacked" role="tablist">
+                    <li><a href="{{ url_for ('backgrounds') }}">Фоны</a></li>
+                    <li><a href="#">Users</a></li>
+                    <li><a href="{{ url_for ('review_images') }}">Images in review</a></li>
+                </ul>
+            </div>
+
+            <div class="col-sm-9 col-md-6 col-lg-9">
+                {% block admin_content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='adminbundle.js') }}"></script>
+{% endblock %}
+

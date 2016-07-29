@@ -1,17 +1,34 @@
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+const webpack = require('webpack');
 module.exports = {
-    entry: "./client/js/app.js",
-    resolve: {
-        root: '/usr/local/lib/node_modules',
+    entry: {
+        admin: "./client/js/app.js",
+        editor: "./client/js/app_editor.js"
     },
     resolveLoader: {
         root: '/usr/local/lib/node_modules',
     },
+    resolve: {
+        root: '/usr/local/lib/node_modules',
+    },
     output: {
         path: __dirname,
-        filename: "server/static/bundle.js"
+        filename: "server/static/[name]bundle.js"
     },
+    // uncomment to start using eslint
+    // eslint: {
+    //     quiet: true,
+    //     failOnError: false,
+    //     failOnWarning: false,
+    //     emitError: false,
+    //     emitWarning: false,
+    //     configFile: '.eslintrc.json'
+    // },
     module: {
+        // uncomment to start using eslint
+        // preLoaders: [
+        //     {test: /\.jsx?$/, loader: "eslint-loader", exclude: /node_modules/}
+        // ],
         loaders: [
             {
                 test: /\.styl$/,
@@ -19,16 +36,24 @@ module.exports = {
                 exclude: /node_modules/
             },
             {
-                test: /\.js$/,
+                test: /\.jsx?$/,
+
                 exclude: /(node_modules|bower_components)/,
                 loader: 'babel-loader',
                 query: {
-                    presets: ['es2015']
+                    presets: ['es2015', 'react', 'stage-0']
                 }
             }
         ]
     },
     plugins: [
-        new ExtractTextPlugin("server/static/styles.css")
+        new ExtractTextPlugin("server/static/styles.css"),
+
+        new webpack.DefinePlugin({
+            'process.env': {
+                'NODE_ENV': JSON.stringify('production')
+            }
+        })
+
     ]
 };
