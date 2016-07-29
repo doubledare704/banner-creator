@@ -1,7 +1,7 @@
 from server.views.views import index, editor, image_delete, image_rename, background_images, review, continue_edit, \
     history_image, review_tool
 from server.views.auth import login_page, authorize, oauth_callback, log_out
-from server.views.admin import inactivate_image, activate_image
+from server.views.admin import admin, backgrounds, inactivate_image, image_delete_from_DB, activate_image, review_images
 from server.utils.image import uploaded_file
 from server.views.admin import admin, backgrounds, image_delete_from_DB, users_page, remove_user
 
@@ -23,6 +23,9 @@ def setup_routes(app):
     app.add_url_rule('/admin/inactivate_image/<int:id>', methods=['POST'], view_func=inactivate_image)
     app.add_url_rule('/admin/delete_image/<int:id>', methods=['POST'], view_func=image_delete_from_DB)
     app.add_url_rule('/admin/activate_image/<int:id>', methods=['POST'], view_func=activate_image)
+    app.add_url_rule('/admin/review_images/', view_func=review_images)
+
+    # editor
     app.add_url_rule('/api/review/', methods=['POST'], view_func=review)
     app.add_url_rule('/editor/<int:history_image_id>', view_func=continue_edit)
     app.add_url_rule('/editor/history/<int:history_image_id>', methods=['GET', 'POST'], view_func=history_image)
