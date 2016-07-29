@@ -11,9 +11,9 @@ const Baz = require('bazooka');
 Baz.register({
     backgroundsAdmin: backgroundsAdmin,
     renderImages: renderImages,
-    reviewAdmin: reviewAdmin
-    'reviewTool': reviewTool
-    'loginClick': loginClick,
+    reviewAdmin: reviewAdmin,
+    'reviewTool': reviewTool,
+    'loginClick': loginClick
 });
 
 Baz.watch();

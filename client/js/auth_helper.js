@@ -18,5 +18,5 @@ function loginClick(node) {
 }
 
 module.exports = {
-    bazFunc: loginClick,
+    bazFunc: loginClick
 };
