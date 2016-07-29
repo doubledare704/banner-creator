@@ -18,7 +18,6 @@ const continueButton = document.getElementById('continue');
 
 const span = document.getElementsByClassName("close")[0];
 
-
 //show result
 resultPreview.addEventListener('click', () => {
     modals.style.display = "block";
@@ -34,7 +33,6 @@ window.onclick = (e) => {
     }
 };
 
-
 // send image to review model
 function sendImageForReview() {
     document.getElementById('continue').href = '';
@@ -49,7 +47,6 @@ function sendImageForReview() {
         name: random_name,
         file_json: imageReview
     };
-    console.log(JSON.stringify(imageReview));
     fetch('/api/review/', {
         method: 'post',
         credentials: 'same-origin',
@@ -58,7 +55,7 @@ function sendImageForReview() {
         },
         body: JSON.stringify(data)
     })
-        .then((res) => res.json(), console.log("It arrived to flask"))
+        .then((res) => res.json())
         .then(function ({result}) {
             document.getElementById('resulting').src = result.src;
             continueButton.href += result.rev;
@@ -81,7 +78,6 @@ deleteFabricItem.addEventListener('click', function () {
 addbutton.addEventListener('click', function () {
     editor.addButton();
 });
-
 
 for (var i = 0; i < addtexts.length; i++) {
     addtexts[i].addEventListener('click', function () {

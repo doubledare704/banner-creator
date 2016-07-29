@@ -198,32 +198,29 @@ export default class Editor {
         });
     }
 
-    addButton() {
-        let gr = new fabric.Group([], {
-            left:100,
-            top:100
-        });
-        gr.add(new fabric.Rect({
-            width: 220,
-            height: 45,
+    addButton(w=220, h=80, fontFamily='Roboto', fontSize=20, fontText='Сюда пиши') {
+        let border = new fabric.Rect({
+            width: w,
+            height: h,
             fill: 'transparent',
             stroke: '#000',
             strokeWidth: 2,
             rx: 5,
             ry: 5
-        }));
-        gr.add(new fabric.IText('Смотреть   >', {
-            width: gr.get('width'),
-            height: gr.get('height'),
-            fontFamily: 'Roboto',
-            fontSize: 20,
-            top: -gr.get('height') + 10,
-            left: -gr.get('width') + 48,
-            originX: 'left',
-            originY: 'top'
-        }));
-        this.canv.add(gr);
-        this.canv.renderAll();
+        });
+        let texting = new fabric.IText(fontText,{
+            fontFamily: fontFamily,
+            fontSize: fontSize,
+            top:h/4,
+            left:w/4.4
+        });
+        texting.setTop(h/2 - texting.getHeight()/2);
+        texting.setLeft(w/2 - texting.getWidth()/2);
+        let group = new fabric.Group([border, texting],{
+            left:200,
+            top:100
+        });
+        this.canv.add(group);
     }
 
     //working now
@@ -326,7 +323,7 @@ export default class Editor {
         canvaser.add(group);
         console.log('bubble group: ' + JSON.stringify(group));
 
-        var rect = makeRect(100, 200, 5, 5, this.canv);
+        var rect = makeRect(100, 200, 10, 10, this.canv);
         canvaser.add(rect);
 
         var p1 = {x: group.getCenterPoint().x - 10, y: group.getCenterPoint().y},
@@ -441,7 +438,7 @@ export default class Editor {
         }
 
         function makeRect(left, top, width, height, canvas) {
-            var block = new fabric.Rect({
+            return new fabric.Rect({
                 left: left,
                 top: top,
                 width: width,
@@ -459,11 +456,10 @@ export default class Editor {
                 hasBorders: false,
                 padding: 0
             });
-            return block;
         }
 
         function addTextToRect(rect, text) {
-            var rectText = new fabric.Text(textInCloud, {
+            return new fabric.Text(textInCloud, {
                 left: rect.left + 5, //Take the block's position
                 top: rect.top + 10,
                 fill: 'black',
@@ -471,20 +467,19 @@ export default class Editor {
                 fontFamily: 'Arial',
                 name: 'text1'
             });
-            return rectText;
         }
     }
 }
 
-// export function disableControls(obj, groups) {
-//     if (obj) {
-//         obj.hasControls = obj.hasBorders = false;
-//     }
-//     else if (groups) {
-//         let items = groups.getObjects();
-//         groups.hasControls = groups.hasBorders = false;
-//         for (var i = 0; i < items.length; i++) {
-//             items[i].hasControls = items[i].hasBorders = false;
-//         }
-//     }
-// }
+export function disableControls(obj, groups) {
+    if (obj) {
+        obj.hasControls = obj.hasBorders = false;
+    }
+    else if (groups) {
+        let items = groups.getObjects();
+        groups.hasControls = groups.hasBorders = false;
+        for (var i = 0; i < items.length; i++) {
+            items[i].hasControls = items[i].hasBorders = false;
+        }
+    }
+}
