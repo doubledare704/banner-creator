@@ -36,7 +36,7 @@ class DeleteButton extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="btn-wrapper">
                 <div className="btn btn-default">
                     <i className="glyphicon glyphicon-trash"/>
                     <span onClick={this.onClick} >Delete</span>
@@ -94,7 +94,7 @@ class RenameButton extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="btn-wrapper">
                 <div className="btn btn-default">
                     <i className="glyphicon glyphicon-pencil"/>
                     <span onClick={this.onClick} >Rename</span>
@@ -127,13 +127,14 @@ class Image extends React.Component {
         return (
             <div className="col-sm-6 col-md-4">
                 <div className="thumbnail">
-                    <img src={this.state.src}/>
+                    <div className="img-wrapper" style={{backgroundImage: `url(${this.state.src})`}} >
+                        </div>
                         <div className="caption">
                             <h3> {this.props.title} </h3>
                             <p> {this.props.url} </p>
                             <p> ID:{this.props.id} </p>
                             <DeleteButton id={this.props.id} handleDelete= {this.props.handleDelete} />
-                            <a onClick={this.handlePreview} className="btn btn-default" role="button">
+                            <a onClick={this.handlePreview} className="btn btn-default btn-wrapper" role="button">
                             Preview
                             </a>
                                 <RenameButton
