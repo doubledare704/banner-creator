@@ -22,3 +22,31 @@ Now try to run dev server `python manage.py runserver`
 
 ## Tests
 - Use `python manage.py test` to run all the tests
+
+======
+# How to build front-end in repo:
+
+1. Open terminal: and input
+```
+npm install
+```
+this will install all used packages.
+2. Then input
+```
+npm run watch
+```
+ or
+```
+npm run webpack
+```
+to run webpack in auto mode
+
+### How to minimize and uglify js\css
+```
+npm run prod
+```
+
+## Client side structure
+1. Styles sources stored in stylus file in /client/css
+2. JS sources stored in /client/js
+3. Don't forget to add new js code in separate files and require them into app.js
