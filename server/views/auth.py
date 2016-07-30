@@ -1,14 +1,17 @@
 from server.models import User
-from server.utils.auth import redirect_after_login, oauth_apps
+from server.utils.auth import oauth_apps
 from flask_oauthlib.client import OAuthException
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user, current_user
 from flask import render_template, redirect, request, url_for, session
 from server.db import db
 
 
 def login_page():
-    if request.args.get('next', None) and request.args['next'] != url_for('log_out'):
-        session['redirect_url'] = request.args['next']
+    if request.args.get('next', None):
+        if current_user.is_authenticated:
+            if request.args['next'] == url_for('log_out'):
+                return redirect('/')
+            return redirect(request.args['next'])
     return render_template('login.html')
 
 
@@ -35,7 +38,7 @@ def oauth_callback(social_network_name):
         db.session.add(user)
         db.session.commit()
     login_user(user)
-    return redirect_after_login()
+    return redirect(url_for('static', filename='auth_close.html'))
 
 
 def authorize(social_network_name):

@@ -1,8 +1,9 @@
 from server.views.views import index, editor, image_delete, image_rename, background_images, review, continue_edit, \
-    history_image
+    history_image, review_tool
 from server.views.auth import login_page, authorize, oauth_callback, log_out
-from server.views.admin import admin, backgrounds, inactivate_image, image_delete_from_DB, activate_image
+from server.views.admin import inactivate_image, activate_image
 from server.utils.image import uploaded_file
+from server.views.admin import admin, backgrounds, image_delete_from_DB, users_page, remove_user
 
 from server.views.views import make_review, dashboard
 
@@ -34,3 +35,7 @@ def setup_routes(app):
     app.add_url_rule('/login/<social_network_name>', view_func=authorize)
     app.add_url_rule('/login/authorized/<social_network_name>/', view_func=oauth_callback)
     app.add_url_rule('/logout', methods=['POST'], view_func=log_out)
+
+    app.add_url_rule('/admin/users', view_func=users_page)
+    app.add_url_rule('/admin/users/<int:user_id>', methods=['DELETE'], view_func=remove_user)
+    app.add_url_rule('/review/', methods=['GET', 'POST'], view_func=review_tool)

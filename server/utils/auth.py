@@ -31,12 +31,5 @@ oauth_apps = {
 }
 
 
-def redirect_after_login():
-    url = session.get('redirect_url', url_for('index'))
-    if session.get('redirect_url', None):
-        del session['redirect_url']
-    return redirect(url)
-
-
 def load_user(user_id):
     return User.query.filter_by(id=user_id).first()

@@ -180,3 +180,16 @@ def dashboard():
     elif current_user.role == User.UserRole.designer:
         reviews = BannerReview.query.filter_by(designer_id=current_user.id).order_by(BannerReview.created_at.desc())
         return render_template('user/designer_dashboard.html', reviews=reviews)
+
+
+def review_tool():
+    images = Image.query.filter_by(active=True)
+    image_json = json.dumps(
+        [{'id': image.id,
+          'url': '/uploads/' + image.name,
+          'title': image.title,
+          'preview': '/uploads/' + image.preview
+          }
+         for image in images
+         ])
+    return render_template('review.html', image_json=image_json)
