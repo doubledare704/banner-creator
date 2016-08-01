@@ -1,0 +1,29 @@
+before_script:
+- vagga _init_storage_dir --allow-multiple banner-creator
+
+stages:
+- containers
+- test
+- deploy
+- cleanup
+
+containers:
+  stage: containers
+  script:
+  - vagga _build python
+
+test:
+  stage: test
+  script:
+  - vagga test
+
+deploy-trunk:
+  stage: deploy
+  only: [master,deploy]
+  script:
+  - vagga -eRSYNC_USER -eRSYNC_PASSWORD deploy config/trunk.yaml
+
+cleanup:
+  stage: cleanup
+  script:
+  - vagga _clean --unused --at-least 1day

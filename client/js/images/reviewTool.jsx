@@ -8,12 +8,18 @@ const BAZOOKA_PREFIX = 'body';
 class EditorWindow extends React.Component {
     constructor(props){
         super(props);
+        this.state={
+            text: "Пиши сюда"
+        };
         this.addText = this.addText.bind(this);
         this.deleteObject = this.deleteObject.bind(this);
         this.addArrow = this.addArrow.bind(this);
         this.addRectangle = this.addRectangle.bind(this);
         this.addEllipse = this.addEllipse.bind(this);
         this.addCommentCloud = this.addCommentCloud.bind(this);
+        this.onInput = this.onInput.bind(this);
+        this.fileInput = this.fileInput.bind(this);
+        this.getMouseCoords = this.getMouseCoords.bind(this);
     }
 
     componentDidMount() {
@@ -44,7 +50,23 @@ class EditorWindow extends React.Component {
     }
 
     addCommentCloud(){
-        this.editor.addCommentCloud("Пиши сюда");
+        this.editor.addCommentCloud( "Пиши сюда");
+    }
+
+    onInput(event){
+        //this.setState({text: event.target.value});
+        this.editor.setTextInItext(event.target.value);
+    }
+
+    fileInput(){
+        console.log('clicke');
+        this.editor.addImage('http://127.0.0.1:5000/uploads/5644682c54c611e694b5507b9dfbe65a.jpg');
+    }
+    getMouseCoords(event) {
+      var pointer = this.editor.canv.getPointer(event.e);
+      var posX = pointer.x;
+      var posY = pointer.y;
+      console.log(posX+", "+posY);    // Log to console
     }
 
     render() {
@@ -72,6 +94,14 @@ class EditorWindow extends React.Component {
                     <div className="btn btn-primary">
                         <i className="glyphicon glyphicon-new-window"/>
                         <span onClick={this.addCommentCloud}>Хмарка</span>
+                    </div>
+
+                    <div className="btn btn-default">
+                        <span onClick={this.fileInput}>File Input</span>
+                    </div>
+
+                    <div className="btn btn-default">
+                        <span onClick={this.getMouseCoords}>coords</span>
                     </div>
 
                     <div className="btn btn-danger">

@@ -2,7 +2,7 @@
 let fabric = require('fabric').fabric;
 
 import Editor from './editor.js';
-
+import {disableControls} from './editor.js';
 
 let editor = new Editor('main', 960, 420);
 
@@ -17,7 +17,6 @@ const modals = document.getElementById('myModal');
 const continueButton = document.getElementById('continue');
 
 const span = document.getElementsByClassName("close")[0];
-
 
 //show result
 resultPreview.addEventListener('click', () => {
@@ -34,11 +33,13 @@ window.onclick = (e) => {
     }
 };
 
-
 // send image to review model
 function sendImageForReview() {
     document.getElementById('continue').href = '';
     let imageReview = editor.canv.toJSON();
+    let o = editor.canv.getActiveObject(),
+        g = editor.canv.getActiveGroup();
+        disableControls(o,g);
     let image_base64 = editor.canv.toDataURL("image/png", 1.0);
     let random_name = Math.random().toString(36).substr(2, 10) + '.png';
     const data = {
@@ -46,7 +47,6 @@ function sendImageForReview() {
         name: random_name,
         file_json: imageReview
     };
-    console.log(JSON.stringify(imageReview));
     fetch('/api/review/', {
         method: 'post',
         credentials: 'same-origin',
@@ -55,7 +55,7 @@ function sendImageForReview() {
         },
         body: JSON.stringify(data)
     })
-        .then((res) => res.json(), console.log("It arrived to flask"))
+        .then((res) => res.json())
         .then(function ({result}) {
             document.getElementById('resulting').src = result.src;
             continueButton.href += result.rev;
@@ -76,9 +76,8 @@ deleteFabricItem.addEventListener('click', function () {
 
 
 addbutton.addEventListener('click', function () {
-    editor.addButton(5);
+    editor.addButton();
 });
-
 
 for (var i = 0; i < addtexts.length; i++) {
     addtexts[i].addEventListener('click', function () {
@@ -120,7 +119,9 @@ filetoeditor.addEventListener('change', (e) => {
 
 downloadLink.addEventListener('click', function () {
     const link = this;
-    editor.downloadImage(link);
+    let activeObject = editor.canv.getActiveObject(),
+        activeGroup = editor.canv.getActiveGroup();
+    editor.downloadImage(link, activeObject, activeGroup);
 }, false);
 
 

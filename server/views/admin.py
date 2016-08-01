@@ -1,7 +1,4 @@
 
-
-import json
-
 from flask_paginate import Pagination
 
 from server.models import Image, User
@@ -29,16 +26,20 @@ def users_page():
     query_db = query_db.filter_by(active=request.args.get('active', True)).order_by(User.created_at.desc())
 
     users_paginator = query_db.paginate(per_page=10)
-    users_list = ([{'id': user.id,
-                    'first_name': user.first_name,
-                    'last_name': user.last_name,
-                    'email': user.email,
-                    'gender': user.gender.name,
-                    'role': user.role.name,
-                    'registration_date': user.created_at.isoformat(),
-                    'auth_by': user.social_type.name
-                    }
-                   for user in users_paginator.items])
+
+    users_list = []
+    for user in users_paginator.items:
+        users_map = {'id': user.id,
+                     'first_name': user.first_name,
+                     'last_name': user.last_name,
+                     'email': user.email,
+                     'role': user.role.name,
+                     'registration_date': user.created_at.isoformat(),
+                     'auth_by': user.social_type.name
+                     }
+        if user.gender:
+            users_map['gender'] = user.gender.name
+        users_list.append(users_map)
 
     pagination = Pagination(per_page=10, page=users_paginator.page, total=users_paginator.total, search=search,
                             record_name='users', css_framework='bootstrap3', found=users_paginator.total)
