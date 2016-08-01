@@ -1,6 +1,11 @@
+dashboard-success-color = #d3ffce
+dashboard-error-color = #ffc0cb
+dashboard-menu-color = #003366
+dashboard-common-color = #eeeeee
+
 .review-section
   padding: 20px
-  background-color: #eeeeee
+  background-color: dashboard-common-color
   border-radius: 10px
   margin-bottom 15px
 
@@ -9,7 +14,7 @@
   padding: 10px
   li
     padding: 10px
-    background-color: #003366
+    background-color: dashboard-menu-color
     margin: 2px
     border-radius: 5px
     a
@@ -17,7 +22,7 @@
       text-decoration: none
 
 .dashboard-reviwer-name
-  color: #003366
+  color: dashboard-menu-color
 
 .dashboard-show-banner
   cursor: pointer
@@ -26,7 +31,7 @@
   display: none
 
 .review-section-success
-  background-color: #d3ffce
+  background-color: dashboard-success-color
 
 .review-section-rejected
-  background-color: #ffc0cb
+  background-color: dashboard-error-color
