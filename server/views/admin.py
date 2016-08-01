@@ -10,6 +10,8 @@ from flask import render_template, json, request, current_app
 from server.db import db
 import os
 
+ALLOWED_FIELDS_TO_CHANGE_IN_USER = ['role', 'last_name', 'first_name']
+
 
 def admin():
     return render_template('admin/admin.html')
@@ -43,11 +45,27 @@ def users_page():
     pagination = Pagination(per_page=10, page=users_paginator.page, total=users_paginator.total, search=search,
                             record_name='users', css_framework='bootstrap3', found=users_paginator.total)
 
+    roles_list = json.dumps([role.name for role in User.UserRole])
+
     return render_template('admin/users.html',
                            users_list=json.dumps(users_list),
                            pagination=pagination,
-                           search_query=search_query
+                           search_query=search_query,
+                           roles_list=roles_list
                            )
+
+
+def change_user():
+    user_id = request.json.get('id', None)
+    # user = User.query.get_or_404(user_id)
+    user_dict = request.json.get('user', None)
+    allowed_dict = {(field, user_dict[field]) for field in user_dict if field in ALLOWED_FIELDS_TO_CHANGE_IN_USER}
+    db.session.query(User).filter(User.id == user_id).update(allowed_dict)
+    db.session.commit()
+    # user.update().values(allowed_dict)
+    # db.session.add(user)
+    # db.session.commit()
+    return 'OK', 200
 
 
 def remove_user(user_id):

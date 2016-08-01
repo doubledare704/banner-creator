@@ -16,12 +16,47 @@ class User extends React.Component {
         };
 
         this.remove_user = this.remove_user.bind(this);
+        this.edit_user = this.edit_user.bind(this);
     }
 
     remove_user() {
         fetch(`/admin/users/${this.state.user.id}`, {
             method: 'DELETE',
             credentials: 'same-origin'
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
+                this.setState({
+                    removed: true
+                })
+            })
+            .catch((response) => {
+                console.error(response.message)
+            });
+    }
+    //
+    // handle_change_role() {
+    //     let user = this.state.user
+    //     user.role = e.target.value
+    // }
+
+    edit_user(e) {
+        let {user} = this.state;
+        user.role = e.target.value;
+        this.setState({user: user});
+
+        fetch(`/admin/users`, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: user.id,
+                user: user
+            })
         })
             .then((response) => {
                 if (!response.ok) {
@@ -42,7 +77,16 @@ class User extends React.Component {
             <tr className={classNames({'danger': removed})}>
                 <td>{user.first_name} {user.last_name}</td>
                 <td>{user.email}</td>
-                <td>{user.role}</td>
+                <td>
+                    <select className="form-control" onChange={this.edit_user} value={user.role}>
+                        {
+                            this.props.rolesList.map((role) => (
+                                    <option value={role}>{role}</option>
+                                )
+                            )
+                        }
+                    </select>
+                </td>
                 <td>{moment(user.registration_date).format("DD-MM-YYYY HH:mm")}</td>
                 <td>{user.auth_by}</td>
                 <td>
@@ -76,6 +120,7 @@ const UsersList = (props) => {
                     return <User
                         key={`user_${user.id}`}
                         user={user}
+                        rolesList={props.rolesList}
                     />;
                 })
             }
@@ -85,10 +130,13 @@ const UsersList = (props) => {
 };
 
 export default function (node) {
-    let {usersList} = h.getAttrs(BAZOOKA_PREFIX, node);
+    let {usersList, usersRoles} = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
-        <UsersList usersList={usersList}/>,
+        <UsersList
+            usersList={usersList}
+            rolesList={usersRoles}
+        />,
         node
     );
 }
