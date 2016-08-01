@@ -2,7 +2,7 @@ from flask import render_template
 
 from flask_login import current_user, login_required
 
-from server.models import User, BannerReview
+from server.models import User, BannerReview, Banner
 
 
 @login_required
@@ -16,4 +16,5 @@ def dashboard():
 
 
 def user_banners():
-    return render_template('user/user_banners.html')
+    banners = Banner.query.filter_by(user=current_user)
+    return render_template('user/user_banners.html', banners=banners)
