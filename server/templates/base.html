@@ -1,47 +1,48 @@
 <!DOCTYPE html>
 <html>
-<head>
-    {% block head %}
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-        <link rel="shortcut icon" href="{{ url_for('static', filename='fav/favicon.ico') }}">
-        <title>{% block title %}{% endblock %} - EVO</title>
-    {% endblock %}
-</head>
-<body>
-{% block navbar %}
-    <div class="navbar navbar-inverse" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/">EVO</a>
+    <head>
+        {% block head %}
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+            <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+            <link rel="shortcut icon" href="{{ url_for('static', filename='fav/favicon.ico') }}">
+            <title>{% block title %}{% endblock %} - EVO</title>
+        {% endblock %}
+    </head>
+    <body>
+        {% block navbar %}
+            <div class="navbar navbar-inverse" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="/">EVO</a>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                            <li{% if request.url_rule.endpoint == "index" %} class="active"{% endif %}><a href="/">Home</a></li>
+                            <li {% if request.url_rule.endpoint == "editor" %} class="active"{% endif %}><a href="{{ url_for ('editor') }}">Editor</a></li>
+                            <li {% if request.url_rule.endpoint == "admin" %} class="active"{% endif %}><a href="{{ url_for ('admin') }}">Admin</a></li>
+                            <li {% if request.url_rule.endpoint == "review" %} class="active"{% endif %}><a href="{{ url_for ('review_tool') }}">Review</a></li>
+                            <li {% if request.url_rule.endpoint == 'dashboard' %}class="active"{% endif %}><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            {% if current_user.is_authenticated %}
+                                <li><a href="/">{{current_user.first_name}} {{current_user.last_name}}</a></li>
+                                <li>
+                                    <form method="post" action="{{ url_for('log_out') }}" class="form-inline">
+                                        <button class="btn btn-link logout" type="submit">Logout</button>
+                                    </form>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li{% if request.url_rule.endpoint == "index" %} class="active"{% endif %}><a href="/">Home</a></li>
-                    <li {% if request.url_rule.endpoint == "editor" %} class="active"{% endif %}><a href="{{ url_for ('editor') }}">Editor</a></li>
-                    <li {% if request.url_rule.endpoint == "admin" %} class="active"{% endif %}><a href="{{ url_for ('admin') }}">Admin</a></li>
-                    <li {% if request.url_rule.endpoint == "review" %} class="active"{% endif %}><a href="{{ url_for ('review_tool') }}">Review</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    {% if current_user.is_authenticated %}
-                        <li><a href="/">{{current_user.first_name}} {{current_user.last_name}}</a></li>
-                        <li>
-                            <form method="post" action="{{ url_for('log_out') }}" class="form-inline">
-                                <button class="btn btn-link logout" type="submit">Logout</button>
-                            </form>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </div>
-{% endblock %}
+        {% endblock %}
 
 {% block content %}
     <div class="container">

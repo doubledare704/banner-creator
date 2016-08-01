@@ -1,4 +1,5 @@
 @require '~normalize-styl'
+@require 'dashboard.styl'
 
 html, body
   height 100%
@@ -113,14 +114,16 @@ canvas#main
   background-color: white
   #backgroundsList
     list-style: none
-    padding: 0
+    padding: 5px
     height: 400px
     overflow: hidden
     overflow-y: scroll
-    img
-      border: 2px solid black
-      height: 100px
-      width: 100px
+    li
+      margin: 2px
+      img
+        border: 1px solid black
+        height: 100px
+        width: 100px
 
 #rightcol
   display none
@@ -237,7 +240,7 @@ canvas#main
 
 .modal-header
   padding: 2px 16px
-  background-color: #5cb85c
+  background-color: #468499
   color: white
 
 
@@ -247,7 +250,7 @@ canvas#main
 
 .modal-footer
   padding: 2px 16px
-  background-color: #5cb85c
+  background-color: #468499
   color: white
 
 #result_review, #continue
@@ -279,3 +282,13 @@ canvas#main
     margin-right 10px
     width 7em
     height 2em
+
+.btn-wrapper
+  display: inline-block
+  margin: 5px
+
+.img-wrapper
+  height: 200px
+  background-position: center center
+  background-repeat: no-repeat
+  background-size: contain

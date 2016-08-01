@@ -2,18 +2,18 @@ import base64
 import os
 import uuid
 import json
-
-from flask_login import login_required
 from io import BytesIO
 
-from sqlalchemy import desc, asc
-from werkzeug.datastructures import FileStorage
 from flask import render_template, redirect, current_app, request, jsonify,url_for
-from werkzeug.utils import secure_filename
 
-from server.models import Image, Review, ImageHistory
+from flask_login import login_required, current_user
+from werkzeug.datastructures import FileStorage
+from werkzeug.utils import secure_filename
+from sqlalchemy import desc, asc
+
 from server.db import db
 from server.utils.image import allowed_file, image_resize, image_preview
+from server.models import Image, Review, ImageHistory, Banner, BannerReview, User
 
 
 @login_required
@@ -74,7 +74,8 @@ def image_rename():
 
 @login_required
 def editor():
-    return render_template('editor_markuped.html')
+    designers = User.query.filter_by(role=User.UserRole.designer)
+    return render_template('editor_markuped.html', designers=designers)
 
 
 @login_required
@@ -141,6 +142,46 @@ def history_image(history_image_id):
 
 
 @login_required
+def make_review():
+    form = request.form
+    _, b64data = form['file'].split(',')
+    name = str(uuid.uuid4()) + '.png'
+    decoded_data = base64.b64decode(b64data)
+    file = FileStorage(BytesIO(decoded_data), filename=name)
+    filename = secure_filename(file.filename)
+    file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+
+    banner = Banner(
+        name=filename,
+        title=form.get('title', 'untitled'),
+        user=current_user
+    )
+    db.session.add(banner)
+    db.session.flush()
+
+    designer = User.query.get(form['designer'])
+    review = BannerReview(
+        banner_id = banner.id,
+        user=current_user,
+        designer=designer,
+        comment=form.get('comment', '')
+    )
+    db.session.add(review)
+    db.session.flush()
+
+    return '', 201
+
+
+@login_required
+def dashboard():
+    if current_user.role == User.UserRole.user:
+        reviews = BannerReview.query.filter_by(user_id=current_user.id).order_by(BannerReview.created_at.desc())
+        return render_template('user/user_dashboard.html', reviews=reviews)
+    elif current_user.role == User.UserRole.designer:
+        reviews = BannerReview.query.filter_by(designer_id=current_user.id).order_by(BannerReview.created_at.desc())
+        return render_template('user/designer_dashboard.html', reviews=reviews)
+
+
 def review_tool():
     images = Image.query.filter_by(active=True)
     image_json = json.dumps(

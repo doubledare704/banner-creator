@@ -7,6 +7,7 @@
           rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab|Roboto:400,500|Lobster&subset=latin,cyrillic'
           rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 {% endblock %}
 
 {% block navbar %}
@@ -61,6 +62,13 @@
             data-bg-img-url="{{ url_for('uploaded_file', filename='') }}">
             </section>
 
+            <section>
+                <a href="#" data-bazooka="openReviewModal">
+                    <i class="material-icons">done_all</i>
+                    <span class="detail">Отправить на ревью</span>
+                </a>
+            </section>
+
             <section class="last-sec">
                 <a href="#" id="input">
                     <i class="material-icons">cloud_upload</i>
@@ -111,6 +119,10 @@
         </div>
 
     </div>
+
+{#  Include html for review modal window  #}
+{% include 'editor/review_modal.html' %}
+
 {% endblock %}
 {% block scripts %}
     <script src="{{ url_for('static', filename='editorbundle.js') }}"></script>
