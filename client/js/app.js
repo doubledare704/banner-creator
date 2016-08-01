@@ -16,8 +16,8 @@ Baz.register({
     'showBanner': showBanner,
     'loginClick': loginClick,
     'reviewTool': reviewTool,
-    'usersList': users
-    reviewAdmin: reviewAdmin,
+    'usersList': users,
+    'reviewAdmin': reviewAdmin
 });
 
 Baz.watch();

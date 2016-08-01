@@ -62,11 +62,6 @@ var extend = function () {
 // initial fabric
 let fabric = require('fabric').fabric;
 
-// this is used to align buttons by bottom. When we add new button - dynamic left coord changes
-let leftCoords = 0;
-// padding between buttons
-let padding_buttons = 65;
-
 
 // Additional functions for review tool
 
@@ -238,21 +233,11 @@ export default class Editor {
     deleteObject(obj, group) {
         let canvaser = this.canv;
         if (obj) {
-            if (this.canv.getActiveObject().get('type') === 'Tag') {
-                leftCoords = 0;
-            }
             canvaser.remove(obj);
         }
         else if (group) {
-            let del_types = [];
             const objectsInGroup = group.getObjects();
             canvaser.discardActiveGroup();
-            for (var i = 0; i < objectsInGroup.length; i++) {
-                del_types.push(objectsInGroup[i].get('type'));
-            }
-            if (inArray('Tag', del_types)) {
-                leftCoords = 0;
-            }
             objectsInGroup.forEach(function (object) {
                 canvaser.remove(object);
             });
@@ -287,6 +272,18 @@ export default class Editor {
         }))
     }
 
+    setTextInItext(texter){
+        let act = this.canv.getActiveObject();
+        if (act){
+            let objs = act.getObjects();
+            for (let i =0; i<objs.length; i++){
+                if(objs[i].text){
+                    objs[i].setText(texter);
+                }
+            }
+            this.canv.renderAll();
+        }
+    }
 
     // http://jsfiddle.net/kqfswu4b/1/
     addCommentCloud(textInCloud) {
@@ -459,7 +456,7 @@ export default class Editor {
         }
 
         function addTextToRect(rect, text) {
-            return new fabric.Text(textInCloud, {
+            return new fabric.IText(textInCloud, {
                 left: rect.left + 5, //Take the block's position
                 top: rect.top + 10,
                 fill: 'black',
