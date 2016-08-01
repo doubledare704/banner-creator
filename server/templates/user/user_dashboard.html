@@ -1,60 +1,27 @@
-{% extends "base.html" %}
+{% extends "user/base_dashboard.html" %}
 
-{% block title %}Home{% endblock %}
-
-{% block page_content %}
+{% block dashboard_content %}
+    {% for review in reviews %}
     <div class="row">
-        <div class="col-lg-3">
-            <ul class="dashboard-menu">
-                <li><a href="#">Main</a></li>
-                <li><a href="#">Banners</a></li>
-            </ul>
-        </div>
-        <div class="col-lg-9">
-            {% for review in reviews %}
-            <div class="row">
-                {% if review.status == None %}
-                <div class="review-section">
-                    <p><b>Отправлено на ревью пользователю <span class="dashboard-reviwer-name">{{ review.designer.last_name }} {{ review.designer.first_name }}</span></b>
-                        <span class="text-left">
-                            {% if review.created_at %}{{ review.created_at.strftime('%H:%M %Y-%m-%d') }}{% endif %}
-                        </span>
-                    </p>
-                    <p>{% if review.reviewed %}Просмотрено{% else %}Не просмотрено{% endif %}</p>
-                    <div>
-                        <span class="dashboard-show-banner" data-bazooka="showBanner">Показать баннер</span>
-                        <span class="glyphicon glyphicon-arrow-down"></span>
-                        <img class="dashboard-review-banner img-responsive" imgSrc="{{ url_for('uploaded_file', filename=review.banner.name) }}"/>
-                    </div>
-                </div>
-
-                {% elif review.status == review.Status.accepted %}
-                <div class="review-section review-section-success">
-                    <p><b>Одобрено пользователем
-                        <span class="dashboard-reviwer-name">
-                            {{ review.designer.last_name }} {{ review.designer.first_name }}
-                        </span>
-                        </b>
-                    </p>
-                </div>
-                {% elif review.status == review.Status.not_accepted %}
-                <div class="review-section review-section-rejected">
-                    <p><b>Отклонено пользователем
-                        <span class="dashboard-reviwer-name">
-                            {{ review.designer.last_name }} {{ review.designer.first_name }}
-                        </span>
-                        </b>
-                    </p>
-                </div>
-
-                {% endif %}
+        <div class="review-section
+        {% if review.status == review.Status.accepted %}
+        review-section-success
+        {% elif review.status == review.Status.not_accepted %}
+        review-section-rejected
+        {% endif %}">
+            <p><b>Отправлено на ревью пользователю <span class="dashboard-reviwer-name">{{ review.designer.last_name }} {{ review.designer.first_name }}</span></b>
+                <span class="text-left">
+                    {% if review.created_at %}{{ review.created_at.strftime('%H:%M %Y-%m-%d') }}{% endif %}
+                </span>
+            </p>
+            <p>{% if review.reviewed %}Просмотрено{% else %}Не просмотрено{% endif %}</p>
+            <p>Название баннера: <span class="dashboard-banner-title">{{ review.banner.title }}</span></p>
+            <div class="dashboard-banner-container">
+                <span class="dashboard-show-banner" data-bazooka="showBanner">Показать баннер</span>
+                <span class="glyphicon glyphicon-arrow-down"></span>
+                <img class="dashboard-review-banner img-responsive" imgSrc="{{ url_for('uploaded_file', filename=review.banner.name) }}"/>
             </div>
-            {% endfor %}
         </div>
     </div>
-{% endblock page_content%}
-
-{% block scripts %}
-    {{ super() }}
-    <script src="{{ url_for('static', filename='adminbundle.js') }}"></script>
-{% endblock scripts %}
+    {% endfor %}
+{% endblock dashboard_content%}

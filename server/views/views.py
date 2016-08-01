@@ -172,16 +172,6 @@ def make_review():
     return '', 201
 
 
-@login_required
-def dashboard():
-    if current_user.role == User.UserRole.user:
-        reviews = BannerReview.query.filter_by(user_id=current_user.id).order_by(BannerReview.created_at.desc())
-        return render_template('user/user_dashboard.html', reviews=reviews)
-    elif current_user.role == User.UserRole.designer:
-        reviews = BannerReview.query.filter_by(designer_id=current_user.id).order_by(BannerReview.created_at.desc())
-        return render_template('user/designer_dashboard.html', reviews=reviews)
-
-
 def review_tool():
     images = Image.query.filter_by(active=True)
     image_json = json.dumps(

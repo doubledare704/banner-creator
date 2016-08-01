@@ -1,0 +1,15 @@
+{% extends "user/base_dashboard.html" %}
+
+{% block dashboard_content %}
+    {% for banner in banners %}
+    <div class="dashboard-banners-container">
+        <p class="dashboard-banner-title">{{ banner.name }}</p>
+        <div class="dashboard-banner-container">
+            <span class="dashboard-show-banner" data-bazooka="showBanner">Показать баннер</span>
+            <span class="glyphicon glyphicon-arrow-down"></span>
+            <img class="dashboard-review-banner img-responsive" imgSrc="{{ url_for('uploaded_file', filename=banner.name) }}"/>
+        </div>
+    </div>
+    {% endfor %}
+
+{% endblock dashboard_content %}
