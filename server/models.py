@@ -1,16 +1,16 @@
 import datetime
+import enum
 
 from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy.schema import Index
+from sqlalchemy.types import Enum
 from flask_login import unicode
 
 from server.db import db
-from sqlalchemy.schema import Index
-from sqlalchemy.types import Enum
-import enum
 
 
-class Image(db.Model):
-    __tablename__ = 'image'
+class BaseImage(db.Model):
+    __abstract__ = True
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     title = db.Column(db.String(120), unique=False)
@@ -19,6 +19,46 @@ class Image(db.Model):
 
     def __repr__(self):
         return '<Image %r>' % self.name
+
+
+class Banner(BaseImage):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    review = db.relationship('BannerReview', backref='banner',
+                             uselist=False)
+
+
+class Image(BaseImage):
+    description = db.Column(db.Text, nullable=True)
+
+
+class BackgroundImage(BaseImage):
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+
+
+class Project(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250), unique=True)
+    background_images = db.relationship('BackgroundImage', backref='project', lazy='dynamic')
+
+
+class BannerReview(db.Model):
+    class Status(enum.Enum):
+        accepted = 0
+        not_accepted = 1
+
+    id = db.Column(db.Integer, primary_key=True)
+    banner_id = db.Column(db.Integer, db.ForeignKey('banner.id'))
+    comment = db.Column(db.Text, nullable=True)
+    reviewed = db.Column(db.Boolean, default=False)
+    status = db.Column(Enum(Status))
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    designer_comment = db.Column(db.Text, nullable=True)
+    changed_at = db.Column(db.DateTime, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    designer_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    user = db.relationship("User", foreign_keys=[user_id])
+    designer = db.relationship("User", foreign_keys=[designer_id])
 
 
 class Review(db.Model):
@@ -67,6 +107,7 @@ class User(db.Model):
     role = db.Column(Enum(UserRole), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
     active = db.Column(db.BOOLEAN, default=True, nullable=False)
+    banners = db.relationship('Banner', backref='user')
 
     __table_args__ = (Index('ix_user_id_social_type', "social_type", "id"),)
 
