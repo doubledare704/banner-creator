@@ -11,7 +11,6 @@ export default class PopUp extends React.Component {
             visible: false
         };
 
-        this.onClose = this.onClose.bind(this);
         this.showPopUp = this.showPopUp.bind(this);
     }
 
@@ -20,29 +19,30 @@ export default class PopUp extends React.Component {
     }
 
     componentDidMount() {
-        popupEvent.filter( (data) => {
+        popupEvent.filter((data) => {
             return data.action === 'change'
         }).subscribe((data) => {
             this.setState({
-                title:data.data.data,
-                confirm:data.data.confirm,
-                confirmClick:data.data.confirmAction,
+                title: data.data.data,
+                confirm: data.data.confirm,
+                flash: data.data.flash,
+                confirmClick: data.data.confirmAction,
                 visible: true
             });
 
-            if ( !data.data.confirm ) {
-                setTimeout(this.onClose, 1500);
+            if (data.data.flash) {
+                setTimeout(PopUp.onClose, 1500);
             }
         });
 
-        popupEvent.filter( (data) => {
+        popupEvent.filter((data) => {
             return data.action === 'close'
         }).subscribe((data) => {
             this.setState({visible: false});
         });
     }
 
-    onClose() {
+    static onClose() {
         popupEvent.onNext({action: 'close'});
     }
 
@@ -50,7 +50,7 @@ export default class PopUp extends React.Component {
         if (this.state.visible === true) {
             return (
                 <div className="modal-content">
-                    <span className="close" onClick={this.onClose}>×</span>
+                    <span className="close" onClick={PopUp.onClose}>×</span>
                     <h1>{this.state.title}</h1>
                     {this.addConfirm(this.state.confirm, this.state.confirmClick)}
                 </div>
@@ -61,25 +61,25 @@ export default class PopUp extends React.Component {
     }
 
     addConfirm(confirm, confirmClick) {
-        if (confirm !== true) {
+        if (!confirm || data.data.flash) {
             return null;
         }
-        if ( confirm === true ) {
+        if (confirm) {
             let confirmAction = () => {
                 confirmClick();
-                this.onClose();
+                PopUp.onClose();
             };
 
-             return (
-                 <div>
-                     <button className="Yes" onClick={confirmAction}>
-                         <i>Да</i>
-                     </button>
-                     <button className="Close" onClick={this.onClose}>
-                         <i>Отменить</i>
-                     </button>
-                 </div>
-             )
+            return (
+                <div>
+                    <button className="Yes" onClick={confirmAction}>
+                        <i>Да</i>
+                    </button>
+                    <button className="Close" onClick={PopUp.onClose}>
+                        <i>Отменить</i>
+                    </button>
+                </div>
+            )
         }
     }
 
@@ -88,8 +88,8 @@ export default class PopUp extends React.Component {
     }
 }
 
-ReactDOM.render( <PopUp/>, document.getElementById('popup'));
+ReactDOM.render(<PopUp/>, document.getElementById('popup'));
 
 module.exports = {
-    'popup': PopUp.change
+    'popup': PopUp
 };
