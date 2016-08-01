@@ -4,8 +4,9 @@ from server.views.auth import login_page, authorize, oauth_callback, log_out
 from server.views.admin import inactivate_image, activate_image
 from server.utils.image import uploaded_file
 from server.views.admin import admin, backgrounds, image_delete_from_DB, users_page, remove_user
+from server.views.views import make_review
 
-from server.views.views import make_review, dashboard
+from server.views import dashboard as dashboard_views
 
 
 def setup_routes(app):
@@ -18,7 +19,10 @@ def setup_routes(app):
     app.add_url_rule('/api/backgrounds/', view_func=background_images)
     app.add_url_rule('/api/backgrounds/<int:page>', view_func=background_images)
     app.add_url_rule('/api/review', methods=['POST'], view_func=make_review)
-    app.add_url_rule('/dashboard/', view_func=dashboard)
+
+    # dashboard
+    app.add_url_rule('/dashboard/', view_func=dashboard_views.dashboard)
+    app.add_url_rule('/dashboard/banners/', view_func=dashboard_views.user_banners, endpoint='dashboard_user_banners')
 
     # admin
     app.add_url_rule('/admin/', view_func=admin)
