@@ -13,6 +13,7 @@ class EditorWindow extends React.Component {
         this.addArrow = this.addArrow.bind(this);
         this.addRectangle = this.addRectangle.bind(this);
         this.addEllipse = this.addEllipse.bind(this);
+        this.addCommentCloud = this.addCommentCloud.bind(this);
     }
 
     componentDidMount() {
@@ -42,6 +43,10 @@ class EditorWindow extends React.Component {
         this.editor.addEllipse();
     }
 
+    addCommentCloud(){
+        this.editor.addCommentCloud("Пиши сюда");
+    }
+
     render() {
         return (<div>
                     <div className="btn btn-primary">
@@ -51,22 +56,27 @@ class EditorWindow extends React.Component {
 
                     <div className="btn btn-primary">
                         <i className="glyphicon glyphicon-arrow-right"/>
-                        <span onClick={this.addArrow}>стрелка</span>
+                        <span onClick={this.addArrow}>Стрелка</span>
                     </div>
 
                     <div className="btn btn-primary">
                         <i className="glyphicon glyphicon-unchecked"/>
-                        <span onClick={this.addRectangle}>квадрат</span>
+                        <span onClick={this.addRectangle}>Квадрат</span>
                     </div>
 
                     <div className="btn btn-primary">
                         <i className="glyphicon glyphicon-unchecked"/>
-                        <span onClick={this.addEllipse}>елипс</span>
+                        <span onClick={this.addEllipse}>Елипс</span>
+                    </div>
+
+                    <div className="btn btn-primary">
+                        <i className="glyphicon glyphicon-new-window"/>
+                        <span onClick={this.addCommentCloud}>Хмарка</span>
                     </div>
 
                     <div className="btn btn-danger">
                         <i className="glyphicon glyphicon-trash"/>
-                        <span onClick={this.deleteObject}>удали</span>
+                        <span onClick={this.deleteObject}>Удали</span>
                     </div>
 
                     <canvas id="main" ref="canvas"></canvas>
@@ -78,18 +88,18 @@ class EditorWindow extends React.Component {
 
                     <form className="form-inline">
                        <div className="form-group">
-                            <span>
+                            <span className="btn-wrapper" >
                                 ПЛОХО: <input type="radio" name="status" value="bad"/>
                             </span>
                         </div>
                         <div className="form-group">
-                            <span>
+                            <span className="btn-wrapper" >
                                 ХОРШО: <input type="radio" name="status" value="good"/>
                             </span>
                         </div>
                     </form>
 
-                    <div className="btn btn-success form-group">
+                    <div className="btn btn-success form-group btn-wrapper">
                             <i className="glyphicon glyphicon-envelope"/>
                             <span>  одправить</span>
                      </div>

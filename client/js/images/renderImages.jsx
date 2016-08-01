@@ -1,37 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
+import {popup} from '../admin/popUp.js';
 
 const BAZOOKA_PREFIX = 'body';
-class DeleteConfirm extends React.Component{
-     constructor(props){
-        super(props);
-    }
-
-    render(){
-        return (
-            <div className="btn btn-danger">
-                <div onClick={this.props.handleDelete(this.props.id)}>
-                    <i className="glyphicon glyphicon-trash"/>
-                    <span>Yes</span>
-               </div>
-            </div>
-        );
-    }
- }
 
 class DeleteButton extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            deleted: false
-        };
-        this.onClick = this.onClick.bind(this);
+        this.onDelete = this.onDelete.bind(this);
       }
 
-    onClick() {
-        this.setState({deleted: !this.state.deleted});
+    onDelete() {
+        popup({data: "Удалить ?",
+        confirm: true,
+        confirmAction: this.props.handleDelete(this.props.id)
+        });
     }
 
     render() {
@@ -39,10 +24,8 @@ class DeleteButton extends React.Component {
             <div className="btn-wrapper">
                 <div className="btn btn-default">
                     <i className="glyphicon glyphicon-trash"/>
-                    <span onClick={this.onClick} >Delete</span>
+                    <span onClick={this.onDelete} >Delete</span>
                 </div>
-                { this.state.deleted ?
-                    <DeleteConfirm id={this.props.id} handleDelete={this.props.handleDelete}/> : null }
             </div>
         );
     }
@@ -53,30 +36,27 @@ class RenameInput extends React.Component {
     constructor(props) {
         super(props);
         this.state={
-            value: ''
+            newtitle: 'noname'
         };
         this.onInput = this.onInput.bind(this);
     }
 
-    componentDidMount() {
-        this.setState({value: this.refs.rename.value})
-    }
-
     onInput() {
-        this.setState({value: this.refs.rename.value})
+        this.setState({newtitle: this.refs.rename.value})
     }
 
     render() {
         return (
-            <div>
+            <div className="btn-wrapper">
                 <input type="text" ref="rename" onChange={this.onInput}  required/>
                 <input type="submit" value="Rename"
-                       onClick={this.props.handleRename(this.props.id, this.state.value)}
+                       onClick={this.props.handleRename(this.props.id, this.state.newtitle)}
                 />
             </div>
             );
         }
     }
+
 
 class RenameButton extends React.Component {
 
@@ -88,18 +68,18 @@ class RenameButton extends React.Component {
         this.onClick = this.onClick.bind(this);
       }
 
-        onClick() {
-            this.setState({renamed: !this.state.renamed});
-        }
+    onClick() {
+        this.setState({renamed: !this.state.renamed});
+    }
 
     render() {
         return (
             <div className="btn-wrapper">
+                { this.state.renamed ? popup({data: <RenameInput id={this.props.id} handleRename = {this.props.handleRename}/> }) : null }
                 <div className="btn btn-default">
                     <i className="glyphicon glyphicon-pencil"/>
                     <span onClick={this.onClick} >Rename</span>
                 </div>
-                { this.state.renamed ? <RenameInput id={this.props.id} handleRename = {this.props.handleRename}/> : null }
             </div>
         );
     }
@@ -110,27 +90,30 @@ class Image extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            src: this.props.preview,
-            previewed: false
+            titleClick: false
         };
+        this.onClick = this.onClick.bind(this);
         this.handlePreview = this.handlePreview.bind(this);
     }
 
     handlePreview() {
-        const src = this.state.previewed ? this.props.preview : this.props.url;
-        this.setState({
-            previewed: !this.state.previewed, src: src
+        popup({
+            data: <div className="img-popup" style={{backgroundImage: `url(${this.props.url})`}} ></div>
         });
+    }
+
+    onClick() {
+        this.setState({titleClick: !this.state.titleClick});
     }
 
     render() {
         return (
             <div className="col-sm-6 col-md-4">
                 <div className="thumbnail">
-                    <div className="img-wrapper" style={{backgroundImage: `url(${this.state.src})`}} >
+                    <div className="img-wrapper" style={{backgroundImage: `url(${this.props.preview})`}} >
                         </div>
                         <div className="caption">
-                            <h3> {this.props.title} </h3>
+                           <h3> {this.props.title} </h3>
                             <p> {this.props.url} </p>
                             <p> ID:{this.props.id} </p>
                             <DeleteButton id={this.props.id} handleDelete= {this.props.handleDelete} />
@@ -149,24 +132,13 @@ class Image extends React.Component {
         }
     }
 
-function WarningMessage(props) {
-    return (
-        <div className="form-group">
-            <h3>Something is wrong, Status: {this.props.status} </h3>
-        </div>
-    );
-}
-
 class ImagesList extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             displayedImages: this.props.imageArray,
-            failed: false,
-            status: null,
             searchQuery: ''
-
         };
         this.handleDelete = this.handleDelete.bind(this);
         this.handleRename = this.handleRename.bind(this);
@@ -184,12 +156,11 @@ class ImagesList extends React.Component {
                 body: JSON.stringify({id: id})
             }).then(response => {
                 if (response.status !== 200) {
-                    this.setState({failed: true});
-                    this.setState({status: response.status});
+                    popup({
+                       data: <p>Something is wrong {response.status} </p>
+                    });
                     return response.status;
                 }
-                this.setState({status: response.status});
-
                 const displayedImages = this.props.imageArray.filter(
                     el => el.id !== id
                 );
@@ -197,6 +168,7 @@ class ImagesList extends React.Component {
                 this.setState({
                     displayedImages: displayedImages
                     });
+                popup({data: "Удален"});
             });
         };
     }
@@ -212,8 +184,9 @@ class ImagesList extends React.Component {
                 body: JSON.stringify({id: id, title: title})
             }).then(response => {
                 if (response.status !== 200) {
-                    this.setState({failed: true});
-                    this.setState({status: response.status});
+                    popup({
+                       data: <p>Што то не так {response.status} </p>
+                    });
                     return response.status;
                 }
                 this.setState({status: response.status});
@@ -223,6 +196,7 @@ class ImagesList extends React.Component {
                 );
                 renameEl[0].title = title;
                 this.setState({displayedImages: this.props.imageArray});
+                popup({data: "Переименовано"})
             });
         };
     }
@@ -240,7 +214,6 @@ class ImagesList extends React.Component {
                         <div className="form-group">
                             <input type="text" placeholder="Search..." className="search-field" onChange={this.handleSearch} />
                         </div>
-                        {this.state.failed ? <WarningMessage status={this.state.status} /> : null}
                 </div>
                      <hr/>
                     <ul>

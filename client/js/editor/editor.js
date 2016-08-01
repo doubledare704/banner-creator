@@ -112,7 +112,7 @@ function createArrowHead(points) {
 function createLine(points) {
     let line = new fabric.Line(points,
         {
-            strokeWidth: 5,
+            strokeWidth: 3,
             stroke: 'red',
             originX: 'center',
             originY: 'center',
@@ -271,7 +271,7 @@ export default class Editor {
     }
 
     addArrow() {
-        let pts = [100, 100, 100, 200];
+        let pts = [100, 200, 100, 100];
         let triangle = createArrowHead(pts);
         let line = createLine(pts);
         let grp = new fabric.Group([triangle, line]);

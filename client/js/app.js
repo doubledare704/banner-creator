@@ -14,7 +14,7 @@ Baz.register({
     renderImages: renderImages,
     reviewAdmin: reviewAdmin,
     'reviewTool': reviewTool,
-    'loginClick': loginClick
+    'loginClick': loginClick,
     'usersList': users
 });
 
