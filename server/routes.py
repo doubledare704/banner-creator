@@ -1,5 +1,5 @@
 from server.views.views import index, editor, image_delete, image_rename, background_images, continue_edit, \
-    history_image, review_tool
+    history_image, review_tool, cuts_background
 from server.views.auth import login_page, authorize, oauth_callback, log_out
 from server.utils.image import uploaded_file
 from server.views.admin import admin, backgrounds, inactivate_image, activate_image, image_delete_from_DB, users_page, \
@@ -30,6 +30,7 @@ def setup_routes(app):
     # editor
     app.add_url_rule('/editor/<int:history_image_id>', view_func=continue_edit)
     app.add_url_rule('/editor/history/<int:history_image_id>', methods=['GET', 'POST'], view_func=history_image)
+    app.add_url_rule('/editor/cut', view_func=cuts_background)
 
     # auth routes
     app.add_url_rule('/login', view_func=login_page)

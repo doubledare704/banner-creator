@@ -182,3 +182,8 @@ def review_tool():
          for image in images
          ])
     return render_template('review.html', image_json=image_json)
+
+
+@login_required
+def cuts_background():
+    return render_template('editor/cutbackground.html')
