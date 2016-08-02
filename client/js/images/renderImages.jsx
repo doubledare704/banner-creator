@@ -157,7 +157,7 @@ class ImagesList extends React.Component {
             }).then(response => {
                 if (response.status !== 200) {
                     popup({
-                       data: <p>Something is wrong {response.status} </p>
+                       data: <p>Што то не так ошибка {response.status} </p>
                     });
                     return response.status;
                 }
@@ -185,11 +185,10 @@ class ImagesList extends React.Component {
             }).then(response => {
                 if (response.status !== 200) {
                     popup({
-                       data: <p>Што то не так {response.status} </p>
+                       data: <p>Што то не так ошибка  {response.status} </p>
                     });
                     return response.status;
                 }
-                this.setState({status: response.status});
 
                 const renameEl = this.props.imageArray.filter(
                     el => (el.id == id)

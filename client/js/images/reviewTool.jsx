@@ -2,12 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
 import Editor from '../editor/editor.js';
+import {popup} from '../admin/popUp.js';
 
 const BAZOOKA_PREFIX = 'body';
 
 class EditorWindow extends React.Component {
     constructor(props){
         super(props);
+        this.state ={
+            status: ''
+        };
         this.addText = this.addText.bind(this);
         this.deleteObject = this.deleteObject.bind(this);
         this.addArrow = this.addArrow.bind(this);
@@ -15,6 +19,8 @@ class EditorWindow extends React.Component {
         this.addEllipse = this.addEllipse.bind(this);
         this.addCommentCloud = this.addCommentCloud.bind(this);
         this.fileInput = this.fileInput.bind(this);
+        this.setComment = this.setComment.bind(this);
+        this.changeStatus = this.changeStatus.bind(this);
     }
 
     componentDidMount() {
@@ -51,7 +57,34 @@ class EditorWindow extends React.Component {
 
     fileInput(){
         console.log(this.props.imageUrl);
-        this.editor.addImage(this.props.imageUrl);
+        this.editor.setBackground(this.props.imageUrl);
+    }
+
+    changeStatus(event){
+        this.setState({status: event.target.value});
+    }
+
+    setComment(){
+        const img_id = this.props.imageId;
+        const status = this.state.status;
+        const comment = this.refs.comment.value;
+        console.log(img_id, comment, status);
+        fetch("/review_action/", {
+            credentials: 'same-origin',
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({id: img_id, comment: comment, status: status})
+        }).then(response => {
+            if (response.status !== 200) {
+                popup({
+                    data: <p>Што то не так ошибка {response.status} </p>
+                });
+                return response.status;
+            }
+            popup({data: "Одправлено обратно"})
+        })
     }
 
     render() {
@@ -90,23 +123,23 @@ class EditorWindow extends React.Component {
 
                      <div className="form-group">
                           <label for="comment">Коментарий:</label>
-                          <textarea className="form-control" name="comment" rows="5" id="comment"></textarea>
+                          <textarea className="form-control" ref="comment" rows="5" id="comment"></textarea>
                     </div>
 
                     <form className="form-inline" action="" method="post">
                        <div className="form-group">
                             <span className="btn-wrapper" >
-                                ПЛОХО: <input type="radio" name="status" value="bad"/>
+                                ПЛОХО: <input onClick={this.changeStatus} type="radio" name="status" value="not_accepted"/>
                             </span>
                         </div>
                         <div className="form-group">
                             <span className="btn-wrapper" >
-                                ХОРШО: <input type="radio" name="status" value="good"/>
+                                ХОРШО: <input onClick={this.changeStatus} type="radio" name="status" value="accepted"/>
                             </span>
                         </div>
                         <div className="btn btn-success form-group btn-wrapper">
                             <i className="glyphicon glyphicon-envelope"/>
-                            <input type="submit" value=" Одправить"  role="button" />
+                            <span onClick={this.setComment}> Одправить</span>
                      </div>
                     </form>
 
@@ -117,10 +150,10 @@ class EditorWindow extends React.Component {
 }
 
 export default function (node) {
-    const { imageUrl } = h.getAttrs(BAZOOKA_PREFIX, node);
+    const { imageUrl, imageId } = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
-        <EditorWindow width={910} height={500} imageUrl={imageUrl} />,
+        <EditorWindow width={910} height={500} imageUrl={imageUrl} imageId = {imageId} />,
         node
     );
 }

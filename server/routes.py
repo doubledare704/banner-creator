@@ -1,5 +1,5 @@
 from server.views.views import index, editor, image_delete, image_rename, background_images, review, continue_edit, \
-    history_image, review_tool, review_image
+    history_image, review_tool, review_image, review_action
 from server.views.auth import login_page, authorize, oauth_callback, log_out
 from server.views.admin import admin, backgrounds, inactivate_image, image_delete_from_DB, activate_image, review_images
 from server.utils.image import uploaded_file
@@ -47,3 +47,4 @@ def setup_routes(app):
     app.add_url_rule('/admin/users/<int:user_id>', methods=['DELETE'], view_func=remove_user)
     app.add_url_rule('/review/', methods=['GET', 'POST'], view_func=review_tool)
     app.add_url_rule('/review_image/<int:img_id>', methods=['GET', 'POST'], view_func=review_image)
+    app.add_url_rule('/review_action/', methods=['GET', 'POST'], view_func=review_action)

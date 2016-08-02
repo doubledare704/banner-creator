@@ -2,8 +2,9 @@ import base64
 import os
 import uuid
 import json
-from io import BytesIO
+import datetime
 
+from io import BytesIO
 from flask import render_template, redirect, current_app, request, jsonify,url_for
 
 from flask_login import login_required, current_user
@@ -177,14 +178,23 @@ def review_tool():
 
 @login_required
 def review_image(img_id):
-    if request.method == 'POST':
-        print(request.form['comment'], request.form['status'] )
-        # banner_review = BannerReview.query.get_or_404(img_id)
-        # comment = request.form['comment']
-        # status = request.form['status']
-        # banner_review.designer_comment = comment
-        # banner_review.status = status
-        # return redirect(url_for('dashboard'))
     banner = Banner.query.get_or_404(img_id)
     image_url = '/uploads/'+ banner.name
-    return render_template('review.html', image_url=image_url)
+    return render_template('review.html', image_url=image_url, image_id=img_id)
+
+@login_required
+def review_action():
+    if request.method == 'POST' :
+        img_id = request.json['id']
+        banner_review = BannerReview.query.get_or_404(img_id)
+        comment, status = request.json['comment'], request.json['status']
+        banner_review.designer_comment = comment
+        banner_review.reviewed = True
+        banner_review.changed_at = datetime.datetime.utcnow()
+        if status == 'accepted':
+            banner_review.status = banner_review.Status.accepted
+        if status == 'not_accepted':
+            banner_review.status = banner_review.Status.not_accepted
+        return '', 200
+    return '', 404
+
