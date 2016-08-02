@@ -153,9 +153,15 @@
                 <li><a class="trn" onclick="call_menu(FILE, 'file_new');" href="#">New</a></li>
                 <li><a class="trn dots" onclick="call_menu(FILE, 'file_open');" href="#">Open</a></li>
                 <li><a class="trn dots" onclick="call_menu(FILE, 'file_save');" href="#">Save as</a></li>
+                <li><a class="trn dots" onclick="call_menu(FILE, 'file_post');" href="#">Отправить на сервер</a></li>
                 <li><a class="trn dots" onclick="call_menu(FILE, 'file_print');" href="#">Print</a></li>
             </ul>
         </li>
+        <div>
+            <ul>
+                <li><a class="trn" href="{{ url_for ('index') }}">Home</a></li>
+            </ul>
+        </div>
         <li>
             <a class="icon edit trn" href="#">Edit</a>
             <ul>

@@ -117,7 +117,6 @@ def history_image(history_image_id):
 def make_review():
     form = request.form
     _, b64data = form['file'].split(',')
-    print(form)
     name = str(uuid.uuid4()) + '.png'
     decoded_data = base64.b64decode(b64data)
     file = FileStorage(BytesIO(decoded_data), filename=name)
@@ -187,3 +186,27 @@ def review_tool():
 @login_required
 def cuts_background():
     return render_template('editor/cutbackground.html')
+
+
+@login_required
+def save_cuted():
+    _, b64data = request.json['file'].split(',')
+    random_name = request.json['name']
+    decoded_data = base64.b64decode(b64data)
+    file = FileStorage(BytesIO(decoded_data), filename=random_name)
+    filename = secure_filename(file.filename)
+    file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+    preview_name = 'preview_' + filename
+    preview_file = image_preview(file)
+    preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
+    title = random_name
+
+    img_cutted = Image(
+        name=filename,
+        title=title,
+        preview=preview_name
+    )
+    db.session.add(img_cutted)
+    db.session.flush()
+
+    return '', 201
