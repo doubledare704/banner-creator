@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
 import Editor from '../editor/editor.js';
-import {popup} from '../admin/popUp.js';
+import {popup} from '../popUp.js';
 
 const BAZOOKA_PREFIX = 'body';
 
@@ -78,12 +78,18 @@ class EditorWindow extends React.Component {
             body: JSON.stringify({id: img_id, comment: comment, status: status})
         }).then(response => {
             if (response.status !== 200) {
-                popup({
+                popup.change({
                     data: <p>Што то не так ошибка {response.status} </p>
                 });
                 return response.status;
             }
-            popup({data: "Одправлено обратно"})
+            popup.change({
+                data: "Одправлено, перейти обратно в кабинет ?",
+                confirm: true,
+                flash: false,
+                confirmAction: () => window.location.href="/dashboard/"
+            });
+
         })
     }
 

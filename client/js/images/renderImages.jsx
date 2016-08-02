@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
-import {popup} from '../admin/popUp.js';
+import {popup} from '../popUp.js';
 
 const BAZOOKA_PREFIX = 'body';
 
@@ -13,9 +13,10 @@ class DeleteButton extends React.Component {
       }
 
     onDelete() {
-        popup({data: "Удалить ?",
+        popup.change({data: "Удалить ?",
         confirm: true,
-        confirmAction: this.props.handleDelete(this.props.id)
+        confirmAction: this.props.handleDelete(this.props.id),
+        flash: false
         });
     }
 
@@ -75,7 +76,8 @@ class RenameButton extends React.Component {
     render() {
         return (
             <div className="btn-wrapper">
-                { this.state.renamed ? popup({data: <RenameInput id={this.props.id} handleRename = {this.props.handleRename}/> }) : null }
+                { this.state.renamed ? popup.change({data: <RenameInput id={this.props.id} handleRename = {this.props.handleRename}/>,
+                    flash: false }) : null }
                 <div className="btn btn-default">
                     <i className="glyphicon glyphicon-pencil"/>
                     <span onClick={this.onClick} >Rename</span>
@@ -97,8 +99,9 @@ class Image extends React.Component {
     }
 
     handlePreview() {
-        popup({
-            data: <div className="img-popup" style={{backgroundImage: `url(${this.props.url})`}} ></div>
+        popup.change({
+            data: <div className="img-popup" style={{backgroundImage: `url(${this.props.url})`}} ></div>,
+            flash: false
         });
     }
 
@@ -156,7 +159,7 @@ class ImagesList extends React.Component {
                 body: JSON.stringify({id: id})
             }).then(response => {
                 if (response.status !== 200) {
-                    popup({
+                    popup.change({
                        data: <p>Што то не так ошибка {response.status} </p>
                     });
                     return response.status;
@@ -168,7 +171,7 @@ class ImagesList extends React.Component {
                 this.setState({
                     displayedImages: displayedImages
                     });
-                popup({data: "Удален"});
+                popup.change({data: "Удален"});
             });
         };
     }
@@ -184,7 +187,7 @@ class ImagesList extends React.Component {
                 body: JSON.stringify({id: id, title: title})
             }).then(response => {
                 if (response.status !== 200) {
-                    popup({
+                    popup.change({
                        data: <p>Што то не так ошибка  {response.status} </p>
                     });
                     return response.status;
@@ -195,7 +198,7 @@ class ImagesList extends React.Component {
                 );
                 renameEl[0].title = title;
                 this.setState({displayedImages: this.props.imageArray});
-                popup({data: "Переименовано"})
+                popup.change({data: "Переименовано"})
             });
         };
     }

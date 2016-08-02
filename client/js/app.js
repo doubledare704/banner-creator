@@ -15,11 +15,11 @@ Baz.register({
     'reviewTool': reviewTool,
     'showBanner': showBanner,
     'loginClick': loginClick,
-    'reviewAdmin': reviewAdmin
-    'usersList': users,
+    'reviewAdmin': reviewAdmin,
+    'usersList': users
 });
 
 Baz.watch();
 
 const unwatch = Baz.watch();
->>>>>>> Temporary merge branch 2
+
