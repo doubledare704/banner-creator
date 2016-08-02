@@ -1,5 +1,8 @@
 {% extends "user/base_dashboard.html" %}
 
+{% import 'user/macros.html' as macros %}
+
+
 {% block dashboard_content %}
     {% for review in reviews %}
     <div class="row">
@@ -9,19 +12,30 @@
         {% elif review.status == review.Status.not_accepted %}
         review-section-rejected
         {% endif %}">
-            <p><b>Отправлено на ревью пользователю <span class="dashboard-reviwer-name">{{ review.designer.last_name }} {{ review.designer.first_name }}</span></b>
-                <span class="text-left">
+            <p class="dashboard-review-title">
+                {% if review.status == review.Status.accepted %}
+                Одобрено дизайнером
+                {% elif review.status == review.Status.not_accepted %}
+                Отклонено дизайнером
+                {% else %}
+                Отправлено на ревью дизайнеру
+                {% endif %}
+                <span class="dashboard-reviwer-name">{{ review.designer.last_name }} {{ review.designer.first_name }}</span>
+                <span class="dashboard-review-date">
                     {% if review.created_at %}{{ review.created_at.strftime('%H:%M %Y-%m-%d') }}{% endif %}
                 </span>
             </p>
-            <p>{% if review.reviewed %}Просмотрено{% else %}Не просмотрено{% endif %}</p>
             <p>Название баннера: <span class="dashboard-banner-title">{{ review.banner.title }}</span></p>
-            <div class="dashboard-banner-container">
-                <span class="dashboard-show-banner" data-bazooka="showBanner">Показать баннер</span>
-                <span class="glyphicon glyphicon-arrow-down"></span>
-                <img class="dashboard-review-banner img-responsive" imgSrc="{{ url_for('uploaded_file', filename=review.banner.name) }}"/>
-            </div>
+            {% if review.designer_comment %}
+                <p>Комментарий дизайнера: <br>{{ review.designer_comment }}</p>
+            {% endif %}
+            {{ macros.render_banner_container('Показать баннер', review.banner.name) }}
+            {% if review.reviewed %}
+                {{ macros.render_banner_container('Показать результат ревью', review.banner.name) }}
+            {% endif %}
         </div>
     </div>
+    {% else %}
+    <p class="dashboard-empty-review">Здесь пока ничего нет :(</p>
     {% endfor %}
 {% endblock dashboard_content%}

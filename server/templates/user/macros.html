@@ -1,0 +1,7 @@
+{% macro render_banner_container(message, filename) %}
+<div class="dashboard-banner-container">
+    <span class="dashboard-show-banner" data-bazooka="showBanner">{{ message }}</span>
+    <span class="glyphicon glyphicon-arrow-down"></span>
+    <img class="dashboard-review-banner img-responsive" imgSrc="{{ url_for('uploaded_file', filename=filename) }}"/>
+</div>
+{% endmacro %}
