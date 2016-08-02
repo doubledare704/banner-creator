@@ -14,7 +14,7 @@ from sqlalchemy import desc, asc
 
 from server.db import db
 from server.utils.image import allowed_file, image_resize, image_preview
-from server.models import Image, Review, ImageHistory, Banner, BannerReview, User
+from server.models import Image, ImageHistory, Banner, BannerReview, User
 
 
 @login_required
@@ -29,7 +29,7 @@ def index():
         if file.filename == '':
             return json.dumps([{'message': 'No selected file'}])
         if file and allowed_file(file.filename):
-            filename = str(uuid.uuid1()).replace("-","") + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
+            filename = str(uuid.uuid1()).replace("-", "") + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
             preview_name = 'preview_' + filename
             original_file = image_resize(file)
             original_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
@@ -46,10 +46,10 @@ def index():
 
     images = Image.query.filter_by(active=True)
     image_json = json.dumps(
-        [{'id':image.id,
-          'url':'/uploads/'+image.name,
-          'title':image.title,
-          'preview':'/uploads/'+image.preview
+        [{'id': image.id,
+          'url': '/uploads/' + image.name,
+          'title': image.title,
+          'preview': '/uploads/' + image.preview
           }
          for image in images
          ])
@@ -90,34 +90,6 @@ def background_images(page=1):
 
 
 @login_required
-def review():
-    _, b64data = request.json['file'].split(',')
-    random_name = request.json['name']
-    decoded_data = base64.b64decode(b64data)
-    file = FileStorage(BytesIO(decoded_data), filename=random_name)
-    filename = secure_filename(file.filename)
-    file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-
-    rev = Review(
-        name=filename
-    )
-    db.session.add(rev)
-    db.session.flush()
-
-    history = ImageHistory(
-        review_image=rev.id,
-        json_hist=request.json['file_json']
-    )
-    db.session.add(history)
-    db.session.flush()
-    review_jsoned = {
-        "src": url_for('uploaded_file', filename=filename),
-        "rev": history.review_image
-    }
-    return jsonify({'result': review_jsoned})
-
-
-@login_required
 def continue_edit(history_image_id):
     edit = ImageHistory.query.filter_by(review_image=history_image_id).first_or_404()
     return render_template('editor_history.html', id_review=edit.review_image)
@@ -146,31 +118,48 @@ def history_image(history_image_id):
 def make_review():
     form = request.form
     _, b64data = form['file'].split(',')
+    print(form)
     name = str(uuid.uuid4()) + '.png'
     decoded_data = base64.b64decode(b64data)
     file = FileStorage(BytesIO(decoded_data), filename=name)
     filename = secure_filename(file.filename)
     file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+    preview_name = 'preview_' + filename
+    preview_file = image_preview(file)
+    preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
 
     banner = Banner(
         name=filename,
         title=form.get('title', 'untitled'),
+        preview=preview_name,
         user=current_user
     )
     db.session.add(banner)
-    db.session.flush()
+    db.session.commit()
 
     designer = User.query.get(form['designer'])
     review = BannerReview(
-        banner_id = banner.id,
+        banner_id=banner.id,
         user=current_user,
         designer=designer,
         comment=form.get('comment', '')
     )
+    db.session.expire_all()
     db.session.add(review)
-    db.session.flush()
+    db.session.commit()
 
-    return '', 201
+    history = ImageHistory(
+        review_image=banner.id,
+        json_hist=form['file_json']
+    )
+    db.session.add(history)
+    # db.session.flush()
+    review_jsoned = {
+        "src": url_for('uploaded_file', filename=filename),
+        "rev": history.review_image
+    }
+    return jsonify({'result': review_jsoned}), 201
+    # return '', 201
 
 @login_required
 def review_tool():
@@ -198,3 +187,8 @@ def review_action():
         return '', 200
     return '', 404
 
+
+
+@login_required
+def cuts_background():
+    return render_template('editor/cutbackground.html')

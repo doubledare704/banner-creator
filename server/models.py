@@ -25,6 +25,7 @@ class Banner(BaseImage):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     review = db.relationship('BannerReview', backref='banner',
                              uselist=False)
+    history = db.relationship('ImageHistory', backref="parent")
 
 
 class Image(BaseImage):
@@ -61,20 +62,10 @@ class BannerReview(db.Model):
     designer = db.relationship("User", foreign_keys=[designer_id])
 
 
-class Review(db.Model):
-    __tablename__ = 'review'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), unique=True)
-    status_review = db.Column(db.Boolean, default=False, nullable=False)
-
-    def __str__(self):
-        return 'Review image {0}'.format(self.name)
-
-
 class ImageHistory(db.Model):
     __tablename__ = 'image_history'
     id = db.Column(db.Integer, primary_key=True)
-    review_image = db.Column(db.Integer, db.ForeignKey('review.id'), nullable=False)
+    review_image = db.Column(db.Integer, db.ForeignKey('banner.id'), nullable=False)
     json_hist = db.Column(JSON, nullable=False)
     created = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
 

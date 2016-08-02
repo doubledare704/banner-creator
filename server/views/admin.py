@@ -1,9 +1,9 @@
+from flask import render_template, json, request, current_app
+from server.models import Image, User
 
 from flask_paginate import Pagination
 
-from server.models import Image, User
-from flask import render_template, json, request, current_app
-
+import json
 from server.db import db
 import os
 
@@ -95,15 +95,3 @@ def activate_image(id):
     image = Image.query.get_or_404(id)
     image.active = True
     return '', 200
-
-
-def review_images():
-    banners = Review.query.order_by(Review.id.asc())
-
-    images = []
-    for banner in banners:
-        images.append({
-            'source': '/uploads/' + banner.name
-        })
-    images = json.dumps(images)
-    return render_template('admin/resultimages.html', images=images)

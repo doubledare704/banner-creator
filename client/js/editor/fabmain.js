@@ -12,60 +12,6 @@ const addbutton = document.getElementById('addButt');
 const addtexts = document.querySelectorAll('#rightcol ul li');
 const filetoeditor = document.getElementById('inputted');
 const deleteFabricItem = document.getElementById('del_item');
-const resultPreview = document.getElementById('result_review');
-const modals = document.getElementById('myModal');
-const continueButton = document.getElementById('continue');
-
-const span = document.getElementsByClassName("close")[0];
-
-//show result
-resultPreview.addEventListener('click', () => {
-    modals.style.display = "block";
-});
-
-//hide result
-span.onclick = ()=> {
-    modals.style.display = "none";
-};
-window.onclick = (e) => {
-    if (e.target == modals) {
-        modals.style.display = "none";
-    }
-};
-
-// send image to review model
-function sendImageForReview() {
-    document.getElementById('continue').href = '';
-    let imageReview = editor.canv.toJSON();
-    let o = editor.canv.getActiveObject(),
-        g = editor.canv.getActiveGroup();
-        disableControls(o,g);
-    let image_base64 = editor.canv.toDataURL("image/png", 1.0);
-    let random_name = Math.random().toString(36).substr(2, 10) + '.png';
-    const data = {
-        file: image_base64,
-        name: random_name,
-        file_json: imageReview
-    };
-    fetch('/api/review/', {
-        method: 'post',
-        credentials: 'same-origin',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-        .then((res) => res.json())
-        .then(function ({result}) {
-            document.getElementById('resulting').src = result.src;
-            continueButton.href += result.rev;
-            continueButton.style.display = "block";
-            resultPreview.style.display = "block";
-        })
-        .catch(function (error) {
-            console.log('Request failed', error);
-        });
-}
 
 // deletes custom object from canvas
 deleteFabricItem.addEventListener('click', function () {
@@ -73,7 +19,6 @@ deleteFabricItem.addEventListener('click', function () {
         activeGroup = editor.canv.getActiveGroup();
     editor.deleteObject(activeObject, activeGroup);
 });
-
 
 addbutton.addEventListener('click', function () {
     editor.addButton();
@@ -124,13 +69,7 @@ downloadLink.addEventListener('click', function () {
     editor.downloadImage(link, activeObject, activeGroup);
 }, false);
 
-
-function sendingReview(node) {
-    node.addEventListener('click', sendImageForReview);
-}
-
 module.exports = {
     'editor': editor,
-    'sendingReview': sendingReview,
     'fabric': fabric
 };

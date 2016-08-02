@@ -58,16 +58,18 @@
                 </a>
             </section>
 
-            <section id="backgroundSection" data-bazooka="backgroundsList" data-bg-view-url="{{ url_for('background_images') }}"
-            data-bg-img-url="{{ url_for('uploaded_file', filename='') }}">
+            <section id="backgroundSection" data-bazooka="backgroundsList"
+                     data-bg-view-url="{{ url_for('background_images') }}"
+                     data-bg-img-url="{{ url_for('uploaded_file', filename='') }}">
             </section>
-
-            <section>
-                <a href="#" data-bazooka="openReviewModal">
-                    <i class="material-icons">done_all</i>
-                    <span class="detail">Отправить на ревью</span>
-                </a>
-            </section>
+            {% block reviewmodal %}
+                <section>
+                    <a href="#" data-bazooka="openReviewModal">
+                        <i class="material-icons">done_all</i>
+                        <span class="detail">Отправить на ревью</span>
+                    </a>
+                </section>
+            {% endblock %}
 
             <section class="last-sec">
                 <a href="#" id="input">
@@ -82,9 +84,12 @@
         <section class="container">
             {% block nav_edit %}
                 <nav class="navigation">
-                    <a href="#" id="to_send" data-bazooka="sendingReview"><i class="material-icons">done_all</i> Отправить на ревью</a>
-                    <a href="#"><i
-                            class="material-icons">insert_comment</i> Добавить коментарий для ревьюера</a>
+                    <a href="{{ url_for ('cuts_background') }}"><i class="material-icons">account_balance_wallet</i>Удаление фона
+                    <small>без реестрации и смс</small>
+                    </a>
+                    <a href="{{ url_for ('index') }}"><i class="material-icons">accessible</i>Home</a>
+                    <a href="{{ url_for ('admin') }}"><i class="material-icons">accessibility</i>Admin</a>
+                    <a href="{{ url_for ('dashboard') }}"><i class="material-icons">all_out</i>Dashboard</a>
                     <a href="#" id="result_review"><i class="material-icons">description</i>Просмотреть результат</a>
                     <a href="" id="continue"><i class="material-icons">flip_to_back</i>Продолжить редактировать</a>
                     <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i> Скачать
@@ -119,10 +124,8 @@
         </div>
 
     </div>
-
-{#  Include html for review modal window  #}
-{% include 'editor/review_modal.html' %}
-
+    {#  Include html for review modal window  #}
+    {% include 'editor/review_modal.html' %}
 {% endblock %}
 {% block scripts %}
     <script src="{{ url_for('static', filename='editorbundle.js') }}"></script>

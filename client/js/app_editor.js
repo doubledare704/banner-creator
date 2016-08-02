@@ -1,4 +1,4 @@
-import {sendingReview, fabric} from './editor/fabmain';
+import {fabric} from './editor/fabmain';
 import {reloadHistory, saveToHistory} from './editor/history';
 import backgroundsList from './editor/background';
 import openReviewModal from './editor/review';
@@ -15,7 +15,6 @@ Baz.register({
     'openReviewModal': openReviewModal,
     'sendToReview': sendToReview,
     'reloadHistory': reloadHistory,
-    'sendingReview': sendingReview,
     'saveToHistory': saveToHistory
 });
 

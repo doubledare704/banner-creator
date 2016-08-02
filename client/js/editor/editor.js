@@ -117,6 +117,12 @@ function createLine(points) {
 }
 // end
 
+fabric.Object.prototype.set({
+    transparentCorners: false,
+    borderColor: '#000',
+    cornerColor: '#000'
+});
+
 // make editor
 export default class Editor {
     constructor(canvas, width, height) {
@@ -194,7 +200,7 @@ export default class Editor {
         });
     }
 
-    addButton(w=220, h=80, fontFamily='Roboto', fontSize=20, fontText='Сюда пиши') {
+    addButton(w = 220, h = 80, fontFamily = 'Roboto', fontSize = 20, fontText = 'Сюда пиши') {
         let border = new fabric.Rect({
             width: w,
             height: h,
@@ -204,17 +210,17 @@ export default class Editor {
             rx: 5,
             ry: 5
         });
-        let texting = new fabric.IText(fontText,{
+        let texting = new fabric.IText(fontText, {
             fontFamily: fontFamily,
             fontSize: fontSize,
-            top:h/4,
-            left:w/4.4
+            top: h / 4,
+            left: w / 4.4
         });
-        texting.setTop(h/2 - texting.getHeight()/2);
-        texting.setLeft(w/2 - texting.getWidth()/2);
-        let group = new fabric.Group([border, texting],{
-            left:200,
-            top:100
+        texting.setTop(h / 2 - texting.getHeight() / 2);
+        texting.setLeft(w / 2 - texting.getWidth() / 2);
+        let group = new fabric.Group([border, texting], {
+            left: 200,
+            top: 100
         });
         this.canv.add(group);
     }
@@ -472,6 +478,7 @@ export default class Editor {
         }
     }
 }
+
 
 export function disableControls(obj, groups) {
     if (obj) {
