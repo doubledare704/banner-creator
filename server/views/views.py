@@ -171,15 +171,20 @@ def make_review():
 
     return '', 201
 
-
+@login_required
 def review_tool():
-    images = Image.query.filter_by(active=True)
-    image_json = json.dumps(
-        [{'id': image.id,
-          'url': '/uploads/' + image.name,
-          'title': image.title,
-          'preview': '/uploads/' + image.preview
-          }
-         for image in images
-         ])
-    return render_template('review.html', image_json=image_json)
+    return render_template('review.html')
+
+@login_required
+def review_image(img_id):
+    if request.method == 'POST':
+        print(request.form['comment'], request.form['status'] )
+        # banner_review = BannerReview.query.get_or_404(img_id)
+        # comment = request.form['comment']
+        # status = request.form['status']
+        # banner_review.designer_comment = comment
+        # banner_review.status = status
+        # return redirect(url_for('dashboard'))
+    banner = Banner.query.get_or_404(img_id)
+    image_url = '/uploads/'+ banner.name
+    return render_template('review.html', image_url=image_url)

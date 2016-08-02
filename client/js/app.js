@@ -13,8 +13,6 @@ const Baz = require('bazooka');
 Baz.register({
     'backgroundsAdmin': backgroundsAdmin,
     'renderImages': renderImages,
-    'showBanner': showBanner,
-    'loginClick': loginClick,
     'reviewTool': reviewTool,
     'showBanner': showBanner,
     'loginClick': loginClick,
