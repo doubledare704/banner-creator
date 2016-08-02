@@ -21,7 +21,8 @@ export default class PopUp extends React.Component {
             return data.action === 'change'
         }).subscribe((data) => {
             this.setState({
-                title: data.data.data,
+                title: data.data.title,
+                body: data.data.data,
                 confirm: data.data.confirm,
                 flash: data.data.flash,
                 confirmClick: data.data.confirmAction,
