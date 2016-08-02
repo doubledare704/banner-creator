@@ -1,0 +1,36 @@
+{% macro render_banner_container(message, filename) %}
+<div class="dashboard-banner-container">
+  <span class="dashboard-show-banner" data-bazooka="showBanner">{{ message }}</span>
+  <span class="glyphicon glyphicon-arrow-down"></span>
+  <img class="dashboard-review-banner img-responsive" imgSrc="{{ url_for('uploaded_file', filename=filename) }}"/>
+</div>
+{% endmacro %}
+
+{% macro render_pagination(pagination, endpoint) %}
+<nav class="pagination-container">
+  <ul class="pagination">
+
+    {% if pagination.has_prev %}
+      <li><a href="{{ url_for(endpoint, page=1) }}">
+        <span aria-hidden="true">&laquo;</span></a>
+      </li>
+      <li><a href="{{ url_for(endpoint, page=pagination.prev_num) }}">
+        {{ pagination.prev_num }} <span class="sr-only"></span></a>
+      </li>
+    {% endif %}
+
+    <li class="active"><a href="{{ url_for(endpoint, page=pagination.page) }}">
+      {{ pagination.page }} <span class="sr-only"></span></a>
+    </li>
+
+    {% if pagination.has_next %}
+      <li><a href="{{ url_for(endpoint, page=pagination.next_num) }}">
+        {{ pagination.next_num }} <span class="sr-only"></span></a>
+      </li>
+      <li><a href="{{ url_for(endpoint, page=pagination.pages) }}" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span></a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endmacro %}

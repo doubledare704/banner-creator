@@ -8,7 +8,7 @@ dashboard-menu-active-color = #00274E
   padding: 20px
   background-color: dashboard-common-color
   border-radius: 10px
-  margin-bottom 15px
+  margin-bottom 10px
 
 .dashboard-menu
   list-style: none
@@ -40,6 +40,22 @@ dashboard-menu-active-color = #00274E
   background-color: dashboard-error-color
 
 .dashboard-banners-container
-  padding: 10px
+  padding: 15px
   margin-bottom: 10px
-  border: 2px solid black
+  border-radius: 5px
+  background-color: dashboard-common-color
+
+.dashboard-banner-title
+.dashboard-review-title
+  font-weight: bold
+
+.pagination-container
+  text-align: center
+  .pagination
+    li
+      a
+        color: dashboard-menu-color
+      &.active
+        a
+          background-color: dashboard-menu-color
+          color: white
