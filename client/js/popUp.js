@@ -10,8 +10,6 @@ export default class PopUp extends React.Component {
         this.state = {
             visible: false
         };
-
-        this.showPopUp = this.showPopUp.bind(this);
     }
 
     static change(data) {
@@ -46,45 +44,56 @@ export default class PopUp extends React.Component {
         popupEvent.onNext({action: 'close'});
     }
 
-    showPopUp() {
+    render() {
         if (this.state.visible === true) {
             return (
-                <div className="modal-content">
-                    <span className="close" onClick={PopUp.onClose}>×</span>
-                    <h1>{this.state.title}</h1>
-                    {this.addConfirm(this.state.confirm, this.state.confirmClick)}
+                <div className="modal-dialog modal-lg" id="popup">
+                    <div className="modal-content">
+
+                        <div className="modal-header">
+                            <button type="button" className="close" onClick={PopUp.onClose}>&times;</button>
+                            {(() => {
+                                if (this.state.title) {
+                                    return (<h4 className="modal-title">{this.state.title}</h4>)
+                                }
+                            })()
+                            }
+                        </div>
+
+                        {(() => {
+                            if (this.state.body) {
+                                return (
+                                    <div className="modal-body">
+                                        <p>{this.state.body}</p>
+                                    </div>
+                                )
+                            }
+                        })()}
+
+                        {(() => {
+                            if (this.state.confirm) {
+                                let confirmAction = () => {
+                                    this.state.confirmClick();
+                                    PopUp.onClose();
+                                };
+
+                                return (
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-success" onClick={confirmAction}>Да
+                                        </button>
+                                        <button type="button" className="btn btn-default" onClick={PopUp.onClose}>
+                                            Отменить
+                                        </button>
+                                    </div>
+                                )
+                            }
+                        })()}
+
+                    </div>
                 </div>
             );
-        } else {
-            return null;
         }
-    }
-
-    addConfirm(confirm, confirmClick) {
-        if (!confirm || data.data.flash) {
-            return null;
-        }
-        if (confirm) {
-            let confirmAction = () => {
-                confirmClick();
-                PopUp.onClose();
-            };
-
-            return (
-                <div>
-                    <button className="Yes" onClick={confirmAction}>
-                        <i>Да</i>
-                    </button>
-                    <button className="Close" onClick={PopUp.onClose}>
-                        <i>Отменить</i>
-                    </button>
-                </div>
-            )
-        }
-    }
-
-    render() {
-        return this.showPopUp()
+        return null;
     }
 }
 
