@@ -19,5 +19,6 @@ def dashboard():
 
 @login_required
 def user_banners():
-    banners = Banner.query.filter_by(user=current_user)
+    page = int(request.args.get('page', 1))  # get page number from url query string
+    banners = Banner.query.filter_by(user=current_user).paginate(page=page, per_page=10)
     return render_template('user/user_banners.html', banners=banners)
