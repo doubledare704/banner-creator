@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Log in{% endblock %}
+
+{% block page_content %}
+<div class="login_block">
+    <h1 class="text-center">Sorry, You are banned by administrator :(</h1>
+</div>
+
+{% endblock page_content %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='adminbundle.js') }}"></script>
+{% endblock %}

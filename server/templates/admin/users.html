@@ -11,14 +11,15 @@
                 <i class="glyphicon glyphicon-search"></i>
             </span>
             {% if search_query %}
-                <input type="text" class="form-control" placeholder="Search" name="search" value="{{search_query}}">
+            <input type="text" class="form-control" placeholder="Search" name="search" value="{{search_query}}">
             {% else %}
-                <input type="text" class="form-control" placeholder="Search" name="search">
+            <input type="text" class="form-control" placeholder="Search" name="search">
             {% endif %}
         </div>
     </form>
     {{ pagination.info }}
-    <div id="users" data-bazooka="usersList" data-users-users-list="{{ users_list }}" data-users-users-roles="{{ roles_list }}"></div>
+    <div id="users" data-bazooka="usersList" data-users-users-list="{{ users_list }}"
+         data-users-users-roles="{{ roles_list }}" data-users-csrf-token="{{ csrf_token() }}" data-users-current-user-id="{{ current_user.id }}"></div>
 </div>
 
 <div class="text-center">

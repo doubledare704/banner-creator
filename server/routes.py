@@ -36,6 +36,6 @@ def setup_routes(app):
     app.add_url_rule('/logout', methods=['POST'], view_func=log_out)
 
     app.add_url_rule('/admin/users', view_func=users_page)
-    app.add_url_rule('/admin/users', methods=['POST'], view_func=change_user)
+    app.add_url_rule('/admin/users/<int:user_id>', methods=['PUT'], view_func=change_user)
     app.add_url_rule('/admin/users/<int:user_id>', methods=['DELETE'], view_func=remove_user)
     app.add_url_rule('/review/', methods=['GET', 'POST'], view_func=review_tool)

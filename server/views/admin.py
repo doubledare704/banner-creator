@@ -1,22 +1,22 @@
-
-
 import json
 
 from flask_paginate import Pagination
+from werkzeug.exceptions import Forbidden, BadRequest
 
+from server.forms.user_edit_form import UserEditForm
 from server.models import Image, User
 from flask import render_template, json, request, current_app
+from flask_login import current_user, login_required
 
 from server.db import db
 import os
-
-ALLOWED_FIELDS_TO_CHANGE_IN_USER = ['role', 'last_name', 'first_name']
 
 
 def admin():
     return render_template('admin/admin.html')
 
 
+@login_required
 def users_page():
     query_db = User.query
 
@@ -55,21 +55,29 @@ def users_page():
                            )
 
 
-def change_user():
-    user_id = request.json.get('id', None)
-    # user = User.query.get_or_404(user_id)
-    user_dict = request.json.get('user', None)
-    allowed_dict = {(field, user_dict[field]) for field in user_dict if field in ALLOWED_FIELDS_TO_CHANGE_IN_USER}
-    db.session.query(User).filter(User.id == user_id).update(allowed_dict)
-    db.session.commit()
-    # user.update().values(allowed_dict)
-    # db.session.add(user)
-    # db.session.commit()
-    return 'OK', 200
+@login_required
+def change_user(user_id):
+    form = UserEditForm()
+    if form.validate_on_submit():
+        db.session.query(User).filter(User.id == user_id).update(form.data)
+        user = User.query.get_or_404(user_id)
+        return json.jsonify({'id': user.id,
+                             'first_name': user.first_name,
+                             'last_name': user.last_name,
+                             'email': user.email,
+                             'gender': user.gender.name,
+                             'role': user.role.name,
+                             'registration_date': user.created_at.isoformat(),
+                             'auth_by': user.social_type.name
+                             })
+    raise BadRequest()
 
 
+@login_required
 def remove_user(user_id):
     user = User.query.get_or_404(user_id)
+    if user == current_user:
+        raise Forbidden()
     user.active = False
     db.session.add(user)
     db.session.commit()
@@ -106,6 +114,7 @@ def image_delete_from_DB(id):
     db.session.delete(image)
     db.session.commit()
     return '', 204
+
 
 def activate_image(id):
     image = Image.query.get_or_404(id)

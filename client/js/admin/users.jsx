@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
 import moment from 'moment';
 import classNames from 'classnames';
+import {popup} from '../popUp.js';
 
 const BAZOOKA_PREFIX = 'users';
 
@@ -14,90 +15,141 @@ class User extends React.Component {
             removed: false,
             user: this.props.user
         };
-
-        this.remove_user = this.remove_user.bind(this);
-        this.edit_user = this.edit_user.bind(this);
+        this.showEditPopup = this.showEditPopup.bind(this);
+        this.rem = this.rem.bind(this);
+        this.saveUser = this.saveUser.bind(this);
     }
 
-    remove_user() {
-        fetch(`/admin/users/${this.state.user.id}`, {
-            method: 'DELETE',
-            credentials: 'same-origin'
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw Error(response.statusText);
-                }
-                this.setState({
-                    removed: true
-                })
-            })
-            .catch((response) => {
-                console.error(response.message)
-            });
-    }
-    //
-    // handle_change_role() {
-    //     let user = this.state.user
-    //     user.role = e.target.value
-    // }
-
-    edit_user(e) {
+    rem() {
         let {user} = this.state;
-        user.role = e.target.value;
-        this.setState({user: user});
+        popup.change({
+            title: `Вы действительно хотите удалить пользователя ${user.first_name} ${user.last_name}?`,
+            confirm: true,
+            flash: false,
+            confirmAction: ()=> {
+                fetch(`/admin/users/${this.state.user.id}`, {
+                    method: 'DELETE',
+                    credentials: 'same-origin',
+                    data: `csrf_token=${encodeURIComponent(this.props.csrfToken)}`
+                })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw Error(response.statusText);
+                        }
+                        this.setState({
+                            removed: true
+                        })
+                    })
+                    .catch((response) => {
+                        console.error(response.message)
+                        popup.change({
+                            title: `Ошибка сервера`,
+                            confirm: false,
+                            flash: true,
+                        });
+                    });
+            }
+        });
+    }
 
-        fetch(`/admin/users`, {
-            method: 'POST',
+    saveUser(e) {
+        e.preventDefault();
+        fetch(`/admin/users/${this.state.user.id}`, {
+            method: 'PUT',
             credentials: 'same-origin',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                id: user.id,
-                user: user
-            })
+            body: new FormData(event.target)
         })
             .then((response) => {
                 if (!response.ok) {
                     throw Error(response.statusText);
                 }
+                return response.json();
+            })
+            .then((user)=> {
                 this.setState({
-                    removed: true
-                })
+                    user: user
+                });
+                popup.onClose()
             })
             .catch((response) => {
                 console.error(response.message)
+                popup.change({
+                    title: `Ошибка сервера`,
+                    confirm: false,
+                    flash: true,
+                });
             });
+    }
+
+    showEditPopup() {
+        let {user} = this.state;
+
+        popup.change({
+            data: <form className="form-horizontal" onSubmit={this.saveUser}>
+                <div className='form-group'>
+                    <input type="hidden" name="csrf_token" defaultValue={this.props.csrfToken}/>
+                </div>
+                <div className='form-group'>
+                    <label className="col-sm-2">First Name</label>
+                    <div className="col-sm-10">
+                        <input type="text" name="first_name" defaultValue={user.first_name} className="form-control"/>
+                    </div>
+                </div>
+                <div className='form-group'>
+                    <label className="col-sm-2">Last Name</label>
+                    <div className="col-sm-10">
+                        <input type="text" name="last_name" defaultValue={user.last_name} className="form-control"/>
+                    </div>
+                </div>
+                <div className='form-group'>
+                    <label className="col-sm-2">User role</label>
+                    <div className="col-sm-6">
+                        <select name="role" className="form-control"
+                                defaultValue={user.role}>
+                            {
+                                this.props.rolesList.map((role) => (
+                                        <option value={role}>{role}</option>
+                                    )
+                                )
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div className='form-group'>
+                    <button type="submit" className='btn btn-success'>Save</button>
+                    <a className='btn btn-default' onClick={popup.onClose}>Close</a>
+                </div>
+            </form>,
+            confirm: false,
+            title: "Изменение данных пользователя",
+            flash: false
+        });
     }
 
     render() {
         let {user, removed}= this.state;
         return (
-            <tr className={classNames({'danger': removed})}>
+            <tr>
                 <td>{user.first_name} {user.last_name}</td>
                 <td>{user.email}</td>
-                <td>
-                    <select className="form-control" onChange={this.edit_user} value={user.role}>
-                        {
-                            this.props.rolesList.map((role) => (
-                                    <option value={role}>{role}</option>
-                                )
-                            )
-                        }
-                    </select>
-                </td>
+                <td>{user.role}</td>
                 <td>{moment(user.registration_date).format("DD-MM-YYYY HH:mm")}</td>
                 <td>{user.auth_by}</td>
                 <td>
-                    <a className={classNames('btn btn-default', {'disabled': removed})}><i
-                        className="glyphicon glyphicon-pencil"/> Edit</a>
-                    <a className={classNames('btn btn-default', {'disabled': removed})}
-                       onClick={this.remove_user}><i className="glyphicon glyphicon-trash"/> Delete
+                    <a className={classNames('btn btn-default', {'hidden': removed})}
+                       onClick={this.showEditPopup}><i className="glyphicon glyphicon-pencil"/> Edit</a>
+                    <a className={classNames('btn btn-danger', {
+                        'disabled': user.id === this.props.currentUserId,
+                        'hidden': removed
+                    })} onClick={this.rem}><i
+                        className="glyphicon glyphicon-trash"/> Delete
+                    </a>
+                    <a className={classNames('btn btn-default disabled', {'hidden': !removed})}><i
+                        className="glyphicon glyphicon-remove"/> Deleted
                     </a>
                 </td>
             </tr>
-        );
+        )
     }
 }
 
@@ -121,6 +173,8 @@ const UsersList = (props) => {
                         key={`user_${user.id}`}
                         user={user}
                         rolesList={props.rolesList}
+                        csrfToken={props.csrfToken}
+                        currentUserId={props.currentUserId}
                     />;
                 })
             }
@@ -130,12 +184,14 @@ const UsersList = (props) => {
 };
 
 export default function (node) {
-    let {usersList, usersRoles} = h.getAttrs(BAZOOKA_PREFIX, node);
+    let {usersList, usersRoles, csrfToken, currentUserId} = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
         <UsersList
             usersList={usersList}
             rolesList={usersRoles}
+            csrfToken={csrfToken}
+            currentUserId={currentUserId}
         />,
         node
     );
