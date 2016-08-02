@@ -4,7 +4,7 @@
 
 
 {% block dashboard_content %}
-    {% for review in reviews %}
+    {% for review in reviews.items %}
     <div class="row">
         <div class="review-section
         {% if review.status == review.Status.accepted %}
@@ -38,4 +38,6 @@
     {% else %}
     <p class="dashboard-empty-review">Здесь пока ничего нет :(</p>
     {% endfor %}
+
+    {{ macros.render_pagination(reviews, request.url_rule.endpoint) }}
 {% endblock dashboard_content%}
