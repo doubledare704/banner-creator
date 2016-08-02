@@ -3,7 +3,6 @@ let fabric = require('fabric').fabric;
 
 import Editor from './editor.js';
 
-
 let editor = new Editor('main', 960, 420);
 
 const fileInput = document.getElementById('input');
@@ -12,60 +11,6 @@ const addbutton = document.getElementById('addButt');
 const addtexts = document.querySelectorAll('#rightcol ul li');
 const filetoeditor = document.getElementById('inputted');
 const deleteFabricItem = document.getElementById('del_item');
-const sendImageReview = document.getElementById('to_send');
-const result_preview = document.getElementById('result_review');
-const modals = document.getElementById('myModal');
-const continueButton = document.getElementById('continue');
-
-const span = document.getElementsByClassName("close")[0];
-
-
-//show result
-result_preview.addEventListener('click', () => {
-    modals.style.display = "block";
-});
-
-//hide result
-span.onclick = ()=> {
-    modals.style.display = "none";
-};
-window.onclick = (e) => {
-    if (e.target == modals) {
-        modals.style.display = "none";
-    }
-};
-
-
-// send image to review model
-function sendImageForReview() {
-    document.getElementById('continue').href = '';
-    let image_review = editor.canv.toJSON();
-    let image_base64 = editor.canv.toDataURL("image/png", 1.0);
-    let random_name = Math.random().toString(36).substr(2, 10) + '.png';
-    const data = {
-        file: image_base64,
-        name: random_name,
-        file_json: image_review
-    };
-    fetch('/api/review/', {
-        method: 'post',
-        credentials: 'same-origin',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-        .then((res) => res.json(), console.log("It arrived to flask"))
-        .then(function ({result}) {
-            document.getElementById('resulting').src = result.src;
-            continueButton.href += result.rev;
-            continueButton.style.display = "block";
-            result_preview.style.display = "block";
-        })
-        .catch(function (error) {
-            console.log('Request failed', error);
-        });
-}
 
 // deletes custom object from canvas
 deleteFabricItem.addEventListener('click', function () {
@@ -74,11 +19,9 @@ deleteFabricItem.addEventListener('click', function () {
     editor.deleteObject(activeObject, activeGroup);
 });
 
-
 addbutton.addEventListener('click', function () {
-    editor.addButton(5);
+    editor.addButton();
 });
-
 
 for (var i = 0; i < addtexts.length; i++) {
     addtexts[i].addEventListener('click', function () {
@@ -120,15 +63,12 @@ filetoeditor.addEventListener('change', (e) => {
 
 downloadLink.addEventListener('click', function () {
     const link = this;
-    editor.downloadImage(link);
+    let activeObject = editor.canv.getActiveObject(),
+        activeGroup = editor.canv.getActiveGroup();
+    editor.downloadImage(link, activeObject, activeGroup);
 }, false);
-
-
-function sendingReview(node) {
-    node.addEventListener('click', sendImageForReview);
-}
 
 module.exports = {
     'editor': editor,
-    'sendingReview': sendingReview
+    'fabric': fabric
 };

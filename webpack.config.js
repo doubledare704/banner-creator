@@ -5,14 +5,27 @@ module.exports = {
         admin: "./client/js/app.js",
         editor: "./client/js/app_editor.js"
     },
+    resolveLoader: {
+        root: '/usr/local/lib/node_modules',
+    },
+    resolve: {
+        root: '/usr/local/lib/node_modules',
+    },
     output: {
         path: __dirname,
         filename: "server/static/[name]bundle.js"
     },
+    // uncomment to start using eslint
     // eslint: {
+    //     quiet: true,
+    //     failOnError: false,
+    //     failOnWarning: false,
+    //     emitError: false,
+    //     emitWarning: false,
     //     configFile: '.eslintrc.json'
     // },
     module: {
+        // uncomment to start using eslint
         // preLoaders: [
         //     {test: /\.jsx?$/, loader: "eslint-loader", exclude: /node_modules/}
         // ],
@@ -43,5 +56,4 @@ module.exports = {
         })
 
     ]
-}
-;
+};

@@ -3,9 +3,10 @@ import backgroundsAdmin from './admin/backgroundsAdmin.jsx';
 import showBanner from './dashboard/dashboard';
 import loginClick from './auth_helper'
 import reviewTool from './images/reviewTool.jsx'
+import reviewAdmin from './admin/reviewsAdmin.jsx';
 import users from './admin/users.jsx';
 
-const styluses = require('./../css/main.styl');
+require('./../css/main.styl');
 const Baz = require('bazooka');
 
 Baz.register({
@@ -14,8 +15,8 @@ Baz.register({
     'showBanner': showBanner,
     'loginClick': loginClick,
     'reviewTool': reviewTool,
-    'usersList': users
+    'usersList': users,
+    'reviewAdmin': reviewAdmin
 });
 
-
-const unwatch = Baz.watch();
+Baz.watch();

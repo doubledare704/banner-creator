@@ -1,12 +1,9 @@
-
-
-import json
+from flask import render_template, json, request, current_app
+from server.models import Image, User
 
 from flask_paginate import Pagination
 
-from server.models import Image, User
-from flask import render_template, json, request, current_app
-
+import json
 from server.db import db
 import os
 
@@ -67,12 +64,12 @@ def backgrounds():
 
     backgrounds = [
         {
-           "id": background.id,
-           'title': background.title,
-           'preview': '/uploads/' + background.preview,
-           "active": background.active
+            "id": background.id,
+            'title': background.title,
+            'preview': '/uploads/' + background.preview,
+            "active": background.active
         } for background in query.all()
-    ]
+        ]
 
     backgrounds = json.dumps(backgrounds)
 
@@ -92,6 +89,7 @@ def image_delete_from_DB(id):
     db.session.delete(image)
     db.session.commit()
     return '', 204
+
 
 def activate_image(id):
     image = Image.query.get_or_404(id)
