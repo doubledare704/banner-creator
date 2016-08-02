@@ -134,7 +134,7 @@ def make_review():
         user=current_user
     )
     db.session.add(banner)
-    db.session.flush()
+    db.session.commit()
 
     designer = User.query.get(form['designer'])
     review = BannerReview(
@@ -143,14 +143,15 @@ def make_review():
         designer=designer,
         comment=form.get('comment', '')
     )
-    # db.session.add(review)
-    # db.session.flush()
-    form['file_json']
+    db.session.expire_all()
+    db.session.add(review)
+    db.session.commit()
+
     history = ImageHistory(
         review_image=banner.id,
         json_hist=form['file_json']
     )
-    # db.session.add(history)
+    db.session.add(history)
     # db.session.flush()
     review_jsoned = {
         "src": url_for('uploaded_file', filename=filename),

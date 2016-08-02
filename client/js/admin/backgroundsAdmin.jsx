@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
-import {popup} from './popUp.js';
+import {popup} from '../popUp.js';
 
 
 const BAZOOKA_PREFIX = 'backgrounds-admin';
