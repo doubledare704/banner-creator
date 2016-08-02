@@ -1,12 +1,15 @@
-from flask import render_template, json, request, current_app
-from server.models import Image, User
+import json
 
 from flask_paginate import Pagination
 
-import json
-from server.db import db
+from server.models import Image, User
+from flask import render_template, json, request, current_app, url_for, redirect
+from werkzeug.exceptions import NotFound
 import os
 
+from server.db import db
+
+per_page = 3
 
 def admin():
     return render_template('admin/admin.html')
@@ -60,20 +63,30 @@ def remove_user(user_id):
 
 
 def backgrounds():
-    query = Image.query.order_by(Image.name.asc())
+    tab = request.args.get('tab')
+    backgrounds = Image.query.filter(Image.active == (tab == 'active')).order_by(Image.title.asc())
+
+    try:
+        backgrounds_paginator = backgrounds.paginate(per_page=per_page, error_out=True)
+    except NotFound:
+            last_page = round(backgrounds.count()/per_page)
+            return redirect(url_for('admin_backgrounds_'+tab, tab=tab, page=last_page))
 
     backgrounds = [
         {
-            "id": background.id,
-            'title': background.title,
-            'preview': '/uploads/' + background.preview,
-            "active": background.active
-        } for background in query.all()
-        ]
+           "id": background.id,
+           'title': background.title,
+           'preview': '/uploads/' + background.preview,
+           "active": background.active
+        } for background in backgrounds_paginator.items
+    ]
+
+    pagination = Pagination(per_page=per_page, page=backgrounds_paginator.page, total=backgrounds_paginator.total,
+                            css_framework='bootstrap3')
 
     backgrounds = json.dumps(backgrounds)
 
-    return render_template('admin/backgrounds.html', backgrounds=backgrounds)
+    return render_template('admin/backgrounds.html', backgrounds=backgrounds, pagination=pagination, tab=tab)
 
 
 def inactivate_image(id):
