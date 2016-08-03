@@ -1,28 +1,38 @@
 {% extends "user/base_dashboard.html" %}
 
+{% import 'user/macros.html' as macros %}
+
+
 {% block dashboard_content %}
-    {% for review in reviews %}
-    <div class="row">
-        <div class="review-section
-        {% if review.status == review.Status.accepted %}
-        review-section-success
-        {% elif review.status == review.Status.not_accepted %}
-        review-section-rejected
-        {% endif %}">
-            <p><b>Отправлено на ревью пользователю <span class="dashboard-reviwer-name">{{ review.designer.last_name }} {{ review.designer.first_name }}</span></b>
-                <span class="text-left">
-                    {% if review.created_at %}{{ review.created_at.strftime('%H:%M %Y-%m-%d') }}{% endif %}
-                </span>
-            </p>
-            <p>{% if review.reviewed %}Просмотрено{% else %}Не просмотрено{% endif %}</p>
-            <p>Название баннера: <span class="dashboard-banner-title">{{ review.banner.title }}</span></p>
-            <div class="dashboard-banner-container">
-                <span class="dashboard-show-banner" data-bazooka="showBanner">Показать баннер</span>
-                <span class="glyphicon glyphicon-arrow-down"></span>
-                <a href="{{ url_for('review_image', img_id=review.banner.id) }}">Review</a>
-                <img class="dashboard-review-banner img-responsive" imgSrc="{{ url_for('uploaded_file', filename=review.banner.name) }}"/>
-            </div>
+  {% for review in reviews.items %}
+    {% if not review.reviewed %}
+      <div class="row">
+        <div class="review-section">
+          <p class="dashboard-review-title">
+            <span class="dashboard-reviwer-name">{{ review.designer.last_name }} {{ review.designer.first_name }}</span>
+            отправил на ревью баннер
+            <span class="dashboard-review-date">
+                {% if review.created_at %}{{ review.created_at.strftime('%H:%M %Y-%m-%d') }}{% endif %}
+            </span>
+          </p>
+
+          {% if review.comment %}
+            <p class="dashboard-comment-text"><b>Комментарий: </b> <br>{{ review.comment }}</p>
+          {% endif %}
+
+          {{ macros.render_banner_container('Показать баннер', review.banner.name) }}
+
+          <span class="dashboard-to-review-btn">
+           <a class="btn btn-default" href="{{ url_for('review_image', img_id=review.banner.id) }}">Открыть баннер для ревью
+            <span class="glyphicon glyphicon-edit"></span>
+           </a>
+          </span>
         </div>
-    </div>
-    {% endfor %}
+      </div>
+    {% endif %}
+  {% else %}
+    <p class="dashboard-empty-review">Здесь пока ничего нет :(</p>
+  {% endfor %}
+
+  {{ macros.render_pagination(reviews, request.url_rule.endpoint) }}
 {% endblock dashboard_content%}

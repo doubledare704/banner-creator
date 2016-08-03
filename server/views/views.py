@@ -173,21 +173,27 @@ def review_image(img_id):
 
 @login_required
 def review_action():
-    if request.method == 'POST' :
-        img_id = request.json['id']
-        banner_review = BannerReview.query.get_or_404(img_id)
-        comment, status = request.json['comment'], request.json['status']
-        banner_review.designer_comment = comment
-        banner_review.reviewed = True
-        banner_review.changed_at = datetime.datetime.utcnow()
-        if status == 'accepted':
-            banner_review.status = banner_review.Status.accepted
-        if status == 'not_accepted':
-            banner_review.status = banner_review.Status.not_accepted
-        return '', 200
-    return '', 404
+    form = request.form
+    _, b64data = form['file'].split(',')
+    print(form)
+    name = str(uuid.uuid4()) + '.png'
+    decoded_data = base64.b64decode(b64data)
+    file = FileStorage(BytesIO(decoded_data), filename=name)
+    filename = secure_filename(file.filename)
+    file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+    preview_name = 'preview_' + filename
+    preview_file = image_preview(file)
+    preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
 
+    banner_review = BannerReview.query.get_or_404(form['id'])
+    banner_review.designer_comment = form.get('comment', '')
+    banner_review.reviewed = True
+    banner_review.changed_at = datetime.datetime.utcnow()
+    banner_review.status =form.get('status', '')
+    banner_review.designer_imagename = filename
+    banner_review.designer_previewname = preview_name
 
+    return '', 200
 
 @login_required
 def cuts_background():

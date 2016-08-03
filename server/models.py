@@ -57,7 +57,8 @@ class BannerReview(db.Model):
     changed_at = db.Column(db.DateTime, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     designer_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    designer_reviewed = db.Column(db.String(64), unique=True)
+    designer_imagename = db.Column(db.String(64), unique=True)
+    designer_previewname = db.Column(db.String(64), unique=True)
 
     user = db.relationship("User", foreign_keys=[user_id])
     designer = db.relationship("User", foreign_keys=[designer_id])

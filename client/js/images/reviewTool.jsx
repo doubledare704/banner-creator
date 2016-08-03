@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
 import Editor from '../editor/editor.js';
+import {disableControls} from '../editor/editor.js';
 import {popup} from '../popUp.js';
 
 const BAZOOKA_PREFIX = 'body';
@@ -21,6 +22,7 @@ class EditorWindow extends React.Component {
         this.fileInput = this.fileInput.bind(this);
         this.setComment = this.setComment.bind(this);
         this.changeStatus = this.changeStatus.bind(this);
+        this.sendToReview = this.sendToReview.bind(this);
     }
 
     componentDidMount() {
@@ -62,6 +64,44 @@ class EditorWindow extends React.Component {
 
     changeStatus(event){
         this.setState({status: event.target.value});
+    }
+
+    sendToReview(event){
+        const img_id = this.props.imageId;
+        const status = this.state.status;
+        const comment = this.refs.comment.value;
+        let activeObject = this.editor.canv.getActiveObject(),
+             activeGroup = this.editor.canv.getActiveGroup();
+        disableControls(activeObject,activeGroup );
+        const formData = new FormData();
+        let imageReview = this.editor.canv.toJSON();
+        formData.append('id', img_id);
+        formData.append('status', status);
+        formData.append('comment', comment);
+        // append image as base64 string
+        formData.append('file', this.editor.canv.toDataURL("image/png", 1.0));
+        formData.append('file_json', JSON.stringify(imageReview));
+        fetch("/review_action/",
+            {
+                method: 'POST',
+                credentials: 'same-origin',
+                body: formData
+            }
+        ).then(response => {
+            if (response.status !== 200) {
+                popup.change({
+                    data: <p>Што то не так ошибка {response.status} </p>
+                });
+                return response.status;
+            }
+            popup.change({
+                data: "Одправлено, перейти обратно в кабинет ?",
+                confirm: true,
+                flash: false,
+                confirmAction: () => window.location.href="/dashboard/"
+            });
+
+        })
     }
 
     setComment(){
@@ -145,7 +185,7 @@ class EditorWindow extends React.Component {
                         </div>
                         <div className="btn btn-success form-group btn-wrapper">
                             <i className="glyphicon glyphicon-envelope"/>
-                            <span onClick={this.setComment}> Одправить</span>
+                            <span onClick={this.sendToReview}> Одправить</span>
                      </div>
                     </form>
 
