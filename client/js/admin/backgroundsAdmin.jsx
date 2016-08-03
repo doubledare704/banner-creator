@@ -110,12 +110,8 @@ class BackgroundsAdmin extends React.Component {
                 ).then((response) => {
                     if (response.status === 200) {
                         popup.change({
-<<<<<<< b0e49b2b5a919b067b3a843bb675de353dcac76e
-                            data: "Фон стал неактивным"
-=======
                             title: "Фон стал неактивным",
                             flash: true
->>>>>>> change endpoint in routes
                         });
                         this.state.backgrounds.splice(index, 1);
                         this.setState({
@@ -129,11 +125,7 @@ class BackgroundsAdmin extends React.Component {
                 const index = this.state.backgrounds.indexOf(tablerow);
 
                 popup.change({
-<<<<<<< b0e49b2b5a919b067b3a843bb675de353dcac76e
-                        data: "Вы действительно хотите удалить картинку?",
-=======
                         title: "Вы действительно хотите удалить картинку?",
->>>>>>> change endpoint in routes
                         confirm: true,
                         confirmAction:
                             () => {
@@ -164,12 +156,8 @@ class BackgroundsAdmin extends React.Component {
             ).then((response) => {
                 if (response.status === 200) {
                     popup.change({
-<<<<<<< b0e49b2b5a919b067b3a843bb675de353dcac76e
-                        data: "Фон стал активным"
-=======
                         title: "Фон стал активным",
                         flash: true
->>>>>>> change endpoint in routes
                     });
                     this.state.backgrounds.splice(index, 1);
                     this.setState({
