@@ -16,12 +16,13 @@ from server.views.views import (
     background_images,
     continue_edit,
     history_image,
+    make_review,
     review_tool,
+    review_image,
+    review_action,
     cuts_background,
     save_cuted
 )
-
-from server.views.views import make_review, review_image,review_tool,review_action
 
 from server.views import dashboard as dashboard_views
 

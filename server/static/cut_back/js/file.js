@@ -376,7 +376,7 @@ function FILE_CLASS() {
         if (object.name != undefined)
             FILE.file_info.general.Name = object.name;
         if (object.size != undefined)
-            FILE.file_info.general.Size = HELPER.number_format(object.size / 1000, 2) + ' KB';
+            FILE.file_info.general.Size = HELPER.number_format(object.size / 1024, 2) + ' KB';
         if (object.type != undefined)
             FILE.file_info.general.Type = object.type;
         if (object.lastModifiedDate != undefined)
