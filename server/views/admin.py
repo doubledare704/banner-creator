@@ -6,10 +6,7 @@ from server.models import Image, User
 from flask import render_template, json, request, current_app, url_for, redirect
 from werkzeug.exceptions import NotFound
 import os
-<<<<<<< b0e49b2b5a919b067b3a843bb675de353dcac76e
 
-=======
->>>>>>> change endpoint in routes
 from server.db import db
 
 per_page = 3
