@@ -27,8 +27,7 @@ def setup_routes(app):
 
     # admin
     app.add_url_rule('/admin/', view_func=admin)
-    app.add_url_rule('/admin/backgrounds/active', view_func=backgrounds, endpoint='admin_backgrounds_active')
-    app.add_url_rule('/admin/backgrounds/inactive', view_func=backgrounds, endpoint='admin_backgrounds_inactive')
+    app.add_url_rule('/admin/backgrounds/', view_func=backgrounds, endpoint='admin_backgrounds')
     app.add_url_rule('/admin/inactivate_image/<int:id>', methods=['POST'], view_func=inactivate_image)
     app.add_url_rule('/admin/delete_image/<int:id>', methods=['POST'], view_func=image_delete_from_DB)
     app.add_url_rule('/admin/activate_image/<int:id>', methods=['POST'], view_func=activate_image)

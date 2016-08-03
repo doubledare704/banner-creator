@@ -6,7 +6,10 @@ from server.models import Image, User
 from flask import render_template, json, request, current_app, url_for, redirect
 from werkzeug.exceptions import NotFound
 import os
+<<<<<<< b0e49b2b5a919b067b3a843bb675de353dcac76e
 
+=======
+>>>>>>> change endpoint in routes
 from server.db import db
 
 per_page = 3
@@ -70,7 +73,7 @@ def backgrounds():
         backgrounds_paginator = backgrounds.paginate(per_page=per_page, error_out=True)
     except NotFound:
             last_page = round(backgrounds.count()/per_page)
-            return redirect(url_for('admin_backgrounds_'+tab, tab=tab, page=last_page))
+            return redirect(url_for('admin_backgrounds', tab=tab, page=last_page))
 
     backgrounds = [
         {
