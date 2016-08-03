@@ -25,7 +25,7 @@
                         <ul class="nav navbar-nav">
                             <li{% if request.url_rule.endpoint == "index" %} class="active"{% endif %}><a href="/">Home</a></li>
                             <li {% if request.url_rule.endpoint == "editor" %} class="active"{% endif %}><a href="{{ url_for ('editor') }}">Editor</a></li>
-                            <li {% if request.url_rule.endpoint == "admin" %} class="active"{% endif %}><a href="{{ url_for ('admin') }}">Admin</a></li>
+                            <li {% if request.url_rule.endpoint.startswith("admin") %} class="active"{% endif %}><a href="{{ url_for ('admin') }}">Admin</a></li>
                             <li {% if request.url_rule.endpoint == "review" %} class="active"{% endif %}><a href="{{ url_for ('review_tool') }}">Review</a></li>
                             <li {% if request.url_rule.endpoint.startswith('dashboard') %}class="active"{% endif %}><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
                         </ul>
