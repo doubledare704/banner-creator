@@ -14,7 +14,7 @@ from sqlalchemy import desc, asc
 
 from server.db import db
 from server.utils.image import allowed_file, image_resize, image_preview
-from server.models import Image, ImageHistory, Banner, BannerReview, User
+from server.models import Image, ImageHistory, Banner, BannerReview, User, BackgroundImage
 
 
 @login_required
@@ -36,7 +36,7 @@ def index():
             preview_file = image_preview(file)
             preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
             title = request.form['title']
-            image = Image(
+            image = BackgroundImage(
                 name=filename,
                 title=title,
                 preview=preview_name
@@ -44,7 +44,7 @@ def index():
             db.session.add(image)
             return redirect(request.url)
 
-    images = Image.query.filter_by(active=True)
+    images = BackgroundImage.query.filter_by(active=True)
     image_json = json.dumps(
         [{'id': image.id,
           'url': '/uploads/' + image.name,
@@ -60,7 +60,7 @@ def index():
 @login_required
 def image_delete():
     img_id = request.json['id']
-    image = Image.query.get_or_404(img_id)
+    image = BackgroundImage.query.get_or_404(img_id)
     image.active = False
     return json.dumps([{'message': 'Image is Deleted !'}])
 
@@ -68,7 +68,7 @@ def image_delete():
 @login_required
 def image_rename():
     img_id = request.json['id']
-    image = Image.query.get_or_404(img_id)
+    image = BackgroundImage.query.get_or_404(img_id)
     image.title = request.json['title']
     return json.dumps([{'message': 'Image is Renamed !'}])
 
@@ -81,7 +81,7 @@ def editor():
 
 @login_required
 def background_images(page=1):
-    paginated_images = Image.query.paginate(page, 4)
+    paginated_images = BackgroundImage.query.paginate(page, 4)
     serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active,
                           "preview": image.preview}
                          for image in paginated_images.items]

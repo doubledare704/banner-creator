@@ -21,6 +21,7 @@ class EditorWindow extends React.Component {
         this.fileInput = this.fileInput.bind(this);
         this.changeStatus = this.changeStatus.bind(this);
         this.sendToReview = this.sendToReview.bind(this);
+        this.addDot = this.addDot.bind(this);
     }
 
     componentDidMount() {
@@ -30,7 +31,11 @@ class EditorWindow extends React.Component {
     }
 
     addText() {
-        this.editor.setFont('Roboto', 36, "red", "Пиши сюда");
+        this.editor.setFont("Roboto", 28, "black", "\n Пиши сюда \n","red", 0.5);
+    }
+
+    addDot(){
+        this.editor.addDot("Roboto", 28, "black", "\n Пиши сюда \n","red", 0.5);
     }
 
     deleteObject() {
@@ -92,7 +97,7 @@ class EditorWindow extends React.Component {
                 data: "Одправлено, перейти обратно в кабинет ?",
                 confirm: true,
                 flash: false,
-                confirmAction: () => window.location.href="/dashboard/"
+                confirmAction: () => window.location.href="/"
             });
 
         })
@@ -106,13 +111,18 @@ class EditorWindow extends React.Component {
                     </div>
 
                     <div className="btn btn-default">
+                        <i className="glyphicon glyphicon-certificate"/>
+                        <span onClick={this.addDot}>_Точка</span>
+                    </div>
+
+                    <div className="btn btn-default">
                         <i className="glyphicon glyphicon-arrow-right"/>
                         <span onClick={this.addArrow}>Стрелка</span>
                     </div>
 
                     <div className="btn btn-default">
                         <i className="glyphicon glyphicon-unchecked"/>
-                        <span onClick={this.addRectangle}>Квадрат</span>
+                        <span onClick={this.addRectangle}>Прямоуголник</span>
                     </div>
 
                     <div className="btn btn-default">

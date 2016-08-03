@@ -1,5 +1,5 @@
 from flask import render_template, json, request, current_app
-from server.models import Image, User
+from server.models import Image, User, BackgroundImage
 
 from flask_paginate import Pagination
 
@@ -60,7 +60,7 @@ def remove_user(user_id):
 
 
 def backgrounds():
-    query = Image.query.order_by(Image.name.asc())
+    query = BackgroundImage.query.order_by(BackgroundImage.name.asc())
 
     backgrounds = [
         {
@@ -77,13 +77,13 @@ def backgrounds():
 
 
 def inactivate_image(id):
-    image = Image.query.get_or_404(id)
+    image = BackgroundImage.query.get_or_404(id)
     image.active = False
     return '', 200
 
 
 def image_delete_from_DB(id):
-    image = Image.query.get_or_404(id)
+    image = BackgroundImage.query.get_or_404(id)
     os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.name))
     os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.preview))
     db.session.delete(image)
@@ -92,6 +92,6 @@ def image_delete_from_DB(id):
 
 
 def activate_image(id):
-    image = Image.query.get_or_404(id)
+    image = BackgroundImage.query.get_or_404(id)
     image.active = True
     return '', 200
