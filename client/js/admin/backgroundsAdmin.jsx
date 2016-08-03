@@ -1,14 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
-import {popup} from './popUp.js';
+import {popup} from '../popUp.js';
 
 
 const BAZOOKA_PREFIX = 'backgrounds-admin';
-const TABS = {
-     active: "Активные фоны",
-    inactive: "Неактивные фоны"
-};
 
 class Button extends React.Component {
     render() {
@@ -17,18 +13,6 @@ class Button extends React.Component {
                 <i>{this.props.name}</i>
             </button>
         )
-    }
-}
-
-
-class Tab extends React.Component {
-    render() {
-        const activeClass = (this.props.isSelected ? 'active' : '');
-
-        return (
-            <li className={activeClass} onClick={this.props.onClick( this.props.name )}><a data-toggle="tab" href={'#'+this.props.name}>{this.props.title}</a></li>
-
-        );
     }
 }
 
@@ -51,14 +35,14 @@ class TableRow extends React.Component {
         const buttonName = this.props.backgroundStatus ? "Деактивировать" : "Удалить";
 
         return (
-            <tr className={this.props.tablerow.active} >
+            <tr>
                 <td>
                     {this.props.tablerow.title}
                 </td>
                 <td>
                     <img src={this.props.tablerow.preview} alt="cat" />
                 </td>
-                <td>
+                <td className="for-delete">
                     <Button name={buttonName} clickAction={this.props.onTableRowDelete(this.props.tablerow)}/>
                 </td>
                 <td>
@@ -71,9 +55,10 @@ class TableRow extends React.Component {
 
 
 class Table extends React.Component {
+
     render() {
         return (
-            <table className="table">
+            <table className="table text-center" id="backgrounds-table">
                 <thead>
                     <tr>
                         <th>Название</th>
@@ -85,17 +70,17 @@ class Table extends React.Component {
                     </tr>
                 </thead>
                 <tbody>
-                {
-                    this.props.backgrounds.map((tablerow) =>
-                            <TableRow
-                                key={tablerow.id}
-                                tablerow={tablerow}
-                                onTableRowDelete={this.props.onTableRowRemove}
-                                backgroundStatus={this.props.backgroundStatus}
-                                onRowActivate={this.props.onTableRowActivate}
-                            />
-                    )
-                }
+                    {
+                        this.props.backgrounds.map((tablerow) =>
+                                <TableRow
+                                    key={tablerow.id}
+                                    tablerow={tablerow}
+                                    onTableRowDelete={this.props.onTableRowRemove}
+                                    backgroundStatus={this.props.backgroundStatus}
+                                    onRowActivate={this.props.onTableRowActivate}
+                                />
+                        )
+                    }
                 </tbody>
             </table>
         );
@@ -108,47 +93,44 @@ class BackgroundsAdmin extends React.Component {
         super(props);
 
         this.state = {
-            backgrounds: this.props.backgroundsArray,
-            selectedTab: "active"
+            backgrounds: this.props.backgrounds
         };
     }
 
-    tabClick = (key) => {
-        return () => {
-            this.setState({
-                selectedTab: key
-            });
-        }
-    };
-
     handleTableRowRemove = (tablerow) => {
         return () => {
-            const index = this.state.backgrounds.indexOf(tablerow);
 
             //if the background is active, we change status on inactive
             if (tablerow.active === true) {
+                const index = this.state.backgrounds.indexOf(tablerow);
+
                 fetch(
-                    `/admin/inactivate_image/` + this.state.backgrounds[index].id,
+                    `/admin/inactivate_image/${this.state.backgrounds[index].id}`,
                     {method: "POST"}
                 ).then((response) => {
                     if (response.status === 200) {
-                        popup({
-                            data: "Фон стал неактивным"
+                        popup.change({
+                            title: "Фон стал неактивным",
+                            flash: true
                         });
-                        this.state.backgrounds[index].active = false;
-                        this.setState({backgrounds: this.state.backgrounds});
+                        this.state.backgrounds.splice(index, 1);
+                        this.setState({
+                            backgrounds: this.state.backgrounds
+                        });
                     }
                 });
 
-                //if the background is inactive we delete this background from DB
+            //if the background is inactive we delete this background from DB
             } else {
-                popup({
-                        data: "Вы действительно хотите удалить картинку?",
+                const index = this.state.backgrounds.indexOf(tablerow);
+
+                popup.change({
+                        title: "Вы действительно хотите удалить картинку?",
                         confirm: true,
                         confirmAction:
                             () => {
                                 fetch(
-                                    `/admin/delete_image/` + this.state.backgrounds[index].id,
+                                    `/admin/delete_image/${this.state.backgrounds[index].id}`,
                                     {method: "POST"}
                                 ).then((response) => {
                                     if (response.status === 204) {
@@ -169,47 +151,45 @@ class BackgroundsAdmin extends React.Component {
             const index = this.state.backgrounds.indexOf(tablerow);
 
             fetch(
-                `/admin/activate_image/` + this.state.backgrounds[index].id,
+                `/admin/activate_image/${this.state.backgrounds[index].id}`,
                 {method: "POST"}
             ).then((response) => {
                 if (response.status === 200) {
-                    popup({
-                        data: "Фон стал активным"
+                    popup.change({
+                        title: "Фон стал активным",
+                        flash: true
                     });
-                    this.state.backgrounds[index].active = true;
-                    this.setState({backgrounds: this.state.backgrounds});
+                    this.state.backgrounds.splice(index, 1);
+                    this.setState({
+                        backgrounds: this.state.backgrounds
+                    });
                 }
             });
         }
     };
 
     render() {
-        const status = (this.state.selectedTab === 'active');
+        const status = (this.props.selectedTab === 'active');
         return (
             <div>
-                <ul className= "nav nav-tabs">
-                    {Object.keys(TABS).map((key) =>
-                            <Tab key={key} onClick={this.tabClick} name={key} title={TABS[key]} isSelected={this.state.selectedTab === key}/>
-                    )}
-                </ul>
                 <Table
                     backgroundStatus={status}
-                    backgrounds={this.state.backgrounds.filter((background) => {
-                         return  background.active === (this.state.selectedTab === 'active');
-                    })}
+                    backgrounds={this.state.backgrounds}
                     onTableRowRemove={this.handleTableRowRemove}
                     onTableRowActivate={this.handleActivateRow}
                 />
             </div>
         );
-    }
+    } 
 }
 
 export default (node) => {
     let {backgrounds} = h.getAttrs(BAZOOKA_PREFIX, node);
+    let {tab} = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
-        <BackgroundsAdmin backgroundsArray = {backgrounds} />,
+
+        <BackgroundsAdmin backgrounds = {backgrounds} selectedTab={tab}/>,
         node
     );
 }

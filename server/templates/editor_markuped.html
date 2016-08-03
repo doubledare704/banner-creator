@@ -7,6 +7,7 @@
           rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab|Roboto:400,500|Lobster&subset=latin,cyrillic'
           rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 {% endblock %}
 
 {% block navbar %}
@@ -57,26 +58,52 @@
                 </a>
             </section>
 
-            <section id="backgroundSection" data-bazooka="backgroundsList" data-bg-view-url="{{ url_for('background_images') }}"
-            data-bg-img-url="{{ url_for('uploaded_file', filename='') }}">
+            <section id="backgroundSection" data-bazooka="backgroundsList"
+                     data-bg-view-url="{{ url_for('background_images') }}"
+                     data-bg-img-url="{{ url_for('uploaded_file', filename='') }}">
             </section>
+            {% block reviewmodal %}
+                <section>
+                    <a href="#" data-bazooka="openReviewModal">
+                        <i class="material-icons">done_all</i>
+                        <span class="detail">Отправить на ревью</span>
+                    </a>
+                </section>
+            {% endblock %}
 
             <section class="last-sec">
-                <a href="#" id="input">
+                <a href="#">
                     <i class="material-icons">cloud_upload</i>
             <span class="download-file">
                 Загрузить изображение
             </span>
                 </a>
-                <input type="file" id='inputted'/>
+                <form action="">
+                    <input type="file" name="file" id='inputted'/>
+                </form>
+                <div class="rightcol2">
+                    <h2>Выберите вариант загрузки</h2>
+                    <div class="uploadings">
+                        <div><a href="{{ url_for ('cuts_background') }}"><i class="material-icons">exit_to_app</i>Нужно вырезать фон</a>
+                        </div>
+                        <div id="local_load"><a href="#" id="input"><i class="material-icons">find_in_page</i>Загрузить
+                            из ПК</a></div>
+                        <div id="from_db"><a href="#"><i class="material-icons">line_style</i>Загрузить из базы</a>
+                        </div>
+                    </div>
+                </div>
             </section>
         </aside>
         <section class="container">
             {% block nav_edit %}
                 <nav class="navigation">
-                    <a href="#" id="to_send" data-bazooka="sendingReview"><i class="material-icons">done_all</i> Отправить на ревью</a>
-                    <a href="#"><i
-                            class="material-icons">insert_comment</i> Добавить коментарий для ревьюера</a>
+                    <a href="{{ url_for ('cuts_background') }}"><i class="material-icons">account_balance_wallet</i>Удаление
+                        фона
+                        <small>без реестрации и смс</small>
+                    </a>
+                    <a href="{{ url_for ('index') }}"><i class="material-icons">accessible</i>Home</a>
+                    <a href="{{ url_for ('admin') }}"><i class="material-icons">accessibility</i>Admin</a>
+                    <a href="{{ url_for ('dashboard') }}"><i class="material-icons">all_out</i>Dashboard</a>
                     <a href="#" id="result_review"><i class="material-icons">description</i>Просмотреть результат</a>
                     <a href="" id="continue"><i class="material-icons">flip_to_back</i>Продолжить редактировать</a>
                     <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i> Скачать
@@ -111,6 +138,8 @@
         </div>
 
     </div>
+    {#  Include html for review modal window  #}
+    {% include 'editor/review_modal.html' %}
 {% endblock %}
 {% block scripts %}
     <script src="{{ url_for('static', filename='editorbundle.js') }}"></script>

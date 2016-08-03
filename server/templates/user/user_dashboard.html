@@ -1,0 +1,45 @@
+{% extends "user/base_dashboard.html" %}
+
+{% import 'user/macros.html' as macros %}
+
+
+{% block dashboard_content %}
+    {% for review in reviews.items %}
+    <div class="row">
+        <div class="review-section
+        {% if review.status == review.Status.accepted %}
+        review-section-success
+        {% elif review.status == review.Status.not_accepted %}
+        review-section-rejected
+        {% endif %}">
+            <p class="dashboard-review-title">
+                {% if review.status == review.Status.accepted %}
+                Одобрено дизайнером
+                {% elif review.status == review.Status.not_accepted %}
+                Отклонено дизайнером
+                {% else %}
+                Отправлено на ревью дизайнеру
+                {% endif %}
+                <span class="dashboard-reviwer-name">{{ review.designer.last_name }} {{ review.designer.first_name }}</span>
+                <span class="dashboard-review-date">
+                    {% if review.created_at %}{{ review.created_at.strftime('%H:%M %Y-%m-%d') }}{% endif %}
+                </span>
+            </p>
+            <p>Название баннера: <span class="dashboard-banner-title">{{ review.banner.title }}</span></p>
+            {% if review.designer_comment %}
+                <p class="dashboard-comment-text"><b>Комментарий дизайнера: </b><br>{{ review.designer_comment }}</p>
+            {% endif %}
+            {{ macros.render_banner_container('Показать баннер', review.banner.name) }}
+            {% if review.reviewed %}
+                {{ macros.render_banner_container('Показать результат ревью', review.designer_imagename) }}
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <p class="dashboard-empty-review">Здесь пока ничего нет :(</p>
+    {% endfor %}
+
+    <div class="pagination-container">
+      {{ pagination.links }}
+    </div>
+{% endblock dashboard_content%}

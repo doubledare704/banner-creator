@@ -5,9 +5,17 @@
 
 
 <h2>Фоны</h2>
-<div data-bazooka="backgroundsAdmin" data-backgrounds-admin-backgrounds='{{ backgrounds }}' ></div>
 
+    <ul class= "nav nav-tabs">
+        <li {% if request.args.get('tab') == "active" %} class="active"{% endif %}><a data-toggle="tab" href="{{ url_for('admin_backgrounds', tab='active') }}">Активные фоны</a></li>
+        <li {% if request.args.get('tab') == "inactive" %} class="active"{% endif %}><a data-toggle="tab" href="{{ url_for('admin_backgrounds', tab='inactive') }}">Неактивные фоны</a></li>
 
+        <div data-bazooka="backgroundsAdmin" data-backgrounds-admin-backgrounds='{{ backgrounds }}' data-backgrounds-admin-tab='{{ tab }}'></div>
+    </ul>
+
+    <div class="text-center">
+        {{ pagination.links }}
+    </div>
 {% endblock %}
 
 

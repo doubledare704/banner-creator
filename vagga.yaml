@@ -5,6 +5,57 @@ containers:
     - !Install [libpq-dev]
     - !Py3Requirements requirements.txt
 
+  python-deploy:
+    setup:
+    - !Container python
+    - !Copy
+      source: /work/config
+      path: /config
+    - !EnsureDir /app
+    - !Copy
+      source: /work/server
+      path: /app/server
+    - !Copy
+      source: /work/manage.py
+      path: /app/manage.py
+    - !Sh |
+        cd /app
+        python3 -m compileall server
+    - !EnsureDir /app/server/static
+    - !Build
+      container: build-static
+      source: /static/server/static/bundle.js
+      path: /app/server/static/bundle.js
+    - !Build
+      container: build-static
+      source: /static/server/static/styles.css
+      path: /app/server/static/styles.css
+    - !EnsureDir /state
+
+  static:
+    setup:
+    - !Ubuntu xenial
+    - !NpmDependencies
+    environ:
+      NODE_PATH: /usr/local/lib/node_modules
+
+  build-static:
+    setup:
+    - !Container static
+    - !Env
+      NODE_PATH: /usr/local/lib/node_modules
+    - !EnsureDir /static
+    # Copy all the things, static files (js) do depend on
+    - !Copy
+      source: /work/client
+      path: /static/client
+    - !Copy
+      source: /work/webpack.config.js
+      path: /static/webpack.config.js
+    - !Sh |
+        cd /static
+        webpack --progress
+
   postgres:
     setup:
     - !Ubuntu xenial
@@ -30,6 +81,21 @@ containers:
     volumes:
       /var/lib/postgresql: !Snapshot
     environ: *pgenv
+
+  deploy-tools:
+    setup:
+    - !Alpine v3.3
+    - !Download
+      url: http://alpine.packages.gitlab.uaprom/alpine.packages@gitlab.uaprom.rsa.pub
+      path: /etc/apk/keys/alpine.packages@gitlab.uaprom.rsa.pub
+    - !Sh |
+        echo http://alpine.packages.gitlab.uaprom/ >> /etc/apk/repositories
+        apk update
+    - !Install [deploy=0.7.2-r0]
+    # A directory for every container
+    - !EnsureDir /target/python-deploy
+    volumes:
+      /target/python-deploy: !Container python-deploy
 
 commands:
   run: !Command
@@ -65,3 +131,11 @@ commands:
         -F --port=$PG_PORT \
         -k /tmp >/dev/null
 
+  webpack: !Command
+    description: Run webpack
+    container: static
+    run: [webpack, --progress]
+
+  deploy: !Command
+     container: deploy-tools
+     run: [deploy]

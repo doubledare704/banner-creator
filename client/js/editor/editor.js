@@ -62,11 +62,6 @@ var extend = function () {
 // initial fabric
 let fabric = require('fabric').fabric;
 
-// this is used to align buttons by bottom. When we add new button - dynamic left coord changes
-let leftCoords = 0;
-// padding between buttons
-let padding_buttons = 65;
-
 
 // Additional functions for review tool
 
@@ -111,7 +106,7 @@ function createArrowHead(points) {
 function createLine(points) {
     let line = new fabric.Line(points,
         {
-            strokeWidth: 5,
+            strokeWidth: 3,
             stroke: 'red',
             originX: 'center',
             originY: 'center',
@@ -121,6 +116,12 @@ function createLine(points) {
     return line;
 }
 // end
+
+fabric.Object.prototype.set({
+    transparentCorners: false,
+    borderColor: '#000',
+    cornerColor: '#000'
+});
 
 // make editor
 export default class Editor {
@@ -149,7 +150,7 @@ export default class Editor {
         });
     }
 
-    setFont(family, size, color, texts) {
+    setFont(family, size, color, texts, backgroundColor='transparent') {
         let obj = new fabric.IText(
             texts,
             {
@@ -157,7 +158,8 @@ export default class Editor {
                 left: 500,
                 top: 100,
                 fontSize: size,
-                fill: color
+                fill: color,
+                backgroundColor: backgroundColor
             });
         this.canv.add(obj);
         this.canv.renderAll();
@@ -198,7 +200,7 @@ export default class Editor {
         });
     }
 
-    addButton(w=220, h=80, fontFamily='Roboto', fontSize=20, fontText='Сюда пиши') {
+    addButton(w = 220, h = 80, fontFamily = 'Roboto', fontSize = 20, fontText = 'Сюда пиши') {
         let border = new fabric.Rect({
             width: w,
             height: h,
@@ -208,17 +210,17 @@ export default class Editor {
             rx: 5,
             ry: 5
         });
-        let texting = new fabric.IText(fontText,{
+        let texting = new fabric.IText(fontText, {
             fontFamily: fontFamily,
             fontSize: fontSize,
-            top:h/4,
-            left:w/4.4
+            top: h / 4,
+            left: w / 4.4
         });
-        texting.setTop(h/2 - texting.getHeight()/2);
-        texting.setLeft(w/2 - texting.getWidth()/2);
-        let group = new fabric.Group([border, texting],{
-            left:200,
-            top:100
+        texting.setTop(h / 2 - texting.getHeight() / 2);
+        texting.setLeft(w / 2 - texting.getWidth() / 2);
+        let group = new fabric.Group([border, texting], {
+            left: 200,
+            top: 100
         });
         this.canv.add(group);
     }
@@ -238,21 +240,11 @@ export default class Editor {
     deleteObject(obj, group) {
         let canvaser = this.canv;
         if (obj) {
-            if (this.canv.getActiveObject().get('type') === 'Tag') {
-                leftCoords = 0;
-            }
             canvaser.remove(obj);
         }
         else if (group) {
-            let del_types = [];
             const objectsInGroup = group.getObjects();
             canvaser.discardActiveGroup();
-            for (var i = 0; i < objectsInGroup.length; i++) {
-                del_types.push(objectsInGroup[i].get('type'));
-            }
-            if (inArray('Tag', del_types)) {
-                leftCoords = 0;
-            }
             objectsInGroup.forEach(function (object) {
                 canvaser.remove(object);
             });
@@ -261,7 +253,7 @@ export default class Editor {
     }
 
     addArrow() {
-        let pts = [100, 100, 100, 200];
+        let pts = [100, 200, 100, 100];
         let triangle = createArrowHead(pts);
         let line = createLine(pts);
         let grp = new fabric.Group([triangle, line]);
@@ -274,7 +266,7 @@ export default class Editor {
             width: 100,
             height: 200,
             stroke: 'red',
-            fill: undefined
+            fill: 'transparent'
         }))
     }
 
@@ -282,11 +274,29 @@ export default class Editor {
         this.canv.add(new fabric.Circle({
             radius: 100,
             stroke: 'red',
-            fill: undefined,
+            fill: 'transparent',
             scaleY: 0.5
         }))
     }
 
+    setTextInItext(texter){
+        let act = this.canv.getActiveObject();
+        if (act){
+            let objs = act.getObjects();
+            for (let i =0; i<objs.length; i++){
+                if(objs[i].text){
+                    if(texter.length <1){
+                        texter=' ';
+                    }
+                    objs[i].setText(texter);
+                }
+                else if(objs[i].type === 'rect'){
+                    objs[i].setWidth(texter.length * 11);
+                }
+            }
+            this.canv.renderAll();
+        }
+    }
 
     // http://jsfiddle.net/kqfswu4b/1/
     addCommentCloud(textInCloud) {
@@ -308,8 +318,6 @@ export default class Editor {
             hasControls: true,
             cornerSize: 8,
             hasBorders: true,
-            strokeWidth: 1,
-            stroke: '#E2E1E1',
             strokeLineJoin: 'round',
             padding: 0,
             id: 'block',
@@ -459,7 +467,7 @@ export default class Editor {
         }
 
         function addTextToRect(rect, text) {
-            return new fabric.Text(textInCloud, {
+            return new fabric.IText(textInCloud, {
                 left: rect.left + 5, //Take the block's position
                 top: rect.top + 10,
                 fill: 'black',
@@ -470,6 +478,7 @@ export default class Editor {
         }
     }
 }
+
 
 export function disableControls(obj, groups) {
     if (obj) {

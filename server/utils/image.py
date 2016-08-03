@@ -1,7 +1,8 @@
 import os
-from flask import request, current_app, send_from_directory
-from PIL import Image as pil
 from math import ceil
+
+from PIL import Image as pil
+from flask import request, current_app, send_from_directory
 
 
 def allowed_file(filename):

@@ -3,10 +3,7 @@
 {% block title %}Home{% endblock %}
 
 {% block page_content %}
-        <div class="container-content">
-            <div  data-bazooka="reviewTool" data-body-image-array='{{ image_json }}'></div>
-
-        </div>
+        <div  data-bazooka="reviewTool" data-body-image-url='{{ image_url }}' data-body-image-id='{{ image_id }}'></div>
 {% endblock %}
 {% block scripts %}
     {{ super() }}
