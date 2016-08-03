@@ -1,0 +1,30 @@
+{% extends "admin/admin.html" %}
+
+{% block admin_content %}
+
+<h2>Проекты</h2>
+
+<table class="table text-center">
+    <thead>
+        <tr >
+            <th class="text-center">Id</th>
+            <th class="text-center">Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for project in projects %}
+            <tr class=id-{{project.id}}>
+                <td>{{project.id}}</td>
+                <td>{{project.name}}</td>
+                <td>
+                    <button class="btn btn-default">
+                        <i>Удалить</i>
+                    </button>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

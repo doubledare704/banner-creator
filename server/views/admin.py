@@ -2,7 +2,7 @@ import json
 
 from flask_paginate import Pagination
 
-from server.models import Image, User
+from server.models import BackgroundImage, User, Project
 from flask import render_template, json, request, current_app, url_for, redirect
 from werkzeug.exceptions import NotFound
 import os
@@ -64,7 +64,7 @@ def remove_user(user_id):
 
 def backgrounds():
     tab = request.args.get('tab')
-    backgrounds = Image.query.filter(Image.active == (tab == 'active')).order_by(Image.title.asc())
+    backgrounds = BackgroundImage.query.filter(BackgroundImage.active == (tab == 'active')).order_by(BackgroundImage.title.asc())
 
     try:
         backgrounds_paginator = backgrounds.paginate(per_page=per_page, error_out=True)
@@ -90,13 +90,13 @@ def backgrounds():
 
 
 def inactivate_image(id):
-    image = Image.query.get_or_404(id)
-    image.active = False
+    BackgroundImage = BackgroundImage.query.get_or_404(id)
+    BackgroundImage.active = False
     return '', 200
 
 
 def image_delete_from_DB(id):
-    image = Image.query.get_or_404(id)
+    image = BackgroundImage.query.get_or_404(id)
     os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.name))
     os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.preview))
     db.session.delete(image)
@@ -105,6 +105,18 @@ def image_delete_from_DB(id):
 
 
 def activate_image(id):
-    image = Image.query.get_or_404(id)
+    image = BackgroundImage.query.get_or_404(id)
     image.active = True
     return '', 200
+
+def projects():
+    projects = Project.query.order_by(Project.name.asc())
+
+    projects = [
+        {
+            "id": project.id,
+            'name': project.name
+        } for project in projects.all()
+        ]
+
+    return render_template('admin/projects.html', projects=projects)
