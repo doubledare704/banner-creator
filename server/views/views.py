@@ -3,6 +3,7 @@ import json
 import os
 import uuid
 from io import BytesIO
+from flask import render_template, redirect, current_app, request, jsonify,url_for
 
 from flask import render_template, redirect, current_app, request, jsonify, url_for
 from flask_login import login_required, current_user
@@ -158,29 +159,39 @@ def make_review():
     return jsonify({'result': review_jsoned}), 201
     # return '', 201
 
+@login_required
+def review_tool():
+    return render_template('review.html')
 
 @login_required
-def dashboard():
-    if current_user.role == User.UserRole.user:
-        reviews = BannerReview.query.filter_by(user_id=current_user.id).order_by(BannerReview.created_at.desc())
-        return render_template('user/user_dashboard.html', reviews=reviews)
-    elif current_user.role == User.UserRole.designer:
-        reviews = BannerReview.query.filter_by(designer_id=current_user.id).order_by(BannerReview.created_at.desc())
-        return render_template('user/designer_dashboard.html', reviews=reviews)
+def review_image(img_id):
+    banner = Banner.query.get_or_404(img_id)
+    image_url = '/uploads/'+ banner.name
+    return render_template('review.html', image_url=image_url, image_id=img_id)
 
+@login_required
+def review_action():
+    form = request.form
+    _, b64data = form['file'].split(',')
+    print(form)
+    name = str(uuid.uuid4()) + '.png'
+    decoded_data = base64.b64decode(b64data)
+    file = FileStorage(BytesIO(decoded_data), filename=name)
+    filename = secure_filename(file.filename)
+    file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+    preview_name = 'preview_' + filename
+    preview_file = image_preview(file)
+    preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
 
-def review_tool():
-    images = Image.query.filter_by(active=True)
-    image_json = json.dumps(
-        [{'id': image.id,
-          'url': '/uploads/' + image.name,
-          'title': image.title,
-          'preview': '/uploads/' + image.preview
-          }
-         for image in images
-         ])
-    return render_template('review.html', image_json=image_json)
+    banner_review = BannerReview.query.get_or_404(form['id'])
+    banner_review.designer_comment = form.get('comment', '')
+    banner_review.reviewed = True
+    banner_review.changed_at = datetime.datetime.utcnow()
+    banner_review.status =form.get('status', '')
+    banner_review.designer_imagename = filename
+    banner_review.designer_previewname = preview_name
 
+    return '', 200
 
 @login_required
 def cuts_background():

@@ -2,6 +2,7 @@
 let fabric = require('fabric').fabric;
 
 import Editor from './editor.js';
+import {disableControls} from './editor.js';
 
 let editor = new Editor('main', 960, 420);
 

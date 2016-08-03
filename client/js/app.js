@@ -12,11 +12,14 @@ const Baz = require('bazooka');
 Baz.register({
     'backgroundsAdmin': backgroundsAdmin,
     'renderImages': renderImages,
+    'reviewTool': reviewTool,
     'showBanner': showBanner,
     'loginClick': loginClick,
-    'reviewTool': reviewTool,
-    'usersList': users,
-    'reviewAdmin': reviewAdmin
+    'reviewAdmin': reviewAdmin,
+    'usersList': users
 });
 
 Baz.watch();
+
+const unwatch = Baz.watch();
+

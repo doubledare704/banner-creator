@@ -106,7 +106,7 @@ function createArrowHead(points) {
 function createLine(points) {
     let line = new fabric.Line(points,
         {
-            strokeWidth: 5,
+            strokeWidth: 3,
             stroke: 'red',
             originX: 'center',
             originY: 'center',
@@ -150,7 +150,7 @@ export default class Editor {
         });
     }
 
-    setFont(family, size, color, texts) {
+    setFont(family, size, color, texts, backgroundColor='transparent') {
         let obj = new fabric.IText(
             texts,
             {
@@ -158,7 +158,8 @@ export default class Editor {
                 left: 500,
                 top: 100,
                 fontSize: size,
-                fill: color
+                fill: color,
+                backgroundColor: backgroundColor
             });
         this.canv.add(obj);
         this.canv.renderAll();
@@ -252,7 +253,7 @@ export default class Editor {
     }
 
     addArrow() {
-        let pts = [100, 100, 100, 200];
+        let pts = [100, 200, 100, 100];
         let triangle = createArrowHead(pts);
         let line = createLine(pts);
         let grp = new fabric.Group([triangle, line]);
@@ -265,7 +266,7 @@ export default class Editor {
             width: 100,
             height: 200,
             stroke: 'red',
-            fill: undefined
+            fill: 'transparent'
         }))
     }
 
@@ -273,18 +274,24 @@ export default class Editor {
         this.canv.add(new fabric.Circle({
             radius: 100,
             stroke: 'red',
-            fill: undefined,
+            fill: 'transparent',
             scaleY: 0.5
         }))
     }
 
-    setTextInItext(texter) {
+    setTextInItext(texter){
         let act = this.canv.getActiveObject();
-        if (act) {
+        if (act){
             let objs = act.getObjects();
-            for (let i = 0; i < objs.length; i++) {
-                if (objs[i].text) {
+            for (let i =0; i<objs.length; i++){
+                if(objs[i].text){
+                    if(texter.length <1){
+                        texter=' ';
+                    }
                     objs[i].setText(texter);
+                }
+                else if(objs[i].type === 'rect'){
+                    objs[i].setWidth(texter.length * 11);
                 }
             }
             this.canv.renderAll();
@@ -311,8 +318,6 @@ export default class Editor {
             hasControls: true,
             cornerSize: 8,
             hasBorders: true,
-            strokeWidth: 1,
-            stroke: '#E2E1E1',
             strokeLineJoin: 'round',
             padding: 0,
             id: 'block',
