@@ -198,3 +198,9 @@ def review_action():
 @login_required
 def cuts_background():
     return render_template('editor/cutbackground.html')
+
+
+@login_required
+def user_profile():
+    return render_template('user/user_profile.html')
+

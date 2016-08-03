@@ -31,7 +31,8 @@
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             {% if current_user.is_authenticated %}
-                                <li><a href="/">{{current_user.first_name}} {{current_user.last_name}}</a></li>
+                                <li><a href="{{ url_for('user_profile') }}">
+                                  {{current_user.first_name}} {{current_user.last_name}}</a></li>
                                 <li>
                                     <form method="post" action="{{ url_for('log_out') }}" class="form-inline">
                                         <button class="btn btn-link logout" type="submit">Logout</button>

@@ -6,7 +6,7 @@ from server.views.admin import admin, backgrounds, inactivate_image, activate_im
     remove_user
 
 from server.views.views import make_review, review_image,review_tool,review_action
-
+from server.views import views as main_views
 from server.views import dashboard as dashboard_views
 
 
@@ -20,6 +20,9 @@ def setup_routes(app):
     app.add_url_rule('/api/backgrounds/', view_func=background_images)
     app.add_url_rule('/api/backgrounds/<int:page>', view_func=background_images)
     app.add_url_rule('/api/review', methods=['POST'], view_func=make_review)
+
+    # user profile
+    app.add_url_rule('/profile/', methods=['GET', 'POST'], view_func=main_views.user_profile)
 
     # dashboard
     app.add_url_rule('/dashboard/', view_func=dashboard_views.dashboard)
