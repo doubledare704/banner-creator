@@ -1,10 +1,25 @@
-from server.views.views import index, editor, image_delete, image_rename, background_images, continue_edit, \
-    history_image, review_tool, cuts_background, save_cuted
-from server.views.auth import login_page, authorize, oauth_callback, log_out
 from server.utils.image import uploaded_file
-from server.views.admin import admin, backgrounds, inactivate_image, activate_image, image_delete_from_DB, users_page, \
+from server.views.admin import (
+    admin,
+    backgrounds,
+    inactivate_image,
+    activate_image,
+    image_delete_from_DB,
+    users_page,
     remove_user
-
+)
+from server.views.auth import login_page, authorize, oauth_callback, log_out
+from server.views.views import (
+    index, editor,
+    image_delete,
+    image_rename,
+    background_images,
+    continue_edit,
+    history_image,
+    review_tool,
+    cuts_background,
+    save_cuted
+)
 from server.views.views import make_review, dashboard
 
 

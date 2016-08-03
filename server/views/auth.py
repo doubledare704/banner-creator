@@ -1,9 +1,10 @@
+from flask import render_template, redirect, request, url_for
+from flask_login import login_required, login_user, logout_user, current_user
+from flask_oauthlib.client import OAuthException
+
+from server.db import db
 from server.models import User
 from server.utils.auth import oauth_apps
-from flask_oauthlib.client import OAuthException
-from flask_login import login_required, login_user, logout_user, current_user
-from flask import render_template, redirect, request, url_for, session
-from server.db import db
 
 
 def login_page():
