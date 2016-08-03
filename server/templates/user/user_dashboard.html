@@ -39,5 +39,7 @@
     <p class="dashboard-empty-review">Здесь пока ничего нет :(</p>
     {% endfor %}
 
-    {{ macros.render_pagination(reviews, request.url_rule.endpoint) }}
+    <div class="pagination-container">
+      {{ pagination.links }}
+    </div>
 {% endblock dashboard_content%}
