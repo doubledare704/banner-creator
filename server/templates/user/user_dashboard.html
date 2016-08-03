@@ -27,7 +27,7 @@
             </p>
             <p>Название баннера: <span class="dashboard-banner-title">{{ review.banner.title }}</span></p>
             {% if review.designer_comment %}
-                <p>Комментарий дизайнера: <br>{{ review.designer_comment }}</p>
+                <p class="dashboard-comment-text"><b>Комментарий дизайнера: </b><br>{{ review.designer_comment }}</p>
             {% endif %}
             {{ macros.render_banner_container('Показать баннер', review.banner.name) }}
             {% if review.reviewed %}
