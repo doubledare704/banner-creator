@@ -18,9 +18,7 @@ class EditorWindow extends React.Component {
         this.addArrow = this.addArrow.bind(this);
         this.addRectangle = this.addRectangle.bind(this);
         this.addEllipse = this.addEllipse.bind(this);
-        this.addCommentCloud = this.addCommentCloud.bind(this);
         this.fileInput = this.fileInput.bind(this);
-        this.setComment = this.setComment.bind(this);
         this.changeStatus = this.changeStatus.bind(this);
         this.sendToReview = this.sendToReview.bind(this);
     }
@@ -51,10 +49,6 @@ class EditorWindow extends React.Component {
 
     addEllipse() {
         this.editor.addEllipse();
-    }
-
-    addCommentCloud(){
-        this.editor.addCommentCloud( "Пиши сюда");
     }
 
     fileInput(){
@@ -104,35 +98,6 @@ class EditorWindow extends React.Component {
         })
     }
 
-    setComment(){
-        const img_id = this.props.imageId;
-        const status = this.state.status;
-        const comment = this.refs.comment.value;
-        console.log(img_id, comment, status);
-        fetch("/review_action/", {
-            credentials: 'same-origin',
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({id: img_id, comment: comment, status: status})
-        }).then(response => {
-            if (response.status !== 200) {
-                popup.change({
-                    data: <p>Што то не так ошибка {response.status} </p>
-                });
-                return response.status;
-            }
-            popup.change({
-                data: "Одправлено, перейти обратно в кабинет ?",
-                confirm: true,
-                flash: false,
-                confirmAction: () => window.location.href="/dashboard/"
-            });
-
-        })
-    }
-
     render() {
         return (<div>
                     <div className="btn btn-default">
@@ -153,11 +118,6 @@ class EditorWindow extends React.Component {
                     <div className="btn btn-default">
                         <i className="glyphicon glyphicon-unchecked"/>
                         <span onClick={this.addEllipse}>Елипс</span>
-                    </div>
-
-                    <div className="btn btn-default">
-                        <i className="glyphicon glyphicon-new-window"/>
-                        <span onClick={this.addCommentCloud}>Хмарка</span>
                     </div>
 
                     <div className="btn btn-default">
