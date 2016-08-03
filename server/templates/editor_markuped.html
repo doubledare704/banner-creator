@@ -72,20 +72,34 @@
             {% endblock %}
 
             <section class="last-sec">
-                <a href="#" id="input">
+                <a href="#">
                     <i class="material-icons">cloud_upload</i>
             <span class="download-file">
                 Загрузить изображение
             </span>
                 </a>
-                <input type="file" id='inputted'/>
+                <form action="">
+                    <input type="file" name="file" id='inputted'/>
+                </form>
+                <div class="rightcol2">
+                    <h2>Выберите вариант загрузки</h2>
+                    <div class="uploadings">
+                        <div><a href="{{ url_for ('cuts_background') }}"><i class="material-icons">exit_to_app</i>Нужно вырезать фон</a>
+                        </div>
+                        <div id="local_load"><a href="#" id="input"><i class="material-icons">find_in_page</i>Загрузить
+                            из ПК</a></div>
+                        <div id="from_db"><a href="#"><i class="material-icons">line_style</i>Загрузить из базы</a>
+                        </div>
+                    </div>
+                </div>
             </section>
         </aside>
         <section class="container">
             {% block nav_edit %}
                 <nav class="navigation">
-                    <a href="{{ url_for ('cuts_background') }}"><i class="material-icons">account_balance_wallet</i>Удаление фона
-                    <small>без реестрации и смс</small>
+                    <a href="{{ url_for ('cuts_background') }}"><i class="material-icons">account_balance_wallet</i>Удаление
+                        фона
+                        <small>без реестрации и смс</small>
                     </a>
                     <a href="{{ url_for ('index') }}"><i class="material-icons">accessible</i>Home</a>
                     <a href="{{ url_for ('admin') }}"><i class="material-icons">accessibility</i>Admin</a>

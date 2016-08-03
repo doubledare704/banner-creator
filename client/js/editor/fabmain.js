@@ -2,7 +2,6 @@
 let fabric = require('fabric').fabric;
 
 import Editor from './editor.js';
-import {disableControls} from './editor.js';
 
 let editor = new Editor('main', 960, 420);
 
@@ -44,22 +43,39 @@ fileInput.addEventListener('click', function () {
 });
 
 filetoeditor.addEventListener('change', (e) => {
-    const url = URL.createObjectURL(e.target.files[0]);
-    fabric.Image.fromURL(url, (img) => {
-
-        let originalsize = img.getOriginalSize();
-        let imgratio = img.width / img.height;
-        let newsize = [editor.canv.width * 0.5, editor.canv.width * 0.5 / imgratio];
-
-        if (originalsize.width > editor.canv.width || originalsize.height > editor.canv.height) {
-            img.set({
-                width: newsize[0],
-                height: newsize[1]
-            })
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    formData.append('file', filetoeditor.files[0]);
+    fetch('/editor/local/',
+        {
+            method: 'POST',
+            credentials: 'same-origin',
+            body: formData
         }
-        editor.canv.add(img);
-        filetoeditor.value = ""
-    });
+    )
+        .then((res) => res.json())
+        .then(function ({result}) {
+            console.log(result);
+            var src = result.src;
+            fabric.Image.fromURL(src, (img) => {
+
+                let originalsize = img.getOriginalSize();
+                let imgratio = img.width / img.height;
+                let newsize = [editor.canv.width * 0.5, editor.canv.width * 0.5 / imgratio];
+
+                if (originalsize.width > editor.canv.width || originalsize.height > editor.canv.height) {
+                    img.set({
+                        width: newsize[0],
+                        height: newsize[1]
+                    })
+                }
+                editor.canv.add(img);
+                filetoeditor.value = ""
+            });
+        })
+        .catch(function (error) {
+            console.log('Request failed', error);
+        });
 });
 
 downloadLink.addEventListener('click', function () {

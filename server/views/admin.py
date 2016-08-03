@@ -1,18 +1,15 @@
 import json
 import os
 
-from flask import render_template, json, request, current_app
-from flask_paginate import Pagination
-
-from server.db import db
-from server.models import Image, User
-from server.models import Image, User
 from flask import render_template, json, request, current_app, url_for, redirect
+from flask_paginate import Pagination
 from werkzeug.exceptions import NotFound
 
 from server.db import db
+from server.models import Image, User, BackgroundImage
 
 per_page = 3
+
 
 def admin():
     return render_template('admin/admin.html')
@@ -67,22 +64,22 @@ def remove_user(user_id):
 
 def backgrounds():
     tab = request.args.get('tab')
-    backgrounds = Image.query.filter(Image.active == (tab == 'active')).order_by(Image.title.asc())
+    backgrounds = BackgroundImage.query.filter(BackgroundImage.active == (tab == 'active')).order_by(BackgroundImage.title.asc())
 
     try:
         backgrounds_paginator = backgrounds.paginate(per_page=per_page, error_out=True)
     except NotFound:
-            last_page = round(backgrounds.count()/per_page)
-            return redirect(url_for('admin_backgrounds', tab=tab, page=last_page))
+        last_page = round(backgrounds.count() / per_page)
+        return redirect(url_for('admin_backgrounds', tab=tab, page=last_page))
 
     backgrounds = [
         {
-           "id": background.id,
-           'title': background.title,
-           'preview': '/uploads/' + background.preview,
-           "active": background.active
+            "id": background.id,
+            'title': background.title,
+            'preview': '/uploads/' + background.preview,
+            "active": background.active
         } for background in backgrounds_paginator.items
-    ]
+        ]
 
     pagination = Pagination(per_page=per_page, page=backgrounds_paginator.page, total=backgrounds_paginator.total,
                             css_framework='bootstrap3')
@@ -93,13 +90,13 @@ def backgrounds():
 
 
 def inactivate_image(id):
-    image = Image.query.get_or_404(id)
+    image = BackgroundImage.query.get_or_404(id)
     image.active = False
     return '', 200
 
 
 def image_delete_from_DB(id):
-    image = Image.query.get_or_404(id)
+    image = BackgroundImage.query.get_or_404(id)
     os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.name))
     os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.preview))
     db.session.delete(image)
@@ -108,6 +105,6 @@ def image_delete_from_DB(id):
 
 
 def activate_image(id):
-    image = Image.query.get_or_404(id)
+    image = BackgroundImage.query.get_or_404(id)
     image.active = True
     return '', 200
