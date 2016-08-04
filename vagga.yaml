@@ -1,0 +1,141 @@
+containers:
+  python:
+    setup:
+    - !Ubuntu xenial
+    - !Install [libpq-dev]
+    - !Py3Requirements requirements.txt
+
+  python-deploy:
+    setup:
+    - !Container python
+    - !Copy
+      source: /work/config
+      path: /config
+    - !EnsureDir /app
+    - !Copy
+      source: /work/server
+      path: /app/server
+    - !Copy
+      source: /work/manage.py
+      path: /app/manage.py
+    - !Sh |
+        cd /app
+        python3 -m compileall server
+    - !EnsureDir /app/server/static
+    - !Build
+      container: build-static
+      source: /static/server/static/bundle.js
+      path: /app/server/static/bundle.js
+    - !Build
+      container: build-static
+      source: /static/server/static/styles.css
+      path: /app/server/static/styles.css
+    - !EnsureDir /state
+
+  static:
+    setup:
+    - !Ubuntu xenial
+    - !NpmDependencies
+    environ:
+      NODE_PATH: /usr/local/lib/node_modules
+
+  build-static:
+    setup:
+    - !Container static
+    - !Env
+      NODE_PATH: /usr/local/lib/node_modules
+    - !EnsureDir /static
+    # Copy all the things, static files (js) do depend on
+    - !Copy
+      source: /work/client
+      path: /static/client
+    - !Copy
+      source: /work/webpack.config.js
+      path: /static/webpack.config.js
+    - !Sh |
+        cd /static
+        webpack --progress
+
+  postgres:
+    setup:
+    - !Ubuntu xenial
+    - !UbuntuUniverse
+    - !EnsureDir /var/lib/postgresql/9.5
+    - !Install
+      - postgresql-9.5
+      - runit
+    - &pgenv !Env
+      PG_BIN: /usr/lib/postgresql/9.5/bin
+      PG_DATA: /var/lib/postgresql/9.5/main
+      PG_PORT: 5433
+      PG_DB: banner_creator
+      PG_USER: banner_creator
+      PG_PASSWORD: banner_creator
+    - !Sh |
+        rm -rf $PG_DATA/*;
+        chpst -u postgres $PG_BIN/pg_ctl initdb -D $PG_DATA;
+        chpst -u postgres $PG_BIN/pg_ctl start -D $PG_DATA -w \
+          -o "-k /tmp -F -p $PG_PORT -h 127.0.0.1";
+        psql -U postgres -h 127.0.0.1 -p $PG_PORT \
+          -c "CREATE DATABASE banner_creator;";
+    volumes:
+      /var/lib/postgresql: !Snapshot
+    environ: *pgenv
+
+  deploy-tools:
+    setup:
+    - !Alpine v3.3
+    - !Download
+      url: http://alpine.packages.gitlab.uaprom/alpine.packages@gitlab.uaprom.rsa.pub
+      path: /etc/apk/keys/alpine.packages@gitlab.uaprom.rsa.pub
+    - !Sh |
+        echo http://alpine.packages.gitlab.uaprom/ >> /etc/apk/repositories
+        apk update
+    - !Install [deploy=0.7.2-r0]
+    # A directory for every container
+    - !EnsureDir /target/python-deploy
+    volumes:
+      /target/python-deploy: !Container python-deploy
+
+commands:
+  run: !Command
+    description: Run this application
+    container: python
+    run:
+    - python3
+    - manage.py
+    - runserver
+
+  test: !Command
+    description: Run tests
+    container: python
+    run:
+    - python3
+    - manage.py
+    - test
+
+  createdb: !Command
+    description: Create initial database
+    container: python
+    run:
+    - python3
+    - manage.py
+    - db
+    - upgrade
+
+  postgres: !Command
+    description: Run posgres
+    container: postgres
+    run: |
+      chpst -u postgres $PG_BIN/postgres -D "$PG_DATA" \
+        -F --port=$PG_PORT \
+        -k /tmp >/dev/null
+
+  webpack: !Command
+    description: Run webpack
+    container: static
+    run: [webpack, --progress]
+
+  deploy: !Command
+     container: deploy-tools
+     run: [deploy]

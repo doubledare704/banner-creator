@@ -9,7 +9,6 @@ function inArray(needle, haystack) {
     return false;
 }
 
-
 // extend function without jquery https://gist.github.com/cfv1984/6319681685f78333d98a
 var extend = function () {
 
@@ -63,69 +62,16 @@ var extend = function () {
 // initial fabric
 let fabric = require('fabric').fabric;
 
-// this is used to align buttons by bottom. When we add new button - dynamic left coord changes
-let leftCoords = 0;
-// padding between buttons
-let padding_buttons = 65;
-
-
-// initial tag type for fabric
-
-fabric.Tag = fabric.util.createClass(fabric.Group, {
-    type: 'Tag',
-
-    initialize: function (options, objects, isAlreadyGrouped) {
-        if (!options) {
-            objects = [];
-            options = {};
-            options.top = 20;
-            options.left = 10 + leftCoords;
-
-            var defaults = {
-                width: 200,
-                height: 40,
-                originX: 'center',
-                originY: 'center'
-            };
-
-            objects[0] = new fabric.Rect(extend({}, defaults, {
-                fill: 'rgba(0,0,0,0)',
-                stroke: '#000',
-                strokewidth: 4,
-                rx: 5,
-                ry: 5
-            }));
-
-            objects[1] = new fabric.IText('Смотреть     >', extend({}, defaults, {
-                textAlign: 'center',
-                fontFamily: 'Roboto',
-                fontSize: 20
-            }));
-        }
-        leftCoords += objects[0].width + padding_buttons;
-        this.callSuper('initialize', objects, options, isAlreadyGrouped);
-    }
-});
-
-fabric.Tag.fromObject = function (object, callback) {
-    var _enlivenedObjects;
-    fabric.util.enlivenObjects(object.objects, function (enlivenedObjects) {
-        delete object.objects;
-        _enlivenedObjects = enlivenedObjects;
-    });
-    return new fabric.Tag(object, _enlivenedObjects);
-};
-fabric.Tag.async = false;
 
 // Additional functions for review tool
 
 function setLineControls(line) {
-    line.setControlVisible("tr",false);
-    line.setControlVisible("tl",false);
-    line.setControlVisible("br",false);
-    line.setControlVisible("bl",false);
-    line.setControlVisible("ml",false);
-    line.setControlVisible("mr",false);
+    line.setControlVisible("tr", false);
+    line.setControlVisible("tl", false);
+    line.setControlVisible("br", false);
+    line.setControlVisible("bl", false);
+    line.setControlVisible("ml", false);
+    line.setControlVisible("mr", false);
 }
 
 function createArrowHead(points) {
@@ -140,36 +86,42 @@ function createArrowHead(points) {
 
         angle = Math.atan2(dy, dx);
 
-        angle *= 180 / Math.PI;
-        angle += 90;
+    angle *= 180 / Math.PI;
+    angle += 90;
 
-        let triangle = new fabric.Triangle({
-            angle: angle,
-            fill: 'red',
-            top: y2,
-            left: x2,
-            height: headLength,
-            width: headLength,
-            originX: 'center',
-            originY: 'center'
-        });
+    let triangle = new fabric.Triangle({
+        angle: angle,
+        fill: 'red',
+        top: y2,
+        left: x2,
+        height: headLength,
+        width: headLength,
+        originX: 'center',
+        originY: 'center'
+    });
 
-        return triangle;
+    return triangle;
 }
 
 function createLine(points) {
     let line = new fabric.Line(points,
         {
-            strokeWidth: 5,
+            strokeWidth: 3,
             stroke: 'red',
             originX: 'center',
             originY: 'center',
-            lockScalingX:true
+            lockScalingX: true
         });
-        setLineControls(line);
-        return line;
+    setLineControls(line);
+    return line;
 }
 // end
+
+fabric.Object.prototype.set({
+    transparentCorners: false,
+    borderColor: '#000',
+    cornerColor: '#000'
+});
 
 // make editor
 export default class Editor {
@@ -198,7 +150,7 @@ export default class Editor {
         });
     }
 
-    setFont(family, size, color, texts) {
+    setFont(family, size, color, texts, backgroundColor='transparent') {
         let obj = new fabric.IText(
             texts,
             {
@@ -206,7 +158,8 @@ export default class Editor {
                 left: 500,
                 top: 100,
                 fontSize: size,
-                fill: color
+                fill: color,
+                backgroundColor: backgroundColor
             });
         this.canv.add(obj);
         this.canv.renderAll();
@@ -247,12 +200,35 @@ export default class Editor {
         });
     }
 
-    addButton() {
-        this.canv.add(new fabric.Tag())
+    addButton(w = 220, h = 80, fontFamily = 'Roboto', fontSize = 20, fontText = 'Сюда пиши') {
+        let border = new fabric.Rect({
+            width: w,
+            height: h,
+            fill: 'transparent',
+            stroke: '#000',
+            strokeWidth: 2,
+            rx: 5,
+            ry: 5
+        });
+        let texting = new fabric.IText(fontText, {
+            fontFamily: fontFamily,
+            fontSize: fontSize,
+            top: h / 4,
+            left: w / 4.4
+        });
+        texting.setTop(h / 2 - texting.getHeight() / 2);
+        texting.setLeft(w / 2 - texting.getWidth() / 2);
+        let group = new fabric.Group([border, texting], {
+            left: 200,
+            top: 100
+        });
+        this.canv.add(group);
     }
 
     //working now
-    downloadImage(link) {
+    downloadImage(link, obj, groups) {
+        disableControls(obj, groups);
+
         link.href = this.canv.toDataURL({
                 format: 'png',
                 quality: 1.0
@@ -264,50 +240,255 @@ export default class Editor {
     deleteObject(obj, group) {
         let canvaser = this.canv;
         if (obj) {
-            if (this.canv.getActiveObject().get('type') === 'Tag') {
-                leftCoords = 0;
-            }
             canvaser.remove(obj);
         }
         else if (group) {
-            let del_types = [];
             const objectsInGroup = group.getObjects();
             canvaser.discardActiveGroup();
-            for (var i = 0; i < objectsInGroup.length; i++) {
-                del_types.push(objectsInGroup[i].get('type'));
-            }
-            if (inArray('Tag', del_types)) {
-                leftCoords = 0;
-            }
             objectsInGroup.forEach(function (object) {
                 canvaser.remove(object);
             });
         }
 
     }
+
     addArrow() {
-        let pts = [100,100,100,200];
+        let pts = [100, 200, 100, 100];
         let triangle = createArrowHead(pts);
         let line = createLine(pts);
-        let grp = new fabric.Group([triangle,line]);
+        let grp = new fabric.Group([triangle, line]);
         setLineControls(grp);
         this.canv.add(grp);
     }
-    addRectangle(){
+
+    addRectangle() {
         this.canv.add(new fabric.Rect({
             width: 100,
             height: 200,
             stroke: 'red',
-            fill: undefined
-        }))
-    }
-    addEllipse(){
-        this.canv.add(new fabric.Circle({
-            radius: 100,
-            stroke: 'red',
-            fill: undefined,
-            scaleY: 0.5,
+            fill: 'transparent'
         }))
     }
 
+    addEllipse() {
+        this.canv.add(new fabric.Circle({
+            radius: 100,
+            stroke: 'red',
+            fill: 'transparent',
+            scaleY: 0.5
+        }))
+    }
+
+    setTextInItext(texter){
+        let act = this.canv.getActiveObject();
+        if (act){
+            let objs = act.getObjects();
+            for (let i =0; i<objs.length; i++){
+                if(objs[i].text){
+                    if(texter.length <1){
+                        texter=' ';
+                    }
+                    objs[i].setText(texter);
+                }
+                else if(objs[i].type === 'rect'){
+                    objs[i].setWidth(texter.length * 11);
+                }
+            }
+            this.canv.renderAll();
+        }
+    }
+
+    // http://jsfiddle.net/kqfswu4b/1/
+    addCommentCloud(textInCloud) {
+        let canvaser = this.canv;
+        var id = 0, MoveAll = false;
+
+        var block = new fabric.Rect({
+            left: 50,
+            top: 50,
+            width: 50,
+            height: 50,
+            fill: 'white',
+            originX: 'left',
+            originY: 'top',
+            centeredRotation: true,
+            lockScalingX: false,
+            lockScalingY: false,
+            lockRotation: false,
+            hasControls: true,
+            cornerSize: 8,
+            hasBorders: true,
+            strokeLineJoin: 'round',
+            padding: 0,
+            id: 'block',
+            name: 'subject'
+        });
+
+        var text = addTextToRect(block);
+        block.width = text.width + 10;
+
+        var group = new fabric.Group([block, text], {id: 'bubbleGroup', name: 'subject'});
+        canvaser.add(group);
+        console.log('bubble group: ' + JSON.stringify(group));
+
+        var rect = makeRect(100, 200, 10, 10, this.canv);
+        canvaser.add(rect);
+
+        var p1 = {x: group.getCenterPoint().x - 10, y: group.getCenterPoint().y},
+            p2 = {x: group.getCenterPoint().x + 10, y: group.getCenterPoint().y},
+            p3 = {x: rect.getCenterPoint().x, y: rect.getCenterPoint().y};
+        var shape = makePolygon(p1, p2, p3);
+        canvaser.add(shape);
+        shape.sendToBack();
+
+        group.shape = shape;
+        group.rect = rect;
+
+        canvaser.renderAll();
+
+        canvaser.on('object:moving', function (e) {
+            var p = e.target;
+            console.log('target type: ' + p.type + ' :::: status: ' + p.status + ' || ' + p.get('status'));
+
+            if (p.type === 'group' && p.status !== 'moving') {
+                canvaser.remove(p.shape);
+
+                var p1 = {x: p.getCenterPoint().x - 10, y: p.getCenterPoint().y},
+                    p2 = {x: p.getCenterPoint().x + 10, y: p.getCenterPoint().y},
+                    p3 = {x: p.rect.getCenterPoint().x, y: p.rect.getCenterPoint().y};
+
+                var shape = makePolygon(p1, p2, p3);
+
+                canvaser.add(shape);
+                canvaser.sendToBack(shape);
+                p.shape = shape;
+            } else if (p.type === 'rect') {
+                var group = canvaser.item(id - 1);
+                canvaser.remove(group.shape);
+
+                var p1 = {x: group.getCenterPoint().x - 10, y: group.getCenterPoint().y},
+                    p2 = {x: group.getCenterPoint().x + 10, y: group.getCenterPoint().y},
+                    p3 = {x: p.getCenterPoint().x, y: p.getCenterPoint().y};
+
+                var shape = makePolygon(p1, p2, p3);
+
+                canvaser.add(shape);
+                canvaser.sendToBack(shape);
+                group.shape = shape;
+            }
+
+            canvaser.renderAll();
+        });
+
+        canvaser.on({
+            'object:selected': selectedObject,
+            'object:modified': deselectObject
+        });
+
+        function deselectObject(e) {
+            console.log('type on deselect: ' + e.target.type);
+        }
+
+        function selectedObject(e) {
+            id = canvaser.getObjects().indexOf(e.target);
+            console.log('id: ' + id + ' type: ' + e.target.type);
+            console.log('selectedObject: ' + JSON.stringify(e.target.toJSON()));
+            console.log(e.target);//JSON.stringify(e.target));
+        }
+
+        function makePolygon(point1, point2, point3) {
+            var shape = new fabric.Polygon([point1, point2, point3], {
+                fill: '#E2E1E1',
+                hasControls: false,
+                lockRotation: true,
+                selection: false,
+                //selectable: false,
+                padding: -1,
+                perPixelTargetFind: true
+            });
+
+            shape.on('mousedown', function (evt) {
+                //TODO: refactor this to only get objects for the balloon this polygon is associated with
+                var objs = canvaser.getObjects();
+                console.log('::: objs :::');
+                console.log(objs);
+                // var group = new fabric.Group(objs, {
+                //   originX: 'center',
+                //   originY: 'center'
+                // });
+
+                var group = new fabric.Group(objs, {status: 'moving'});
+
+                // Relevant code
+                var originalX = shape.left,
+                    originalY = shape.top,
+                    mouseX = evt.e.pageX,
+                    mouseY = evt.e.pageY;
+                canvaser.on('object:moving', function (evt) {
+                    shape.left = originalX;
+                    shape.top = originalY;
+                    group.left += evt.e.pageX - mouseX;
+                    group.top += evt.e.pageY - mouseY;
+                    originalX = shape.left;
+                    originalY = shape.top;
+                    mouseX = evt.e.pageX;
+                    mouseY = evt.e.pageY;
+                });
+
+                canvaser.setActiveGroup(group.setCoords()).renderAll();
+            });
+
+            // clean up the listener
+            shape.on('mouseup', function (evt) {
+                canvaser.off('object:moving');
+            });
+            return shape;
+        }
+
+        function makeRect(left, top, width, height, canvas) {
+            return new fabric.Rect({
+                left: left,
+                top: top,
+                width: width,
+                height: height,
+                // fill: 'rgb(127, 140, 141)',
+                fill: 'black',
+                originX: 'left',
+                originY: 'top',
+                centeredRotation: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                lockRotation: true,
+                hasControls: false,
+                cornerSize: 0,
+                hasBorders: false,
+                padding: 0
+            });
+        }
+
+        function addTextToRect(rect, text) {
+            return new fabric.IText(textInCloud, {
+                left: rect.left + 5, //Take the block's position
+                top: rect.top + 10,
+                fill: 'black',
+                fontSize: 20,
+                fontFamily: 'Arial',
+                name: 'text1'
+            });
+        }
+    }
+}
+
+
+export function disableControls(obj, groups) {
+    if (obj) {
+        obj.hasControls = obj.hasBorders = false;
+    }
+    else if (groups) {
+        let items = groups.getObjects();
+        groups.hasControls = groups.hasBorders = false;
+        for (var i = 0; i < items.length; i++) {
+            items[i].hasControls = items[i].hasBorders = false;
+        }
+    }
 }

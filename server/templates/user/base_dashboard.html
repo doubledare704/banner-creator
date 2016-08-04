@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-lg-3">
+            <ul class="dashboard-menu">
+                <li class="{% if request.url_rule.endpoint == 'dashboard' %}dashboard-menu-active{% endif %}">
+                    <a href="{{ url_for('dashboard') }}">Main</a>
+                </li>
+                <li class="{% if request.url_rule.endpoint == 'dashboard_user_banners' %}dashboard-menu-active{% endif %}">
+                    <a href="{{ url_for('dashboard_user_banners') }}">Banners</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-lg-9">
+        {% block dashboard_content %}
+        {% endblock dashboard_content %}
+        </div>
+    </div>
+{% endblock page_content%}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='adminbundle.js') }}"></script>
+{% endblock scripts %}

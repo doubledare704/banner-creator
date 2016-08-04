@@ -11,10 +11,9 @@ function loadHist() {
             }
         }
     )
-        .then((result) => result.json(), console.log('Json accepted'))
+        .then((result) => result.json())
         .then(function ({fetch_history}) {
-            console.log(fetch_history);
-            console.log(fetch_history.objects);
+            editor.canv.clear();
             editor.canv.loadFromJSON(fetch_history, editor.canv.renderAll.bind(editor.canv))
         })
         .catch(function (error) {
@@ -36,11 +35,7 @@ function sendTohistory() {
         },
         body: JSON.stringify(data)
     })
-        .then((res) => res.json(), console.log("It arrived to flask"))
-        .then(function ({result}) {
-            console.log({result});
-
-        })
+        .then((res) => res.json())
         .catch(function (error) {
             console.log('Request failed', error);
         });

@@ -1,0 +1,79 @@
+dashboard-success-color = #d3ffce
+dashboard-error-color = #ffc0cb
+dashboard-menu-color = #003366
+dashboard-common-color = #eeeeee
+dashboard-menu-active-color = #00274E
+dashboard-comment-color = #dedede
+
+
+.review-section
+  padding: 20px
+  background-color: dashboard-common-color
+  border-radius: 10px
+  margin-bottom 10px
+
+.dashboard-menu
+  list-style: none
+  padding: 10px
+  li
+    padding: 10px
+    background-color: dashboard-menu-color
+    margin: 2px
+    border-radius: 5px
+    &.dashboard-menu-active
+      background-color: dashboard-menu-active-color
+    a
+      color: #f0f8ff
+      text-decoration: none
+
+.dashboard-reviwer-name
+  color: dashboard-menu-color
+
+.dashboard-show-banner
+  cursor: pointer
+  margin-bottom: 5px
+
+.dashboard-review-banner
+  display: none
+  margin-bottom: 5px
+
+.review-section-success
+  background-color: dashboard-success-color
+
+.review-section-rejected
+  background-color: dashboard-error-color
+
+.dashboard-banners-container
+  padding: 15px
+  margin-bottom: 10px
+  border-radius: 5px
+  background-color: dashboard-common-color
+
+.dashboard-banner-title
+.dashboard-review-title
+  font-weight: bold
+
+.pagination-container
+  text-align: center
+  .pagination
+    li
+      a
+        color: dashboard-menu-color
+      &.active
+        a
+          background-color: dashboard-menu-color
+          color: white
+          border-color: dashboard-menu-color
+
+.dashboard-to-review-btn
+  a
+    text-decoration: none
+
+.dashboard-comment-text
+  padding: 5px
+  border-radius: 5px
+  background-color: dashboard-comment-color
+
+.review-section-rejected .dashboard-comment-text,
+.review-section-success .dashboard-comment-text
+  background-color: whitesmoke

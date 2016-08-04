@@ -25,3 +25,6 @@ LOGGING_FORMAT = '%(levelname)s - %(asctime)s - %(message)s [module: %(module)s,
 LOGGING_LOCATION = 'logs/banner.log'
 LOGGING_LEVEL = logging.WARNING
 LOGGING_FILE_SIZE = 1 * 1024 * 1024  # 1 MB
+
+# i18n
+BABEL_DEFAULT_LOCALE = 'ru'

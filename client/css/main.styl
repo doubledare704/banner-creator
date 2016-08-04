@@ -1,4 +1,6 @@
 @require '~normalize-styl'
+@require 'dashboard.styl'
+@require 'user_profile.styl'
 
 html, body
   height 100%
@@ -73,6 +75,7 @@ section.with_menu:hover > #rightcol
   align-content center
   border 2px solid #000000
   border-left 0
+
   a
     padding 30px 50px
     justify-content flex-start
@@ -113,14 +116,16 @@ canvas#main
   background-color: white
   #backgroundsList
     list-style: none
-    padding: 0
+    padding: 5px
     height: 400px
     overflow: hidden
     overflow-y: scroll
-    img
-      border: 2px solid black
-      height: 100px
-      width: 100px
+    li
+      margin: 2px
+      img
+        border: 1px solid black
+        height: 100px
+        width: 100px
 
 #rightcol
   display none
@@ -167,26 +172,12 @@ canvas#main
 .hidden
   display: none
 
-.modal
-  display none
-  position fixed
-  z-index 1
-  padding-top 100px
-  left 0
-  top 0
-  width 100%
-  height 100%
-  overflow auto
-  background-color rgb(0, 0, 0)
-  background-color rgba(0, 0, 0, 0.4)
-
 .modal-content
   position: relative
   background-color: #fefefe
   margin: auto
   padding: 0
   border: 1px solid #888
-  width: 80%
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
   -webkit-animation-name: animatetop
   -webkit-animation-duration: 0.4s
@@ -219,49 +210,51 @@ canvas#main
     opacity: 1
   }
 
-
-/* The Close Button */
-.close
-  color: white
-  float: right
-  font-size: 28px
-  font-weight: bold
-
-
-.close:hover,
-.close:focus
-  color: #000
-  text-decoration: none
-  cursor: pointer
-
-
-.modal-header
-  padding: 2px 16px
-  background-color: #5cb85c
-  color: white
-
-
-.modal-body
-  padding: 2px 16px
-
-
-.modal-footer
-  padding: 2px 16px
-  background-color: #5cb85c
-  color: white
-
 #result_review, #continue
   display none
+
+.box-like-a-boss
+  display flex
+  flex-wrap wrap
+  flex-direction row-reverse
+  height auto
+
+  .box-item
+    flex-basis 33%
+    box-shadow 0 0 0 1px rgba(0,0,0,0.1)
+
+    img
+      height auto
+      width 100%
 
 #popup
   position fixed
   left 20%
   top 15%
-  width 50%
   z-index 5
-  text-align center
 
-  button
-    margin-right 10px
-    width 7em
-    height 2em
+.btn-wrapper
+  display: inline-block
+  margin: 5px
+
+.img-wrapper
+  height: 200px
+  background-position: center center
+  background-repeat: no-repeat
+  background-size: contain
+
+.img-popup
+  height: 480px
+  background-position: center center
+  background-repeat: no-repeat
+  background-size: contain
+
+#backgrounds-table tbody tr td
+  vertical-align: middle
+
+#backgrounds-table thead tr th
+  text-align: center
+
+#backgrounds-table tbody tr td img
+  height: 200px
+

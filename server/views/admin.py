@@ -5,11 +5,16 @@ from werkzeug.exceptions import Forbidden, BadRequest
 
 from server.forms.user_edit_form import UserEditForm, USER_ROLES
 from server.models import Image, User
-from flask import render_template, json, request, current_app
+
 from flask_login import current_user, login_required
 
-from server.db import db
+from flask import render_template, json, request, current_app, url_for, redirect
+from werkzeug.exceptions import NotFound
 import os
+
+from server.db import db
+
+per_page = 3
 
 
 def admin():
@@ -31,16 +36,20 @@ def users_page():
     query_db = query_db.filter_by(active=request.args.get('active', True)).order_by(User.created_at.desc())
 
     users_paginator = query_db.paginate(per_page=10)
-    users_list = ([{'id': user.id,
-                    'first_name': user.first_name,
-                    'last_name': user.last_name,
-                    'email': user.email,
-                    'gender': user.gender.name,
-                    'role': user.role.name,
-                    'registration_date': user.created_at.isoformat(),
-                    'auth_by': user.social_type.name
-                    }
-                   for user in users_paginator.items])
+
+    users_list = []
+    for user in users_paginator.items:
+        users_map = {'id': user.id,
+                     'first_name': user.first_name,
+                     'last_name': user.last_name,
+                     'email': user.email,
+                     'role': user.role.name,
+                     'registration_date': user.created_at.isoformat(),
+                     'auth_by': user.social_type.name
+                     }
+        if user.gender:
+            users_map['gender'] = user.gender.name
+        users_list.append(users_map)
 
     pagination = Pagination(per_page=10, page=users_paginator.page, total=users_paginator.total, search=search,
                             record_name='users', css_framework='bootstrap3', found=users_paginator.total)
@@ -88,7 +97,14 @@ def remove_user(user_id):
 
 
 def backgrounds():
-    query = Image.query.order_by(Image.name.asc())
+    tab = request.args.get('tab')
+    backgrounds = Image.query.filter(Image.active == (tab == 'active')).order_by(Image.title.asc())
+
+    try:
+        backgrounds_paginator = backgrounds.paginate(per_page=per_page, error_out=True)
+    except NotFound:
+            last_page = round(backgrounds.count()/per_page)
+            return redirect(url_for('admin_backgrounds', tab=tab, page=last_page))
 
     backgrounds = [
         {
@@ -96,12 +112,15 @@ def backgrounds():
            'title': background.title,
            'preview': '/uploads/' + background.preview,
            "active": background.active
-        } for background in query.all()
+        } for background in backgrounds_paginator.items
     ]
+
+    pagination = Pagination(per_page=per_page, page=backgrounds_paginator.page, total=backgrounds_paginator.total,
+                            css_framework='bootstrap3')
 
     backgrounds = json.dumps(backgrounds)
 
-    return render_template('admin/backgrounds.html', backgrounds=backgrounds)
+    return render_template('admin/backgrounds.html', backgrounds=backgrounds, pagination=pagination, tab=tab)
 
 
 def inactivate_image(id):
