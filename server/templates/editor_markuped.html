@@ -78,13 +78,13 @@
                 Загрузить изображение
             </span>
                 </a>
-                <form action="">
+                <form id="upload-file" method="post" enctype="multipart/form-data">
                     <input type="file" name="file" id='inputted'/>
                 </form>
                 <div class="rightcol2">
                     <h2>Выберите вариант загрузки</h2>
                     <div class="uploadings">
-                        <div><a href="{{ url_for ('cuts_background') }}"><i class="material-icons">exit_to_app</i>Нужно вырезать фон</a>
+                        <div><a id="cutters" href="{{ url_for ('cuts_background') }}"><i class="material-icons">exit_to_app</i>Нужно вырезать фон</a>
                         </div>
                         <div id="local_load"><a href="#" id="input"><i class="material-icons">find_in_page</i>Загрузить
                             из ПК</a></div>
@@ -101,9 +101,9 @@
                         фона
                         <small>без реестрации и смс</small>
                     </a>
-                    <a href="{{ url_for ('index') }}"><i class="material-icons">accessible</i>Home</a>
-                    <a href="{{ url_for ('admin') }}"><i class="material-icons">accessibility</i>Admin</a>
-                    <a href="{{ url_for ('dashboard') }}"><i class="material-icons">all_out</i>Dashboard</a>
+                    <a href="{{ url_for ('index') }}"><i class="material-icons">accessible</i>На главную</a>
+                    <a href="{{ url_for ('admin') }}"><i class="material-icons">accessibility</i>Админка</a>
+                    <a href="{{ url_for ('dashboard') }}"><i class="material-icons">all_out</i>Доска уведомлений</a>
                     <a href="#" id="result_review"><i class="material-icons">description</i>Просмотреть результат</a>
                     <a href="" id="continue"><i class="material-icons">flip_to_back</i>Продолжить редактировать</a>
                     <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i> Скачать

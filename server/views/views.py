@@ -231,21 +231,22 @@ def save_cuted():
         )
         db.session.add(img_cutted)
         db.session.flush()
+        r = {
+            'src': url_for('editor'),
+            'file': url_for('uploaded_file', filename=filename)
+        }
+        return jsonify({'result': r}), 201
 
-        return '', 201
 
-
-# not working
 @login_required
 def load_from_pc():
     if not request.files:
         return jsonify({'result': 'no field file in form'}), 406
     else:
-        file_ = request.files.getlist("file")
+        file_ = request.files['file']
         name = str(uuid.uuid4()) + '.png'
         preview_name = 'preview_' + name
-        original_file = image_resize(file_)
-        original_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], name))
+        file_.save(os.path.join(current_app.config['UPLOAD_FOLDER'], name))
         preview_file = image_preview(file_)
         preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
 
