@@ -1,11 +1,28 @@
-from server.views.views import index, editor, image_delete, image_rename, background_images, continue_edit, \
-    history_image, cuts_background
-from server.views.auth import login_page, authorize, oauth_callback, log_out
 from server.utils.image import uploaded_file
-from server.views.admin import admin, backgrounds, inactivate_image, activate_image, image_delete_from_DB, users_page, \
+from server.views.admin import (
+    admin,
+    backgrounds,
+    inactivate_image,
+    activate_image,
+    image_delete_from_DB,
+    users_page,
     remove_user
-
-from server.views.views import make_review, review_image,review_tool,review_action
+)
+from server.views.auth import login_page, authorize, oauth_callback, log_out
+from server.views.views import (
+    index, editor,
+    image_delete,
+    image_rename,
+    background_images,
+    continue_edit,
+    history_image,
+    make_review,
+    review_tool,
+    review_image,
+    review_action,
+    cuts_background,
+    save_cuted,
+    load_from_pc)
 
 from server.views import dashboard as dashboard_views
 
@@ -30,7 +47,7 @@ def setup_routes(app):
 
     # admin
     app.add_url_rule('/admin/', view_func=admin)
-    app.add_url_rule('/admin/backgrounds/', view_func=backgrounds)
+    app.add_url_rule('/admin/backgrounds/', view_func=backgrounds, endpoint='admin_backgrounds')
     app.add_url_rule('/admin/inactivate_image/<int:id>', methods=['POST'], view_func=inactivate_image)
     app.add_url_rule('/admin/delete_image/<int:id>', methods=['POST'], view_func=image_delete_from_DB)
     app.add_url_rule('/admin/activate_image/<int:id>', methods=['POST'], view_func=activate_image)
@@ -38,7 +55,9 @@ def setup_routes(app):
     # editor
     app.add_url_rule('/editor/<int:history_image_id>', view_func=continue_edit)
     app.add_url_rule('/editor/history/<int:history_image_id>', methods=['GET', 'POST'], view_func=history_image)
-    app.add_url_rule('/editor/cut', view_func=cuts_background)
+    app.add_url_rule('/cutter/', view_func=cuts_background)
+    app.add_url_rule('/editor/cut_saved/', methods=['GET', 'POST'], view_func=save_cuted)
+    app.add_url_rule('/editor/local/', methods=['POST'], view_func=load_from_pc)
 
     # auth routes
     app.add_url_rule('/login', view_func=login_page)

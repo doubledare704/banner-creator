@@ -247,3 +247,40 @@ canvas#main
   background-position: center center
   background-repeat: no-repeat
   background-size: contain
+
+#backgrounds-table tbody tr td
+  vertical-align: middle
+
+#backgrounds-table thead tr th
+  text-align: center
+
+#backgrounds-table tbody tr td img
+  height: 200px
+
+.rightcol2
+  display none
+  position absolute
+  background-color #ffffff
+  border 2px dashed #000
+  width 500px
+  text-align left
+  padding-left 20px
+  top -150%
+  right -200%
+  z-index 2
+
+  .uploadings
+    display flex
+    flex-wrap wrap
+    flex-direction column
+    height auto
+
+    div
+      flex-basis 50px
+
+      i
+        vertical-align: middle;
+
+
+section.last-sec:hover > .rightcol2
+  display block

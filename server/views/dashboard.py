@@ -22,7 +22,7 @@ def dashboard():
         return render_template('user/user_dashboard.html', reviews=reviews, pagination=pagination)
     elif current_user.role == User.UserRole.designer:
         reviews = BannerReview.query.filter_by(designer_id=current_user.id).order_by(BannerReview.created_at.desc()
-                                                                                 ).paginate(page=page, per_page=10)
+                                                                                     ).paginate(page=page, per_page=10)
         pagination = Pagination(per_page=10, page=page, total=reviews.total, css_framework='bootstrap3')
         return render_template('user/designer_dashboard.html', reviews=reviews, pagination=pagination)
 
