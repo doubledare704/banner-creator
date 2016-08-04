@@ -210,7 +210,7 @@ def user_profile():
         user.query.update(form.data)
         db.session.commit()
         flash('Профиль изменен.')
-    else:
+    elif request.method == 'POST':
         flash('Профиль не изменен. Проверьте введенные данные.')
     return render_template('user/user_profile.html', form=form)
 
