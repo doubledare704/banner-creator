@@ -3,7 +3,7 @@ import json
 from flask_paginate import Pagination
 from werkzeug.exceptions import Forbidden, BadRequest
 
-from server.forms.user_edit_form import UserEditForm
+from server.forms.user_edit_form import UserEditForm, USER_ROLES
 from server.models import Image, User
 from flask import render_template, json, request, current_app
 from flask_login import current_user, login_required
@@ -45,7 +45,7 @@ def users_page():
     pagination = Pagination(per_page=10, page=users_paginator.page, total=users_paginator.total, search=search,
                             record_name='users', css_framework='bootstrap3', found=users_paginator.total)
 
-    roles_list = json.dumps([role.name for role in User.UserRole])
+    roles_list = json.dumps(USER_ROLES)
 
     return render_template('admin/users.html',
                            users_list=json.dumps(users_list),
@@ -58,19 +58,22 @@ def users_page():
 @login_required
 def change_user(user_id):
     form = UserEditForm()
-    if form.validate_on_submit():
-        db.session.query(User).filter(User.id == user_id).update(form.data)
-        user = User.query.get_or_404(user_id)
-        return json.jsonify({'id': user.id,
-                             'first_name': user.first_name,
-                             'last_name': user.last_name,
-                             'email': user.email,
-                             'gender': user.gender.name,
-                             'role': user.role.name,
-                             'registration_date': user.created_at.isoformat(),
-                             'auth_by': user.social_type.name
-                             })
-    raise BadRequest()
+    if not form.validate_on_submit():
+        raise BadRequest()
+    user = User.query.get_or_404(user_id)
+    # user.first_name form.data
+    User.query.filter_by(id=user_id).update(form.data)
+    db.session.add(user)
+    db.session.commit()
+    return json.jsonify({'id': user.id,
+                         'first_name': user.first_name,
+                         'last_name': user.last_name,
+                         'email': user.email,
+                         'gender': user.gender.name,
+                         'role': user.role.name,
+                         'registration_date': user.created_at.isoformat(),
+                         'auth_by': user.social_type.name
+                         })
 
 
 @login_required

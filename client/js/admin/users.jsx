@@ -16,16 +16,15 @@ class User extends React.Component {
             user: this.props.user
         };
         this.showEditPopup = this.showEditPopup.bind(this);
-        this.rem = this.rem.bind(this);
+        this.removeUser = this.removeUser.bind(this);
         this.saveUser = this.saveUser.bind(this);
     }
 
-    rem() {
+    removeUser() {
         let {user} = this.state;
         popup.change({
             title: `Вы действительно хотите удалить пользователя ${user.first_name} ${user.last_name}?`,
             confirm: true,
-            flash: false,
             confirmAction: ()=> {
                 fetch(`/admin/users/${this.state.user.id}`, {
                     method: 'DELETE',
@@ -41,7 +40,7 @@ class User extends React.Component {
                         })
                     })
                     .catch((response) => {
-                        console.error(response.message)
+                        console.error(response.message);
                         popup.change({
                             title: `Ошибка сервера`,
                             confirm: false,
@@ -72,7 +71,7 @@ class User extends React.Component {
                 popup.onClose()
             })
             .catch((response) => {
-                console.error(response.message)
+                console.error(response.message);
                 popup.change({
                     title: `Ошибка сервера`,
                     confirm: false,
@@ -86,9 +85,6 @@ class User extends React.Component {
 
         popup.change({
             data: <form className="form-horizontal" onSubmit={this.saveUser}>
-                <div className='form-group'>
-                    <input type="hidden" name="csrf_token" defaultValue={this.props.csrfToken}/>
-                </div>
                 <div className='form-group'>
                     <label className="col-sm-2">First Name</label>
                     <div className="col-sm-10">
@@ -115,9 +111,9 @@ class User extends React.Component {
                         </select>
                     </div>
                 </div>
-                <div className='form-group'>
-                    <button type="submit" className='btn btn-success'>Save</button>
-                    <a className='btn btn-default' onClick={popup.onClose}>Close</a>
+                <div className='form-group text-center'>
+                    <button type="submit" className='btn btn-success'>Сохранить</button>
+                    <a className='btn btn-default' onClick={popup.onClose}>Закрыть</a>
                 </div>
             </form>,
             confirm: false,
@@ -136,16 +132,16 @@ class User extends React.Component {
                 <td>{moment(user.registration_date).format("DD-MM-YYYY HH:mm")}</td>
                 <td>{user.auth_by}</td>
                 <td>
-                    <a className={classNames('btn btn-default', {'hidden': removed})}
-                       onClick={this.showEditPopup}><i className="glyphicon glyphicon-pencil"/> Edit</a>
-                    <a className={classNames('btn btn-danger', {
+                    <a className={classNames('btn btn-default btn-sm', {'hidden': removed})}
+                       onClick={this.showEditPopup}><i className="glyphicon glyphicon-pencil"/> Изменить</a>
+                    <a className={classNames('btn btn-danger btn-sm', {
                         'disabled': user.id === this.props.currentUserId,
                         'hidden': removed
-                    })} onClick={this.rem}><i
-                        className="glyphicon glyphicon-trash"/> Delete
+                    })} onClick={this.removeUser}><i
+                        className="glyphicon glyphicon-trash"/> Удалить
                     </a>
                     <a className={classNames('btn btn-default disabled', {'hidden': !removed})}><i
-                        className="glyphicon glyphicon-remove"/> Deleted
+                        className="glyphicon glyphicon-remove"/>Удалено
                     </a>
                 </td>
             </tr>
@@ -158,12 +154,12 @@ const UsersList = (props) => {
         <table className="table">
             <thead>
             <tr>
-                <th>Name</th>
+                <th>Имя</th>
                 <th>E-mail</th>
-                <th>Role</th>
-                <th>Registration date</th>
-                <th>Auth by</th>
-                <th>Actions</th>
+                <th>Роль</th>
+                <th>Дата регистрации</th>
+                <th>Соцсеть</th>
+                <th>Действия</th>
             </tr>
             </thead>
             <tbody>

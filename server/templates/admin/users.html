@@ -2,7 +2,7 @@
 
 {% block admin_content %}
 
-<h2>Users</h2>
+<h2>Пользователи</h2>
 
 <div class="row">
     <form method="get" action="{{ url_for('users_page') }}">
@@ -11,13 +11,12 @@
                 <i class="glyphicon glyphicon-search"></i>
             </span>
             {% if search_query %}
-            <input type="text" class="form-control" placeholder="Search" name="search" value="{{search_query}}">
+            <input type="text" class="form-control" placeholder="Поиск" name="search" value="{{search_query}}">
             {% else %}
-            <input type="text" class="form-control" placeholder="Search" name="search">
+            <input type="text" class="form-control" placeholder="Поиск" name="search">
             {% endif %}
         </div>
     </form>
-    {{ pagination.info }}
     <div id="users" data-bazooka="usersList" data-users-users-list="{{ users_list }}"
          data-users-users-roles="{{ roles_list }}" data-users-csrf-token="{{ csrf_token() }}" data-users-current-user-id="{{ current_user.id }}"></div>
 </div>

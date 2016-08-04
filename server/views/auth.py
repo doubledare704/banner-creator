@@ -37,7 +37,7 @@ def oauth_callback(social_network_name):
         )
         db.session.add(user)
         db.session.commit()
-    if user.active:
+    if user.is_active():
         login_user(user)
     else:
         return render_template('auth/banned.html')

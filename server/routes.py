@@ -1,11 +1,13 @@
-from server.views.views import index, editor, image_delete, image_rename, background_images, review, continue_edit, \
-    history_image, review_tool
+from server.views.views import (
+    index, editor, image_delete, image_rename, background_images, review, continue_edit, history_image, review_tool
+)
 from server.views.auth import login_page, authorize, oauth_callback, log_out
 from server.views.admin import inactivate_image, activate_image
 from server.utils.image import uploaded_file
 
-from server.views.admin import admin, backgrounds, image_delete_from_DB, users_page, remove_user, \
-    change_user
+from server.views.admin import (
+    admin, backgrounds, image_delete_from_DB, users_page, remove_user, change_user
+)
 
 
 def setup_routes(app):
