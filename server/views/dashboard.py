@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 from flask_login import current_user, login_required
 from flask_paginate import Pagination
 
-from server.models import User, BannerReview, Banner, BackgroundImage
+from server.models import User, BannerReview, Banner, BackgroundImage, Project
 from server.db import db
 
 @login_required
@@ -35,32 +35,8 @@ def user_banners():
 
 @login_required
 def dashboard_images():
-    # if request.method == 'POST':
-    #     # check if the post request has the file part
-    #     if 'file' not in request.files:
-    #         return json.dumps([{'message': 'No file part !'}])
-    #     file = request.files['file']
-    #     # if user does not select file, browser also
-    #     # submit a empty part without filename
-    #     if file.filename == '':
-    #         return json.dumps([{'message': 'No selected file'}])
-    #     if file and allowed_file(file.filename):
-    #         filename = str(uuid.uuid1()).replace("-", "") + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
-    #         preview_name = 'preview_' + filename
-    #         original_file = image_resize(file)
-    #         original_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-    #         preview_file = image_preview(file)
-    #         preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
-    #         title = request.form['title']
-    #         image = BackgroundImage(
-    #             name=filename,
-    #             title=title,
-    #             preview=preview_name
-    #         )
-    #         db.session.add(image)
-    #         return redirect(request.url)
-
     images = BackgroundImage.query.filter_by(active=True)
+    projects = Project.query.all()
     image_json = json.dumps(
         [{'id': image.id,
           'url': '/uploads/' + image.name,
@@ -69,12 +45,12 @@ def dashboard_images():
           }
          for image in images
          ])
-    return render_template('user/dashboard_images.html', image_json=image_json)
+    return render_template('user/dashboard_images.html', image_json=image_json, projects=projects)
 
 def upload():
 
     uploaded_files = request.files.getlist("file[]")
-
+    project = request.form['project']
     for file in uploaded_files:
         if file and allowed_file(file.filename):
 
@@ -87,7 +63,8 @@ def upload():
             image = BackgroundImage(
                 name=filename,
                 title=file.filename,
-                preview=preview_name
+                preview=preview_name,
+                project_id=project
             )
             db.session.add(image)
 

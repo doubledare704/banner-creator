@@ -31,11 +31,11 @@ class EditorWindow extends React.Component {
     }
 
     addText() {
-        this.editor.setFont("Roboto", 28, "black", "\n Пиши сюда \n","red", 0.5);
+        this.editor.setFont("Roboto", 28, "black", "Пиши сюда","red", 0.5);
     }
 
     addDot(){
-        this.editor.addDot("Roboto", 28, "black", "\n Пиши сюда \n","red", 0.5);
+        this.editor.addDot();
     }
 
     deleteObject() {
@@ -137,27 +137,29 @@ class EditorWindow extends React.Component {
 
                     <canvas id="main" ref="canvas"></canvas>
 
-                     <div className="form-group">
+                    <div className="col-lg-9">
+                         <div className="form-group">
                           <label for="comment">Коментарий:</label>
                           <textarea className="form-control" ref="comment" rows="5" id="comment"></textarea>
+                        </div>
+                        <form className="form-inline" action="" method="post">
+                           <div className="form-group">
+                                <span className="btn-wrapper" >
+                                    ПЛОХО: <input onClick={this.changeStatus} type="radio" name="status" value="not_accepted"/>
+                                </span>
+                            </div>
+                            <div className="form-group">
+                                <span className="btn-wrapper" >
+                                    ХОРШО: <input onClick={this.changeStatus} type="radio" name="status" value="accepted"/>
+                                </span>
+                            </div>
+                            <div className="btn btn-success form-group btn-wrapper">
+                                <i className="glyphicon glyphicon-envelope"/>
+                                <span onClick={this.sendToReview}> Одправить</span>
+                            </div>
+                        </form>
                     </div>
 
-                    <form className="form-inline" action="" method="post">
-                       <div className="form-group">
-                            <span className="btn-wrapper" >
-                                ПЛОХО: <input onClick={this.changeStatus} type="radio" name="status" value="not_accepted"/>
-                            </span>
-                        </div>
-                        <div className="form-group">
-                            <span className="btn-wrapper" >
-                                ХОРШО: <input onClick={this.changeStatus} type="radio" name="status" value="accepted"/>
-                            </span>
-                        </div>
-                        <div className="btn btn-success form-group btn-wrapper">
-                            <i className="glyphicon glyphicon-envelope"/>
-                            <span onClick={this.sendToReview}> Одправить</span>
-                     </div>
-                    </form>
 
 
                 </div>
@@ -169,7 +171,7 @@ export default function (node) {
     const { imageUrl, imageId } = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
-        <EditorWindow width={910} height={500} imageUrl={imageUrl} imageId = {imageId} />,
+        <EditorWindow width={860} height={500} imageUrl={imageUrl} imageId = {imageId} />,
         node
     );
 }

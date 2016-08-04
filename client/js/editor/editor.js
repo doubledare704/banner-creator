@@ -263,7 +263,7 @@ export default class Editor {
 
     addDot(){
         let circle = new fabric.Circle({
-            radius: 10,
+            radius: 6,
             fill: 'black',
             left: 490,
             top: 90

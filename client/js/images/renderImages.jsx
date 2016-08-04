@@ -13,7 +13,7 @@ class DeleteButton extends React.Component {
       }
 
     onDelete() {
-        popup.change({data: "Удалить ?",
+        popup.change({data: <h2>Удалить ?</h2> ,
         confirm: true,
         confirmAction: this.props.handleDelete(this.props.id),
         flash: false
@@ -150,7 +150,7 @@ class ImagesList extends React.Component {
             }).then(response => {
                 if (response.status !== 200) {
                     popup.change({
-                       data: <p>Што то не так ошибка {response.status} </p>
+                       data: <h2>Што то не так ошибка {response.status} </h2>
                     });
                     return response.status;
                 }
@@ -161,7 +161,10 @@ class ImagesList extends React.Component {
                 this.setState({
                     displayedImages: displayedImages
                     });
-                popup.change({data: "Удален"});
+                popup.change({
+                    data: <h2> Удален </h2>,
+                    flash: true
+                });
             });
         };
     }
@@ -178,7 +181,7 @@ class ImagesList extends React.Component {
             }).then(response => {
                 if (response.status !== 200) {
                     popup.change({
-                       data: <p>Што то не так ошибка  {response.status} </p>
+                       data: <h2>Што то не так ошибка  {response.status} </h2>
                     });
                     return response.status;
                 }
@@ -188,7 +191,10 @@ class ImagesList extends React.Component {
                 );
                 renameEl[0].title = title;
                 this.setState({displayedImages: this.props.imageArray});
-                popup.change({data: "Переименовано"})
+                popup.change({
+                    data: <h2> Переименовано </h2>,
+                    flash: true
+                })
             });
         };
     }
