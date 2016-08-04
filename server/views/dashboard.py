@@ -12,6 +12,7 @@ from flask_paginate import Pagination
 from server.models import User, BannerReview, Banner, BackgroundImage, Project
 from server.db import db
 
+
 @login_required
 def dashboard():
     page = int(request.args.get('page', 1))  # get page number from url query string
@@ -33,8 +34,9 @@ def user_banners():
     banners = Banner.query.filter_by(user=current_user).paginate(page=page, per_page=10)
     return render_template('user/user_banners.html', banners=banners)
 
+
 @login_required
-def dashboard_images():
+def dashboard_backgrounds():
     images = BackgroundImage.query.filter_by(active=True)
     projects = Project.query.all()
     image_json = json.dumps(
@@ -45,10 +47,11 @@ def dashboard_images():
           }
          for image in images
          ])
-    return render_template('user/dashboard_images.html', image_json=image_json, projects=projects)
+    return render_template('user/dashboard_backgrounds.html', image_json=image_json, projects=projects)
 
+
+@login_required
 def upload():
-
     uploaded_files = request.files.getlist("file[]")
     project = request.form['project']
     for file in uploaded_files:
@@ -68,5 +71,4 @@ def upload():
             )
             db.session.add(image)
 
-
-    return redirect(url_for('dashboard_backrounds'))
+    return redirect(url_for('dashboard_backgrounds'))

@@ -45,8 +45,8 @@ def setup_routes(app):
     # dashboard
     app.add_url_rule('/', view_func=dashboard_views.dashboard)
     app.add_url_rule('/dashboard/banners/', view_func=dashboard_views.user_banners, endpoint='dashboard_user_banners')
-    app.add_url_rule('/dashboard_images/', methods=['GET', 'POST'], view_func=dashboard_views.dashboard_images,
-                     endpoint='dashboard_backrounds')
+    app.add_url_rule('/dashboard/backgrounds/', methods=['GET', 'POST'], view_func=dashboard_views.dashboard_backgrounds,
+                     endpoint='dashboard_backgrounds')
     app.add_url_rule('/upload', methods=['GET', 'POST'], view_func=dashboard_views.upload, endpoint='upload')
 
     # admin
