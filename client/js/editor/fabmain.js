@@ -12,13 +12,38 @@ const addtexts = document.querySelectorAll('#rightcol ul li');
 const filetoeditor = document.getElementById('inputted');
 const deleteFabricItem = document.getElementById('del_item');
 const beforeCutter = document.getElementById('cutters');
+const allCutted = document.getElementById('from_db');
 
+// loads all cuted backgrounds from db
+allCutted.addEventListener('click', function () {
+    fetch('/editor/cut-choose/',
+        {
+            method: 'get',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+    )
+        .then((res) => res.json())
+        .then(function ({result}) {
+            let elem = document.createElement("div");
+            elem.class = "boxer";
+            for (var i = 0; i < result.length; i++) {
+                elem.append("<img src=" + result[i].preview + "/>");
+            }
+            console.log(elem);
+            console.log(result)
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+});
 
 // save to local storage
 beforeCutter.addEventListener('click', function () {
     let bannerStory = editor.canv.toJSON();
     bannerStory = JSON.stringify(bannerStory);
-    console.log(bannerStory);
     localStorage.setItem('canvasStory', bannerStory);
 });
 

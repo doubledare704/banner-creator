@@ -97,7 +97,7 @@ def continue_edit(history_image_id):
 @login_required
 def history_image(history_image_id):
     if request.method == 'POST':
-        if 'hist_id' or 'jsn' not in request.files:
+        if 'jsn' not in request.json:
             return jsonify({'result': 'no hist_id or jsn field'})
         else:
             hist_id = request.json['hist_id']
@@ -263,3 +263,16 @@ def load_from_pc():
         }
 
         return jsonify({'result': review_jsoned}), 201
+
+
+@login_required
+def load_all_cuts():
+    allimages = Image.query.all()
+    cut_jsoned = []
+    for img in allimages:
+        cut_jsoned.append({
+            'url': '/uploads/' + img.name,
+            'preview': '/uploads/' + img.preview
+        })
+
+    return jsonify({'result': cut_jsoned}), 201
