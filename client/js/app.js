@@ -5,6 +5,7 @@ import loginClick from './auth_helper'
 import reviewTool from './images/reviewTool.jsx'
 import reviewAdmin from './admin/reviewsAdmin.jsx';
 import users from './admin/users.jsx';
+import toggleProfileForm from './profile/profile';
 
 require('./../css/main.styl');
 const Baz = require('bazooka');
@@ -16,10 +17,8 @@ Baz.register({
     'showBanner': showBanner,
     'loginClick': loginClick,
     'reviewAdmin': reviewAdmin,
-    'usersList': users
+    'usersList': users,
+    'toggleProfileForm': toggleProfileForm
 });
 
 Baz.watch();
-
-const unwatch = Baz.watch();
-

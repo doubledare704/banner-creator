@@ -7,11 +7,16 @@
         <div class="col-lg-3">
             <ul class="dashboard-menu">
                 <li class="{% if request.url_rule.endpoint == 'dashboard' %}dashboard-menu-active{% endif %}">
-                    <a href="{{ url_for('dashboard') }}">Main</a>
+                    <a href="{{ url_for('dashboard') }}">Главная</a>
                 </li>
                 <li class="{% if request.url_rule.endpoint == 'dashboard_user_banners' %}dashboard-menu-active{% endif %}">
-                    <a href="{{ url_for('dashboard_user_banners') }}">Banners</a>
+                    <a href="{{ url_for('dashboard_user_banners') }}">Банера</a>
                 </li>
+                {% if current_user.role.name in ('designer', 'admin') %}
+                <li class="{% if request.url_rule.endpoint == 'dashboard_user_banners' %}dashboard-menu-active{% endif %}">
+                    <a href="{{ url_for('dashboard_backrounds') }}">Фони и загрузка</a>
+                </li>
+                {% endif %}
             </ul>
         </div>
         <div class="col-lg-9">
