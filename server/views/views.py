@@ -209,6 +209,8 @@ def user_profile():
         user = User.query.get(current_user.id)
         user.query.update(form.data)
         db.session.commit()
-        flash('Профиль изменен')
+        flash('Профиль изменен.')
+    else:
+        flash('Профиль не изменен. Проверьте введенные данные.')
     return render_template('user/user_profile.html', form=form)
 

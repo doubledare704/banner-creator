@@ -19,16 +19,27 @@
       <button class="btn btn-default" data-bazooka="toggleProfileForm">Редактировать профиль <span class="glyphicon glyphicon-pencil"></span></button>
       <div class="profile-edit-form-container">
         <form method="post">
+          {% if form.first_name.errors %}
+            <ul class="form-errors-list">{% for error in form.first_name.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+          {% endif %}
           <div class="form-group">
             <label>Имя:
               <input class="form-control" name="first_name" value="{{ current_user.first_name }}">
             </label>
           </div>
+
+          {% if form.last_name.errors %}
+            <ul class="form-errors-list">{% for error in form.last_name.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+          {% endif %}
           <div class="form-group">
             <label>Фамилия:
               <input class="form-control" name="last_name" value="{{ current_user.last_name }}">
             </label>
           </div>
+
+          {% if form.gender.errors %}
+            <ul class="form-errors-list">{% for error in form.gender.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+          {% endif %}
           <div class="form-group">
             <label>Пол:
               <select class="form-control" name="gender" autocomplete="off">

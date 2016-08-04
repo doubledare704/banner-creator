@@ -5,6 +5,7 @@ from flask import Flask
 
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_babel import Babel
 
 from server.utils.auth import load_user
 from server.routes import setup_routes
@@ -21,6 +22,9 @@ def create_app():
     app.config.from_pyfile('config.py', silent=True)
     # apply config from env variable, must be an absolute path to python file
     app.config.from_envvar('APP_CONFIG_FILE')
+
+    # i18n
+    Babel(app)
 
     db.init_app(app)
 
