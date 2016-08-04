@@ -6,10 +6,10 @@ module.exports = {
         editor: "./client/js/app_editor.js"
     },
     resolveLoader: {
-        root: '/usr/local/lib/node_modules',
+        root: '/usr/local/lib/node_modules'
     },
     resolve: {
-        root: '/usr/local/lib/node_modules',
+        root: '/usr/local/lib/node_modules'
     },
     output: {
         path: __dirname,

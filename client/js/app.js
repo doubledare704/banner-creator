@@ -22,6 +22,3 @@ Baz.register({
 });
 
 Baz.watch();
-
-const unwatch = Baz.watch();
-

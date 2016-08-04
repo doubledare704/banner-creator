@@ -2,7 +2,6 @@
 let fabric = require('fabric').fabric;
 
 import Editor from './editor.js';
-import {disableControls} from './editor.js';
 
 let editor = new Editor('main', 960, 420);
 
@@ -12,6 +11,16 @@ const addbutton = document.getElementById('addButt');
 const addtexts = document.querySelectorAll('#rightcol ul li');
 const filetoeditor = document.getElementById('inputted');
 const deleteFabricItem = document.getElementById('del_item');
+const beforeCutter = document.getElementById('cutters');
+
+
+// save to local storage
+beforeCutter.addEventListener('click', function () {
+    let bannerStory = editor.canv.toJSON();
+    bannerStory = JSON.stringify(bannerStory);
+    console.log(bannerStory);
+    localStorage.setItem('canvasStory', bannerStory);
+});
 
 // deletes custom object from canvas
 deleteFabricItem.addEventListener('click', function () {
@@ -43,23 +52,41 @@ fileInput.addEventListener('click', function () {
     return false;
 });
 
-filetoeditor.addEventListener('change', (e) => {
-    const url = URL.createObjectURL(e.target.files[0]);
-    fabric.Image.fromURL(url, (img) => {
-
-        let originalsize = img.getOriginalSize();
-        let imgratio = img.width / img.height;
-        let newsize = [editor.canv.width * 0.5, editor.canv.width * 0.5 / imgratio];
-
-        if (originalsize.width > editor.canv.width || originalsize.height > editor.canv.height) {
-            img.set({
-                width: newsize[0],
-                height: newsize[1]
-            })
+filetoeditor.addEventListener('change', () => {
+    event.preventDefault();
+    const formData = new FormData(document.getElementById('upload-file')[0]);
+    formData.append('file', filetoeditor.files[0]);
+    fetch('/editor/local/',
+        {
+            method: 'POST',
+            credentials: 'same-origin',
+            body: formData
         }
-        editor.canv.add(img);
-        filetoeditor.value = ""
-    });
+    )
+        .then((res) => res.json())
+        .then(function ({result}) {
+            console.log(result);
+            var src = result.src;
+            fabric.Image.fromURL(src, (img) => {
+
+                let originalsize = img.getOriginalSize();
+                console.log(originalsize);
+                let imgratio = img.width / img.height;
+                let newsize = [editor.canv.width * 0.5, editor.canv.width * 0.5 / imgratio];
+
+                if (originalsize.width > editor.canv.width || originalsize.height > editor.canv.height) {
+                    img.set({
+                        width: newsize[0],
+                        height: newsize[1]
+                    })
+                }
+                editor.canv.add(img);
+                filetoeditor.value = ""
+            });
+        })
+        .catch(function (error) {
+            console.log('Request failed', error);
+        });
 });
 
 downloadLink.addEventListener('click', function () {
@@ -68,6 +95,34 @@ downloadLink.addEventListener('click', function () {
         activeGroup = editor.canv.getActiveGroup();
     editor.downloadImage(link, activeObject, activeGroup);
 }, false);
+
+window.onload = function () {
+
+    if (localStorage['canvasStory']) {
+        editor.canv.clear();
+        editor.canv.loadFromJSON(localStorage.getItem('canvasStory'), editor.canv.renderAll.bind(editor.canv))
+        console.log(localStorage.getItem('canvasStory'))
+    }
+    if (localStorage['file_cuted']) {
+        console.log(localStorage.getItem('file_cuted'));
+        fabric.Image.fromURL(localStorage.getItem('file_cuted'), (img) => {
+
+            let originalsize = img.getOriginalSize();
+            console.log(originalsize);
+            let imgratio = img.width / img.height;
+            let newsize = [editor.canv.width * 0.5, editor.canv.width * 0.5 / imgratio];
+
+            if (originalsize.width > editor.canv.width || originalsize.height > editor.canv.height) {
+                img.set({
+                    width: newsize[0],
+                    height: newsize[1]
+                })
+            }
+            editor.canv.add(img);
+            filetoeditor.value = ""
+        });
+    }
+};
 
 module.exports = {
     'editor': editor,

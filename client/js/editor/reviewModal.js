@@ -27,6 +27,7 @@ function sendToReview(event) {
             document.getElementById('continue').href += result.rev;
             document.getElementById('continue').style.display = "block";
             document.getElementById('result_review').style.display = "block";
+            localStorage.clear();
         })
         .catch(function (error) {
             console.log('Request failed', error);
