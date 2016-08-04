@@ -1,4 +1,3 @@
-from flask import redirect, url_for, session
 from flask_oauthlib.contrib.apps import facebook as facebook_app
 from flask_oauthlib.contrib.apps import google as google_app
 from flask_oauthlib.client import OAuth

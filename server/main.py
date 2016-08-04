@@ -5,6 +5,8 @@ from flask import Flask
 
 from flask_migrate import Migrate
 from flask_login import LoginManager
+
+from flask_wtf.csrf import CsrfProtect
 from flask_babel import Babel
 
 from server.utils.auth import load_user
@@ -32,6 +34,8 @@ def create_app():
     login_manager = LoginManager(app)
     login_manager.login_view = "login_page"
     login_manager.user_loader(load_user)
+
+    CsrfProtect(app)
 
     # load all models to be available for db migration tool
     from server import models

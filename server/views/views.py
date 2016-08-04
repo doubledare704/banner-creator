@@ -11,7 +11,7 @@ from flask import (render_template, redirect, current_app, request, jsonify,
 from flask_login import login_required, current_user
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
-from sqlalchemy import desc, asc
+from sqlalchemy import desc
 
 from server.db import db
 from server import forms
@@ -163,15 +163,18 @@ def make_review():
     return jsonify({'result': review_jsoned}), 201
     # return '', 201
 
+
 @login_required
 def review_tool():
     return render_template('review.html')
 
+
 @login_required
 def review_image(img_id):
     banner = Banner.query.get_or_404(img_id)
-    image_url = '/uploads/'+ banner.name
+    image_url = '/uploads/' + banner.name
     return render_template('review.html', image_url=image_url, image_id=img_id)
+
 
 @login_required
 def review_action():
@@ -191,11 +194,12 @@ def review_action():
     banner_review.designer_comment = form.get('comment', '')
     banner_review.reviewed = True
     banner_review.changed_at = datetime.datetime.utcnow()
-    banner_review.status =form.get('status', '')
+    banner_review.status = form.get('status', '')
     banner_review.designer_imagename = filename
     banner_review.designer_previewname = preview_name
 
     return '', 200
+
 
 @login_required
 def cuts_background():
@@ -213,4 +217,3 @@ def user_profile():
     elif request.method == 'POST':
         flash('Профиль не изменен. Проверьте введенные данные.')
     return render_template('user/user_profile.html', form=form)
-

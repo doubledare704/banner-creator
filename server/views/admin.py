@@ -1,8 +1,13 @@
 import json
 
 from flask_paginate import Pagination
+from werkzeug.exceptions import Forbidden, BadRequest
 
+from server.forms.user_edit_form import UserEditForm, USER_ROLES
 from server.models import Image, User
+
+from flask_login import current_user, login_required
+
 from flask import render_template, json, request, current_app, url_for, redirect
 from werkzeug.exceptions import NotFound
 import os
@@ -11,10 +16,12 @@ from server.db import db
 
 per_page = 3
 
+
 def admin():
     return render_template('admin/admin.html')
 
 
+@login_required
 def users_page():
     query_db = User.query
 
@@ -47,15 +54,42 @@ def users_page():
     pagination = Pagination(per_page=10, page=users_paginator.page, total=users_paginator.total, search=search,
                             record_name='users', css_framework='bootstrap3', found=users_paginator.total)
 
+    roles_list = json.dumps(USER_ROLES)
+
     return render_template('admin/users.html',
                            users_list=json.dumps(users_list),
                            pagination=pagination,
-                           search_query=search_query
+                           search_query=search_query,
+                           roles_list=roles_list
                            )
 
 
+@login_required
+def change_user(user_id):
+    form = UserEditForm()
+    if not form.validate_on_submit():
+        raise BadRequest()
+    user = User.query.get_or_404(user_id)
+    # user.first_name form.data
+    User.query.filter_by(id=user_id).update(form.data)
+    db.session.add(user)
+    db.session.commit()
+    return json.jsonify({'id': user.id,
+                         'first_name': user.first_name,
+                         'last_name': user.last_name,
+                         'email': user.email,
+                         'gender': user.gender.name,
+                         'role': user.role.name,
+                         'registration_date': user.created_at.isoformat(),
+                         'auth_by': user.social_type.name
+                         })
+
+
+@login_required
 def remove_user(user_id):
     user = User.query.get_or_404(user_id)
+    if user == current_user:
+        raise Forbidden()
     user.active = False
     db.session.add(user)
     db.session.commit()
