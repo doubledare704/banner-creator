@@ -177,16 +177,13 @@ canvas#main
   width 100%
   height 100%
   overflow auto
-  background-color rgb(0, 0, 0)
-  background-color rgba(0, 0, 0, 0.4)
-
+//
 .modal-content
   position: relative
   background-color: #fefefe
   margin: auto
   padding: 0
   border: 1px solid #888
-  width: 80%
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
   -webkit-animation-name: animatetop
   -webkit-animation-duration: 0.4s
@@ -208,7 +205,6 @@ canvas#main
     opacity: 1
   }
 
-
 @keyframes animatetop
   from {
     top: -300px
@@ -219,37 +215,6 @@ canvas#main
     opacity: 1
   }
 
-
-/* The Close Button */
-.close
-  color: white
-  float: right
-  font-size: 28px
-  font-weight: bold
-
-
-.close:hover,
-.close:focus
-  color: #000
-  text-decoration: none
-  cursor: pointer
-
-
-.modal-header
-  padding: 2px 16px
-  background-color: #5cb85c
-  color: white
-
-
-.modal-body
-  padding: 2px 16px
-
-
-.modal-footer
-  padding: 2px 16px
-  background-color: #5cb85c
-  color: white
-
 #result_review, #continue
   display none
 
@@ -257,11 +222,4 @@ canvas#main
   position fixed
   left 20%
   top 15%
-  width 50%
   z-index 5
-  text-align center
-
-  button
-    margin-right 10px
-    width 7em
-    height 2em
