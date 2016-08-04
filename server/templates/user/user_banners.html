@@ -3,12 +3,14 @@
 {% import 'user/macros.html' as macros %}
 
 {% block dashboard_content %}
-    {% for banner in banners.items %}
-    <div class="dashboard-banners-container">
-        <p class="dashboard-banner-title">{{ banner.title }}</p>
-        {{ macros.render_banner_container('Показать баннер', banner.name) }}
-    </div>
-    {% endfor %}
+  {% for banner in banners.items %}
+  <div class="dashboard-banners-container">
+    <p class="dashboard-banner-title">{{ banner.title }}</p>
+    {{ macros.render_banner_container('Показать баннер', banner.name) }}
+  </div>
+  {% endfor %}
 
-    {{ macros.render_pagination(banners, request.url_rule.endpoint) }}
+  <div class="pagination-container">
+    {{ pagination.links }}
+  </div>
 {% endblock dashboard_content %}

@@ -32,7 +32,8 @@ def dashboard():
 def user_banners():
     page = int(request.args.get('page', 1))  # get page number from url query string
     banners = Banner.query.filter_by(user=current_user).paginate(page=page, per_page=10)
-    return render_template('user/user_banners.html', banners=banners)
+    pagination = Pagination(per_page=10, page=page, total=banners.total, css_framework='bootstrap3')
+    return render_template('user/user_banners.html', banners=banners, pagination=pagination)
 
 
 @login_required
