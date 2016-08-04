@@ -137,7 +137,7 @@ class EditorWindow extends React.Component {
 
                     <canvas id="main" ref="canvas"></canvas>
 
-                    <div className="col-lg-9">
+                    <div className="col-lg-10">
                          <div className="form-group">
                           <label for="comment">Коментарий:</label>
                           <textarea className="form-control" ref="comment" rows="5" id="comment"></textarea>
@@ -171,7 +171,7 @@ export default function (node) {
     const { imageUrl, imageId } = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
-        <EditorWindow width={860} height={500} imageUrl={imageUrl} imageId = {imageId} />,
+        <EditorWindow width={960} height={420} imageUrl={imageUrl} imageId = {imageId} />,
         node
     );
 }
