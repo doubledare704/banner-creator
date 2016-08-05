@@ -41,10 +41,7 @@
                                   </a>
                                 </li>
                                 <li>
-                                    <form method="post" action="{{ url_for('log_out') }}" class="form-inline">
-                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                                        <button class="btn btn-link logout" type="submit">Вийти</button>
-                                    </form>
+                                    <a href="/" data-bazooka="auth_logout" data-users-csrf-token="{{ csrf_token() }}">Выход</a>
                                 </li>
                             {% endif %}
                         </ul>

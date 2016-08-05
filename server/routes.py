@@ -1,9 +1,10 @@
 from server.utils.image import uploaded_file
 
 from server.views.admin import (
-    admin, backgrounds, inactivate_image, activate_image, image_delete_from_DB, users_page, remove_user, change_user,
-    projects
+    admin, backgrounds, inactivate_image, activate_image, users_page, remove_user, change_user,
+    projects, image_delete_from_db
 )
+
 from server.views.auth import login_page, authorize, oauth_callback, log_out
 
 from server.views.views import (
@@ -39,7 +40,7 @@ def setup_routes(app):
     app.add_url_rule('/admin/', view_func=admin)
     app.add_url_rule('/admin/backgrounds/', view_func=backgrounds, endpoint='admin_backgrounds')
     app.add_url_rule('/admin/inactivate_image/<int:id>', methods=['POST'], view_func=inactivate_image)
-    app.add_url_rule('/admin/delete_image/<int:id>', methods=['POST'], view_func=image_delete_from_DB)
+    app.add_url_rule('/admin/delete_image/<int:id>', methods=['POST'], view_func=image_delete_from_db)
     app.add_url_rule('/admin/activate_image/<int:id>', methods=['POST'], view_func=activate_image)
     app.add_url_rule('/admin/projects/', view_func=projects, endpoint='admin_projects')
 

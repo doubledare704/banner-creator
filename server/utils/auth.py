@@ -31,4 +31,4 @@ oauth_apps = {
 
 
 def load_user(user_id):
-    return User.query.filter_by(id=user_id).first()
+    return User.query.filter_by(id=user_id, active=True).first()

@@ -1,7 +1,7 @@
 import renderImages from './images/renderImages.jsx';
 import backgroundsAdmin from './admin/backgroundsAdmin.jsx';
 import showBanner from './dashboard/dashboard';
-import loginClick from './auth_helper'
+import {loginClick, logoutClick} from './auth_helper'
 import reviewTool from './images/reviewTool.jsx'
 import reviewAdmin from './admin/reviewsAdmin.jsx';
 import users from './admin/users.jsx';
@@ -18,7 +18,9 @@ Baz.register({
     'loginClick': loginClick,
     'reviewAdmin': reviewAdmin,
     'usersList': users,
-    'toggleProfileForm': toggleProfileForm
+    'toggleProfileForm': toggleProfileForm,
+    'auth_logout': logoutClick,
+    'auth_login': loginClick
 });
 
 Baz.watch();
