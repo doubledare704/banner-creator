@@ -23,7 +23,7 @@ from server.views.views import (
     review_action,
     cuts_background,
     save_cuted,
-    load_from_pc)
+    load_from_pc, load_all_cuts)
 
 from server.views import views as main_views, dashboard as dashboard_views
 
@@ -65,6 +65,7 @@ def setup_routes(app):
     app.add_url_rule('/cutter/', view_func=cuts_background)
     app.add_url_rule('/editor/cut_saved/', methods=['GET', 'POST'], view_func=save_cuted)
     app.add_url_rule('/editor/local/', methods=['POST'], view_func=load_from_pc)
+    app.add_url_rule('/editor/cut-choose/', view_func=load_all_cuts)
 
     # auth routes
     app.add_url_rule('/login', view_func=login_page)
