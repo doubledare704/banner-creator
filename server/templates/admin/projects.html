@@ -1,0 +1,33 @@
+{% extends "admin/admin.html" %}
+
+{% block admin_content %}
+
+    <h2>Проекти</h2>
+
+    <div class="row">
+        <form method="post" class="col-lg-6">
+            <div class="form-group">
+              <label for="usr">Добавить название:</label>
+              <input type="text" name="project" class="form-control" required>
+            </div>
+
+             <button type="submit" class="btn btn-default">
+                 <i class = "glyphicon glyphicon-plus-sign"> </i>
+                 Добавить</button>
+        </form>
+
+    </div>
+    <hr>
+    <div class="row">
+        <h4>Список проектов</h4>
+        <div class="col-lg-6">
+
+         <ul class="list-group table-of-contents">
+            {% for project in projects %}
+                  <li class="list-group-item text-center">{{ project.name }}<i class = "glyphicon glyphicon-usd"> </i></li>
+            {% endfor %}
+        </ul>
+        </div>
+    </div>
+
+{% endblock %}

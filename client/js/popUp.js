@@ -64,7 +64,7 @@ export default class PopUp extends React.Component {
                         {(() => {
                             if (this.state.body) {
                                 return (
-                                    <div className="modal-body">
+                                    <div className="modal-body text-center">
                                         <p>{this.state.body}</p>
                                     </div>
                                 )
