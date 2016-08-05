@@ -273,8 +273,8 @@ def load_all_cuts():
     cut_jsoned = []
     for img in allimages:
         cut_jsoned.append({
-            'url': '/uploads/' + img.name,
-            'preview': '/uploads/' + img.preview
+            'url': url_for('uploaded_file', filename=img.name),
+            'preview': url_for('uploaded_file', filename=img.preview)
         })
 
     return jsonify({'result': cut_jsoned}), 201

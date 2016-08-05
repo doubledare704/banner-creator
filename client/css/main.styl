@@ -269,12 +269,11 @@ canvas#main
     flex-direction column
     height auto
 
-    div
+    .lm
       flex-basis 50px
 
       i
         vertical-align: middle;
-
 
 section.last-sec:hover > .rightcol2
   display block
@@ -286,3 +285,24 @@ section.last-sec:hover > .rightcol2
   a:link
     color #000000
     text-decoration none
+
+.list-cuted
+  display none
+
+  div
+    flex-basis 250px
+    overflow hidden
+
+    .boxer
+      height 156px
+
+#from_db:hover .list-cuted
+  display flex
+  overflow auto
+  background-color #fff
+  flex-wrap wrap
+  flex-direction row
+  position absolute
+  top -250%
+  height 700px
+  width 1277px
