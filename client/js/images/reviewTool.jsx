@@ -31,7 +31,8 @@ class EditorWindow extends React.Component {
     }
 
     addText() {
-        this.editor.setFont("Roboto", 28, "black", "Пиши сюда","red", 0.5);
+        this.editor.setFont("Roboto", 28, "#000", "...замечание","#ff9900", 0.6);
+        this.editor.addDot();
     }
 
     addDot(){

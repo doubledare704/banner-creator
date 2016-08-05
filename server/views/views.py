@@ -198,7 +198,8 @@ def review_action():
         banner_review.designer_comment = form.get('comment', '')
         banner_review.reviewed = True
         banner_review.changed_at = datetime.datetime.utcnow()
-        banner_review.status = form.get('status', '')
+        if form['status']:
+            banner_review.status = form['status']
         banner_review.designer_imagename = filename
         banner_review.designer_previewname = preview_name
 

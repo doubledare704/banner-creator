@@ -265,6 +265,8 @@ export default class Editor {
         let circle = new fabric.Circle({
             radius: 6,
             fill: 'black',
+            stroke: '#ff9900',
+            strokeWidth: 3,
             left: 490,
             top: 90
         });
