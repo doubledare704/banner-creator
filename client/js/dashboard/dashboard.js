@@ -3,8 +3,9 @@ import * as helpers from '../helpers.js';
 
 function showBanner(e) {
   const node = e.target;
-  const parentNode = node.parentNode;
-  const imageNode = parentNode.lastElementChild;
+  let nodeParent = node.parentNode;
+  if (nodeParent.nodeName !== 'DIV') { nodeParent = nodeParent.parentNode }
+  const imageNode = nodeParent.lastElementChild;
   if (helpers.isHidden(imageNode)) {
     const imgSrcAttr = imageNode.getAttribute('imgSrc');
     imageNode.setAttribute('src', imgSrcAttr);

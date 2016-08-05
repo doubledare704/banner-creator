@@ -56,7 +56,7 @@ class User extends React.Component {
         fetch(`/admin/users/${this.state.user.id}`, {
             method: 'PUT',
             credentials: 'same-origin',
-            body: new FormData(event.target)
+            body: new FormData(e.target)
         })
             .then((response) => {
                 if (!response.ok) {
