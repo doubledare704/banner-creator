@@ -55,10 +55,12 @@ def dashboard_backgrounds():
 def upload():
     uploaded_files = request.files.getlist("file[]")
     project = request.form['project']
+    project_prefix=Project.query.get(project).name
     for file in uploaded_files:
         if file and allowed_file(file.filename):
 
             filename = str(uuid.uuid1()).replace("-", "") + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
+            title = project_prefix + file.filename
             preview_name = 'preview_' + filename
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
             preview_file = image_preview(file)
@@ -66,7 +68,7 @@ def upload():
 
             image = BackgroundImage(
                 name=filename,
-                title=file.filename,
+                title=title,
                 preview=preview_name,
                 project_id=project
             )
