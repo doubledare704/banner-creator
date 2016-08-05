@@ -6,6 +6,8 @@ BASE_DIR = os.path.abspath(os.path.dirname(CUR_DIR))  # server directory
 
 # Set debug to False in production
 DEBUG = True
+WTF_CSRF_CHECK_DEFAULT = False
+WTF_CSRF_ENABLED = False
 
 # Settings for uploading images
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'media')
@@ -23,3 +25,6 @@ LOGGING_FORMAT = '%(levelname)s - %(asctime)s - %(message)s [module: %(module)s,
 LOGGING_LOCATION = 'logs/banner.log'
 LOGGING_LEVEL = logging.WARNING
 LOGGING_FILE_SIZE = 1 * 1024 * 1024  # 1 MB
+
+# i18n
+BABEL_DEFAULT_LOCALE = 'ru'

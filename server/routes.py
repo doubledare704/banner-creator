@@ -6,7 +6,8 @@ from server.views.admin import (
     activate_image,
     image_delete_from_DB,
     users_page,
-    remove_user
+    remove_user,
+    change_user
 )
 from server.views.auth import login_page, authorize, oauth_callback, log_out
 from server.views.views import (
@@ -24,12 +25,12 @@ from server.views.views import (
     save_cuted,
     load_from_pc, load_all_cuts)
 
-from server.views import dashboard as dashboard_views
+from server.views import views as main_views, dashboard as dashboard_views
 
 
 def setup_routes(app):
     """Here we map routes to handlers."""
-    app.add_url_rule('/', methods=['GET', 'POST'], view_func=index)
+    app.add_url_rule('/index/', methods=['GET', 'POST'], view_func=index)
     app.add_url_rule('/uploads/<filename>', view_func=uploaded_file)
     app.add_url_rule('/delete/', methods=['POST'], view_func=image_delete)
     app.add_url_rule('/rename/', methods=['POST'], view_func=image_rename)
@@ -38,9 +39,15 @@ def setup_routes(app):
     app.add_url_rule('/api/backgrounds/<int:page>', view_func=background_images)
     app.add_url_rule('/api/review', methods=['POST'], view_func=make_review)
 
+    # user profile
+    app.add_url_rule('/profile/', methods=['GET', 'POST'], view_func=main_views.user_profile)
+
     # dashboard
-    app.add_url_rule('/dashboard/', view_func=dashboard_views.dashboard)
+    app.add_url_rule('/', view_func=dashboard_views.dashboard)
     app.add_url_rule('/dashboard/banners/', view_func=dashboard_views.user_banners, endpoint='dashboard_user_banners')
+    app.add_url_rule('/dashboard/backgrounds/', methods=['GET', 'POST'], view_func=dashboard_views.dashboard_backgrounds,
+                     endpoint='dashboard_backgrounds')
+    app.add_url_rule('/upload', methods=['GET', 'POST'], view_func=dashboard_views.upload, endpoint='upload')
 
     # admin
     app.add_url_rule('/admin/', view_func=admin)
@@ -48,6 +55,9 @@ def setup_routes(app):
     app.add_url_rule('/admin/inactivate_image/<int:id>', methods=['POST'], view_func=inactivate_image)
     app.add_url_rule('/admin/delete_image/<int:id>', methods=['POST'], view_func=image_delete_from_DB)
     app.add_url_rule('/admin/activate_image/<int:id>', methods=['POST'], view_func=activate_image)
+    app.add_url_rule('/admin/users', view_func=users_page)
+    app.add_url_rule('/admin/users/<int:user_id>', methods=['PUT'], view_func=change_user)
+    app.add_url_rule('/admin/users/<int:user_id>', methods=['DELETE'], view_func=remove_user)
 
     # editor
     app.add_url_rule('/editor/<int:history_image_id>', view_func=continue_edit)
@@ -63,8 +73,6 @@ def setup_routes(app):
     app.add_url_rule('/login/authorized/<social_network_name>/', view_func=oauth_callback)
     app.add_url_rule('/logout', methods=['POST'], view_func=log_out)
 
-    app.add_url_rule('/admin/users', view_func=users_page)
-    app.add_url_rule('/admin/users/<int:user_id>', methods=['DELETE'], view_func=remove_user)
     app.add_url_rule('/review/', methods=['GET', 'POST'], view_func=review_tool)
     app.add_url_rule('/review_image/<int:img_id>', methods=['GET', 'POST'], view_func=review_image)
     app.add_url_rule('/review_action/', methods=['GET', 'POST'], view_func=review_action)

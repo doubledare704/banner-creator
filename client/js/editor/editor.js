@@ -150,7 +150,7 @@ export default class Editor {
         });
     }
 
-    setFont(family, size, color, texts, backgroundColor='transparent') {
+    setFont(family, size, color, texts, backgroundColor='transparent',opacity=1) {
         let obj = new fabric.IText(
             texts,
             {
@@ -160,7 +160,7 @@ export default class Editor {
                 fontSize: size,
                 fill: color,
                 backgroundColor: backgroundColor
-            });
+            }).setOpacity(opacity);
         this.canv.add(obj);
         this.canv.renderAll();
     }
@@ -261,10 +261,23 @@ export default class Editor {
         this.canv.add(grp);
     }
 
+    addDot(){
+        let circle = new fabric.Circle({
+            radius: 6,
+            fill: 'black',
+            left: 490,
+            top: 90
+        });
+        this.canv.add(circle );
+        this.canv.renderAll();
+    }
+
     addRectangle() {
         this.canv.add(new fabric.Rect({
-            width: 100,
-            height: 200,
+            width: 200,
+            height: 100,
+            left: 100,
+            top: 100,
             stroke: 'red',
             fill: 'transparent'
         }))
@@ -273,6 +286,8 @@ export default class Editor {
     addEllipse() {
         this.canv.add(new fabric.Circle({
             radius: 100,
+            left: 100,
+            top: 100,
             stroke: 'red',
             fill: 'transparent',
             scaleY: 0.5

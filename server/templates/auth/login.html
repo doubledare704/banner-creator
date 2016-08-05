@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Log in{% endblock %}
+
+{% block page_content %}
+<div class="login_block">
+    <h1 class="text-center">Please, sign in</h1>
+    <div class="row">
+        <div class="col-md-2 col-md-offset-4 text-right">
+            <a href="" data-bazooka="loginClick" data-users-social-network="google">
+                <img src="{{ url_for('static', filename='icons/google_auth.png') }}">
+            </a>
+        </div>
+        <div class="col-md-1">
+            <a href="" data-bazooka="loginClick" data-users-social-network="facebook">
+                <img src="{{ url_for('static', filename='icons/facebook_auth.png') }}">
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock page_content %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='adminbundle.js') }}"></script>
+{% endblock %}

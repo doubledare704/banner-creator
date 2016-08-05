@@ -4,14 +4,16 @@ import json
 import os
 import uuid
 from io import BytesIO
+from flask import (render_template, redirect, current_app, request, jsonify,
+                   flash, url_for)
 
-from flask import render_template, redirect, current_app, request, jsonify, url_for
 from flask_login import login_required, current_user
-from sqlalchemy import desc
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
+from sqlalchemy import desc
 
 from server.db import db
+from server.forms import profile_form
 from server.models import Image, ImageHistory, Banner, BannerReview, User, BackgroundImage
 from server.utils.image import allowed_file, image_resize, image_preview
 
@@ -276,3 +278,16 @@ def load_all_cuts():
         })
 
     return jsonify({'result': cut_jsoned}), 201
+
+
+@login_required
+def user_profile():
+    form = profile_form.ProfileForm()
+    if form.validate_on_submit():
+        user = User.query.get(current_user.id)
+        user.query.update(form.data)
+        db.session.commit()
+        flash('Профиль изменен.')
+    elif request.method == 'POST':
+        flash('Профиль не изменен. Проверьте введенные данные.')
+    return render_template('user/user_profile.html', form=form)

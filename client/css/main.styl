@@ -1,5 +1,6 @@
 @require '~normalize-styl'
 @require 'dashboard.styl'
+@require 'user_profile.styl'
 
 html, body
   height 100%
@@ -157,13 +158,6 @@ canvas#main
 #inputted
   display none
 
-.login_block div
-  margin: 20px
-  list-style: none
-
-.login_block div a
-  font-size: 2em
-
 .logout
   padding-top: 12px
   padding-bottom: 10px
@@ -234,7 +228,7 @@ canvas#main
 
 .btn-wrapper
   display: inline-block
-  margin: 5px
+  margin: 2px
 
 .img-wrapper
   height: 200px
@@ -284,3 +278,11 @@ canvas#main
 
 section.last-sec:hover > .rightcol2
   display block
+
+.login_block
+  img
+    width 100px
+
+  a:link
+    color #000000
+    text-decoration none

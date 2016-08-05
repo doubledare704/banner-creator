@@ -108,7 +108,7 @@ class User(db.Model):
         return True
 
     def is_active(self):
-        return True
+        return self.active
 
     def is_anonymous(self):
         return False
