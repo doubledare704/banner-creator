@@ -7,7 +7,8 @@ from server.views.admin import (
     image_delete_from_DB,
     users_page,
     remove_user,
-    change_user
+    change_user,
+    projects_page
 )
 from server.views.auth import login_page, authorize, oauth_callback, log_out
 from server.views.views import (
@@ -58,6 +59,7 @@ def setup_routes(app):
     app.add_url_rule('/admin/users', view_func=users_page)
     app.add_url_rule('/admin/users/<int:user_id>', methods=['PUT'], view_func=change_user)
     app.add_url_rule('/admin/users/<int:user_id>', methods=['DELETE'], view_func=remove_user)
+    app.add_url_rule('/admin/projects/', methods=['GET','POST'], view_func=projects_page)
 
     # editor
     app.add_url_rule('/editor/<int:history_image_id>', view_func=continue_edit)
