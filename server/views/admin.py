@@ -11,7 +11,7 @@ from flask_paginate import Pagination
 from werkzeug.exceptions import NotFound
 
 from server.db import db
-from server.models import User, BackgroundImage
+from server.models import User, BackgroundImage, Project
 
 per_page = 3
 
@@ -141,3 +141,14 @@ def activate_image(id):
     image = BackgroundImage.query.get_or_404(id)
     image.active = True
     return '', 200
+
+
+@login_required
+def projects_page():
+    if request.method == 'POST':
+        project_name=request.form['project']
+        if project_name:
+            db.session.add(Project(name=project_name))
+        return redirect(request.url)
+    projects = Project.query.all()
+    return render_template('admin/projects.html', projects=projects)
