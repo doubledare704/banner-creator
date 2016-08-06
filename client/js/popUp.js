@@ -41,7 +41,7 @@ class PopUp extends React.Component {
             if (this.props.confirmAction) {
                 this.props.confirmAction();
             }
-            this.deactivatePopUp();
+            deactivatePopUp();
         }
     }
 
@@ -57,7 +57,7 @@ class PopUp extends React.Component {
                         {this.props.children ? <div className="modal-body">{this.props.children}</div> : null}
                         {this.props.confirm ?
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-success" onClick={this.closeAction}>Да
+                                <button type="button" className="btn btn-success" onClick={this.confirmAction}>Да
                                 </button>
                                 <button type="button" className="btn btn-default" onClick={this.closeAction}>
                                     Отменить
