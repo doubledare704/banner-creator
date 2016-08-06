@@ -161,6 +161,17 @@ canvas#main
 .hidden
   display: none
 
+.modal
+  display none
+  position fixed
+  z-index 1
+  padding-top 100px
+  left 0
+  top 0
+  width 100%
+  height 100%
+  overflow auto
+
 .modal-content
   position: relative
   background-color: #fefefe
@@ -187,7 +198,6 @@ canvas#main
     top: 0
     opacity: 1
   }
-
 
 @keyframes animatetop
   from {
@@ -323,4 +333,3 @@ section.last-sec:hover > .rightcol2
   iframe
     width 100%
     height 100%
-

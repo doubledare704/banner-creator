@@ -39,7 +39,7 @@ function ConfigLogoutClick(csrfToken) {
             })
             .catch((response) => {
                 console.error(response.message);
-                popup.change({
+                activatePopUp({
                     title: `Ошибка сервера`,
                     confirm: false,
                     flash: true,
