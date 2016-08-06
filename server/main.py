@@ -11,6 +11,7 @@ from flask_babel import Babel
 
 from server.utils.auth import load_user
 from server.routes import setup_routes
+from server.filters import init_custom_filters
 from server.db import db
 
 
@@ -27,6 +28,9 @@ def create_app():
 
     # i18n
     Babel(app)
+
+    # add custom jinja2 filters
+    init_custom_filters(app)
 
     db.init_app(app)
 

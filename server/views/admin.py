@@ -156,11 +156,19 @@ def activate_image(image_id):
 
 
 @requires_roles('admin', 'designer')
+# def projects_page():
+#     projects_list = [
+#         {
+#             "id": project.id,
+#             'name': project.name
+#         } for project in Project.query.order_by(Project.name.asc()).all()]
+#
+#     return render_template('admin/projects.html', projects=projects_list)
 def projects_page():
-    projects_list = [
-        {
-            "id": project.id,
-            'name': project.name
-        } for project in Project.query.order_by(Project.name.asc()).all()]
-
-    return render_template('admin/projects.html', projects=projects_list)
+    if request.method == 'POST':
+        project_name=request.form['project']
+        if project_name:
+            db.session.add(Project(name=project_name))
+        return redirect(request.url)
+    projects = Project.query.all()
+    return render_template('admin/projects.html', projects=projects)

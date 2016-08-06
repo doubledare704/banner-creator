@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block title %}Профиль{% endblock title %}
+
 {% block page_content %}
   <div class="row">
     <div class="col-lg-3 profile-icon-container">
@@ -12,7 +14,7 @@
         <p><span class="profile-user-info-clause">Имя:</span> <span class="profile-user-info-item">{{ current_user.first_name }}</span></p>
         <p><span class="profile-user-info-clause">Фамилия:</span> <span class="profile-user-info-item">{{ current_user.last_name }}</span></p>
         <p><span class="profile-user-info-clause">E-mail:</span> <span class="profile-user-info-item">{{ current_user.email }}</span></p>
-        <p><span class="profile-user-info-clause">Дата регистрации:</span> <span class="profile-user-info-item">{{ current_user.created_at.strftime('%H:%M %Y-%m-%d') }}</span></p>
+        <p><span class="profile-user-info-clause">Дата регистрации:</span> <span class="profile-user-info-item">{{ current_user.created_at|format_date }}</span></p>
       </div>
     </div>
     <div class="col-lg-8">

@@ -99,7 +99,7 @@ def continue_edit(history_image_id):
 @login_required
 def history_image(history_image_id):
     if request.method == 'POST':
-        if 'hist_id' or 'jsn' not in request.files:
+        if 'jsn' not in request.json:
             return jsonify({'result': 'no hist_id or jsn field'})
         else:
             hist_id = request.json['hist_id']
@@ -198,7 +198,8 @@ def review_action():
         banner_review.designer_comment = form.get('comment', '')
         banner_review.reviewed = True
         banner_review.changed_at = datetime.datetime.utcnow()
-        banner_review.status = form.get('status', '')
+        if form['status']:
+            banner_review.status = form['status']
         banner_review.designer_imagename = filename
         banner_review.designer_previewname = preview_name
 
@@ -265,6 +266,19 @@ def load_from_pc():
         }
 
         return jsonify({'result': review_jsoned}), 201
+
+
+@login_required
+def load_all_cuts():
+    allimages = Image.query.all()
+    cut_jsoned = []
+    for img in allimages:
+        cut_jsoned.append({
+            'url': url_for('uploaded_file', filename=img.name),
+            'preview': url_for('uploaded_file', filename=img.preview)
+        })
+
+    return jsonify({'result': cut_jsoned}), 201
 
 
 @login_required

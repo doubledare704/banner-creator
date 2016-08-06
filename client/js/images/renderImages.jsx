@@ -50,7 +50,7 @@ class RenameInput extends React.Component {
         return (
             <div className="btn-wrapper">
                 <input type="text" ref="rename" onChange={this.onInput}  required/>
-                <input type="submit" value="Переименуй"
+                <input type="submit" value="Переименуй" 
                        onClick={this.props.handleRename(this.props.id, this.state.newtitle)}
                 />
             </div>
