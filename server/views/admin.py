@@ -12,15 +12,20 @@ from werkzeug.exceptions import NotFound
 
 from server.db import db
 from server.models import User, BackgroundImage, Project
+from server.utils.auth import requires_roles
 
 per_page = 3
 
 
+@requires_roles('admin', 'designer')
 def admin():
-    return render_template('admin/users.html')
+    if current_user.role == User.UserRole.admin:
+        return redirect(url_for('users_page'))
+    if current_user.role == User.UserRole.designer:
+        return redirect(url_for('admin_projects'))
 
 
-@login_required
+@requires_roles('admin')
 def users_page():
     query_db = User.query
 
@@ -63,7 +68,7 @@ def users_page():
                            )
 
 
-@login_required
+@requires_roles('admin')
 def change_user(user_id):
     form = UserEditForm()
     if not form.validate_on_submit():
@@ -86,7 +91,7 @@ def change_user(user_id):
                          })
 
 
-@login_required
+@requires_roles('admin')
 def remove_user(user_id):
     user = User.query.get_or_404(user_id)
     if user == current_user:
@@ -150,8 +155,8 @@ def activate_image(image_id):
     return '', 200
 
 
-@login_required
-def projects():
+@requires_roles('admin', 'designer')
+def projects_page():
     projects_list = [
         {
             "id": project.id,
