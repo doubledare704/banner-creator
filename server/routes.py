@@ -1,30 +1,16 @@
 from server.utils.image import uploaded_file
+
 from server.views.admin import (
-    admin,
-    backgrounds,
-    inactivate_image,
-    activate_image,
-    image_delete_from_DB,
-    users_page,
-    remove_user,
-    change_user,
-    projects_page
+    admin, backgrounds, inactivate_image, activate_image, users_page, remove_user, change_user, projects_page,
+    image_delete_from_db
 )
+
 from server.views.auth import login_page, authorize, oauth_callback, log_out
+
 from server.views.views import (
-    index, editor,
-    image_delete,
-    image_rename,
-    background_images,
-    continue_edit,
-    history_image,
-    make_review,
-    review_tool,
-    review_image,
-    review_action,
-    cuts_background,
-    save_cuted,
-    load_from_pc, load_all_cuts)
+    index, editor, image_delete, image_rename, background_images, continue_edit, history_image, make_review,
+    review_tool, review_image, review_action, cuts_background, save_cuted, load_from_pc, load_all_cuts
+)
 
 from server.views import views as main_views, dashboard as dashboard_views
 
@@ -46,7 +32,8 @@ def setup_routes(app):
     # dashboard
     app.add_url_rule('/', view_func=dashboard_views.dashboard)
     app.add_url_rule('/dashboard/banners/', view_func=dashboard_views.user_banners, endpoint='dashboard_user_banners')
-    app.add_url_rule('/dashboard/backgrounds/', methods=['GET', 'POST'], view_func=dashboard_views.dashboard_backgrounds,
+    app.add_url_rule('/dashboard/backgrounds/', methods=['GET', 'POST'],
+                     view_func=dashboard_views.dashboard_backgrounds,
                      endpoint='dashboard_backgrounds')
     app.add_url_rule('/upload', methods=['GET', 'POST'], view_func=dashboard_views.upload, endpoint='upload')
 
@@ -54,12 +41,14 @@ def setup_routes(app):
     app.add_url_rule('/admin/', view_func=admin)
     app.add_url_rule('/admin/backgrounds/', view_func=backgrounds, endpoint='admin_backgrounds')
     app.add_url_rule('/admin/inactivate_image/<int:id>', methods=['POST'], view_func=inactivate_image)
-    app.add_url_rule('/admin/delete_image/<int:id>', methods=['POST'], view_func=image_delete_from_DB)
+    app.add_url_rule('/admin/delete_image/<int:id>', methods=['POST'], view_func=image_delete_from_db)
     app.add_url_rule('/admin/activate_image/<int:id>', methods=['POST'], view_func=activate_image)
+    app.add_url_rule('/admin/projects/', view_func=projects_page, endpoint='admin_projects')
+
     app.add_url_rule('/admin/users', view_func=users_page)
     app.add_url_rule('/admin/users/<int:user_id>', methods=['PUT'], view_func=change_user)
     app.add_url_rule('/admin/users/<int:user_id>', methods=['DELETE'], view_func=remove_user)
-    app.add_url_rule('/admin/projects/', methods=['GET','POST'], view_func=projects_page)
+    app.add_url_rule('/admin/projects/', methods=['GET', 'POST'], view_func=projects_page)
 
     # editor
     app.add_url_rule('/editor/<int:history_image_id>', view_func=continue_edit)
