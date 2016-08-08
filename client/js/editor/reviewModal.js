@@ -8,7 +8,7 @@ function sendToReview(event) {
     event.preventDefault();
     let o = editor.canv.getActiveObject(),
         g = editor.canv.getActiveGroup();
-        disableControls(o,g);
+    disableControls(o, g);
     const formData = new FormData(event.target);
     let imageReview = editor.canv.toJSON();
     // append image as base64 string
@@ -25,6 +25,7 @@ function sendToReview(event) {
         .then(function ({result}) {
             document.getElementById('resulting').src = result.src;
             document.getElementById('continue').href += result.rev;
+            document.getElementById('double').style.display = "block";
             document.getElementById('continue').style.display = "block";
             document.getElementById('result_review').style.display = "block";
             localStorage.clear();
