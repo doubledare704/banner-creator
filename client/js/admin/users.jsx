@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
 import moment from 'moment';
 import classNames from 'classnames';
-import {popup} from '../popUp.js';
+import {activatePopUp, deactivatePopUp} from '../popUp.js';
 
 const BAZOOKA_PREFIX = 'users';
 
@@ -15,6 +15,7 @@ class User extends React.Component {
             removed: false,
             user: this.props.user
         };
+
         this.showEditPopup = this.showEditPopup.bind(this);
         this.removeUser = this.removeUser.bind(this);
         this.saveUser = this.saveUser.bind(this);
@@ -22,7 +23,7 @@ class User extends React.Component {
 
     removeUser() {
         let {user} = this.state;
-        popup.change({
+        activatePopUp({
             title: `Вы действительно хотите удалить пользователя ${user.first_name} ${user.last_name}?`,
             confirm: true,
             confirmAction: ()=> {
@@ -41,7 +42,7 @@ class User extends React.Component {
                     })
                     .catch((response) => {
                         console.error(response.message);
-                        popup.change({
+                        activatePopUp({
                             title: `Ошибка сервера`,
                             confirm: false,
                             flash: true,
@@ -68,11 +69,11 @@ class User extends React.Component {
                 this.setState({
                     user: user
                 });
-                popup.onClose()
+                deactivatePopUp()
             })
             .catch((response) => {
                 console.error(response.message);
-                popup.change({
+                activatePopUp({
                     title: `Ошибка сервера`,
                     confirm: false,
                     flash: true,
@@ -81,44 +82,49 @@ class User extends React.Component {
     }
 
     showEditPopup() {
-        let {user} = this.state;
-
-        popup.change({
-            data: <form className="form-horizontal" onSubmit={this.saveUser}>
-                <div className='form-group'>
-                    <label className="col-sm-2">First Name</label>
-                    <div className="col-sm-10">
-                        <input type="text" name="first_name" defaultValue={user.first_name} className="form-control"/>
-                    </div>
-                </div>
-                <div className='form-group'>
-                    <label className="col-sm-2">Last Name</label>
-                    <div className="col-sm-10">
-                        <input type="text" name="last_name" defaultValue={user.last_name} className="form-control"/>
-                    </div>
-                </div>
-                <div className='form-group'>
-                    <label className="col-sm-2">User role</label>
-                    <div className="col-sm-6">
-                        <select name="role" className="form-control"
-                                defaultValue={user.role}>
-                            {
-                                this.props.rolesList.map((role) => (
-                                        <option value={role}>{role}</option>
-                                    )
-                                )
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div className='form-group text-center'>
-                    <button type="submit" className='btn btn-success'>Сохранить</button>
-                    <a className='btn btn-default' onClick={popup.onClose}>Закрыть</a>
-                </div>
-            </form>,
+        this.setState({isUserEditMode: true});
+        let {user}= this.state;
+        activatePopUp({
             confirm: false,
             title: "Изменение данных пользователя",
-            flash: false
+            closeAction: deactivatePopUp,
+            child: <form className="form-horizontal" onSubmit={this.saveUser}>
+                    <div className='form-group'>
+                        <input type="hidden" name="csrf_token" defaultValue={this.props.csrfToken}/>
+                    </div>
+                    <div className='form-group'>
+                        <label className="col-sm-2">First Name</label>
+                        <div className="col-sm-10">
+                            <input type="text" name="first_name" defaultValue={user.first_name}
+                                   className="form-control"/>
+                        </div>
+                    </div>
+                    <div className='form-group'>
+                        <label className="col-sm-2">Last Name</label>
+                        <div className="col-sm-10">
+                            <input type="text" name="last_name" defaultValue={user.last_name}
+                                   className="form-control"/>
+                        </div>
+                    </div>
+                    <div className='form-group'>
+                        <label className="col-sm-2">User role</label>
+                        <div className="col-sm-6">
+                            <select name="role" className="form-control"
+                                    defaultValue={user.role}>
+                                {
+                                    this.props.rolesList.map((role) => (
+                                            <option value={role}>{role}</option>
+                                        )
+                                    )
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div className='form-group text-center'>
+                        <button type="submit" className='btn btn-success'>Save</button>
+                        <a className='btn btn-default' onClick={deactivatePopUp}>Close</a>
+                    </div>
+                </form>
         });
     }
 

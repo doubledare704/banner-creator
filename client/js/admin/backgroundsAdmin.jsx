@@ -109,7 +109,7 @@ class BackgroundsAdmin extends React.Component {
                     {method: "POST"}
                 ).then((response) => {
                     if (response.status === 200) {
-                        popup.change({
+                        activatePopUp({
                             title: "Фон стал неактивным",
                             flash: true
                         });
@@ -124,7 +124,7 @@ class BackgroundsAdmin extends React.Component {
             } else {
                 const index = this.state.backgrounds.indexOf(tablerow);
 
-                popup.change({
+                activatePopUp({
                         title: "Вы действительно хотите удалить картинку?",
                         confirm: true,
                         confirmAction:
@@ -155,7 +155,7 @@ class BackgroundsAdmin extends React.Component {
                 {method: "POST"}
             ).then((response) => {
                 if (response.status === 200) {
-                    popup.change({
+                    activatePopUp({
                         title: "Фон стал активным",
                         flash: true
                     });

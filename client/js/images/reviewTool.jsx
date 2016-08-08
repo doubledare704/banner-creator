@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
 import Editor from '../editor/editor.js';
 import {disableControls} from '../editor/editor.js';
-import {popup} from '../popUp.js';
+import {activatePopUp} from '../popUp.js';
 
 const BAZOOKA_PREFIX = 'body';
 
@@ -89,15 +89,14 @@ class EditorWindow extends React.Component {
             }
         ).then(response => {
             if (response.status !== 200) {
-                popup.change({
-                    data: <p>Што то не так ошибка {response.status} </p>
+                activatePopUp({
+                    title: <p>Што то не так ошибка {response.status} </p>
                 });
                 return response.status;
             }
-            popup.change({
-                data: "Одправлено, перейти обратно в кабинет ?",
+            activatePopUp({
+                title: "Одправлено, перейти обратно в кабинет ?",
                 confirm: true,
-                flash: false,
                 confirmAction: () => window.location.href="/"
             });
 

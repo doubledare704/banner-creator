@@ -1,95 +1,70 @@
-import Rx from 'rx';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-let popupEvent = new Rx.Subject();
+const CLOSE_TIMEOUT_DELAY = 1500;
 
-export default class PopUp extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            visible: false
-        };
+const popupNode = document.getElementById('popup');
+
+class PopUp extends React.Component {
+    constructor() {
+        super();
+        this.closeAction = this.closeAction.bind(this);
+        this.defaultCloseAction = this.defaultCloseAction.bind(this);
+        this.confirmAction = this.confirmAction.bind(this);
+        this.setFlash = this.setFlash.bind(this);
     }
 
-    static change(data) {
-        popupEvent.onNext({action: 'change', data: data});
+    componentDidUpdate() {
+        this.setFlash()
     }
 
     componentDidMount() {
-        popupEvent.filter((data) => {
-            return data.action === 'change'
-        }).subscribe((data) => {
-            this.setState({
-                title: data.data.title,
-                body: data.data.data,
-                confirm: data.data.confirm,
-                flash: data.data.flash,
-                confirmClick: data.data.confirmAction,
-                visible: true
-            });
-
-            if (data.data.flash) {
-                setTimeout(PopUp.onClose, 1500);
-            }
-        });
-
-        popupEvent.filter((data) => {
-            return data.action === 'close'
-        }).subscribe((data) => {
-            this.setState({visible: false});
-        });
+        this.setFlash()
     }
 
-    static onClose() {
-        popupEvent.onNext({action: 'close'});
+    setFlash(){
+        if (this.props.flash) {
+            setTimeout(this.closeAction, CLOSE_TIMEOUT_DELAY);
+        }
+    }
+
+    closeAction() {
+        return this.props.onClose ? this.props.onClose() : this.defaultCloseAction()
+    }
+
+    defaultCloseAction() {
+        return deactivatePopUp()
+    }
+
+    confirmAction() {
+        if (this.props.confirm) {
+            if (this.props.confirmAction) {
+                this.props.confirmAction();
+            }
+            deactivatePopUp();
+        }
     }
 
     render() {
-        if (this.state.visible === true) {
+        if (this.props.isVisible) {
             return (
                 <div className="modal-dialog modal-lg" id="popup">
                     <div className="modal-content">
-
                         <div className="modal-header">
-                            <button type="button" className="close" onClick={PopUp.onClose}>&times;</button>
-                            {(() => {
-                                if (this.state.title) {
-                                    return (<h4 className="modal-title">{this.state.title}</h4>)
-                                }
-                            })()
-                            }
+                            <button type="button" className="close" onClick={this.closeAction}>&times;</button>
+                            {this.props.title ? this.props.title : null}
                         </div>
-
-                        {(() => {
-                            if (this.state.body) {
-                                return (
-                                    <div className="modal-body text-center">
-                                        <p>{this.state.body}</p>
-                                    </div>
-                                )
-                            }
-                        })()}
-
-                        {(() => {
-                            if (this.state.confirm) {
-                                let confirmAction = () => {
-                                    this.state.confirmClick();
-                                    PopUp.onClose();
-                                };
-
-                                return (
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-success" onClick={confirmAction}>Да
-                                        </button>
-                                        <button type="button" className="btn btn-default" onClick={PopUp.onClose}>
-                                            Отменить
-                                        </button>
-                                    </div>
-                                )
-                            }
-                        })()}
-
+                        {this.props.children ? <div className="modal-body">{this.props.children}</div> : null}
+                        {this.props.confirm ?
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-success" onClick={this.confirmAction}>Да
+                                </button>
+                                <button type="button" className="btn btn-default" onClick={this.closeAction}>
+                                    Отменить
+                                </button>
+                            </div>
+                            : null
+                        }
                     </div>
                 </div>
             );
@@ -98,8 +73,17 @@ export default class PopUp extends React.Component {
     }
 }
 
-ReactDOM.render(<PopUp/>, document.getElementById('popup'));
+export function activatePopUp(data) {
+    ReactDOM.render(<PopUp
+        confirm={data.confirm}
+        isVisible={true}
+        title={data.title}
+        flash={data.flash}
+        onClose={data.closeAction}
+        confirmAction={data.confirmAction}
+    >{data.child}</PopUp>, popupNode);
+}
 
-module.exports = {
-    'popup': PopUp
-};
+export function deactivatePopUp() {
+    ReactDOM.render(<PopUp isVisible={false}/>, popupNode);
+}

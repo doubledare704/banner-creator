@@ -12,15 +12,20 @@ from werkzeug.exceptions import NotFound
 
 from server.db import db
 from server.models import User, BackgroundImage, Project
+from server.utils.auth import requires_roles
 
 per_page = 3
 
 
+@requires_roles('admin', 'designer')
 def admin():
-    return render_template('admin/admin.html')
+    if current_user.role == User.UserRole.admin:
+        return redirect(url_for('users_page'))
+    if current_user.role == User.UserRole.designer:
+        return redirect(url_for('admin_projects'))
 
 
-@login_required
+@requires_roles('admin')
 def users_page():
     query_db = User.query
 
@@ -63,14 +68,16 @@ def users_page():
                            )
 
 
-@login_required
+@requires_roles('admin')
 def change_user(user_id):
     form = UserEditForm()
     if not form.validate_on_submit():
         raise BadRequest()
     user = User.query.get_or_404(user_id)
-    # user.first_name form.data
-    User.query.filter_by(id=user_id).update(form.data)
+    user.first_name = form.data['first_name']
+    user.last_name = form.data['last_name']
+    user.role = form.data['role']
+
     db.session.add(user)
     db.session.commit()
     return json.jsonify({'id': user.id,
@@ -84,7 +91,7 @@ def change_user(user_id):
                          })
 
 
-@login_required
+@requires_roles('admin')
 def remove_user(user_id):
     user = User.query.get_or_404(user_id)
     if user == current_user:
@@ -95,17 +102,19 @@ def remove_user(user_id):
     return 'OK', 200
 
 
+@login_required
 def backgrounds():
     tab = request.args.get('tab')
-    backgrounds = BackgroundImage.query.filter(BackgroundImage.active == (tab == 'active')).order_by(BackgroundImage.title.asc())
+    background_images = BackgroundImage.query.filter(BackgroundImage.active == (tab == 'active')).order_by(
+        BackgroundImage.title.asc())
 
     try:
-        backgrounds_paginator = backgrounds.paginate(per_page=per_page, error_out=True)
+        backgrounds_paginator = background_images.paginate(per_page=per_page, error_out=True)
     except NotFound:
-        last_page = round(backgrounds.count() / per_page)
+        last_page = round(background_images.count() / per_page)
         return redirect(url_for('admin_backgrounds', tab=tab, page=last_page))
 
-    backgrounds = [
+    background_images = [
         {
             "id": background.id,
             'title': background.title,
@@ -117,19 +126,21 @@ def backgrounds():
     pagination = Pagination(per_page=per_page, page=backgrounds_paginator.page, total=backgrounds_paginator.total,
                             css_framework='bootstrap3')
 
-    backgrounds = json.dumps(backgrounds)
+    background_images = json.dumps(background_images)
 
-    return render_template('admin/backgrounds.html', backgrounds=backgrounds, pagination=pagination, tab=tab)
+    return render_template('admin/backgrounds.html', backgrounds=background_images, pagination=pagination, tab=tab)
 
 
-def inactivate_image(id):
-    image = BackgroundImage.query.get_or_404(id)
+@login_required
+def inactivate_image(image_id):
+    image = BackgroundImage.query.get_or_404(image_id)
     image.active = False
     return '', 200
 
 
-def image_delete_from_DB(id):
-    image = BackgroundImage.query.get_or_404(id)
+@login_required
+def image_delete_from_db(image_id):
+    image = BackgroundImage.query.get_or_404(image_id)
     os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.name))
     os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.preview))
     db.session.delete(image)
@@ -137,13 +148,22 @@ def image_delete_from_DB(id):
     return '', 204
 
 
-def activate_image(id):
-    image = BackgroundImage.query.get_or_404(id)
+@login_required
+def activate_image(image_id):
+    image = BackgroundImage.query.get_or_404(image_id)
     image.active = True
     return '', 200
 
 
-@login_required
+@requires_roles('admin', 'designer')
+# def projects_page():
+#     projects_list = [
+#         {
+#             "id": project.id,
+#             'name': project.name
+#         } for project in Project.query.order_by(Project.name.asc()).all()]
+#
+#     return render_template('admin/projects.html', projects=projects_list)
 def projects_page():
     if request.method == 'POST':
         project_name=request.form['project']

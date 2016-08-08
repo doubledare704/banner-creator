@@ -31,7 +31,7 @@ def dashboard():
 @login_required
 def user_banners():
     page = int(request.args.get('page', 1))  # get page number from url query string
-    banners = Banner.query.filter_by(user=current_user).paginate(page=page, per_page=10)
+    banners = Banner.query.filter_by(user=current_user).order_by(Banner.id.desc()).paginate(page=page, per_page=10)
     pagination = Pagination(per_page=10, page=page, total=banners.total, css_framework='bootstrap3')
     return render_template('user/user_banners.html', banners=banners, pagination=pagination)
 
@@ -55,10 +55,12 @@ def dashboard_backgrounds():
 def upload():
     uploaded_files = request.files.getlist("file[]")
     project = request.form['project']
+    project_prefix=Project.query.get(project).name
     for file in uploaded_files:
         if file and allowed_file(file.filename):
 
             filename = str(uuid.uuid1()).replace("-", "") + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
+            title = project_prefix + file.filename
             preview_name = 'preview_' + filename
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
             preview_file = image_preview(file)
@@ -66,7 +68,7 @@ def upload():
 
             image = BackgroundImage(
                 name=filename,
-                title=file.filename,
+                title=title,
                 preview=preview_name,
                 project_id=project
             )
