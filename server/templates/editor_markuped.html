@@ -11,114 +11,163 @@
 {% endblock %}
 
 {% block navbar %}
+    <div class="navbar navbar-inverse" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">EVO</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li {% if request.url_rule.endpoint.startswith('dashboard') %}class="active"{% endif %}><a
+                            href="{{ url_for('dashboard') }}">Кабинет</a></li>
+                    <li {% if request.url_rule.endpoint == "editor" %} class="active"{% endif %}><a
+                            href="{{ url_for ('editor') }}">Редактор</a></li>
+                    <li {% if request.url_rule.endpoint == "admin" %} class="active"{% endif %}><a
+                            href="{{ url_for ('admin') }}">Админ</a></li>
+                    <li{% if request.url_rule.endpoint == "index" %} class="active"{% endif %}><a
+                            href="{{ url_for('index') }}">Все фоны</a></li>
 
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if current_user.is_authenticated %}
+                        <li{% if request.url_rule.endpoint == "user_profile" %} class="active"{% endif %}>
+                            <a href="{{ url_for('user_profile') }}">
+                                {% if current_user.first_name or current_user.last_name %}
+                                    {{ current_user.first_name }} {{ current_user.last_name }}
+                                {% else %}
+                                    Профиль
+                                {% endif %}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/">Выход</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block content %}
-    <div class="wrapper">
-        <aside class="column_aside">
-            <section>
-                <a href="#">
-                    <i class="material-icons">usb</i>
-            <span class="detail">
-                Для перемещения объекта просто выберите его и перемещайте.
-            </span>
-                </a>
-            </section>
-            <section class="with_menu">
-                <a href="#">
-                    <i class="material-icons">sort_by_alpha</i>
-            <span class="detail">
-                Добавить текст
-            </span>
-                </a>
-                <div id="rightcol">
-                    <h2>Выберите вариант текста</h2>
-                    <ul>
-                        <li class="head1" data-size="24" data-text="Header text">H1 подзаголовок</li>
-                        <li class="head2" data-size="18" data-text="Header text">H2 подзаголовок</li>
-                        <li class="head3" data-size="12" data-text="Header text">H3 подзаголовок
-                            <hr>
-                        </li>
-                        <li class="head1" data-size="24" data-type="p" data-text="от 1 700 грн">Цена от для большого
-                            банера
-                        </li>
-                        <li class="head2" data-size="18" data-type="p" data-text="от 1 700 грн">Цена от для маленького
-                            банера
-                        </li>
-                    </ul>
-                </div>
-            </section>
-            <section>
-                <a href="#" id="addButt">
-                    <i class="material-icons">input</i>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-1 col-sm-2 col-md-2 cols-xs-2 column_aside">
+                <section class="with_menu">
+                    <a href="#">
+                        <i class="material-icons">sort_by_alpha</i>
+                    <span class="detail">
+                        Добавить текст
+                    </span>
+                    </a>
+                    <div id="rightcol">
+                        <h2>Выберите вариант текста</h2>
+                        <ul>
+                            <li class="head1" data-size="24" data-text="Header text">H1 подзаголовок</li>
+                            <li class="head2" data-size="18" data-text="Header text">H2 подзаголовок</li>
+                            <li class="head3" data-size="12" data-text="Header text">H3 подзаголовок
+                                <hr>
+                            </li>
+                            <li class="head1" data-size="24" data-type="p" data-text="от 1 700 грн">Цена от для большого
+                                банера
+                            </li>
+                            <li class="head2" data-size="18" data-type="p" data-text="от 1 700 грн">Цена от для
+                                маленького
+                                банера
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <section>
+                    <a href="#" id="addButt">
+                        <i class="material-icons">input</i>
             <span class="detail">
                 Добавить кнопку
             </span>
-                </a>
-            </section>
-
-            <section id="backgroundSection" data-bazooka="backgroundsList"
-                     data-bg-view-url="{{ url_for('background_images') }}"
-                     data-bg-img-url="{{ url_for('uploaded_file', filename='') }}">
-            </section>
-            {% block reviewmodal %}
-                <section>
-                    <a href="#" data-bazooka="openReviewModal">
-                        <i class="material-icons">done_all</i>
-                        <span class="detail">Отправить на ревью</span>
                     </a>
                 </section>
-            {% endblock %}
 
-            <section class="last-sec">
-                <a href="#">
-                    <i class="material-icons">cloud_upload</i>
-            <span class="download-file">
-                Загрузить изображение
-            </span>
-                </a>
-                <form id="upload-file" method="post" enctype="multipart/form-data">
-                    <input type="file" name="file" id='inputted'/>
-                </form>
-                <div class="rightcol2">
-                    <h2>Выберите вариант загрузки</h2>
-                    <div class="uploadings">
-                        <div class="lm"><a href="{{ url_for ('cuts_background') }}" id="cutters"><i class="material-icons">exit_to_app</i>Нужно вырезать фон</a>
-                        </div>
-                        <div id="local_load" class="lm"><a href="#" id="input"><i
-                                class="material-icons">find_in_page</i>Загрузить
-                            из ПК</a></div>
-                        <div id="from_db" class="lm"><a><i class="material-icons">line_style</i>Загрузить из базы</a>
-                            <div class="list-cuted">
+                <section id="backgroundSection" data-bazooka="backgroundsList"
+                         data-bg-view-url="{{ url_for('background_images') }}"
+                         data-bg-img-url="{{ url_for('uploaded_file', filename='') }}">
+                </section>
+                {% block reviewmodal %}
+                    <section>
+                        <a href="#" data-bazooka="openReviewModal">
+                            <i class="material-icons">done_all</i>
+                            <span class="detail">Отправить на ревью</span>
+                        </a>
+                    </section>
+                {% endblock %}
+                <section id="double">
+                    <section>
+                        <a href="#" id="result_review"><i class="material-icons">description</i>Просмотреть
+                            результат</a>
+                    </section>
+                    <section>
+                        <a href="" id="continue"><i class="material-icons">flip_to_back</i>Продолжить редактировать</a>
+                    </section>
+                </section>
+                <section>
+                    <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i>
+                        <span>Скачать
+                        баннер</span></a>
+                </section>
 
+                {% block saver %}
+
+                {% endblock %}
+
+                <section class="last-sec">
+                    <a href="#">
+                        <i class="material-icons">cloud_upload</i>
+                    <span class="download-file">
+                        Загрузить изображение
+                    </span>
+                    </a>
+                    <form id="upload-file" method="post" enctype="multipart/form-data">
+                        <input type="file" name="file" id='inputted'/>
+                    </form>
+                    <div class="rightcol2">
+                        <h2>Выберите вариант загрузки</h2>
+                        <div class="uploadings">
+                            <div class="lm"><a href="{{ url_for ('cuts_background') }}" id="cutters"><i
+                                    class="material-icons">exit_to_app</i>Нужно вырезать фон</a>
+                            </div>
+                            <div id="local_load" class="lm"><a href="#" id="input"><i
+                                    class="material-icons">find_in_page</i>Загрузить
+                                из ПК</a></div>
+                            <div id="from_db" class="lm"><a><i class="material-icons">line_style</i>Загрузить из
+                                базы</a>
+                                <div class="list-cuted">
+
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </aside>
-        <section class="container">
-            {% block nav_edit %}
-                <nav class="navigation">
-                  <a href="{{ url_for ('dashboard') }}"><i class="material-icons">all_out</i>Доска уведомлений</a>
-                  <a href="{{ url_for ('admin') }}"><i class="material-icons">accessibility</i>Админка</a>
-                    <a href="#" id="result_review"><i class="material-icons">description</i>Просмотреть результат</a>
-                    <a href="" id="continue"><i class="material-icons">flip_to_back</i>Продолжить редактировать</a>
-                    <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i> Скачать
-                        баннер</a>
-                </nav>
-            {% endblock %}
-            <main class="container-content">
-                <div class="button-group">
-                    <a href="#" id="del_item">
-                        <i class="material-icons">delete</i>
-                    </a>
-                </div>
-                <canvas id="main">
-                </canvas>
-            </main>
-        </section>
+                </section>
+            </div>
+
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                <section class="container">
+                    <main class="container-content">
+                        <div class="button-group">
+                            <a href="#" id="del_item">
+                                <i class="material-icons">delete</i>
+                            </a>
+                        </div>
+                        <canvas id="main">
+                        </canvas>
+                    </main>
+                </section>
+            </div>
+        </div>
     </div>
     <div id="myModal" class="modal">
 
