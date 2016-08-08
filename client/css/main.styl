@@ -5,56 +5,39 @@
 html, body
   height 100%
 
-box-shadow(args...)
-  -webkit-box-shadow args
-  -moz-box-shadow args
-  box-shadow args
-
-canvas#c
-  border 1px dashed #ff9e2a
-  box-shadow -16px 18px 95px -23px rgba(0, 0, 0, 0.75)
-
-.block
-  display block
-
-.fontpack, .sizepack
-  display inline-block
-  float right
-  min-width 20%
-
-.wrapper
-  height 100%
-  display flex
-  flex-wrap wrap
-  flex-direction row
-  justify-content flex-start
-  align-items flex-start
-
 .column_aside
-  flex 1
-  order 1
-  flex-basis 100%
-  height 99.5%
-
+  height 800px
   display flex
   flex-wrap wrap
   flex-direction column
   align-items stretch
-  border 2px solid #000000
   position relative
 
   section
-    flex-basis 11%
     text-align center
     align-content center
     position relative
+    height 80px
+    width 80px
+    border 1px solid #000
+    margin 7px
 
     a
       color #000000
       text-decoration none
+      font-size 12px
 
   span
     display block
+    font-size 12px
+
+section#double
+  height 160px
+  display none
+
+  section
+    margin 0
+    border 0
 
 section.last-sec
   margin-top auto
@@ -90,18 +73,6 @@ section.with_menu:hover > #rightcol
     margin-left auto
     padding-right 20px
 
-@media (min-width: 600px)
-  .wrapper
-    flex-wrap nowrap
-
-  .column_aside
-    flex-basis 12%
-    order 1
-
-  .container
-    flex-basis 88%
-    order 2
-
 .container-content
   margin 10%
 
@@ -110,7 +81,8 @@ canvas#main
 
 #backgroundsContainer
   position: absolute
-  left: 225px
+  z-index 3
+  left: 83px
   top: 0
   border: 1px solid black
   background-color: white
@@ -131,8 +103,8 @@ canvas#main
   display none
   position absolute
   background-color #ffffff
-  border 2px solid #000
-  width 300%
+  border 1px solid #000
+  width 412px
   text-align left
   padding-left 10px
   top -3%
@@ -209,7 +181,7 @@ canvas#main
 
   .box-item
     flex-basis 33%
-    box-shadow 0 0 0 1px rgba(0,0,0,0.1)
+    box-shadow 0 0 0 1px rgba(0, 0, 0, 0.1)
 
     img
       height auto
@@ -255,7 +227,7 @@ canvas#main
   text-align left
   padding-left 20px
   top -150%
-  right -200%
+  left 79px
   z-index 2
 
   .uploadings
@@ -299,6 +271,7 @@ section.last-sec:hover > .rightcol2
   flex-direction row
   position absolute
   top -250%
+  left 70px
   border 1px dashed #000
   height 700px
   width 1277px
