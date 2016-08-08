@@ -1,22 +1,22 @@
 {% extends "base.html" %}
 
-{% block title %}Admin{% endblock %}
+{% block title %}Admin panel{% endblock %}
 
 {% block page_content %}
 
 
     <div class="container">
         <div class="row">
-            <div class="col-sm-3 col-md-6 col-lg-3">
+            <div class="col-sm-3 col-md-3 col-lg-2">
                 <h2>Меню</h2>
                 <ul class="nav nav-pills nav-stacked" role="tablist">
-                    <li><a href="{{ url_for ('admin_backgrounds', tab='active') }}">Фоны</a></li>
                     <li><a href="{{ url_for('users_page')}}">Пользователи</a></li>
-                    <li><a href="#">Проекты</a></li>
+                    <li><a href="{{ url_for ('admin_backgrounds', tab='active') }}">Фоны</a></li>
+                    <li><a href="{{ url_for('admin_projects')}}">Проекты</a></li>
                 </ul>
             </div>
 
-            <div class="col-sm-9 col-md-6 col-lg-9">
+            <div class="col-sm-9 col-md-9 col-lg-10">
                 {% block admin_content %}{% endblock %}
             </div>
         </div>

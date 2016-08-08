@@ -1,6 +1,8 @@
+from flask_login import current_user, login_required
 from flask_oauthlib.client import OAuth
-from flask_oauthlib.contrib.apps import facebook as facebook_app
-from flask_oauthlib.contrib.apps import google as google_app
+from flask_oauthlib.contrib.apps import facebook as facebook_app, google as google_app
+from functools import wraps
+from werkzeug.exceptions import Forbidden
 
 from server.models import User
 
@@ -31,4 +33,16 @@ oauth_apps = {
 
 
 def load_user(user_id):
-    return User.query.filter_by(id=user_id).first()
+    return User.query.filter_by(id=user_id, active=True).first()
+
+
+def requires_roles(*roles):
+    def wrapper(f):
+        @wraps(f)
+        @login_required
+        def wrapped(*args, **kwargs):
+            if current_user.role.name not in roles:
+                return Forbidden()
+            return f(*args, **kwargs)
+        return wrapped
+    return wrapper

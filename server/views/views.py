@@ -4,14 +4,16 @@ import json
 import os
 import uuid
 from io import BytesIO
+from flask import (render_template, redirect, current_app, request, jsonify,
+                   flash, url_for)
 
-from flask import render_template, redirect, current_app, request, jsonify, url_for
 from flask_login import login_required, current_user
-from sqlalchemy import desc
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
+from sqlalchemy import desc
 
 from server.db import db
+from server.forms import profile_form
 from server.models import Image, ImageHistory, Banner, BannerReview, User, BackgroundImage
 from server.utils.image import allowed_file, image_resize, image_preview
 
@@ -97,7 +99,7 @@ def continue_edit(history_image_id):
 @login_required
 def history_image(history_image_id):
     if request.method == 'POST':
-        if 'hist_id' or 'jsn' not in request.files:
+        if 'jsn' not in request.json:
             return jsonify({'result': 'no hist_id or jsn field'})
         else:
             hist_id = request.json['hist_id']
@@ -196,7 +198,8 @@ def review_action():
         banner_review.designer_comment = form.get('comment', '')
         banner_review.reviewed = True
         banner_review.changed_at = datetime.datetime.utcnow()
-        banner_review.status = form.get('status', '')
+        if form['status']:
+            banner_review.status = form['status']
         banner_review.designer_imagename = filename
         banner_review.designer_previewname = preview_name
 
@@ -231,21 +234,22 @@ def save_cuted():
         )
         db.session.add(img_cutted)
         db.session.flush()
+        r = {
+            'src': url_for('editor'),
+            'file': url_for('uploaded_file', filename=filename)
+        }
+        return jsonify({'result': r}), 201
 
-        return '', 201
 
-
-# not working
 @login_required
 def load_from_pc():
     if not request.files:
         return jsonify({'result': 'no field file in form'}), 406
     else:
-        file_ = request.files.getlist("file")
+        file_ = request.files['file']
         name = str(uuid.uuid4()) + '.png'
         preview_name = 'preview_' + name
-        original_file = image_resize(file_)
-        original_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], name))
+        file_.save(os.path.join(current_app.config['UPLOAD_FOLDER'], name))
         preview_file = image_preview(file_)
         preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
 
@@ -262,3 +266,29 @@ def load_from_pc():
         }
 
         return jsonify({'result': review_jsoned}), 201
+
+
+@login_required
+def load_all_cuts():
+    allimages = Image.query.all()
+    cut_jsoned = []
+    for img in allimages:
+        cut_jsoned.append({
+            'url': url_for('uploaded_file', filename=img.name),
+            'preview': url_for('uploaded_file', filename=img.preview)
+        })
+
+    return jsonify({'result': cut_jsoned}), 201
+
+
+@login_required
+def user_profile():
+    form = profile_form.ProfileForm()
+    if form.validate_on_submit():
+        user = User.query.get(current_user.id)
+        user.query.update(form.data)
+        db.session.commit()
+        flash('Профиль изменен.')
+    elif request.method == 'POST':
+        flash('Профиль не изменен. Проверьте введенные данные.')
+    return render_template('user/user_profile.html', form=form)

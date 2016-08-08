@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
-import {popup} from '../popUp.js';
+import {activatePopUp} from '../popUp.js';
 
 const BAZOOKA_PREFIX = 'body';
 
@@ -13,10 +13,9 @@ class DeleteButton extends React.Component {
       }
 
     onDelete() {
-        popup.change({data: "Удалить ?",
+        activatePopUp({child: <h2>Удалить?</h2> ,
         confirm: true,
-        confirmAction: this.props.handleDelete(this.props.id),
-        flash: false
+        confirmAction: this.props.handleDelete(this.props.id)
         });
     }
 
@@ -25,7 +24,7 @@ class DeleteButton extends React.Component {
             <div className="btn-wrapper">
                 <div className="btn btn-default">
                     <i className="glyphicon glyphicon-trash"/>
-                    <span onClick={this.onDelete} >Delete</span>
+                    <span onClick={this.onDelete} >Удали</span>
                 </div>
             </div>
         );
@@ -50,7 +49,7 @@ class RenameInput extends React.Component {
         return (
             <div className="btn-wrapper">
                 <input type="text" ref="rename" onChange={this.onInput}  required/>
-                <input type="submit" value="Rename"
+                <input type="submit" value="Переименуй" 
                        onClick={this.props.handleRename(this.props.id, this.state.newtitle)}
                 />
             </div>
@@ -76,11 +75,11 @@ class RenameButton extends React.Component {
     render() {
         return (
             <div className="btn-wrapper">
-                { this.state.renamed ? popup.change({data: <RenameInput id={this.props.id} handleRename = {this.props.handleRename}/>,
+                { this.state.renamed ? activatePopUp({child: <h2> <RenameInput id={this.props.id} handleRename = {this.props.handleRename}/> </h2>    ,
                     flash: false }) : null }
                 <div className="btn btn-default">
                     <i className="glyphicon glyphicon-pencil"/>
-                    <span onClick={this.onClick} >Rename</span>
+                    <span onClick={this.onClick} >Переименуй</span>
                 </div>
             </div>
         );
@@ -91,43 +90,33 @@ class Image extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            titleClick: false
-        };
-        this.onClick = this.onClick.bind(this);
         this.handlePreview = this.handlePreview.bind(this);
     }
 
     handlePreview() {
-        popup.change({
-            data: <div className="img-popup" style={{backgroundImage: `url(${this.props.url})`}} ></div>,
+        activatePopUp({
+            child: <div className="img-popup" style={{backgroundImage: `url(${this.props.url})`}} ></div>,
             flash: false
         });
     }
 
-    onClick() {
-        this.setState({titleClick: !this.state.titleClick});
-    }
-
     render() {
         return (
-            <div className="col-sm-6 col-md-4">
+            <div className="col-lg-6">
                 <div className="thumbnail">
                     <div className="img-wrapper" style={{backgroundImage: `url(${this.props.preview})`}} >
                         </div>
                         <div className="caption">
-                           <h3> {this.props.title} </h3>
-                            <p> {this.props.url} </p>
-                            <p> ID:{this.props.id} </p>
-                            <DeleteButton id={this.props.id} handleDelete= {this.props.handleDelete} />
+                           <h6> {this.props.title} </h6>
                             <a onClick={this.handlePreview} className="btn btn-default btn-wrapper" role="button">
-                            Preview
+                            Смотри
                             </a>
                                 <RenameButton
                                     title={this.props.title}
                                     id={this.props.id}
                                     handleRename={this.props.handleRename}
                                 />
+                            <DeleteButton id={this.props.id} handleDelete= {this.props.handleDelete} />
                     </div>
                 </div>
             </div>
@@ -159,8 +148,8 @@ class ImagesList extends React.Component {
                 body: JSON.stringify({id: id})
             }).then(response => {
                 if (response.status !== 200) {
-                    popup.change({
-                       data: <p>Што то не так ошибка {response.status} </p>
+                    activatePopUp({
+                       title: <h2>Што то не так ошибка {response.status} </h2>
                     });
                     return response.status;
                 }
@@ -171,7 +160,10 @@ class ImagesList extends React.Component {
                 this.setState({
                     displayedImages: displayedImages
                     });
-                popup.change({data: "Удален"});
+                activatePopUp({
+                    title: <h2> Удален </h2>,
+                    flash: true
+                });
             });
         };
     }
@@ -187,8 +179,8 @@ class ImagesList extends React.Component {
                 body: JSON.stringify({id: id, title: title})
             }).then(response => {
                 if (response.status !== 200) {
-                    popup.change({
-                       data: <p>Што то не так ошибка  {response.status} </p>
+                    activatePopUp({
+                       title: <h2>Што то не так ошибка  {response.status} </h2>
                     });
                     return response.status;
                 }
@@ -198,7 +190,10 @@ class ImagesList extends React.Component {
                 );
                 renameEl[0].title = title;
                 this.setState({displayedImages: this.props.imageArray});
-                popup.change({data: "Переименовано"})
+                activatePopUp({
+                    title: <h2> Переименовано </h2>,
+                    flash: true
+                })
             });
         };
     }
@@ -214,11 +209,11 @@ class ImagesList extends React.Component {
             <div>
                 <div className="form-inline">
                         <div className="form-group">
-                            <input type="text" placeholder="Search..." className="search-field" onChange={this.handleSearch} />
+                            <input type="text" placeholder="Поиск..." className="search-field" onChange={this.handleSearch} />
                         </div>
                 </div>
                      <hr/>
-                    <ul>
+                    <div>
                         {
                            filteredImages.map(el => {
                                return <Image
@@ -232,7 +227,7 @@ class ImagesList extends React.Component {
                                />;
                            })
                         }
-                    </ul>
+                    </div>
             </div>
         );
     }

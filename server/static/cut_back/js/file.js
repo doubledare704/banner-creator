@@ -68,7 +68,6 @@ function FILE_CLASS() {
     };
 
     this.file_post = function () {
-        console.log('azaza');
         this.SAVE_TO_SERVER();
     };
     //print
@@ -91,7 +90,7 @@ function FILE_CLASS() {
             tempCtx.drawImage(document.getElementById(LAYER.layers[i].name), 0, 0, WIDTH, HEIGHT);
         }
 
-      
+
         //trim
         var trim_info = IMAGE.trim_info(tempCanvas);
         tmp_data = tempCtx.getImageData(0, 0, WIDTH, HEIGHT);
@@ -113,7 +112,11 @@ function FILE_CLASS() {
             },
             body: JSON.stringify(data)
         })
-            .then(() => console.log('ok'))
+            .then((res) => res.json())
+            .then(function ({result}) {
+                localStorage.setItem('file_cuted', result.file);
+                window.location.href=result.src
+            })
             .catch(function (error) {
                 console.log('Request failed', error);
             });

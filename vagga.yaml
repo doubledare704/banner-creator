@@ -31,6 +31,8 @@ containers:
       source: /static/server/static/styles.css
       path: /app/server/static/styles.css
     - !EnsureDir /state
+    environ:
+      APP_CONFIG_FILE: /app/server/config/production.py
 
   static:
     setup:
