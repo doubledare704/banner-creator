@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
-import {popup} from '../popUp.js';
+import {activatePopUp} from '../popUp.js';
 
 
 const BAZOOKA_PREFIX = 'backgrounds-admin';
@@ -106,7 +106,8 @@ class BackgroundsAdmin extends React.Component {
 
                 fetch(
                     `/admin/inactivate_image/${this.state.backgrounds[index].id}`,
-                    {method: "POST"}
+                    {credentials: 'same-origin',
+                        method: "POST"}
                 ).then((response) => {
                     if (response.status === 200) {
                         activatePopUp({
@@ -131,7 +132,8 @@ class BackgroundsAdmin extends React.Component {
                             () => {
                                 fetch(
                                     `/admin/delete_image/${this.state.backgrounds[index].id}`,
-                                    {method: "POST"}
+                                    {credentials: 'same-origin',
+                                        method: "POST"}
                                 ).then((response) => {
                                     if (response.status === 204) {
                                         this.state.backgrounds.splice(index, 1);
@@ -152,7 +154,8 @@ class BackgroundsAdmin extends React.Component {
 
             fetch(
                 `/admin/activate_image/${this.state.backgrounds[index].id}`,
-                {method: "POST"}
+                {credentials: 'same-origin',
+                    method: "POST"}
             ).then((response) => {
                 if (response.status === 200) {
                     activatePopUp({

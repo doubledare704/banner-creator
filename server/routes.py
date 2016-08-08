@@ -40,9 +40,9 @@ def setup_routes(app):
     # admin
     app.add_url_rule('/admin/', view_func=admin)
     app.add_url_rule('/admin/backgrounds/', view_func=backgrounds, endpoint='admin_backgrounds')
-    app.add_url_rule('/admin/inactivate_image/<int:id>', methods=['POST'], view_func=inactivate_image)
-    app.add_url_rule('/admin/delete_image/<int:id>', methods=['POST'], view_func=image_delete_from_db)
-    app.add_url_rule('/admin/activate_image/<int:id>', methods=['POST'], view_func=activate_image)
+    app.add_url_rule('/admin/inactivate_image/<int:image_id>', methods=['POST'], view_func=inactivate_image)
+    app.add_url_rule('/admin/delete_image/<int:image_id>', methods=['POST'], view_func=image_delete_from_db)
+    app.add_url_rule('/admin/activate_image/<int:image_id>', methods=['POST'], view_func=activate_image)
     app.add_url_rule('/admin/projects/', view_func=projects_page, endpoint='admin_projects')
 
     app.add_url_rule('/admin/users', view_func=users_page)
