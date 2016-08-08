@@ -84,7 +84,7 @@
                 <div class="rightcol2">
                     <h2>Выберите вариант загрузки</h2>
                     <div class="uploadings">
-                        <div class="lm"><a id="cutters"><i class="material-icons">exit_to_app</i>Нужно вырезать фон</a>
+                        <div class="lm"><a href="{{ url_for ('cuts_background') }}" id="cutters"><i class="material-icons">exit_to_app</i>Нужно вырезать фон</a>
                         </div>
                         <div id="local_load" class="lm"><a href="#" id="input"><i
                                 class="material-icons">find_in_page</i>Загрузить
@@ -120,10 +120,6 @@
                 </canvas>
             </main>
         </section>
-    </div>
-    <div id="fmaing">
-        <a href='#' onclick='this.parentNode.parentNode.removeChild(this.parentNode)'>Закрыть это окно</a>
-        <iframe id="thatCutter" src="{{ url_for ('cuts_background') }}" frameborder="0"></iframe>
     </div>
     <div id="myModal" class="modal">
 

@@ -13,23 +13,6 @@ const filetoeditor = document.getElementById('inputted');
 const deleteFabricItem = document.getElementById('del_item');
 const beforeCutter = document.getElementById('cutters');
 const allCutted = document.getElementById('from_db');
-const sendToCutter = document.getElementById('cutters');
-
-
-// iframe cutter
-sendToCutter.addEventListener('click', function () {
-    const ifr = document.getElementById('fmaing');
-    const frm = document.getElementById('thatCutter');
-    ifr.style.display = "block";
-    // $('#iframe').contents().find('body').append('<button>Click Here</button>');
-    //
-    // /* We seek for a `button` element within the iframe body, in the iframe content */
-    // $('#iframe').contents().find('body button').click(function (event) {
-    //     event.preventDefault();
-    //     $('#iframe').remove();
-    //     $('#result').text('Iframe deleted!');
-    // });
-});
 
 // loads all cuted backgrounds from db
 allCutted.addEventListener('mouseover', function popList() {
@@ -69,7 +52,6 @@ allCutted.addEventListener('mouseover', function popList() {
                                 })
                             }
                             editor.canv.add(img);
-                            lister[0].style.display="none";
                         });
                     }
                 });
