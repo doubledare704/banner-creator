@@ -102,7 +102,7 @@ def remove_user(user_id):
     return 'OK', 200
 
 
-@login_required
+@requires_roles('admin')
 def backgrounds():
     tab = request.args.get('tab')
     background_images = BackgroundImage.query.filter(BackgroundImage.active == (tab == 'active')).order_by(
@@ -131,14 +131,16 @@ def backgrounds():
     return render_template('admin/backgrounds.html', backgrounds=background_images, pagination=pagination, tab=tab)
 
 
-@login_required
+@requires_roles('admin')
 def inactivate_image(image_id):
     image = BackgroundImage.query.get_or_404(image_id)
     image.active = False
+    db.session.add(image)
+    db.session.commit()
     return '', 200
 
 
-@login_required
+@requires_roles('admin')
 def image_delete_from_db(image_id):
     image = BackgroundImage.query.get_or_404(image_id)
     os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.name))
@@ -148,10 +150,12 @@ def image_delete_from_db(image_id):
     return '', 204
 
 
-@login_required
+@requires_roles('admin')
 def activate_image(image_id):
     image = BackgroundImage.query.get_or_404(image_id)
     image.active = True
+    db.session.add(image)
+    db.session.commit()
     return '', 200
 
 
