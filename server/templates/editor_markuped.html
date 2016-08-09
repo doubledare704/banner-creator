@@ -187,7 +187,13 @@
 
     </div>
     {#  Include html for review modal window  #}
-    {% include 'editor/review_modal.html' %}
+    <div id="reviewModal" class="modal"
+    {% block bazookas %}
+         data-bazooka="sendToReview"
+    {% endblock %}
+    >
+        {% include 'editor/review_modal.html' %}
+    </div>
 {% endblock %}
 {% block scripts %}
     <script src="{{ url_for('static', filename='editorbundle.js') }}"></script>

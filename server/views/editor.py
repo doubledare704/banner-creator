@@ -75,6 +75,10 @@ def make_review():
         preview_name = 'preview_' + filename
         preview_file = image_preview(file_)
         preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
+        if 'ids' in request.form:
+            comment_to_review = 'Относится к прошлому баннеру /editor/' + form['ids'] + ' ' + form.get('comment', '')
+        else:
+            comment_to_review = form.get('comment', '')
 
         banner = Banner(
             name=filename,
@@ -90,7 +94,7 @@ def make_review():
             banner_id=banner.id,
             user=current_user,
             designer=designer,
-            comment=form.get('comment', '')
+            comment=comment_to_review
         )
         db.session.expire_all()
         db.session.add(review)
