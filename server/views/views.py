@@ -93,7 +93,8 @@ def background_images(page=1):
 @login_required
 def continue_edit(history_image_id):
     edit = ImageHistory.query.filter_by(review_image=history_image_id).first_or_404()
-    return render_template('editor_history.html', id_review=edit.review_image)
+    designers = User.query.filter_by(role=User.UserRole.designer)
+    return render_template('editor_history.html', id_review=edit.review_image, designers=designers)
 
 
 @login_required
