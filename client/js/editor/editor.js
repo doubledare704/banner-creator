@@ -146,7 +146,7 @@ export default class Editor {
         fabric.Image.fromURL(imgsrc, function (img) {
             let originalsize = img.getOriginalSize();
             if (originalsize.width > cdim[0]) {
-                sX = cdim[0] / originalsize.width+ 0.005;
+                sX = cdim[0] / originalsize.width + 0.005;
                 sY = sX;
             }
             let center = c.getCenter();
@@ -187,17 +187,12 @@ export default class Editor {
                 fill: color,
                 styles: {
                     0: {
-                        0: {fontSize: size * 0.7},
-                        1: {fontSize: size * 0.7},
-                        3: {fontSize: size * 1.3},
+                        0: {fontSize: size - 15},
+                        1: {fontSize: size - 15},
 
-                        5: {fontSize: size * 1.3},
-                        6: {fontSize: size * 1.3},
-                        7: {fontSize: size * 1.3},
-
-                        9: {fontSize: size},
-                        10: {fontSize: size},
-                        11: {fontSize: size}
+                        9: {fontSize: size - 15},
+                        10: {fontSize: size - 15},
+                        11: {fontSize: size - 15}
                     }
                 }
             });
@@ -211,19 +206,20 @@ export default class Editor {
         });
     }
 
-    addButton(w = 220, h = 80, fontFamily = 'Roboto', fontSize = 20, fontText = 'Смотреть >') {
+    addButton(w = 120, h = 30, fontFamily = 'Roboto', fontSize = 13, fontText = 'Смотреть >', textColor = '#3c3c3c') {
         let border = new fabric.Rect({
             width: w,
             height: h,
             fill: 'transparent',
-            stroke: '#000',
-            strokeWidth: 2,
+            stroke: '#3c3c3c',
+            strokeWidth: 1,
             rx: 5,
             ry: 5
         });
         let texting = new fabric.IText(fontText, {
             fontFamily: fontFamily,
             fontSize: fontSize,
+            fill: textColor,
             top: h / 4,
             left: w / 4.4
         });

@@ -1,14 +1,5 @@
 {% extends "base.html" %}
-
-{% block head %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='fav/favicon.ico') }}">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-          rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab|Roboto:400,500|Lobster&subset=latin,cyrillic'
-          rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-{% endblock %}
+{% block title %}Создание банера{% endblock %}
 
 {% block navbar %}
     <div class="navbar navbar-inverse" role="navigation">
@@ -69,15 +60,15 @@
                     <div id="rightcol">
                         <h2>Выберите вариант текста</h2>
                         <ul>
-                            <li class="head1" data-size="24" data-text="Header text">H1 подзаголовок</li>
-                            <li class="head2" data-size="18" data-text="Header text">H2 подзаголовок</li>
-                            <li class="head3" data-size="12" data-text="Header text">H3 подзаголовок
+                            <li class="head1" data-size="40" data-text="Header text">H1 подзаголовок</li>
+                            <li class="head2" data-size="30" data-text="Header text">H2 подзаголовок</li>
+                            <li class="head3" data-size="17" data-text="Header text">H3 подзаголовок
                                 <hr>
                             </li>
-                            <li class="head1" data-size="24" data-type="p" data-text="от 1 700 грн">Цена от для большого
+                            <li class="head3" data-size="32" data-type="p" data-text="от 1 700 грн">Цена от для большого
                                 банера
                             </li>
-                            <li class="head2" data-size="18" data-type="p" data-text="от 1 700 грн">Цена от для
+                            <li class="head4" data-size="28" data-type="p" data-text="от 1 700 грн">Цена от для
                                 маленького
                                 банера
                             </li>
@@ -188,9 +179,9 @@
     </div>
     {#  Include html for review modal window  #}
     <div id="reviewModal" class="modal"
-    {% block bazookas %}
+            {% block bazookas %}
          data-bazooka="sendToReview"
-    {% endblock %}
+            {% endblock %}
     >
         {% include 'editor/review_modal.html' %}
     </div>
