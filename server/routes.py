@@ -8,7 +8,7 @@ from server.views.auth import login_page, authorize, oauth_callback, log_out
 from server.views.editor import (continue_edit, history_image, cuts_background,
                                  save_cuted, load_from_pc, load_all_cuts,
                                  background_images, editor, make_review)
-from server.views.views import (
+from server.views.images import (
     index, image_delete, image_rename,
     review_tool, review_image, review_action
 )
