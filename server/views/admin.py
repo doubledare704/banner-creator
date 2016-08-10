@@ -14,7 +14,7 @@ from server.db import db
 from server.models import User, BackgroundImage, Project
 from server.utils.auth import requires_roles
 
-PER_PAGE = 3
+PER_PAGE = 10
 
 
 @requires_roles('admin', 'designer')
