@@ -29,7 +29,7 @@
                 <ul class="nav navbar-nav">
                             <li {% if request.url_rule.endpoint.startswith('dashboard') %}class="active"{% endif %}><a href="{{ url_for('dashboard') }}">Кабинет</a></li>
                             <li {% if request.url_rule.endpoint == "editor" %} class="active"{% endif %}><a href="{{ url_for ('editor') }}">Редактор</a></li>
-                            {% if current_user.role == current_user.UserRole.admin or current_user.role == current_user.UserRole.designer %}
+                            {% if current_user.is_authenticated and (current_user.role == current_user.UserRole.admin or current_user.role == current_user.UserRole.designer) %}
                               <li {% if request.url_rule.endpoint == "admin" %} class="active"{% endif %}>
                                 <a href="{{ url_for ('admin') }}">Админ</a>
                               </li>
