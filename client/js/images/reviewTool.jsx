@@ -8,9 +8,9 @@ import {activatePopUp} from '../popUp.js';
 const BAZOOKA_PREFIX = 'body';
 
 class EditorWindow extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state ={
+        this.state = {
             status: ''
         };
         this.addText = this.addText.bind(this);
@@ -31,17 +31,17 @@ class EditorWindow extends React.Component {
     }
 
     addText() {
-        this.editor.setFont("Roboto", 28, "#000", "...замечание","#ff9900", 0.6);
+        this.editor.setFont("Roboto", 28, "#000", "...замечание", "#ff9900", 0.6);
         this.editor.addDot();
     }
 
-    addDot(){
+    addDot() {
         this.editor.addDot();
     }
 
     deleteObject() {
-         let activeObject = this.editor.canv.getActiveObject(),
-             activeGroup = this.editor.canv.getActiveGroup();
+        let activeObject = this.editor.canv.getActiveObject(),
+            activeGroup = this.editor.canv.getActiveGroup();
         this.editor.deleteObject(activeObject, activeGroup);
     }
 
@@ -57,21 +57,24 @@ class EditorWindow extends React.Component {
         this.editor.addEllipse();
     }
 
-    fileInput(){
+    fileInput() {
         this.editor.setBackground(this.props.imageUrl);
     }
 
-    changeStatus(event){
+    changeStatus(event) {
         this.setState({status: event.target.value});
     }
 
-    sendToReview(event){
+    sendToReview(event) {
         const img_id = this.props.imageId;
         const status = this.state.status;
         const comment = this.refs.comment.value;
+        let canvas = this.editor.canv;
+        let objs = canvas.getObjects();
+        this.editor.filterAndDelete(objs);
         let activeObject = this.editor.canv.getActiveObject(),
-             activeGroup = this.editor.canv.getActiveGroup();
-        disableControls(activeObject,activeGroup );
+            activeGroup = this.editor.canv.getActiveGroup();
+        disableControls(activeObject, activeGroup);
         const formData = new FormData();
         let imageReview = this.editor.canv.toJSON();
         formData.append('id', img_id);
@@ -96,7 +99,7 @@ class EditorWindow extends React.Component {
             activatePopUp({
                 title: "Одправлено, перейти обратно в кабинет ?",
                 confirm: true,
-                confirmAction: () => window.location.href="/"
+                confirmAction: () => window.location.href = "/"
             });
 
         })
@@ -104,73 +107,74 @@ class EditorWindow extends React.Component {
 
     render() {
         return (<div>
-                    <div className="btn btn-default">
-                        <i className="glyphicon glyphicon-text-height"/>
-                        <span onClick={this.addText}>екст</span>
-                    </div>
-
-                    <div className="btn btn-default">
-                        <i className="glyphicon glyphicon-certificate"/>
-                        <span onClick={this.addDot}>_Точка</span>
-                    </div>
-
-                    <div className="btn btn-default">
-                        <i className="glyphicon glyphicon-arrow-right"/>
-                        <span onClick={this.addArrow}>Стрелка</span>
-                    </div>
-
-                    <div className="btn btn-default">
-                        <i className="glyphicon glyphicon-unchecked"/>
-                        <span onClick={this.addRectangle}>Прямоуголник</span>
-                    </div>
-
-                    <div className="btn btn-default">
-                        <i className="glyphicon glyphicon-unchecked"/>
-                        <span onClick={this.addEllipse}>Елипс</span>
-                    </div>
-
-                    <div className="btn btn-default">
-                        <i className="glyphicon glyphicon-trash"/>
-                        <span onClick={this.deleteObject}>Удали</span>
-                    </div>
-
-                    <canvas id="main" ref="canvas"></canvas>
-
-                    <div className="col-lg-10">
-                         <div className="form-group">
-                          <label for="comment">Коментарий:</label>
-                          <textarea className="form-control" ref="comment" rows="5" id="comment"></textarea>
-                        </div>
-                        <form className="form-inline" action="" method="post">
-                           <div className="form-group">
-                                <span className="btn-wrapper" >
-                                    ПЛОХО: <input onClick={this.changeStatus} type="radio" name="status" value="not_accepted"/>
-                                </span>
-                            </div>
-                            <div className="form-group">
-                                <span className="btn-wrapper" >
-                                    ХОРШО: <input onClick={this.changeStatus} type="radio" name="status" value="accepted"/>
-                                </span>
-                            </div>
-                            <div className="btn btn-success form-group btn-wrapper">
-                                <i className="glyphicon glyphicon-envelope"/>
-                                <span onClick={this.sendToReview}> Одправить</span>
-                            </div>
-                        </form>
-                    </div>
-
-
-
+                <div className="btn btn-default">
+                    <i className="glyphicon glyphicon-text-height"/>
+                    <span onClick={this.addText}>екст</span>
                 </div>
+
+                <div className="btn btn-default">
+                    <i className="glyphicon glyphicon-certificate"/>
+                    <span onClick={this.addDot}>_Точка</span>
+                </div>
+
+                <div className="btn btn-default">
+                    <i className="glyphicon glyphicon-arrow-right"/>
+                    <span onClick={this.addArrow}>Стрелка</span>
+                </div>
+
+                <div className="btn btn-default">
+                    <i className="glyphicon glyphicon-unchecked"/>
+                    <span onClick={this.addRectangle}>Прямоуголник</span>
+                </div>
+
+                <div className="btn btn-default">
+                    <i className="glyphicon glyphicon-unchecked"/>
+                    <span onClick={this.addEllipse}>Елипс</span>
+                </div>
+
+                <div className="btn btn-default">
+                    <i className="glyphicon glyphicon-trash"/>
+                    <span onClick={this.deleteObject}>Удали</span>
+                </div>
+
+                <canvas id="main" ref="canvas"></canvas>
+
+                <div className="col-lg-10">
+                    <div className="form-group">
+                        <label for="comment">Коментарий:</label>
+                        <textarea className="form-control" ref="comment" rows="5" id="comment"></textarea>
+                    </div>
+                    <form className="form-inline" action="" method="post">
+                        <div className="form-group">
+                                <span className="btn-wrapper">
+                                    ПЛОХО: <input onClick={this.changeStatus} type="radio" name="status"
+                                                  value="not_accepted"/>
+                                </span>
+                        </div>
+                        <div className="form-group">
+                                <span className="btn-wrapper">
+                                    ХОРШО: <input onClick={this.changeStatus} type="radio" name="status"
+                                                  value="accepted"/>
+                                </span>
+                        </div>
+                        <div className="btn btn-success form-group btn-wrapper">
+                            <i className="glyphicon glyphicon-envelope"/>
+                            <span onClick={this.sendToReview}> Одправить</span>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
         );
     }
 }
 
 export default function (node) {
-    const { imageUrl, imageId } = h.getAttrs(BAZOOKA_PREFIX, node);
+    const {imageUrl, imageId} = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
-        <EditorWindow width={960} height={420} imageUrl={imageUrl} imageId = {imageId} />,
+        <EditorWindow width={960} height={420} imageUrl={imageUrl} imageId={imageId}/>,
         node
     );
 }
