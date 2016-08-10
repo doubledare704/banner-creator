@@ -1,9 +1,18 @@
+_templates:
+ local_env: &local_env
+   APP_CONFIG_FILE: /work/server/config/production.py
+   SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://postgres@localhost:5433/banner_creator
+ test_env: &test_env
+   APP_CONFIG_FILE: /work/server/config/testing.py
+   SQLALCHEMY_TEST_DATABASE_URI: postgresql+psycopg2://postgres:postgres@localhost:5433/banner_creator_tests
+
 containers:
   python:
     setup:
     - !Ubuntu xenial
-    - !Install [libpq-dev]
+    - !Install [libpq-dev, ca-certificates]
     - !Py3Requirements requirements.txt
+    environ: *local_env
 
   python-deploy:
     setup:
@@ -16,6 +25,9 @@ containers:
       source: /work/server
       path: /app/server
     - !Copy
+      source: /work/instance
+      path: /app/instance
+    - !Copy
       source: /work/manage.py
       path: /app/manage.py
     - !Sh |
@@ -24,15 +36,18 @@ containers:
     - !EnsureDir /app/server/static
     - !Build
       container: build-static
-      source: /static/server/static/bundle.js
-      path: /app/server/static/bundle.js
+      source: /static/server/static/adminbundle.js
+      path: /app/server/static/adminbundle.js
+    - !Build
+      container: build-static
+      source: /static/server/static/editorbundle.js
+      path: /app/server/static/editorbundle.js
     - !Build
       container: build-static
       source: /static/server/static/styles.css
       path: /app/server/static/styles.css
     - !EnsureDir /state
-    environ:
-      APP_CONFIG_FILE: /app/server/config/production.py
+    - !EnsureDir /storage
 
   static:
     setup:
@@ -56,7 +71,7 @@ containers:
       path: /static/webpack.config.js
     - !Sh |
         cd /static
-        webpack --progress
+        webpack --progress -p
 
   postgres:
     setup:
@@ -86,6 +101,9 @@ containers:
 
   deploy-tools:
     setup:
+    - !Env
+      APP_CONFIG_FILE: /work/server/config/production.py
+      SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://postgres@localhost:5433/banner_creator
     - !Alpine v3.3
     - !Download
       url: http://alpine.packages.gitlab.uaprom/alpine.packages@gitlab.uaprom.rsa.pub
@@ -93,24 +111,25 @@ containers:
     - !Sh |
         echo http://alpine.packages.gitlab.uaprom/ >> /etc/apk/repositories
         apk update
-    - !Install [deploy=0.7.2-r0]
+    - !Install [deploy=0.9.2-r0]
     # A directory for every container
     - !EnsureDir /target/python-deploy
     volumes:
       /target/python-deploy: !Container python-deploy
+    environ: *local_env
 
 commands:
   run: !Command
     description: Run this application
     container: python
-    run:
-    - python3
-    - manage.py
-    - runserver
+    environ: *local_env
+    run: |
+      python3 manage.py runserver -h 0.0.0.0 -p 20000
 
   test: !Command
     description: Run tests
     container: python
+    environ: *test_env
     run:
     - python3
     - manage.py
@@ -125,6 +144,14 @@ commands:
     - db
     - upgrade
 
+  makesuperuser: !Command
+    description: Create initial database
+    container: python
+    run:
+    - python3
+    - manage.py
+    - makesuperuser
+
   postgres: !Command
     description: Run posgres
     container: postgres
@@ -136,7 +163,7 @@ commands:
   webpack: !Command
     description: Run webpack
     container: static
-    run: [webpack, --progress]
+    run: [webpack, --progress, -p]
 
   deploy: !Command
      container: deploy-tools
