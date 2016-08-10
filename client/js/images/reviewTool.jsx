@@ -58,7 +58,6 @@ class EditorWindow extends React.Component {
     }
 
     fileInput(){
-        console.log(this.props.imageUrl);
         this.editor.setBackground(this.props.imageUrl);
     }
 
