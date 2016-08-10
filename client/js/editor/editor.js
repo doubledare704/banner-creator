@@ -146,7 +146,7 @@ export default class Editor {
         fabric.Image.fromURL(imgsrc, function (img) {
             let originalsize = img.getOriginalSize();
             if (originalsize.width > cdim[0]) {
-                sX = cdim[0] / originalsize.width+ 0.005;
+                sX = cdim[0] / originalsize.width + 0.005;
                 sY = sX;
             }
             let center = c.getCenter();
@@ -187,17 +187,12 @@ export default class Editor {
                 fill: color,
                 styles: {
                     0: {
-                        0: {fontSize: size * 0.7},
-                        1: {fontSize: size * 0.7},
-                        3: {fontSize: size * 1.3},
+                        0: {fontSize: size - 15},
+                        1: {fontSize: size - 15},
 
-                        5: {fontSize: size * 1.3},
-                        6: {fontSize: size * 1.3},
-                        7: {fontSize: size * 1.3},
-
-                        9: {fontSize: size},
-                        10: {fontSize: size},
-                        11: {fontSize: size}
+                        9: {fontSize: size - 15},
+                        10: {fontSize: size - 15},
+                        11: {fontSize: size - 15}
                     }
                 }
             });
@@ -211,19 +206,20 @@ export default class Editor {
         });
     }
 
-    addButton(w = 220, h = 80, fontFamily = 'Roboto', fontSize = 20, fontText = 'Смотреть >') {
+    addButton(w = 120, h = 30, fontFamily = 'Roboto', fontSize = 13, fontText = 'Смотреть >', textColor = '#3c3c3c') {
         let border = new fabric.Rect({
             width: w,
             height: h,
             fill: 'transparent',
-            stroke: '#000',
-            strokeWidth: 2,
+            stroke: '#3c3c3c',
+            strokeWidth: 1,
             rx: 5,
             ry: 5
         });
         let texting = new fabric.IText(fontText, {
             fontFamily: fontFamily,
             fontSize: fontSize,
+            fill: textColor,
             top: h / 4,
             left: w / 4.4
         });
@@ -236,8 +232,11 @@ export default class Editor {
         this.canv.add(group);
     }
 
-    //working now
+    // downloads an image
     downloadImage(link, obj, groups) {
+        let canvas = this.canv;
+        let objs = canvas.getObjects();
+        this.filterAndDelete(objs);
         disableControls(obj, groups);
 
         link.href = this.canv.toDataURL({
@@ -306,6 +305,39 @@ export default class Editor {
             scaleY: 0.5
         }))
     }
+    
+    // change grid size
+    setNewGridSize(gridSize = 10) {
+        // create grid
+        let canvas = this.canv;
+        let objs = canvas.getObjects();
+        let typesObj = objs.map(function (a) {
+            return a.type;
+        });
+        if (inArray('line', typesObj)) {
+            this.filterAndDelete(objs);
+            this.addGrid(gridSize);
+        }
+        else {
+            this.addGrid(gridSize)
+        }
+    }
+    
+    // add grid for canvas
+    setGridToCanv(gridSize = 10) {
+        // create grid
+        let canvas = this.canv;
+        let objs = canvas.getObjects();
+        let typesObj = objs.map(function (a) {
+            return a.type;
+        });
+        if (inArray('line', typesObj)) {
+            this.filterAndDelete(objs);
+        }
+        else {
+            this.addGrid(gridSize)
+        }
+    }
 
     setTextInItext(texter) {
         let act = this.canv.getActiveObject();
@@ -324,6 +356,39 @@ export default class Editor {
             }
             this.canv.renderAll();
         }
+    }
+
+
+    // util func for adding  grid to canvas
+    addGrid(gridSize = 10) {
+        let canvas = this.canv;
+        for (var i = 0; i < (canvas.width / gridSize); i++) {
+            canvas.add(new fabric.Line([i * gridSize, 0, i * gridSize, canvas.width], {
+                stroke: '#A1A1A1',
+                selectable: false
+            }));
+            canvas.add(new fabric.Line([0, i * gridSize, canvas.width, i * gridSize], {
+                stroke: '#A1A1A1',
+                selectable: false
+            }))
+        }
+        canvas.on('object:moving', function (options) {
+            options.target.set({
+                left: Math.round(options.target.left / gridSize) * gridSize,
+                top: Math.round(options.target.top / gridSize) * gridSize
+            });
+        });
+    }
+
+    // filters array for line type
+    filterAndDelete(objs) {
+        let canvas = this.canv;
+        var toDeleteObjs = objs.filter(function (a) {
+            return a.type === 'line'
+        });
+        toDeleteObjs.forEach(function (object) {
+            canvas.remove(object);
+        });
     }
 }
 

@@ -1,12 +1,14 @@
 {% extends "editor_markuped.html" %}
-{% block reviewmodal %}
-{% endblock %}
 
 {% block saver %}
     <section data-bazooka="reloadHistory">
         <a href="" id="progress_saver" data-bazooka="saveToHistory" data-review="{{ id_review }}"><i
                 class="material-icons">beenhere</i><span>Сохранить</span></a>
     </section>
+{% endblock %}
+
+{% block bazookas %}
+    data-bazooka="oldToReview"
 {% endblock %}
 
 {% block scripts %}

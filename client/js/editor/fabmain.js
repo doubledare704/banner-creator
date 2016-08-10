@@ -67,6 +67,7 @@ beforeCutter.addEventListener('click', function () {
     let bannerStory = editor.canv.toJSON();
     bannerStory = JSON.stringify(bannerStory);
     localStorage.setItem('canvasStory', bannerStory);
+    localStorage.setItem('gridSize', document.getElementById('newGrid').value);
 });
 
 // deletes custom object from canvas
@@ -163,6 +164,10 @@ window.onload = function () {
             editor.canv.add(img);
             filetoeditor.value = ""
         });
+    }
+    if (localStorage['gridSize']) {
+        editor.setNewGridSize(localStorage.getItem('gridSize'));
+        document.getElementById('newGrid').value = localStorage.getItem('gridSize');
     }
 };
 
