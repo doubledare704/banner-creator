@@ -52,7 +52,7 @@ def index():
          for image in images
          ])
 
-    return render_template('list.html', image_json=image_json)
+    return render_template('images/list.html', image_json=image_json)
 
 
 @login_required
@@ -73,14 +73,14 @@ def image_rename():
 
 @login_required
 def review_tool():
-    return render_template('review.html')
+    return render_template('images/review.html')
 
 
 @login_required
 def review_image(img_id):
     banner = Banner.query.get_or_404(img_id)
     image_url = '/uploads/' + banner.name
-    return render_template('review.html', image_url=image_url, image_id=img_id)
+    return render_template('images/review.html', image_url=image_url, image_id=img_id)
 
 
 @login_required
@@ -109,4 +109,3 @@ def review_action():
         banner_review.designer_previewname = preview_name
 
         return '', 200
-    return '', 404
