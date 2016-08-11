@@ -59,6 +59,7 @@ class BannerReview(db.Model):
     designer_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     designer_imagename = db.Column(db.String(64), unique=True)
     designer_previewname = db.Column(db.String(64), unique=True)
+    comment_clouds = db.Column(JSON, nullable=True)
 
     user = db.relationship("User", foreign_keys=[user_id])
     designer = db.relationship("User", foreign_keys=[designer_id])
