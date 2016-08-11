@@ -12,7 +12,10 @@
       </div>
       <div class="caption">
         <h4 class="{% if not banner.title %}text-muted{% endif %}">{{ banner.title|default('нет названия', true) }}</h4>
-        <p><a href="{{ url_for('continue_edit', history_image_id=banner.id) }}" class="btn btn-primary" role="button">Редактировать <span class="glyphicon glyphicon-pencil"></span></a></p>
+        <div class="text-right">
+          <a href="{{ url_for('continue_edit', history_image_id=banner.id) }}" class="btn btn-primary" role="button"> <span class="glyphicon glyphicon-pencil tooltipp" data-tooltip="Редактировать баннер"></span> </a>
+          <a href="#" class="btn btn-danger" role="button"> <span class="glyphicon glyphicon-trash tooltipp" data-tooltip="Удалить баннер"></span> </a>
+        </div>
       </div>
     </div>
   </div>
