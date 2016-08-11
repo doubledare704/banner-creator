@@ -89,7 +89,7 @@ function createArrowHead(points) {
     angle *= 180 / Math.PI;
     angle += 90;
 
-    let triangle = new fabric.Triangle({
+    return new fabric.Triangle({
         angle: angle,
         fill: 'red',
         top: y2,
@@ -99,8 +99,6 @@ function createArrowHead(points) {
         originX: 'center',
         originY: 'center'
     });
-
-    return triangle;
 }
 
 function createLine(points) {
@@ -139,22 +137,9 @@ export default class Editor {
 
     //sets background
     setBackground(imgsrc) {
-        // var sX = 1;
-        // var sY = 1;
-        // let cdim = [this.canv.width, this.canv.height];
         let c = this.canv;
-        // let e = this.getCanvasAtResoution();
         fabric.Image.fromURL(imgsrc, function (img) {
-            // let a = img;
-            // let c = a.width;
-            // let g = a.height;
-            // let originalsize = img.getOriginalSize();
-            // if (originalsize.width > cdim[0]) {
-            //     sX = cdim[0] / originalsize.width + 0.005;
-            //     sY = sX;
-            // }
-            (function getCanvasAtResoution(newWidth, newHeight)
-            {
+            (function getCanvasAtResoution(newWidth, newHeight) {
                 let can = c;
                 if (can.width != newWidth || can.height != newHeight) {
                     can.setWidth(newWidth);
@@ -162,29 +147,12 @@ export default class Editor {
                     can.renderAll();
                     can.calcOffset();
                 }
-            })(img.width,img.height);
-            let center = c.getCenter();
+            })(img.width, img.height);
             c.setBackgroundImage(imgsrc, c.renderAll.bind(c), {
-                // scaleY: sY,
-                // scaleX: sX,
-                top: center.top,
-                left: center.left,
-                originX: 'center',
-                originY: 'center'
             });
         });
     }
 
-    // resizer of canvas
-    // getCanvasAtResoution(newWidth, newHeight){
-    //     let can = this.canv;
-    //     if (can.width != newWidth || can.height != newHeight){
-    //         can.setWidth(newWidth);
-    //         can.setHeight(newHeight);
-    //         can.renderAll();
-    //         can.calcOffset();
-    //     }
-    // }
 
     setFont(family, size, color, texts, backgroundColor = 'transparent', opacity = 1) {
         let obj = new fabric.IText(
@@ -385,13 +353,15 @@ export default class Editor {
 
 
     // util func for adding  grid to canvas
-    addGrid(gridSize = 10) {
+    addGrid(gridSize = 15) {
         let canvas = this.canv;
-        for (var i = 0; i < (canvas.width / gridSize); i++) {
-            canvas.add(new fabric.Line([i * gridSize, 0, i * gridSize, canvas.width], {
+        for (let i = 0; i < (canvas.width / gridSize); i++) {
+            canvas.add(new fabric.Line([i * gridSize, 0, i * gridSize, canvas.height], {
                 stroke: '#A1A1A1',
                 selectable: false
             }));
+        }
+        for (let i=0; i<(canvas.height / gridSize); i++){
             canvas.add(new fabric.Line([0, i * gridSize, canvas.width, i * gridSize], {
                 stroke: '#A1A1A1',
                 selectable: false
