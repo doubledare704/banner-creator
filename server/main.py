@@ -1,11 +1,10 @@
+import sys
 import logging
-from logging import handlers
 
 from flask import Flask
 
 from flask_migrate import Migrate
 from flask_login import LoginManager
-
 from flask_wtf.csrf import CsrfProtect
 from flask_babel import Babel
 
@@ -47,9 +46,8 @@ def create_app():
     migrate = Migrate(app, db, directory='server/migrations')
 
     # logging config
-    handler = handlers.RotatingFileHandler(filename=app.config['LOGGING_LOCATION'],
-                                           maxBytes=app.config['LOGGING_FILE_SIZE'],
-                                           backupCount=1)
+    app.logger.handlers.clear()  # remove default loggers
+    handler = logging.StreamHandler(stream=sys.stdout)
     handler.setLevel(app.config['LOGGING_LEVEL'])
     formatter = logging.Formatter(app.config['LOGGING_FORMAT'])
     handler.setFormatter(formatter)

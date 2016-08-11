@@ -13,7 +13,7 @@ class DeleteButton extends React.Component {
       }
 
     onDelete() {
-        activatePopUp({child: <h2>Удалить?</h2> ,
+        activatePopUp({child: <h2 className="text-center">Удалить?</h2> ,
         confirm: true,
         confirmAction: this.props.handleDelete(this.props.id)
         });
@@ -47,7 +47,7 @@ class RenameInput extends React.Component {
 
     render() {
         return (
-            <div className="btn-wrapper">
+            <div className="btn-wrapper text-center">
                 <input type="text" ref="rename" onChange={this.onInput}  required/>
                 <input type="submit" value="Переименуй" 
                        onClick={this.props.handleRename(this.props.id, this.state.newtitle)}
@@ -149,7 +149,7 @@ class ImagesList extends React.Component {
             }).then(response => {
                 if (response.status !== 200) {
                     activatePopUp({
-                       title: <h2>Што то не так ошибка {response.status} </h2>
+                       title: <h2 className="text-center">Што то не так ошибка {response.status} </h2>
                     });
                     return response.status;
                 }
@@ -161,7 +161,7 @@ class ImagesList extends React.Component {
                     displayedImages: displayedImages
                     });
                 activatePopUp({
-                    title: <h2> Удален </h2>,
+                    title: <h2 className="text-center"> Удален </h2>,
                     flash: true
                 });
             });
@@ -180,7 +180,7 @@ class ImagesList extends React.Component {
             }).then(response => {
                 if (response.status !== 200) {
                     activatePopUp({
-                       title: <h2>Што то не так ошибка  {response.status} </h2>
+                       title: <h2 className="text-center">Што то не так ошибка  {response.status} </h2>
                     });
                     return response.status;
                 }
@@ -191,7 +191,7 @@ class ImagesList extends React.Component {
                 renameEl[0].title = title;
                 this.setState({displayedImages: this.props.imageArray});
                 activatePopUp({
-                    title: <h2> Переименовано </h2>,
+                    title: <h2 className="text-center"> Переименовано </h2>,
                     flash: true
                 })
             });

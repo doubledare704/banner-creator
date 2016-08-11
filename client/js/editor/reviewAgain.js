@@ -9,6 +9,8 @@ function sendToReview(event) {
     let objs = canvas.getObjects();
     editor.filterAndDelete(objs);
     event.preventDefault();
+    const saver = document.getElementById('progress_saver');
+    const previewId = saver.getAttribute('data-review');
     let o = editor.canv.getActiveObject(),
         g = editor.canv.getActiveGroup();
     disableControls(o, g);
@@ -17,6 +19,8 @@ function sendToReview(event) {
     // append image as base64 string
     formData.append('file', editor.canv.toDataURL("image/png", 1.0));
     formData.append('file_json', JSON.stringify(imageReview));
+    formData.append('ids', previewId);
+
     fetch('/api/review',
         {
             method: 'POST',
@@ -29,7 +33,7 @@ function sendToReview(event) {
             document.getElementById('resulting').src = result.src;
             document.getElementById('continue').href += result.rev;
             document.getElementById('double').style.display = "block";
-            document.getElementById('continue').style.display = "block";
+            document.getElementById('double').style.height = "80px";
             document.getElementById('result_review').style.display = "block";
             localStorage.clear();
         })
