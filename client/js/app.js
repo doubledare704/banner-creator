@@ -15,12 +15,11 @@ Baz.register({
     'renderImages': renderImages,
     'reviewTool': reviewTool,
     'showBanner': showBanner,
-    'loginClick': loginClick,
     'reviewAdmin': reviewAdmin,
     'usersList': users,
     'toggleProfileForm': toggleProfileForm,
-    'auth_logout': logoutClick,
-    'auth_login': loginClick
+    "authLogout": logoutClick,
+    'authLogin': loginClick
 });
 
 Baz.watch();

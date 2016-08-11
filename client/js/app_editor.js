@@ -17,7 +17,10 @@ Baz.register({
     'sendToReview': sendToReview,
     'reloadHistory': reloadHistory,
     'saveToHistory': saveToHistory,
-    'auth_logout': logoutClick
+    'oldToReview': oldToReview,
+    'setGrid': setGrid,
+    'setGridSize': setGridSize,
+    "authLogout": logoutClick
 });
 
 Baz.watch();
