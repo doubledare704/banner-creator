@@ -3,7 +3,7 @@ import React from 'react';
 import {activatePopUp} from '../popUp';
 
 
-function MegaImg(props) {
+function Banner(props) {
     return (
         <img className="img-responsive" src={props.src}/>
     )
@@ -12,6 +12,6 @@ function MegaImg(props) {
 export default function(node) {
   node.addEventListener('click', function (e) {
     e.stopPropagation();
-    activatePopUp({child: <MegaImg src={node.dataset.bannerUrl}/>})
+    activatePopUp({child: <Banner src={node.dataset.bannerUrl}/>})
   })
 }

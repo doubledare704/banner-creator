@@ -5,11 +5,11 @@
 {% block dashboard_content %}
 <div class="row">
   {% for banner in banners.items %}
-  <div class="col-md-6">
+  <div class="col-md-6 dashboard-banner-container">
     <div class="thumbnail">
-      <a href="{{ url_for('uploaded_file', filename=banner.name) }}" class="img-wrapper">
-        <img class="img-responsive dashboard-banner-preview" style="height: inherit" src="{{ url_for('uploaded_file', filename=banner.preview) }}" alt="Loading...">
-      </a>
+      <div class="img-wrapper dashboard-banner-preview" data-bazooka="showBannerPopup" data-banner-url="{{ url_for('uploaded_file', filename=banner.name) }}">
+        <img class="img-responsive" style="height: inherit" src="{{ url_for('uploaded_file', filename=banner.preview) }}" alt="Loading...">
+      </div>
       <div class="caption">
         <h4 class="{% if not banner.title %}text-muted{% endif %}">{{ banner.title|default('нет названия', true) }}</h4>
         <p><a href="{{ url_for('continue_edit', history_image_id=banner.id) }}" class="btn btn-primary" role="button">Редактировать <span class="glyphicon glyphicon-pencil"></span></a></p>
