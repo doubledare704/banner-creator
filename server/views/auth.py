@@ -10,7 +10,7 @@ def login_page():
     if request.args.get('next', None):
         if current_user.is_authenticated:
             if request.args['next'] == url_for('log_out'):
-                return redirect('/')
+                return redirect(url_for('dashboard'))
             return redirect(request.args['next'])
     return render_template('auth/login.html')
 

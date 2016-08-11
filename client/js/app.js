@@ -18,14 +18,12 @@ Baz.register({
     'renderImages': renderImages,
     'reviewTool': reviewTool,
     'showBanner': showBanner,
-    'loginClick': loginClick,
     'reviewAdmin': reviewAdmin,
     'usersList': users,
     'toggleProfileForm': toggleProfileForm,
-    'auth_logout': logoutClick,
+    "authLogout": logoutClick,
+    'authLogin': loginClick,
     'imageSlider': imageSlider,
-
-    'auth_login': loginClick,
   // dashboard
     'goToReview': goToReview,
     'showBannerPopup': showBannerPopup

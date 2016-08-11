@@ -9,14 +9,15 @@ from server.views.editor import (continue_edit, history_image, cuts_background,
                                  save_cuted, load_from_pc, load_all_cuts,
                                  background_images, editor, make_review)
 from server.views.images import (
-    index, image_delete, image_rename,
-    review_tool, review_image, review_action
-)
+    image_delete, image_rename,
+    review_tool, review_image, review_action,
+    backgrounds_page)
 
 
 def setup_routes(app):
     """Here we map routes to handlers."""
-    app.add_url_rule('/index/', methods=['GET', 'POST'], view_func=index)
+    app.add_url_rule('/index/', view_func=dashboard_views.dashboard, endpoint='index')
+    app.add_url_rule('/backgrounds/', methods=['GET', 'POST'], view_func=backgrounds_page)
     app.add_url_rule('/uploads/<filename>', view_func=uploaded_file)
     app.add_url_rule('/delete/', methods=['POST'], view_func=image_delete)
     app.add_url_rule('/rename/', methods=['POST'], view_func=image_rename)
@@ -44,7 +45,7 @@ def setup_routes(app):
     app.add_url_rule('/admin/activate_image/<int:image_id>', methods=['POST'], view_func=activate_image)
     app.add_url_rule('/admin/projects/', view_func=projects_page, endpoint='admin_projects')
 
-    app.add_url_rule('/admin/users', view_func=users_page)
+    app.add_url_rule('/admin/users', view_func=users_page, endpoint='admin_users')
     app.add_url_rule('/admin/users/<int:user_id>', methods=['PUT'], view_func=change_user)
     app.add_url_rule('/admin/users/<int:user_id>', methods=['DELETE'], view_func=remove_user)
     app.add_url_rule('/admin/projects/', methods=['GET', 'POST'], view_func=projects_page)

@@ -1,51 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Создание банера{% endblock %}
 
-{% block navbar %}
-    <div class="navbar navbar-inverse" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/">EVO</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li {% if request.url_rule.endpoint.startswith('dashboard') %}class="active"{% endif %}><a
-                            href="{{ url_for('dashboard') }}">Кабинет</a></li>
-                    <li {% if request.url_rule.endpoint == "editor" %} class="active"{% endif %}><a
-                            href="{{ url_for ('editor') }}">Редактор</a></li>
-                    <li {% if request.url_rule.endpoint == "admin" %} class="active"{% endif %}><a
-                            href="{{ url_for ('admin') }}">Админ</a></li>
-                    <li{% if request.url_rule.endpoint == "index" %} class="active"{% endif %}><a
-                            href="{{ url_for('index') }}">Все фоны</a></li>
-
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    {% if current_user.is_authenticated %}
-                        <li{% if request.url_rule.endpoint == "user_profile" %} class="active"{% endif %}>
-                            <a href="{{ url_for('user_profile') }}">
-                                {% if current_user.first_name or current_user.last_name %}
-                                    {{ current_user.first_name }} {{ current_user.last_name }}
-                                {% else %}
-                                    Профиль
-                                {% endif %}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/">Выход</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </div>
-{% endblock %}
-
 {% block content %}
     <div class="container-fluid">
         <div class="row">

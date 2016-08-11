@@ -4,6 +4,7 @@ import {setGrid, setGridSize} from './editor/grids'
 import backgroundsList from './editor/background';
 import openReviewModal from './editor/review';
 import sendToReview from './editor/reviewModal';
+import {logoutClick} from './auth_helper'
 import oldToReview from './editor/reviewAgain';
 
 require('./../css/main.styl');
@@ -20,6 +21,7 @@ Baz.register({
     'saveToHistory': saveToHistory,
     'oldToReview': oldToReview,
     'setGrid': setGrid,
+    "authLogout": logoutClick,
     'setGridSize': setGridSize
 });
 
