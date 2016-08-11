@@ -7,6 +7,7 @@ import reviewAdmin from './admin/reviewsAdmin.jsx';
 import users from './admin/users.jsx';
 import toggleProfileForm from './profile/profile';
 import goToReview from './dashboard/designer_review';
+import showBannerPopup from './dashboard/designer_dashboard_banner';
 
 require('./../css/main.styl');
 const Baz = require('bazooka');
@@ -22,7 +23,10 @@ Baz.register({
     'toggleProfileForm': toggleProfileForm,
     'auth_logout': logoutClick,
     'auth_login': loginClick,
-    'goToReview': goToReview
+
+    // dashboard
+    'goToReview': goToReview,
+    'showBannerPopup': showBannerPopup
 });
 
 Baz.watch();

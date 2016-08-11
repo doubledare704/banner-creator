@@ -21,10 +21,8 @@
             {% endif %}
 
           </div>
-          <div class="col-lg-6 text-right">
-            <a class=" dashboard-banner-preview" href="{{ url_for('uploaded_file', filename=review.banner.name) }}">
-              <img src="{{ url_for('uploaded_file', filename=review.banner.preview) }}">
-            </a>
+          <div class="col-lg-6 text-right dashboard-banner-preview" data-bazooka="showBannerPopup" data-banner-url="{{ url_for('uploaded_file', filename=review.banner.name) }}">
+            <img src="{{ url_for('uploaded_file', filename=review.banner.preview) }}">
           </div>
         </div>
       </div>
