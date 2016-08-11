@@ -1,6 +1,8 @@
 import os
+import logging
 
 DEBUG = False
+LOGGING_LEVEL = logging.ERROR
 
 STORAGE_DIR = '/storage'  # directory of storage with user's files
 

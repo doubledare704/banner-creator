@@ -6,7 +6,9 @@
   {% for banner in banners.items %}
   <div class="dashboard-banners-container">
     <p class="dashboard-banner-title">{{ banner.title }}</p>
-    {{ macros.render_banner_container('Показать баннер', banner.name) }}
+
+    {{ macros.render_banner_container('Показать баннер', banner.name, banner.id) }}
+
     <a href="{{ url_for('continue_edit', history_image_id=banner.id) }}" class="btn btn-default">
         Редактировать <i class="glyphicon glyphicon-picture"></i></a>
   </div>

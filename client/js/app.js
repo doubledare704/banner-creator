@@ -6,6 +6,7 @@ import reviewTool from './images/reviewTool.jsx'
 import reviewAdmin from './admin/reviewsAdmin.jsx';
 import users from './admin/users.jsx';
 import toggleProfileForm from './profile/profile';
+import imageSlider from './images/slider.jsx';
 
 require('./../css/main.styl');
 const Baz = require('bazooka');
@@ -19,7 +20,8 @@ Baz.register({
     'usersList': users,
     'toggleProfileForm': toggleProfileForm,
     "authLogout": logoutClick,
-    'authLogin': loginClick
+    'authLogin': loginClick,
+    'imageSlider': imageSlider
 });
 
 Baz.watch();

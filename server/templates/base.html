@@ -1,58 +1,61 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        {% block head %}
-            <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-            <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-            <link rel="shortcut icon" href="{{ url_for('static', filename='fav/favicon.ico') }}">
-            <title>{% block title %}{% endblock %} - EVO</title>
-        {% endblock %}
-    </head>
-    <body>
-        {% block navbar %}
-            <div class="navbar navbar-inverse" role="navigation">
-                <div class="container">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="/">EVO</a>
-                    </div>
-                    <div class="navbar-collapse collapse">
-                        <ul class="nav navbar-nav">
+<head>
+    {% block head %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='fav/favicon.ico') }}">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+              rel="stylesheet">
+        <link href='https://fonts.googleapis.com/css?family=Roboto:500&subset=latin,cyrillic' rel='stylesheet'
+              type='text/css'>
+        <title>{% block title %}{% endblock %} - EVO</title>
+    {% endblock %}
+</head>
+<body>
+{% block navbar %}
+    <div class="navbar navbar-inverse" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">EVO</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
                             <li {% if request.url_rule.endpoint.startswith('dashboard') %}class="active"{% endif %}><a href="{{ url_for('dashboard') }}">Кабинет</a></li>
-                            <li {% if request.url_rule.endpoint == "editor" %} class="active"{% endif %}><a href="{{ url_for ('editor') }}">Редактор</a></li>
+                            <li class="{{active_endpoint('editor')}}"><a href="{{ url_for ('editor') }}">Редактор</a></li>
                             {% if current_user.is_authenticated and (current_user.role == current_user.UserRole.admin or current_user.role == current_user.UserRole.designer) %}
-                              <li {% if request.url_rule.endpoint == "admin" %} class="active"{% endif %}>
+                              <li class="{{active_endpoint('admin')}}">
                                 <a href="{{ url_for ('admin') }}">Админ</a>
                               </li>
                             {% endif %}
                             <li{% if request.url_rule.endpoint == "index" %} class="active"{% endif %}><a href="{{ url_for('index') }}">Все фоны</a></li>
-
-                        </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                            {% if current_user.is_authenticated %}
-                                <li{% if request.url_rule.endpoint == "user_profile" %} class="active"{% endif %}>
-                                  <a href="{{ url_for('user_profile') }}">
-                                    {% if current_user.first_name or current_user.last_name %}
-                                      {{current_user.first_name}} {{current_user.last_name}}
-                                    {% else %}
-                                      Профиль
-                                    {% endif %}
-                                  </a>
-                                </li>
-                                <li>
-                                    <a href="/" data-bazooka="authLogout" data-users-csrf-token="{{ csrf_token() }}">Выход</a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </div>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if current_user.is_authenticated %}
+                        <li{% if request.url_rule.endpoint == "user_profile" %} class="active"{% endif %}>
+                            <a href="{{ url_for('user_profile') }}">
+                                {% if current_user.first_name or current_user.last_name %}
+                                    {{ current_user.first_name }} {{ current_user.last_name }}
+                                {% else %}
+                                    Профиль
+                                {% endif %}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/" data-bazooka="authLogout" data-users-csrf-token="{{ csrf_token() }}">Выход</a>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
-        {% endblock %}
+        </div>
+    </div>
+{% endblock %}
 
 {% block content %}
     <div class="container">

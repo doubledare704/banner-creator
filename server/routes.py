@@ -1,18 +1,17 @@
 from server.utils.image import uploaded_file
-
+from server.views import views as main_views, dashboard as dashboard_views
 from server.views.admin import (
     admin, backgrounds, inactivate_image, activate_image, users_page, remove_user, change_user, projects_page,
     image_delete_from_db
 )
-
 from server.views.auth import login_page, authorize, oauth_callback, log_out
-
-from server.views.views import (
-    index, editor, image_delete, image_rename, background_images, continue_edit, history_image, make_review,
-    review_tool, review_image, review_action, cuts_background, save_cuted, load_from_pc, load_all_cuts
+from server.views.editor import (continue_edit, history_image, cuts_background,
+                                 save_cuted, load_from_pc, load_all_cuts,
+                                 background_images, editor, make_review)
+from server.views.images import (
+    index, image_delete, image_rename,
+    review_tool, review_image, review_action
 )
-
-from server.views import views as main_views, dashboard as dashboard_views
 
 
 def setup_routes(app):
