@@ -139,20 +139,34 @@ export default class Editor {
 
     //sets background
     setBackground(imgsrc) {
-        var sX = 1;
-        var sY = 1;
-        let cdim = [this.canv.width, this.canv.height];
+        // var sX = 1;
+        // var sY = 1;
+        // let cdim = [this.canv.width, this.canv.height];
         let c = this.canv;
+        // let e = this.getCanvasAtResoution();
         fabric.Image.fromURL(imgsrc, function (img) {
-            let originalsize = img.getOriginalSize();
-            if (originalsize.width > cdim[0]) {
-                sX = cdim[0] / originalsize.width + 0.005;
-                sY = sX;
-            }
+            // let a = img;
+            // let c = a.width;
+            // let g = a.height;
+            // let originalsize = img.getOriginalSize();
+            // if (originalsize.width > cdim[0]) {
+            //     sX = cdim[0] / originalsize.width + 0.005;
+            //     sY = sX;
+            // }
+            (function getCanvasAtResoution(newWidth, newHeight)
+            {
+                let can = c;
+                if (can.width != newWidth || can.height != newHeight) {
+                    can.setWidth(newWidth);
+                    can.setHeight(newHeight);
+                    can.renderAll();
+                    can.calcOffset();
+                }
+            })(img.width,img.height);
             let center = c.getCenter();
             c.setBackgroundImage(imgsrc, c.renderAll.bind(c), {
-                scaleY: sY,
-                scaleX: sX,
+                // scaleY: sY,
+                // scaleX: sX,
                 top: center.top,
                 left: center.left,
                 originX: 'center',
@@ -160,6 +174,17 @@ export default class Editor {
             });
         });
     }
+
+    // resizer of canvas
+    // getCanvasAtResoution(newWidth, newHeight){
+    //     let can = this.canv;
+    //     if (can.width != newWidth || can.height != newHeight){
+    //         can.setWidth(newWidth);
+    //         can.setHeight(newHeight);
+    //         can.renderAll();
+    //         can.calcOffset();
+    //     }
+    // }
 
     setFont(family, size, color, texts, backgroundColor = 'transparent', opacity = 1) {
         let obj = new fabric.IText(
@@ -305,7 +330,7 @@ export default class Editor {
             scaleY: 0.5
         }))
     }
-    
+
     // change grid size
     setNewGridSize(gridSize = 10) {
         // create grid
@@ -322,7 +347,7 @@ export default class Editor {
             this.addGrid(gridSize)
         }
     }
-    
+
     // add grid for canvas
     setGridToCanv(gridSize = 10) {
         // create grid
