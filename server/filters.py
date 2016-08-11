@@ -18,3 +18,9 @@ def init_custom_filters(app):
         if request.url_rule.endpoint == endpoint:
             return 'active'
         return ""
+
+    @app.template_global('active_endpoint_startswith')
+    def active_endpoint_startswith(endpoint):
+        if request.url_rule.endpoint.startswith(endpoint):
+            return 'active'
+        return ""

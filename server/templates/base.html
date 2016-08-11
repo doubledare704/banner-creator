@@ -27,18 +27,18 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                            <li {% if request.url_rule.endpoint.startswith('dashboard') %}class="active"{% endif %}><a href="{{ url_for('dashboard') }}">Кабинет</a></li>
+                            <li class="{{active_endpoint_startswith('dashboard')}}"><a href="{{ url_for('dashboard') }}">Кабинет</a></li>
                             <li class="{{active_endpoint('editor')}}"><a href="{{ url_for ('editor') }}">Редактор</a></li>
                             {% if current_user.is_authenticated and (current_user.role == current_user.UserRole.admin or current_user.role == current_user.UserRole.designer) %}
-                              <li class="{{active_endpoint('admin')}}">
+                              <li class="{{active_endpoint_startswith('admin')}}">
                                 <a href="{{ url_for ('admin') }}">Админ</a>
                               </li>
                             {% endif %}
-                            <li{% if request.url_rule.endpoint == "index" %} class="active"{% endif %}><a href="{{ url_for('index') }}">Все фоны</a></li>
+                            <li class="{{active_endpoint('backgrounds_page')}}"><a href="{{ url_for('backgrounds_page') }}">Все фоны</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}
-                        <li{% if request.url_rule.endpoint == "user_profile" %} class="active"{% endif %}>
+                        <li class="{{active_endpoint('user_profile')}}">
                             <a href="{{ url_for('user_profile') }}">
                                 {% if current_user.first_name or current_user.last_name %}
                                     {{ current_user.first_name }} {{ current_user.last_name }}
