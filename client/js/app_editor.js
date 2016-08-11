@@ -1,6 +1,6 @@
 import {fabric} from './editor/fabmain';
 import {reloadHistory, saveToHistory} from './editor/history';
-import {setGrid, setGridSize} from './editor/grids'
+import {setGrid, setGridSize} from './editor/grids';
 import backgroundsList from './editor/background';
 import openReviewModal from './editor/review';
 import sendToReview from './editor/reviewModal';
