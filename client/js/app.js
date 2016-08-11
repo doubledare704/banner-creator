@@ -8,7 +8,6 @@ import users from './admin/users.jsx';
 import toggleProfileForm from './profile/profile';
 import goToReview from './dashboard/designer_review';
 import showBannerPopup from './dashboard/designer_dashboard_banner';
-import imageSlider from './images/slider.jsx';
 
 require('./../css/main.styl');
 const Baz = require('bazooka');
@@ -23,7 +22,6 @@ Baz.register({
     'toggleProfileForm': toggleProfileForm,
     "authLogout": logoutClick,
     'authLogin': loginClick,
-    'imageSlider': imageSlider,
   // dashboard
     'goToReview': goToReview,
     'showBannerPopup': showBannerPopup
