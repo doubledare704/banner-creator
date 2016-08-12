@@ -1,9 +1,8 @@
 from server.utils.image import uploaded_file
 from server.views import views as main_views, dashboard as dashboard_views
 from server.views.admin import (
-    admin, backgrounds, inactivate_image, activate_image, users_page, remove_user, change_user, projects_page,
-    image_delete_from_db
-)
+    admin, backgrounds, inactivate_image, activate_image, users_page, remove_user, change_user,
+    default_project_page, image_delete_from_db, create_project, project_page)
 from server.views.auth import login_page, authorize, oauth_callback, log_out
 from server.views.editor import (continue_edit, history_image, cuts_background,
                                  save_cuted, load_from_pc, load_all_cuts,
@@ -43,12 +42,14 @@ def setup_routes(app):
     app.add_url_rule('/admin/inactivate_image/<int:image_id>', methods=['POST'], view_func=inactivate_image)
     app.add_url_rule('/admin/delete_image/<int:image_id>', methods=['POST'], view_func=image_delete_from_db)
     app.add_url_rule('/admin/activate_image/<int:image_id>', methods=['POST'], view_func=activate_image)
-    app.add_url_rule('/admin/projects/', view_func=projects_page, endpoint='admin_projects')
+
+    app.add_url_rule('/admin/projects/<int:project_id>', view_func=project_page, endpoint='admin_project_page')
+    app.add_url_rule('/admin/projects/', view_func=default_project_page)
+    app.add_url_rule('/admin/projects/', methods=['POST'], view_func=create_project)
 
     app.add_url_rule('/admin/users', view_func=users_page, endpoint='admin_users')
     app.add_url_rule('/admin/users/<int:user_id>', methods=['PUT'], view_func=change_user)
     app.add_url_rule('/admin/users/<int:user_id>', methods=['DELETE'], view_func=remove_user)
-    app.add_url_rule('/admin/projects/', methods=['GET', 'POST'], view_func=projects_page)
 
     # editor
     app.add_url_rule('/editor/<int:history_image_id>', view_func=continue_edit)

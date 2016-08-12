@@ -8,12 +8,12 @@
         <div class="row">
             <div class="col-sm-3 col-md-3 col-lg-2">
                 <ul class="nav nav-pills nav-stacked left-menu" role="tablist">
-                    {% if current_user.is_admin %}
+                    {% if current_user.is_admin() %}
                         <li class="{{active_endpoint('admin_users')}}"><a href="{{ url_for('admin_users')}}">Пользователи</a></li>
                         <li class="{{active_endpoint('admin_backgrounds')}}"><a href="{{ url_for ('admin_backgrounds', tab='active') }}">Фоны</a></li>
                     {% endif %}
                     {% for project in projects_list() %}
-                        <li><a href="{{ url_for('admin_projects')}}">{{project.name}}</a></li>
+                        <li><a href="{{ url_for('admin_project_page', project_id=project.id)}}">{{project.name}}</a></li>
                     {% endfor %}
                     <form method="post" class="form-inline">
                         <div class="input-group">
