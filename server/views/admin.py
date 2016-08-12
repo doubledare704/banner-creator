@@ -19,10 +19,10 @@ PER_PAGE = 10
 
 @requires_roles('admin', 'designer')
 def admin():
-    if current_user.role == User.UserRole.admin:
+    if current_user.is_admin():
         return redirect(url_for('admin_users'))
-    if current_user.role == User.UserRole.designer:
-        return redirect(url_for('admin_projects'))
+    if current_user.is_designer:
+        return redirect(url_for('default_project_page'))
 
 
 @requires_roles('admin')
@@ -160,19 +160,22 @@ def activate_image(image_id):
 
 
 @requires_roles('admin', 'designer')
-# def projects_page():
-#     projects_list = [
-#         {
-#             "id": project.id,
-#             'name': project.name
-#         } for project in Project.query.order_by(Project.name.asc()).all()]
-#
-#     return render_template('admin/projects.html', projects=projects_list)
-def projects_page():
-    if request.method == 'POST':
-        project_name = request.form['project']
-        if project_name:
-            db.session.add(Project(name=project_name))
-        return redirect(request.url)
-    projects = Project.query.all()
-    return render_template('admin/projects.html', projects=projects)
+def default_project_page():
+    return render_template('admin/projects_default.html')
+
+
+@requires_roles('admin')
+def create_project():
+    project_name = request.form['project']
+    if project_name:
+        project = Project(name=project_name)
+        db.session.add(project)
+        db.session.commit()
+        return redirect(url_for('admin_project_page', project_id=project.id))
+    raise BadRequest()
+
+
+@requires_roles('admin', 'designer')
+def project_page(project_id):
+    project = Project.query.get_or_404(project_id)
+    return render_template('admin/project.html', project=project)
