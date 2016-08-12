@@ -1,16 +1,10 @@
-import os
 import logging
 
-CUR_DIR = os.path.abspath(os.path.dirname(__file__))  # directory with config files
-BASE_DIR = os.path.abspath(os.path.dirname(CUR_DIR))  # server directory
-
 # Set debug to False in production
-DEBUG = True
 WTF_CSRF_CHECK_DEFAULT = False
 WTF_CSRF_ENABLED = False
 
 # Settings for uploading images
-UPLOAD_FOLDER = os.path.join(BASE_DIR, 'media')
 ALLOWED_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif')
 
 # Database settings
@@ -27,4 +21,3 @@ LOGGING_LEVEL = logging.WARNING
 # i18n
 BABEL_DEFAULT_LOCALE = 'ru'
 BABEL_DEFAULT_TIMEZONE = 'Europe/Kiev'
-

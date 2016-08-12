@@ -4,7 +4,7 @@ import os
 from werkzeug.exceptions import Forbidden, BadRequest
 
 from server.forms.user_edit_form import UserEditForm, USER_ROLES
-from flask_login import current_user, login_required
+from flask_login import current_user
 
 from flask import render_template, json, request, current_app, url_for, redirect
 from flask_paginate import Pagination
@@ -14,15 +14,15 @@ from server.db import db
 from server.models import User, BackgroundImage, Project
 from server.utils.auth import requires_roles
 
-per_page = 3
+PER_PAGE = 10
 
 
 @requires_roles('admin', 'designer')
 def admin():
-    if current_user.role == User.UserRole.admin:
-        return redirect(url_for('users_page'))
-    if current_user.role == User.UserRole.designer:
-        return redirect(url_for('admin_projects'))
+    if current_user.is_admin():
+        return redirect(url_for('admin_users'))
+    if current_user.is_designer:
+        return redirect(url_for('default_project_page'))
 
 
 @requires_roles('admin')
@@ -39,7 +39,7 @@ def users_page():
 
     query_db = query_db.filter_by(active=request.args.get('active', True)).order_by(User.created_at.desc())
 
-    users_paginator = query_db.paginate(per_page=10)
+    users_paginator = query_db.paginate(per_page=PER_PAGE)
 
     users_list = []
     for user in users_paginator.items:
@@ -55,7 +55,7 @@ def users_page():
             users_map['gender'] = user.gender.name
         users_list.append(users_map)
 
-    pagination = Pagination(per_page=10, page=users_paginator.page, total=users_paginator.total, search=search,
+    pagination = Pagination(per_page=PER_PAGE, page=users_paginator.page, total=users_paginator.total, search=search,
                             record_name='users', css_framework='bootstrap3', found=users_paginator.total)
 
     roles_list = json.dumps(USER_ROLES)
@@ -109,9 +109,9 @@ def backgrounds():
         BackgroundImage.title.asc())
 
     try:
-        backgrounds_paginator = background_images.paginate(per_page=per_page, error_out=True)
+        backgrounds_paginator = background_images.paginate(per_page=PER_PAGE, error_out=True)
     except NotFound:
-        last_page = round(background_images.count() / per_page)
+        last_page = round(background_images.count() / PER_PAGE)
         return redirect(url_for('admin_backgrounds', tab=tab, page=last_page))
 
     background_images = [
@@ -123,7 +123,7 @@ def backgrounds():
         } for background in backgrounds_paginator.items
         ]
 
-    pagination = Pagination(per_page=per_page, page=backgrounds_paginator.page, total=backgrounds_paginator.total,
+    pagination = Pagination(per_page=PER_PAGE, page=backgrounds_paginator.page, total=backgrounds_paginator.total,
                             css_framework='bootstrap3')
 
     background_images = json.dumps(background_images)
@@ -160,19 +160,22 @@ def activate_image(image_id):
 
 
 @requires_roles('admin', 'designer')
-# def projects_page():
-#     projects_list = [
-#         {
-#             "id": project.id,
-#             'name': project.name
-#         } for project in Project.query.order_by(Project.name.asc()).all()]
-#
-#     return render_template('admin/projects.html', projects=projects_list)
-def projects_page():
-    if request.method == 'POST':
-        project_name=request.form['project']
-        if project_name:
-            db.session.add(Project(name=project_name))
-        return redirect(request.url)
-    projects = Project.query.all()
-    return render_template('admin/projects.html', projects=projects)
+def default_project_page():
+    return render_template('admin/projects_default.html')
+
+
+@requires_roles('admin')
+def create_project():
+    project_name = request.form['project']
+    if project_name:
+        project = Project(name=project_name)
+        db.session.add(project)
+        db.session.commit()
+        return redirect(url_for('admin_project_page', project_id=project.id))
+    raise BadRequest()
+
+
+@requires_roles('admin', 'designer')
+def project_page(project_id):
+    project = Project.query.get_or_404(project_id)
+    return render_template('admin/project.html', project=project)

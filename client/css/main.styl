@@ -1,6 +1,7 @@
 @require '~normalize-styl'
 @require 'dashboard.styl'
 @require 'user_profile.styl'
+@require 'admin.styl'
 
 html, body
   height 100%
@@ -306,3 +307,22 @@ section.last-sec:hover > .rightcol2
 
 #cutters
   cursor: pointer;
+
+.tooltipp
+  border-bottom: 1px dotted #0077AA;
+  &::after
+    background: dashboard-common-color
+    border-radius: 8px 8px 8px 8px
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5)
+    color: black
+    content: attr(data-tooltip)
+    margin-top: -24px
+    opacity: 0
+    padding: 10px 10px
+    position: absolute
+    visibility: hidden
+    transition: all 0.5s ease-in-out
+  &:hover::after
+    z-index: 1
+    opacity: 1
+    visibility: visible
