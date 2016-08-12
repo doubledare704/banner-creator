@@ -44,7 +44,7 @@
                          data-bg-img-url="{{ url_for('uploaded_file', filename='') }}">
                 </section>
                 {% block reviewmodal %}
-                    <section class="btn btn-default">
+                    <section class="btn btn-default" data-bazooka="setOriginalZoom">
                         <a href="#" data-bazooka="openReviewModal">
                             <i class="material-icons">done_all</i>
                             <span class="detail">Отправить на ревью</span>
@@ -60,7 +60,7 @@
                         <a href="" id="continue"><i class="material-icons">flip_to_back</i>Продолжить редактировать</a>
                     </section>
                 </section>
-                <section class="btn btn-default">
+                <section class="btn btn-default" data-bazooka="setOriginalZoom">
                     <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i>
                         <span>Скачать
                         баннер</span></a>
@@ -99,7 +99,7 @@
                     </div>
                 </section>
             </div>
-            <div class="col-lg-1 col-sm-2 col-md-2 cols-xs-2 column_aside nopad">
+            <div class="col-lg-1 col-sm-2 col-md-2 cols-xs-2 column_aside nopad" data-bazooka="keysListen">
                 <section data-bazooka="setGrid" class="btn btn-default">
                     <a href="#">
                         <i class="material-icons">sync</i>
@@ -114,21 +114,30 @@
                         <span>Поменять размер сетки</span>
                     </a>
                 </section>
-                <section class="btn btn-default">
+                <section class="btn btn-default" data-bazooka="setNormalZoom">
                     <a href="#">
-                        <i class="material-icons">search</i>
-                        <span>Зум для общего вида</span>
+                        <i class="material-icons">zoom_in</i>
+                        <span>Увеличить</span>
+                        <span>ctrl +</span>
                     </a>
                 </section>
-                <section class="btn btn-default">
+                <section class="btn btn-default" data-bazooka="zoomOuter">
                     <a href="#">
-                        <i class="material-icons">undo</i>
-                        <span>Вернуть оригинальный размер</span>
+                        <i class="material-icons">zoom_out</i>
+                        <span>Уменьшить</span>
+                        <span>ctrl -</span>
+                    </a>
+                </section>
+                <section class="btn btn-default" data-bazooka="setOriginalZoom">
+                    <a href="#">
+                        <i class="material-icons">zoom_out_map</i>
+                        <span>Оригинальный размер</span>
+                        <span>ctrl 0</span>
                     </a>
                 </section>
             </div>
 
-            <div class="col-lg-10 col-md-8 col-sm-8 col-xs-8">
+            <div class="col-lg-10 col-md-8 col-sm-8 col-xs-8" id="godparent">
                 <div class="button-group">
                     <a href="#" id="del_item">
                         <i class="material-icons">delete</i>

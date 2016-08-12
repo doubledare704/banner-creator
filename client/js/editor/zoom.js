@@ -1,42 +1,101 @@
-import {editor} from './fabmain.js';
+import {editor} from "./fabmain.js";
 
 // as in source http://jsfiddle.net/Q3TMA/1107/
-let copiedObject;
-let copiedObjects = [];
 let canvasScale = 1;
-let SCALE_FACTOR = 1.2;
+let SCALE_FACTOR = 1.25;
 let canvas = editor.canv;
 
 function resetZoom() {
-    const newSize = document.getElementById('newGrid');
-    let ns = newSize.value;
-    editor.setNewGridSize(ns);
+    canvas.setHeight(canvas.getHeight() * (1 / canvasScale));
+    canvas.setWidth(canvas.getWidth() * (1 / canvasScale));
+    canvas.backgroundImage.width = canvas.getWidth();
+    canvas.backgroundImage.height = canvas.getHeight();
+
+    let objects = canvas.getObjects();
+    for (let i in objects) {
+        let scaleX = objects[i].scaleX;
+        let scaleY = objects[i].scaleY;
+        let left = objects[i].left;
+        let top = objects[i].top;
+
+        let tempScaleX = scaleX * (1 / canvasScale);
+        let tempScaleY = scaleY * (1 / canvasScale);
+        let tempLeft = left * (1 / canvasScale);
+        let tempTop = top * (1 / canvasScale);
+
+        objects[i].scaleX = tempScaleX;
+        objects[i].scaleY = tempScaleY;
+        objects[i].left = tempLeft;
+        objects[i].top = tempTop;
+
+        objects[i].setCoords();
+    }
+
+    canvas.renderAll();
+
+    canvasScale = 1;
+}
+
+function zoomOut() {
+    canvasScale = canvasScale / SCALE_FACTOR;
+
+    canvas.setHeight(canvas.getHeight() * (1 / SCALE_FACTOR));
+    canvas.setWidth(canvas.getWidth() * (1 / SCALE_FACTOR));
+    canvas.backgroundImage.width = canvas.getWidth();
+    canvas.backgroundImage.height = canvas.getHeight();
+
+    let objects = canvas.getObjects();
+    for (let i in objects) {
+        let scaleX = objects[i].scaleX;
+        let scaleY = objects[i].scaleY;
+        let left = objects[i].left;
+        let top = objects[i].top;
+
+        let tempScaleX = scaleX * (1 / SCALE_FACTOR);
+        let tempScaleY = scaleY * (1 / SCALE_FACTOR);
+        let tempLeft = left * (1 / SCALE_FACTOR);
+        let tempTop = top * (1 / SCALE_FACTOR);
+
+        objects[i].scaleX = tempScaleX;
+        objects[i].scaleY = tempScaleY;
+        objects[i].left = tempLeft;
+        objects[i].top = tempTop;
+
+        objects[i].setCoords();
+    }
+
+    canvas.renderAll();
 }
 
 function zoomIn() {
-    let defaultGrid = 0;
-    const innumber = document.getElementById('newGrid');
-    if (innumber.value > 0) {
-        defaultGrid = innumber.value;
+    canvasScale = canvasScale * SCALE_FACTOR;
+
+    canvas.setHeight(canvas.getHeight() * SCALE_FACTOR);
+    canvas.setWidth(canvas.getWidth() * SCALE_FACTOR);
+    canvas.backgroundImage.width = canvas.getWidth();
+    canvas.backgroundImage.height = canvas.getHeight();
+
+    let objects = canvas.getObjects();
+    for (let i in objects) {
+        let scaleX = objects[i].scaleX;
+        let scaleY = objects[i].scaleY;
+        let left = objects[i].left;
+        let top = objects[i].top;
+
+        let tempScaleX = scaleX * SCALE_FACTOR;
+        let tempScaleY = scaleY * SCALE_FACTOR;
+        let tempLeft = left * SCALE_FACTOR;
+        let tempTop = top * SCALE_FACTOR;
+
+        objects[i].scaleX = tempScaleX;
+        objects[i].scaleY = tempScaleY;
+        objects[i].left = tempLeft;
+        objects[i].top = tempTop;
+
+        objects[i].setCoords();
     }
-    else {
-        defaultGrid = 15;
-        innumber.value = defaultGrid;
-    }
-    editor.setGridToCanv(defaultGrid);
-    const secnumber = document.getElementById('gridder');
-    if (secnumber.classList.contains('disabled')) {
-        secnumber.classList.remove("disabled");
-        if (innumber.hasAttribute('disabled')) {
-            innumber.removeAttribute("disabled");
-        }
-    }
-    else {
-        secnumber.classList.add("disabled");
-        if (!innumber.hasAttribute('disabled')) {
-            innumber.setAttribute("disabled", "disabled");
-        }
-    }
+
+    canvas.renderAll();
 }
 
 function createListenersKeyboard() {
@@ -45,43 +104,37 @@ function createListenersKeyboard() {
 function onKeyDownHandler(event) {
     //event.preventDefault();
 
-    var key;
-    if(window.event){
+    let key;
+    if (window.event) {
         key = window.event.keyCode;
     }
-    else{
+    else {
         key = event.keyCode;
     }
 
-    switch(key){
+    switch (key) {
         //////////////
         // Shortcuts
         //////////////
         // Zoom In (Ctrl+"+")
         case 187: // Ctrl+"+"
-            if(ableToShortcut()){
-                if(event.ctrlKey){
-                    event.preventDefault();
-                    zoomIn();
-                }
+            if (event.ctrlKey) {
+                event.preventDefault();
+                zoomIn();
             }
             break;
         // Zoom Out (Ctrl+"-")
         case 189: // Ctrl+"-"
-            if(ableToShortcut()){
-                if(event.ctrlKey){
-                    event.preventDefault();
-                    zoomOut();
-                }
+            if (event.ctrlKey) {
+                event.preventDefault();
+                zoomOut();
             }
             break;
         // Reset Zoom (Ctrl+"0")
         case 48: // Ctrl+"0"
-            if(ableToShortcut()){
-                if(event.ctrlKey){
-                    event.preventDefault();
-                    resetZoom();
-                }
+            if (event.ctrlKey) {
+                event.preventDefault();
+                resetZoom();
             }
             break;
         default:
@@ -91,18 +144,23 @@ function onKeyDownHandler(event) {
 }
 
 
-function keysListen(node){
+function keysListen(node) {
     node.onload = createListenersKeyboard();
 }
 
 function setOriginalZoom(node) {
     node.addEventListener('click', resetZoom);
 }
+function zoomOuter(node) {
+    node.addEventListener('click', zoomOut);
+}
 function setNormalZoom(node) {
-    node.addEventListener('input', zoomIn);
+    node.addEventListener('click', zoomIn);
 }
 
 module.exports = {
     'setOriginalZoom': setOriginalZoom,
-    'setNormalZoom': setNormalZoom
+    'setNormalZoom': setNormalZoom,
+    'keysListen': keysListen,
+    'zoomOuter': zoomOuter
 };

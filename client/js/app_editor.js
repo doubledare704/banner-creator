@@ -6,6 +6,7 @@ import openReviewModal from './editor/review';
 import sendToReview from './editor/reviewModal';
 import {logoutClick} from './auth_helper'
 import oldToReview from './editor/reviewAgain';
+import {setOriginalZoom, keysListen, setNormalZoom, zoomOuter} from './editor/zoom';
 
 require('./../css/main.styl');
 require('./editor/fabmain.js');
@@ -22,7 +23,11 @@ Baz.register({
     'oldToReview': oldToReview,
     'setGrid': setGrid,
     "authLogout": logoutClick,
-    'setGridSize': setGridSize
+    'setGridSize': setGridSize,
+    'setOriginalZoom': setOriginalZoom,
+    'keysListen': keysListen,
+    'setNormalZoom': setNormalZoom,
+    'zoomOuter': zoomOuter
 });
 
 Baz.watch();
