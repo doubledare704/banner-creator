@@ -19,14 +19,13 @@ export default function (node) {
 
   activatePopUp({child: <ConfirmationHeader message="Удалить ревью?" />,
     confirm: true,
-    confirmAction: function zz() {
+    confirmAction: function() {
      const url = node.dataset.url;
      fetch(url, {
        method: 'POST',
        credentials: 'same-origin'})
        .then(
          (response) => {
-           console.log(response);
            if (response.status === 204) {
              activatePopUp({
                child: <Message message="Ревью помещено в архив"/>,

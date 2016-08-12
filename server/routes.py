@@ -36,7 +36,7 @@ def setup_routes(app):
                      view_func=dashboard_views.dashboard_backgrounds,
                      endpoint='dashboard_backgrounds')
     app.add_url_rule('/upload', methods=['GET', 'POST'], view_func=dashboard_views.upload, endpoint='upload')
-    app.add_url_rule('/dashboard/reviews/del/<int:review_id>', methods=['GET', 'POST'],
+    app.add_url_rule('/dashboard/reviews/del/<int:review_id>', methods=['POST'],
                      view_func=dashboard_views.delete_review)
     app.add_url_rule('/dashboard/archive/', view_func=dashboard_views.dashboard_archive,
                      endpoint='dashboard_archive')

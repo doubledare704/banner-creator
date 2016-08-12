@@ -17,14 +17,16 @@ from server.db import db
 @login_required
 def dashboard():
     page = int(request.args.get('page', 1))  # get page number from url query string
-    if current_user.role == User.UserRole.designer or current_user.role == User.UserRole.admin:
-        reviews = BannerReview.query.filter_by(designer_id=current_user.id).order_by(BannerReview.created_at.desc()
-                                                                                     ).paginate(page=page, per_page=10)
+    if current_user.is_designer() or current_user.is_admin():
+        reviews = BannerReview.query.filter_by(designer_id=current_user.id, reviewed=False, active=True
+                                               ).order_by(BannerReview.created_at.desc()
+                                               ).paginate(page=page, per_page=10)
         pagination = Pagination(per_page=10, page=page, total=reviews.total, css_framework='bootstrap3')
         return render_template('user/designer_dashboard.html', reviews=reviews, pagination=pagination)
     else:
-        reviews = BannerReview.query.filter_by(user_id=current_user.id).order_by(BannerReview.created_at.desc()
-                                                                                 ).paginate(page=page, per_page=10)
+        reviews = BannerReview.query.filter_by(user_id=current_user.id, active=True
+                                               ).order_by(BannerReview.created_at.desc()
+                                               ).paginate(page=page, per_page=10)
         pagination = Pagination(per_page=10, page=page, total=reviews.total, css_framework='bootstrap3')
         return render_template('user/user_dashboard.html', reviews=reviews, pagination=pagination)
 

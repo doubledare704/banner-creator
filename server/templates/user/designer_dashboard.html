@@ -5,30 +5,28 @@
 
 {% block dashboard_content %}
   {% for review in reviews.items %}
-    {% if not review.reviewed %}
-      <div class="row dashboard-review-container" data-bazooka="goToReview" data-review-url="{{ url_for('review_image', img_id=review.banner.id) }}">
-        <div class="review-section row">
-          <p class="dashboard-review-title">
-            <span class="dashboard-reviwer-name">{{ review.designer.last_name }} {{ review.designer.first_name }}</span>
-            отправил на ревью баннер
-            <span class="dashboard-review-date">
-              {% if review.created_at %}{{ review.created_at|format_date }}{% endif %}
-            </span>
-          </p>
-          <div class="col-lg-6">
-            {% if review.comment %}
-              <p class="dashboard-comment-text"><b>Комментарий: </b> <br>{{ review.comment }}</p>
-            {% endif %}
+    <div class="row dashboard-review-container" data-bazooka="goToReview" data-review-url="{{ url_for('review_image', img_id=review.banner.id) }}">
+      <div class="review-section row">
+        <p class="dashboard-review-title">
+          <span class="dashboard-reviwer-name">{{ review.designer.last_name }} {{ review.designer.first_name }}</span>
+          отправил на ревью баннер
+          <span class="dashboard-review-date">
+            {% if review.created_at %}{{ review.created_at|format_date }}{% endif %}
+          </span>
+        </p>
+        <div class="col-lg-6">
+          {% if review.comment %}
+            <p class="dashboard-comment-text"><b>Комментарий: </b> <br>{{ review.comment }}</p>
+          {% endif %}
 
-          </div>
-          <div class="col-lg-4 col-lg-offset-2 dashboard-banner-preview" data-bazooka="showBannerPopup" data-banner-url="{{ url_for('uploaded_file', filename=review.banner.name) }}">
-            <img src="{{ url_for('uploaded_file', filename=review.banner.preview) }}">
-          </div>
+        </div>
+        <div class="col-lg-4 col-lg-offset-2 dashboard-banner-preview" data-bazooka="showBannerPopup" data-banner-url="{{ url_for('uploaded_file', filename=review.banner.name) }}">
+          <img src="{{ url_for('uploaded_file', filename=review.banner.preview) }}">
         </div>
       </div>
-    {% endif %}
+    </div>
   {% else %}
-    <p class="dashboard-empty-review">Здесь пока ничего нет :(</p>
+    <p class="dashboard-designer-empty-review bg-info">На ревью ничего не присылали, можно расслабиться и попить чайку...</p>
   {% endfor %}
 
   <div class="pagination-container">
