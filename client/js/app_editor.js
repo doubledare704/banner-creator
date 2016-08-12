@@ -1,4 +1,4 @@
-import {fabric} from './editor/fabmain';
+import {fabric, resetCanvas, deleteKeyup} from './editor/fabmain';
 import {reloadHistory, saveToHistory} from './editor/history';
 import {setGrid, setGridSize} from './editor/grids';
 import backgroundsList from './editor/background';
@@ -27,7 +27,9 @@ Baz.register({
     'setOriginalZoom': setOriginalZoom,
     'keysListen': keysListen,
     'setNormalZoom': setNormalZoom,
-    'zoomOuter': zoomOuter
+    'zoomOuter': zoomOuter,
+    'resetCanvas': resetCanvas,
+    'deleteKeyup': deleteKeyup
 });
 
 Baz.watch();

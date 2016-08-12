@@ -141,6 +141,42 @@ downloadLink.addEventListener('click', function () {
     editor.downloadImage(link, activeObject, activeGroup);
 }, false);
 
+function resetAll() {
+    editor.canv.clear();
+    localStorage.clear();
+    editor.canv.setBackgroundImage(null, editor.canv.renderAll.bind(editor.canv));
+    editor.canv.setWidth(960);
+    editor.canv.setHeight(420);
+}
+
+function resetCanvas(node) {
+    node.addEventListener('click', resetAll);
+}
+
+function deleteKeyup(node) {
+    node.onload = document.addEventListener('keydown', function (event) {
+        var key = event.keyCode || event.charCode;
+
+        if (key == 8 || key == 46) {
+            let activeObject = editor.canv.getActiveObject(),
+                activeGroup = editor.canv.getActiveGroup();
+            editor.deleteObject(activeObject, activeGroup);
+            return false;
+        }
+    }, false);
+
+    //     function () {
+    //     var key = event.keyCode || event.charCode;
+    //
+    //     if (key == 8 || key == 46) {
+    //         let activeObject = editor.canv.getActiveObject(),
+    //             activeGroup = editor.canv.getActiveGroup();
+    //         editor.deleteObject(activeObject, activeGroup);
+    //         return false;
+    //     }
+    // };
+}
+
 window.onload = function () {
 
     if (localStorage['canvasStory']) {
@@ -172,5 +208,7 @@ window.onload = function () {
 
 module.exports = {
     'editor': editor,
-    'fabric': fabric
+    'fabric': fabric,
+    'resetCanvas': resetCanvas,
+    'deleteKeyup': deleteKeyup
 };
