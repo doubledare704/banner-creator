@@ -114,13 +114,13 @@ class User(db.Model):
         return False
 
     def is_user(self):
-        return (not self.is_anonymous()) and self.role == User.UserRole.user
+        return self.role == User.UserRole.user
 
     def is_designer(self):
-        return (not self.is_anonymous()) and self.role == User.UserRole.designer
+        return self.role == User.UserRole.designer
 
     def is_admin(self):
-        return (not self.is_anonymous()) and self.role == User.UserRole.admin
+        return self.role == User.UserRole.admin
 
     def get_id(self):
         return unicode(self.id)
