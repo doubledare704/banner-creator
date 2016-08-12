@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-1 col-sm-2 col-md-2 cols-xs-2 column_aside">
-                <section class="with_menu">
+                <section class="with_menu btn btn-default">
                     <a href="#">
                         <i class="material-icons">sort_by_alpha</i>
                     <span class="detail">
@@ -15,43 +15,43 @@
                     <div id="rightcol">
                         <h2>Выберите вариант текста</h2>
                         <ul>
-                            <li class="head1" data-size="40" data-text="Header text">H1 подзаголовок</li>
-                            <li class="head2" data-size="30" data-text="Header text">H2 подзаголовок</li>
-                            <li class="head3" data-size="17" data-text="Header text">H3 подзаголовок
+                            <li class="head1" data-size="30" data-text="Header text">H1 подзаголовок</li>
+                            <li class="head2" data-size="20" data-text="Header text">H2 подзаголовок</li>
+                            <li class="head3" data-size="10" data-text="Header text">H3 подзаголовок
                                 <hr>
                             </li>
-                            <li class="head3" data-size="32" data-type="p" data-text="от 1 700 грн">Цена от для большого
+                            <li class="head3" data-size="24" data-type="p" data-text="от 1 700 грн">Цена от для большого
                                 банера
                             </li>
-                            <li class="head4" data-size="28" data-type="p" data-text="от 1 700 грн">Цена от для
+                            <li class="head4" data-size="15" data-type="p" data-text="от 1 700 грн">Цена от для
                                 маленького
                                 банера
                             </li>
                         </ul>
                     </div>
                 </section>
-                <section>
+                <section class="btn btn-default">
                     <a href="#" id="addButt">
                         <i class="material-icons">input</i>
-            <span class="detail">
-                Добавить кнопку
-            </span>
+                        <span class="detail">
+                            Добавить кнопку
+                        </span>
                     </a>
                 </section>
 
-                <section id="backgroundSection" data-bazooka="backgroundsList"
+                <section id="backgroundSection" data-bazooka="backgroundsList" class="btn btn-default"
                          data-bg-view-url="{{ url_for('background_images') }}"
                          data-bg-img-url="{{ url_for('uploaded_file', filename='') }}">
                 </section>
                 {% block reviewmodal %}
-                    <section>
+                    <section class="btn btn-default" data-bazooka="setOriginalZoom">
                         <a href="#" data-bazooka="openReviewModal">
                             <i class="material-icons">done_all</i>
                             <span class="detail">Отправить на ревью</span>
                         </a>
                     </section>
                 {% endblock %}
-                <section id="double">
+                <section id="double" class="btn btn-default">
                     <section>
                         <a href="#" id="result_review"><i class="material-icons">description</i>Просмотреть
                             результат</a>
@@ -60,7 +60,7 @@
                         <a href="" id="continue"><i class="material-icons">flip_to_back</i>Продолжить редактировать</a>
                     </section>
                 </section>
-                <section>
+                <section class="btn btn-default" data-bazooka="setOriginalZoom">
                     <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i>
                         <span>Скачать
                         баннер</span></a>
@@ -70,7 +70,7 @@
 
                 {% endblock %}
 
-                <section class="last-sec">
+                <section class="last-sec btn btn-default">
                     <a href="#">
                         <i class="material-icons">cloud_upload</i>
                     <span class="download-file">
@@ -99,30 +99,52 @@
                     </div>
                 </section>
             </div>
-            <div class="col-lg-1 col-sm-2 col-md-2 cols-xs-2 column_aside nopad">
-                <section data-bazooka="setGrid">
+            <div class="col-lg-1 col-sm-2 col-md-2 cols-xs-2 column_aside nopad" data-bazooka="keysListen">
+                <section data-bazooka="setGrid" class="btn btn-default">
                     <a href="#">
                         <i class="material-icons">sync</i>
-                        <span>Добавить/убрать сетку</span>
+                        <span>Добавить/ убрать сетку</span>
                     </a>
                 </section>
-                <section class="counter-grid">
+                <section class="counter-grid btn btn-default disabled" id="gridder">
                     <a href="#">
                         <i class="material-icons">code</i>
-                        <input type="number" id="newGrid" class="number-input" data-bazooka="setGridSize" />
+                        <input type="number" id="newGrid" class="form-control number-input" data-bazooka="setGridSize"
+                               disabled/>
                         <span>Поменять размер сетки</span>
+                    </a>
+                </section>
+                <section class="btn btn-default" data-bazooka="setNormalZoom">
+                    <a href="#">
+                        <i class="material-icons">zoom_in</i>
+                        <span>Увеличить</span>
+                        <span>ctrl +</span>
+                    </a>
+                </section>
+                <section class="btn btn-default" data-bazooka="zoomOuter">
+                    <a href="#">
+                        <i class="material-icons">zoom_out</i>
+                        <span>Уменьшить</span>
+                        <span>ctrl -</span>
+                    </a>
+                </section>
+                <section class="btn btn-default" data-bazooka="setOriginalZoom">
+                    <a href="#">
+                        <i class="material-icons">zoom_out_map</i>
+                        <span>Оригинальный размер</span>
+                        <span>ctrl 0</span>
                     </a>
                 </section>
             </div>
 
-            <div class="col-lg-10 col-md-8 col-sm-8 col-xs-8">
-                <section class="container forcanvas">
-                    <main class="container-content">
-                        <div class="button-group">
-                            <a href="#" id="del_item">
-                                <i class="material-icons">delete</i>
-                            </a>
-                        </div>
+            <div class="col-lg-10 col-md-8 col-sm-8 col-xs-8" id="godparent">
+                <div class="button-group">
+                    <a href="#" id="del_item">
+                        <i class="material-icons">delete</i>
+                    </a>
+                </div>
+                <section class="container2 forcanvas" id="parentWrap">
+                    <main class="container-content" id="childWrap">
                         <canvas id="main">
                         </canvas>
                     </main>
