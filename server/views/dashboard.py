@@ -3,12 +3,13 @@ import uuid
 import os
 
 from flask import render_template, request, redirect, current_app,url_for
-from server.utils.image import allowed_file, image_preview
-from werkzeug.utils import secure_filename
 
 from flask_login import current_user, login_required
 from flask_paginate import Pagination
+from werkzeug.utils import secure_filename
 
+
+from server.utils.image import allowed_file, image_preview
 from server.models import User, BannerReview, Banner, BackgroundImage, Project
 from server.db import db
 
@@ -75,3 +76,26 @@ def upload():
             db.session.add(image)
 
     return redirect(url_for('dashboard_backgrounds'))
+
+
+@login_required
+def dashboard_archive():
+    page = int(request.args.get('page', 1))  # get page number from url query string
+    if current_user.is_designer() or current_user.is_admin():
+        reviews = BannerReview.query.filter_by(reviewed=True, user_id=current_user.id).paginate(page=page, per_page=10)
+        pagination = Pagination(per_page=10, page=page, total=reviews.total, css_framework='bootstrap3')
+        return render_template('user/dashboard_designer_archive.html', reviews=reviews, pagination=pagination)
+    elif current_user.is_user():
+        reviews = BannerReview.query.filter_by(active=False, user_id=current_user.id).paginate(page=page, per_page=10)
+        pagination = Pagination(per_page=10, page=page, total=reviews.total, css_framework='bootstrap3')
+        return render_template('user/dashboard_user_archive.html', reviews=reviews, pagination=pagination)
+
+
+@login_required
+def delete_review(review_id):
+    user_reviews = BannerReview.query.filter_by(user_id=current_user.id)
+    review = user_reviews.filter_by(id=review_id).first()
+    review.active = False
+    db.session.commit()
+    return '', 204
+

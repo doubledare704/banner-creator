@@ -1,0 +1,46 @@
+{% extends 'user/base_dashboard.html' %}
+
+{% block dashboard_content %}
+  {% for review in reviews.items %}
+    <div class="row dashboard-review-container">
+      <div class="review-section row
+        {% if review.status == review.Status.accepted %}
+          review-section-success
+        {% elif review.status == review.Status.not_accepted %}
+          review-section-rejected
+        {% endif %}">
+        <p class="dashboard-review-title">
+          <span class="dashboard-reviwer-name">{{ review.designer.last_name }} {{ review.designer.first_name }}</span>
+          отправлял на ревью баннер
+          <span class="dashboard-review-date">
+            {% if review.created_at %}{{ review.created_at|format_date }}{% endif %}
+          </span>
+        </p>
+        <p>
+          <b>
+            {% if review.status.name == 'accepted' %}
+              Одобрено
+            {% elif review.status.name == 'not_accepted' %}
+              Отклонено
+            {% endif %}
+          </b>
+        </p>
+        <div class="col-lg-6">
+          {% if review.comment %}
+            <p class="dashboard-comment-text"><b>Комментарий: </b> <br>{{ review.comment }}</p>
+          {% endif %}
+
+        </div>
+        <div class="col-lg-4 col-lg-offset-2 dashboard-banner-preview" data-bazooka="showBannerPopup" data-banner-url="{{ url_for('uploaded_file', filename=review.banner.name) }}">
+          <img src="{{ url_for('uploaded_file', filename=review.banner.preview) }}">
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <p class="dashboard-empty-review">Здесь пока ничего нет :(</p>
+  {% endfor %}
+
+  <div class="pagination-container">
+    {{ pagination.links }}
+  </div>
+{% endblock dashboard_content %}
