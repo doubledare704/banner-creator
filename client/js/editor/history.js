@@ -15,6 +15,23 @@ function loadHist() {
         .then((result) => result.json())
         .then(function ({fetch_history}) {
             editor.canv.clear();
+            let w, h;
+            if (fetch_history.hasOwnProperty('backgroundImage')) {
+                let unpack = fetch_history.backgroundImage;
+                console.log(unpack.width);
+                // if (unpack.width) {
+                w = unpack.width;
+                h = unpack.height;
+                (function getCanvasAtResoution(newWidth, newHeight) {
+                    let can = editor.canv;
+                    if (can.width != newWidth || can.height != newHeight) {
+                        can.setWidth(newWidth);
+                        can.setHeight(newHeight);
+                        can.renderAll();
+                        can.calcOffset();
+                    }
+                })(w, h);
+            }
             editor.canv.loadFromJSON(fetch_history, editor.canv.renderAll.bind(editor.canv))
         })
         .catch(function (error) {

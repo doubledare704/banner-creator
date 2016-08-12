@@ -102,8 +102,7 @@ fileInput.addEventListener('click', function () {
 });
 
 filetoeditor.addEventListener('change', () => {
-    event.preventDefault();
-    const formData = new FormData(document.getElementById('upload-file')[0]);
+    const formData = new FormData();
     formData.append('file', filetoeditor.files[0]);
     fetch('/editor/local/',
         {
