@@ -9,6 +9,11 @@ function inArray(needle, haystack) {
     return false;
 }
 
+// converter pt to px
+function ptToPx(points) {
+    return Math.round(points * 1.333333)
+}
+
 // extend function without jquery https://gist.github.com/cfv1984/6319681685f78333d98a
 var extend = function () {
 
@@ -148,8 +153,7 @@ export default class Editor {
                     can.calcOffset();
                 }
             })(img.width, img.height);
-            c.setBackgroundImage(imgsrc, c.renderAll.bind(c), {
-            });
+            c.setBackgroundImage(imgsrc, c.renderAll.bind(c), {});
         });
     }
 
@@ -159,9 +163,9 @@ export default class Editor {
             texts,
             {
                 fontFamily: family,
-                left: 500,
-                top: 100,
-                fontSize: size,
+                left: 500 * this.seekAndResize(),
+                top: 100 * this.seekAndResize(),
+                fontSize: ptToPx(size) * this.seekAndResize(),
                 fill: color,
                 backgroundColor: backgroundColor
             }).setOpacity(opacity);
@@ -174,18 +178,18 @@ export default class Editor {
             texts,
             {
                 fontFamily: family,
-                left: 500,
-                top: 100,
-                fontSize: size,
+                left: 500 * this.seekAndResize(),
+                top: 100 * this.seekAndResize(),
+                fontSize: ptToPx(size) * this.seekAndResize(),
                 fill: color,
                 styles: {
                     0: {
-                        0: {fontSize: size - 15},
-                        1: {fontSize: size - 15},
+                        0: {fontSize: ptToPx(13)},
+                        1: {fontSize: ptToPx(13)},
 
-                        9: {fontSize: size - 15},
-                        10: {fontSize: size - 15},
-                        11: {fontSize: size - 15}
+                        9: {fontSize: ptToPx(13)},
+                        10: {fontSize: ptToPx(13)},
+                        11: {fontSize: ptToPx(13)}
                     }
                 }
             });
@@ -201,8 +205,8 @@ export default class Editor {
 
     addButton(w = 120, h = 30, fontFamily = 'Roboto', fontSize = 13, fontText = 'Смотреть >', textColor = '#3c3c3c') {
         let border = new fabric.Rect({
-            width: w,
-            height: h,
+            width: w * this.seekAndResize(),
+            height: h * this.seekAndResize(),
             fill: 'transparent',
             stroke: '#3c3c3c',
             strokeWidth: 1,
@@ -211,16 +215,16 @@ export default class Editor {
         });
         let texting = new fabric.IText(fontText, {
             fontFamily: fontFamily,
-            fontSize: fontSize,
+            fontSize: fontSize * this.seekAndResize(),
             fill: textColor,
             top: h / 4,
             left: w / 4.4
         });
-        texting.setTop(h / 2 - texting.getHeight() / 2);
-        texting.setLeft(w / 2 - texting.getWidth() / 2);
+        texting.setTop(border.height / 2 - texting.getHeight() / 2);
+        texting.setLeft(border.width / 2 - texting.getWidth() / 2);
         let group = new fabric.Group([border, texting], {
-            left: 200,
-            top: 100
+            left: 200 * this.seekAndResize(),
+            top: 100 * this.seekAndResize()
         });
         this.canv.add(group);
     }
@@ -361,7 +365,7 @@ export default class Editor {
                 selectable: false
             }));
         }
-        for (let i=0; i<(canvas.height / gridSize); i++){
+        for (let i = 0; i < (canvas.height / gridSize); i++) {
             canvas.add(new fabric.Line([0, i * gridSize, canvas.width, i * gridSize], {
                 stroke: '#A1A1A1',
                 selectable: false
@@ -384,6 +388,32 @@ export default class Editor {
         toDeleteObjs.forEach(function (object) {
             canvas.remove(object);
         });
+    }
+
+    // resize calc for buttons and texts
+    seekAndResize() {
+        const defwidth = 960;
+        const defheight = 420;
+        let realWidth = this.canv.getWidth();
+        let realHeight = this.canv.getHeight();
+        let coef = 0;
+        if (realHeight > realHeight) {
+            if (realHeight > defheight) {
+                coef = realHeight / defheight
+            }
+            else {
+                coef = 1
+            }
+        }
+        else {
+            if (realWidth > defwidth) {
+                coef = realWidth / defwidth
+            }
+            else {
+                coef = 1
+            }
+        }
+        return coef
     }
 }
 
