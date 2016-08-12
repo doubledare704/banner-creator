@@ -1,7 +1,7 @@
 import renderImages from './images/renderImages.jsx';
 import backgroundsAdmin from './admin/backgroundsAdmin.jsx';
 import showBanner from './dashboard/dashboard';
-import {loginClick, logoutClick} from './auth_helper'
+import {loginClick, logoutClick} from './authHelper'
 import reviewTool from './images/reviewTool.jsx'
 import reviewAdmin from './admin/reviewsAdmin.jsx';
 import users from './admin/users.jsx';

@@ -17,6 +17,9 @@
                     {% endfor %}
                     <form method="post" class="form-inline">
                         <div class="input-group">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        </div>
+                        <div class="input-group">
                           <input type="text" id="project" name="project" class="form-control" required placeholder="Введите имя">
                             <span class="input-group-btn">
                                  <button type="submit" class="btn btn-default">

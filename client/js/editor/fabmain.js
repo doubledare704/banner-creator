@@ -2,6 +2,7 @@
 let fabric = require('fabric').fabric;
 
 import Editor from './editor.js';
+import csrfToken from '../csrfHelper.js'
 
 let editor = new Editor('main', 960, 420);
 
@@ -108,6 +109,9 @@ filetoeditor.addEventListener('change', () => {
         {
             method: 'POST',
             credentials: 'same-origin',
+            headers: {
+                'X-CSRFToken': csrfToken()
+            },
             body: formData
         }
     )

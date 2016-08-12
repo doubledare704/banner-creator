@@ -4,7 +4,7 @@ import {setGrid, setGridSize} from './editor/grids'
 import backgroundsList from './editor/background';
 import openReviewModal from './editor/review';
 import sendToReview from './editor/reviewModal';
-import {logoutClick} from './auth_helper'
+import {logoutClick} from './authHelper'
 import oldToReview from './editor/reviewAgain';
 
 require('./../css/main.styl');

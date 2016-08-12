@@ -10,6 +10,9 @@
         </div>
         <div class="modal-body">
             <form action="{{ url_for('make_review') }}" method="post" id="braveForm">
+                <div class="form-group">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                </div>
                 <div class="row">
                     <div class="form-group">
                         <label class="col-md-6">Название баннера

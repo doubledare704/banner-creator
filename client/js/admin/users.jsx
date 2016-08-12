@@ -4,6 +4,7 @@ import {h} from 'bazooka';
 import moment from 'moment';
 import classNames from 'classnames';
 import {activatePopUp, deactivatePopUp} from '../popUp.js';
+import csrfToken from '../csrfHelper.js'
 
 const BAZOOKA_PREFIX = 'users';
 
@@ -30,7 +31,9 @@ class User extends React.Component {
                 fetch(`/admin/users/${this.state.user.id}`, {
                     method: 'DELETE',
                     credentials: 'same-origin',
-                    data: `csrf_token=${encodeURIComponent(this.props.csrfToken)}`
+                    headers: {
+                        'X-CSRFToken': csrfToken()
+                    }
                 })
                     .then((response) => {
                         if (!response.ok) {
@@ -57,6 +60,9 @@ class User extends React.Component {
         fetch(`/admin/users/${this.state.user.id}`, {
             method: 'PUT',
             credentials: 'same-origin',
+            headers: {
+                'X-CSRFToken': csrfToken()
+            },
             body: new FormData(e.target)
         })
             .then((response) => {
@@ -89,9 +95,6 @@ class User extends React.Component {
             title: "Изменение данных пользователя",
             closeAction: deactivatePopUp,
             child: <form className="form-horizontal" onSubmit={this.saveUser}>
-                    <div className='form-group'>
-                        <input type="hidden" name="csrf_token" defaultValue={this.props.csrfToken}/>
-                    </div>
                     <div className='form-group'>
                         <label className="col-sm-2">First Name</label>
                         <div className="col-sm-10">
@@ -175,7 +178,6 @@ const UsersList = (props) => {
                         key={`user_${user.id}`}
                         user={user}
                         rolesList={props.rolesList}
-                        csrfToken={props.csrfToken}
                         currentUserId={props.currentUserId}
                     />;
                 })
@@ -186,13 +188,12 @@ const UsersList = (props) => {
 };
 
 export default function (node) {
-    let {usersList, usersRoles, csrfToken, currentUserId} = h.getAttrs(BAZOOKA_PREFIX, node);
+    let {usersList, usersRoles, currentUserId} = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
         <UsersList
             usersList={usersList}
             rolesList={usersRoles}
-            csrfToken={csrfToken}
             currentUserId={currentUserId}
         />,
         node

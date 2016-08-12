@@ -1,8 +1,7 @@
 import logging
 
-# Set debug to False in production
-WTF_CSRF_CHECK_DEFAULT = False
-WTF_CSRF_ENABLED = False
+WTF_CSRF_CHECK_DEFAULT = True
+WTF_CSRF_ENABLED = True
 
 # Settings for uploading images
 ALLOWED_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif')
