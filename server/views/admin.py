@@ -2,7 +2,10 @@ import json
 import os
 
 from werkzeug.exceptions import Forbidden, BadRequest
+from werkzeug.utils import secure_filename
 
+from server.forms.create_project_form import CreateProjectForm
+from server.forms.font_upload_form import FontUploadForm
 from server.forms.user_edit_form import UserEditForm, USER_ROLES
 from flask_login import current_user
 
@@ -11,7 +14,7 @@ from flask_paginate import Pagination
 from werkzeug.exceptions import NotFound
 
 from server.db import db
-from server.models import User, BackgroundImage, Project
+from server.models import User, BackgroundImage, Project, Font
 from server.utils.auth import requires_roles
 
 PER_PAGE = 10
@@ -166,16 +169,33 @@ def default_project_page():
 
 @requires_roles('admin')
 def create_project():
-    project_name = request.form['project']
-    if project_name:
-        project = Project(name=project_name)
-        db.session.add(project)
-        db.session.commit()
-        return redirect(url_for('admin_project_page', project_id=project.id))
-    raise BadRequest()
+    form = CreateProjectForm()
+    if not form.validate_on_submit():
+        raise BadRequest()
+    project = Project(name=form.data['project_name'])
+    db.session.add(project)
+    db.session.commit()
+    return redirect(url_for('admin_project_page', project_id=project.id))
 
 
 @requires_roles('admin', 'designer')
 def project_page(project_id):
     project = Project.query.get_or_404(project_id)
     return render_template('admin/project.html', project=project)
+
+
+@requires_roles('admin', 'designer')
+def add_font(project_id):
+    form = FontUploadForm()
+    if not form.validate_on_submit():
+        raise BadRequest()
+    project = Project.query.get_or_404(project_id)
+    name = form.data['font_name']
+    file = form.data['font_file']
+    filename = '%s_%s' % (project.name, secure_filename(file.filename))
+    _, extension = os.path.splitext(file.filename)
+    file.save(os.path.join(current_app.config['FONT_FOLDER'], filename))
+    db.session.add(Font(name=name, project_id=project_id, filename=filename))
+    db.session.commit()
+    return redirect(url_for('admin_project_page', project_id=project_id))
+    # return 'Created', 201

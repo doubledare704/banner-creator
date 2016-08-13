@@ -15,11 +15,11 @@ class PopUp extends React.Component {
     }
 
     componentDidUpdate() {
-        this.setFlash()
+        this.setFlash();
     }
 
     componentDidMount() {
-        this.setFlash()
+        this.setFlash();
     }
 
     setFlash(){
@@ -29,11 +29,11 @@ class PopUp extends React.Component {
     }
 
     closeAction() {
-        return this.props.onClose ? this.props.onClose() : this.defaultCloseAction()
+        return this.props.onClose ? this.props.onClose() : this.defaultCloseAction();
     }
 
     defaultCloseAction() {
-        return deactivatePopUp()
+        return deactivatePopUp();
     }
 
     confirmAction() {

@@ -4,7 +4,7 @@ import {h} from 'bazooka';
 import moment from 'moment';
 import classNames from 'classnames';
 import {activatePopUp, deactivatePopUp} from '../popUp.js';
-import csrfToken from '../csrfHelper.js'
+import csrfToken from '../csrfHelper.js';
 
 const BAZOOKA_PREFIX = 'users';
 
@@ -41,7 +41,7 @@ class User extends React.Component {
                         }
                         this.setState({
                             removed: true
-                        })
+                        });
                     })
                     .catch((response) => {
                         console.error(response.message);
@@ -75,7 +75,7 @@ class User extends React.Component {
                 this.setState({
                     user: user
                 });
-                deactivatePopUp()
+                deactivatePopUp();
             })
             .catch((response) => {
                 console.error(response.message);
