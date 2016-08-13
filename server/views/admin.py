@@ -1,4 +1,5 @@
 import json
+
 import os
 
 from werkzeug.exceptions import Forbidden, BadRequest
@@ -189,13 +190,10 @@ def add_font(project_id):
     form = FontUploadForm()
     if not form.validate_on_submit():
         raise BadRequest()
-    project = Project.query.get_or_404(project_id)
     name = form.data['font_name']
     file = form.data['font_file']
-    filename = '%s_%s' % (project.name, secure_filename(file.filename))
     _, extension = os.path.splitext(file.filename)
-    file.save(os.path.join(current_app.config['FONT_FOLDER'], filename))
-    db.session.add(Font(name=name, project_id=project_id, filename=filename))
+    file.save(os.path.join(current_app.config['FONT_FOLDER'], secure_filename(file.filename)))
+    db.session.add(Font(name=name, project_id=project_id))
     db.session.commit()
-    return redirect(url_for('admin_project_page', project_id=project_id))
-    # return 'Created', 201
+    return 'Created', 201

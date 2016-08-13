@@ -1,5 +1,12 @@
 {% extends "admin/admin.html" %}
 
+{% import 'user/macros.html' as macros %}
+
+{% block head %}
+    {{ super() }}
+    {{ macros.load_project_fonts(project) }}
+{% endblock %}
+
 {% block admin_content %}
 
 <h2>{{ project.name }}</h2>
@@ -8,9 +15,28 @@
     <h3>Загруженные шрифты</h3>
     <ul>
         {% for font in project.fonts %}
-            <li>{{ font.name }}</li>
+            <li style="font-family:{{ font.name }};">{{ font.name }}</li>
         {% endfor %}
     </ul>
+
+    <div>
+        <form class="form" action="{{ url_for('add_font', project_id=project.id) }}" method=post enctype=multipart/form-data>
+            <div class="form-group">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            </div>
+            <div class="form-group">
+                <label for="font_name">Название шрифта</label>
+                <input id="font_name" name="font_name" type="text" >
+            </div>
+            <div class="form-group">
+                <label for="file">Загрузить шрифт</label>
+                <input id="file" type="file" name="font_file" accept=".ttf, .otf, .woff, .woff2, .svg">
+            </div>
+            <div class="form-group">
+                <input class="btn btn-default" type="submit" role="button" value="Загрузить">
+            </div>
+        </form>
+    </div>
 </div>
 
 {% endblock %}
