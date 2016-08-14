@@ -15,7 +15,8 @@
                     {% for project in projects_list() %}
                         <li><a href="{{ url_for('admin_project_page', project_id=project.id)}}">{{project.name}}</a></li>
                     {% endfor %}
-                    <form action="{{ url_for('create_project') }}" method="post" class="form-inline">
+                    <li><a href="" data-bazooka="createProject"><i class="glyphicon glyphicon-plus"></i> Создать проект</a></li>
+                    <form action="{{ url_for('create_project') }}" method="post" class="form-inline hidden">
                         <div class="input-group">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         </div>

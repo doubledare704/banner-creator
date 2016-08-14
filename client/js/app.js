@@ -9,6 +9,8 @@ import toggleProfileForm from './profile/profile';
 import goToReview from './dashboard/designer_review';
 import showBannerPopup from './dashboard/designer_dashboard_banner';
 import imageSlider from './images/slider.jsx';
+import handleCreateProjectClick from './admin/create_project_field.js';
+import {uploadButton} from './helpers';
 
 require('./../css/main.styl');
 const Baz = require('bazooka');
@@ -24,7 +26,9 @@ Baz.register({
     "authLogout": logoutClick,
     'authLogin': loginClick,
     'imageSlider': imageSlider,
-  // dashboard
+    'createProject': handleCreateProjectClick,
+    'uploadButton': uploadButton,
+    // dashboard
     'goToReview': goToReview,
     'showBannerPopup': showBannerPopup
 });

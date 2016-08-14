@@ -20,17 +20,22 @@
     </ul>
 
     <div>
-        <form class="form" action="{{ url_for('add_font', project_id=project.id) }}" method=post enctype=multipart/form-data>
+        <form class="form-horizontal" action="{{ url_for('add_font', project_id=project.id) }}" method=post enctype=multipart/form-data>
             <div class="form-group">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             </div>
             <div class="form-group">
-                <label for="font_name">Название шрифта</label>
-                <input id="font_name" name="font_name" type="text" >
+                <label for="font_name" class="col-md-2">Название шрифта</label>
+                <div class="col-md-10">
+                    <input class="form-control" id="font_name" name="font_name" type="text" required>
+                </div>
             </div>
             <div class="form-group">
-                <label for="file">Загрузить шрифт</label>
-                <input id="file" type="file" name="font_file" accept=".ttf, .otf, .woff, .woff2, .svg">
+                <button class="btn btn-default" data-bazooka="uploadButton">
+                    <i class="glyphicon glyphicon-cloud-upload"></i> Custom Upload
+                </button>
+                <input id="upload" type='file'>
+                <label for="upload"></label>
             </div>
             <div class="form-group">
                 <input class="btn btn-default" type="submit" role="button" value="Загрузить">

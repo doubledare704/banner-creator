@@ -3,3 +3,13 @@ export function isHidden(elem) {
     const style = window.getComputedStyle(elem);
     return (style.display === 'none')
 }
+
+
+export function uploadButton(node) {
+    node.onclick = (e) => {
+        e.preventDefault();
+        e.target.nextElementSibling.click();
+    };
+    const uploadButton = node.nextElementSibling;
+    uploadButton.onchange = (e) =>(uploadButton.labels[0].innerText = uploadButton.files[0].name );
+}
