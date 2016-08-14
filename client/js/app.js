@@ -1,5 +1,6 @@
 import renderImages from './images/renderImages.jsx';
 import backgroundsAdmin from './admin/backgroundsAdmin.jsx';
+import projectsPanel from './admin/projects.jsx';
 import showBanner from './dashboard/dashboard';
 import {loginClick, logoutClick} from './authHelper';
 import reviewTool from './images/reviewTool.jsx';
@@ -28,6 +29,7 @@ Baz.register({
     'imageSlider': imageSlider,
     'createProject': handleCreateProjectClick,
     'uploadButton': uploadButton,
+    'projectsPanel': projectsPanel,
     // dashboard
     'goToReview': goToReview,
     'showBannerPopup': showBannerPopup

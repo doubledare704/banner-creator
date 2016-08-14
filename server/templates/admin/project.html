@@ -13,11 +13,7 @@
 
 <div class="row">
     <h3>Загруженные шрифты</h3>
-    <ul>
-        {% for font in project.fonts %}
-            <li style="font-family:{{ font.name }};">{{ font.name }}</li>
-        {% endfor %}
-    </ul>
+    <div data-bazooka="projectsPanel" data-projects-font-list="{{ fonts }}"></div>
 
     <div>
         <form class="form-horizontal" action="{{ url_for('add_font', project_id=project.id) }}" method=post enctype=multipart/form-data>

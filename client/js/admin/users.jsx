@@ -95,39 +95,39 @@ class User extends React.Component {
             title: "Изменение данных пользователя",
             closeAction: deactivatePopUp,
             child: <form className="form-horizontal" onSubmit={this.saveUser}>
-                    <div className='form-group'>
-                        <label className="col-sm-2">First Name</label>
-                        <div className="col-sm-10">
-                            <input type="text" name="first_name" defaultValue={user.first_name}
-                                   className="form-control"/>
-                        </div>
+                <div className='form-group'>
+                    <label className="col-sm-2">First Name</label>
+                    <div className="col-sm-10">
+                        <input type="text" name="first_name" defaultValue={user.first_name}
+                               className="form-control"/>
                     </div>
-                    <div className='form-group'>
-                        <label className="col-sm-2">Last Name</label>
-                        <div className="col-sm-10">
-                            <input type="text" name="last_name" defaultValue={user.last_name}
-                                   className="form-control"/>
-                        </div>
+                </div>
+                <div className='form-group'>
+                    <label className="col-sm-2">Last Name</label>
+                    <div className="col-sm-10">
+                        <input type="text" name="last_name" defaultValue={user.last_name}
+                               className="form-control"/>
                     </div>
-                    <div className='form-group'>
-                        <label className="col-sm-2">User role</label>
-                        <div className="col-sm-6">
-                            <select name="role" className="form-control"
-                                    defaultValue={user.role}>
-                                {
-                                    this.props.rolesList.map((role) => (
-                                            <option value={role}>{role}</option>
-                                        )
+                </div>
+                <div className='form-group'>
+                    <label className="col-sm-2">User role</label>
+                    <div className="col-sm-6">
+                        <select name="role" className="form-control"
+                                defaultValue={user.role}>
+                            {
+                                this.props.rolesList.map((role) => (
+                                        <option value={role}>{role}</option>
                                     )
-                                }
-                            </select>
-                        </div>
+                                )
+                            }
+                        </select>
                     </div>
-                    <div className='form-group text-center'>
-                        <button type="submit" className='btn btn-success'>Save</button>
-                        <a className='btn btn-default' onClick={deactivatePopUp}>Close</a>
-                    </div>
-                </form>
+                </div>
+                <div className='form-group text-center'>
+                    <button type="submit" className='btn btn-success'>Save</button>
+                    <a className='btn btn-default' onClick={deactivatePopUp}>Close</a>
+                </div>
+            </form>
         });
     }
 
@@ -158,8 +158,8 @@ class User extends React.Component {
     }
 }
 
-const UsersList = (props) => {
-    return <div>
+const UsersList = (props) => (
+    <div>
         <table className="table">
             <thead>
             <tr>
@@ -185,7 +185,7 @@ const UsersList = (props) => {
             </tbody>
         </table>
     </div>
-};
+);
 
 export default function (node) {
     let {usersList, usersRoles, currentUserId} = h.getAttrs(BAZOOKA_PREFIX, node);
