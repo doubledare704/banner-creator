@@ -6,7 +6,7 @@ from server.views.admin import (
 from server.views.auth import login_page, authorize, oauth_callback, log_out
 from server.views.editor import (continue_edit, history_image, cuts_background,
                                  save_cuted, load_from_pc, load_all_cuts,
-                                 background_images, editor, make_review)
+                                 background_images, editor, ReviewView)
 from server.views.images import (
     image_delete, image_rename,
     review_tool, review_image, review_action,
@@ -23,7 +23,6 @@ def setup_routes(app):
     app.add_url_rule('/editor/', view_func=editor)
     app.add_url_rule('/api/backgrounds/', view_func=background_images)
     app.add_url_rule('/api/backgrounds/<int:page>', view_func=background_images)
-    app.add_url_rule('/api/review', methods=['POST'], view_func=make_review)
 
     # user profile
     app.add_url_rule('/profile/', methods=['GET', 'POST'], view_func=main_views.user_profile)
@@ -62,6 +61,7 @@ def setup_routes(app):
     app.add_url_rule('/editor/cut_saved/', methods=['GET', 'POST'], view_func=save_cuted)
     app.add_url_rule('/editor/local/', methods=['POST'], view_func=load_from_pc)
     app.add_url_rule('/editor/cut-choose/', view_func=load_all_cuts)
+    app.add_url_rule('/editor/review/', view_func=ReviewView.as_view('review'))
 
     # auth routes
     app.add_url_rule('/login', view_func=login_page)
