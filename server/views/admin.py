@@ -94,7 +94,8 @@ def change_user(user_id):
                          'gender': user.gender.name,
                          'role': user.role.name,
                          'registration_date': user.created_at.isoformat(),
-                         'auth_by': user.social_type.name
+                         'auth_by': user.social_type.name,
+                         'active': user.active
                          })
 
 
