@@ -1,14 +1,14 @@
 """create fonts
 
 Revision ID: 6ddd40dc3e15
-Revises: 03b09c3d91cb
+Revises: 5ef96dd323f3
 Create Date: 2016-08-13 22:22:46.113303
 
 """
 
 # revision identifiers, used by Alembic.
 revision = '6ddd40dc3e15'
-down_revision = '03b09c3d91cb'
+down_revision = '5ef96dd323f3'
 
 from alembic import op
 import sqlalchemy as sa

@@ -8,8 +8,10 @@ let canvas = editor.canv;
 function resetZoom() {
     canvas.setHeight(canvas.getHeight() * (1 / canvasScale));
     canvas.setWidth(canvas.getWidth() * (1 / canvasScale));
-    canvas.backgroundImage.width = canvas.getWidth();
-    canvas.backgroundImage.height = canvas.getHeight();
+    if (canvas.backgroundImage) {
+        canvas.backgroundImage.width = canvas.getWidth();
+        canvas.backgroundImage.height = canvas.getHeight();
+    }
 
     let objects = canvas.getObjects();
     for (let i in objects) {
@@ -41,8 +43,11 @@ function zoomOut() {
 
     canvas.setHeight(canvas.getHeight() * (1 / SCALE_FACTOR));
     canvas.setWidth(canvas.getWidth() * (1 / SCALE_FACTOR));
-    canvas.backgroundImage.width = canvas.getWidth();
-    canvas.backgroundImage.height = canvas.getHeight();
+
+    if (canvas.backgroundImage) {
+        canvas.backgroundImage.width = canvas.getWidth();
+        canvas.backgroundImage.height = canvas.getHeight();
+    }
 
     let objects = canvas.getObjects();
     for (let i in objects) {
@@ -72,8 +77,10 @@ function zoomIn() {
 
     canvas.setHeight(canvas.getHeight() * SCALE_FACTOR);
     canvas.setWidth(canvas.getWidth() * SCALE_FACTOR);
-    canvas.backgroundImage.width = canvas.getWidth();
-    canvas.backgroundImage.height = canvas.getHeight();
+    if (canvas.backgroundImage) {
+        canvas.backgroundImage.width = canvas.getWidth();
+        canvas.backgroundImage.height = canvas.getHeight();
+    }
 
     let objects = canvas.getObjects();
     for (let i in objects) {

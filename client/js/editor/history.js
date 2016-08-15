@@ -18,8 +18,6 @@ function loadHist() {
             let w, h;
             if (fetch_history.hasOwnProperty('backgroundImage')) {
                 let unpack = fetch_history.backgroundImage;
-                console.log(unpack.width);
-                // if (unpack.width) {
                 w = unpack.width;
                 h = unpack.height;
                 (function getCanvasAtResoution(newWidth, newHeight) {

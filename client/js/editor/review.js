@@ -1,18 +1,13 @@
-const modal = document.getElementById('reviewModal');
-const closeModal = document.getElementsByClassName('close')[1];
+import { activateHtmlPopUp } from '../popUp';
 
 
-closeModal.onclick = () => {
-    modal.style.display = "none";
-};
-
-window.addEventListener('click', (e) => {
-    if (e.target == modal) {
-        modal.style.display = "none";
-}});
-
-module.exports = function(node) {
+export default function(node) {
   node.addEventListener('click', function (e) {
-    modal.style.display = 'block';
+    fetch(node.dataset.url,
+      {credentials: 'same-origin'})
+      .then((res) => res.text())
+      .then((text) => {
+        activateHtmlPopUp({child: text})
+      });
   });
 };
