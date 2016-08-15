@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {activatePopUp} from '../popUp';
-import csrf from '../csrfHelper';
+import {csrf} from '../helpers';
 
 
 function ConfirmationHeader(props) {
