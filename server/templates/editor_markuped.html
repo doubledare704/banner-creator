@@ -139,13 +139,16 @@
 
             <div class="col-lg-10 col-md-8 col-sm-8 col-xs-8" id="godparent">
                 <div class="button-group">
-                    <a href="#" id="del_item">
+                    <a href="#" class="btn btn-warning" id="del_item">
                         <i class="material-icons">delete</i>
                     </a>
-                    <a href="#" data-bazooka="resetCanvas"><i class="material-icons">cancel</i></a>
+                    <a href="#" class="btn btn-danger" data-bazooka="resetCanvas"><i class="material-icons">cancel</i></a>
+                    <a href="#" class="btn btn-default disabled " id="undo"><i class="material-icons">undo</i></a>
+                    <a href="#" class="btn btn-default disabled " id="redo"><i class="material-icons">redo</i></a>
+
                 </div>
                 <section class="container2 forcanvas" id="parentWrap">
-                    <main class="container-content" id="childWrap">
+                    <main class="container-content" id="childWrap" data-bazooka="redoUndo">
                         <canvas id="main" data-bazooka="deleteKeyup">
                         </canvas>
                     </main>
