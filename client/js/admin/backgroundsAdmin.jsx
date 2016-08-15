@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
 import {activatePopUp} from '../popUp.js';
+import csrfToken from '../csrfHelper.js'
 
 
 const BAZOOKA_PREFIX = 'backgrounds-admin';
@@ -104,11 +105,14 @@ class BackgroundsAdmin extends React.Component {
             if (tablerow.active === true) {
                 const index = this.state.backgrounds.indexOf(tablerow);
 
-                fetch(
-                    `/admin/inactivate_image/${this.state.backgrounds[index].id}`,
-                    {credentials: 'same-origin',
-                        method: "POST"}
-                ).then((response) => {
+                fetch(`/admin/inactivate_image/${this.state.backgrounds[index].id}`,{
+                    credentials: 'same-origin',
+                    method: "POST",
+                    headers: {
+                        'X-CSRFToken': csrfToken()
+                    }
+                })
+                    .then((response) => {
                     if (response.status === 200) {
                         activatePopUp({
                             title: "Фон стал неактивным",
@@ -130,11 +134,14 @@ class BackgroundsAdmin extends React.Component {
                         confirm: true,
                         confirmAction:
                             () => {
-                                fetch(
-                                    `/admin/delete_image/${this.state.backgrounds[index].id}`,
-                                    {credentials: 'same-origin',
-                                        method: "POST"}
-                                ).then((response) => {
+                                fetch(`/admin/delete_image/${this.state.backgrounds[index].id}`,{
+                                    credentials: 'same-origin',
+                                    method: "POST",
+                                    headers: {
+                                        'X-CSRFToken': csrfToken()
+                                    },
+                                })
+                                    .then((response) => {
                                     if (response.status === 204) {
                                         this.state.backgrounds.splice(index, 1);
                                         this.setState({backgrounds: this.state.backgrounds});
@@ -152,11 +159,14 @@ class BackgroundsAdmin extends React.Component {
         return () => {
             const index = this.state.backgrounds.indexOf(tablerow);
 
-            fetch(
-                `/admin/activate_image/${this.state.backgrounds[index].id}`,
-                {credentials: 'same-origin',
-                    method: "POST"}
-            ).then((response) => {
+            fetch(`/admin/activate_image/${this.state.backgrounds[index].id}`,{
+                credentials: 'same-origin',
+                method: "POST",
+                headers: {
+                'X-CSRFToken': csrfToken()
+                }
+            })
+                .then((response) => {
                 if (response.status === 200) {
                     activatePopUp({
                         title: "Фон стал активным",

@@ -10,6 +10,7 @@
         <link href='https://fonts.googleapis.com/css?family=Roboto:500&subset=latin,cyrillic' rel='stylesheet'
               type='text/css'>
         <title>{% block title %}{% endblock %} - EVO</title>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
     {% endblock %}
 </head>
 <body>
@@ -29,7 +30,7 @@
                 <ul class="nav navbar-nav">
                             <li class="{{active_endpoint_startswith('dashboard')}}"><a href="{{ url_for('dashboard') }}">Кабинет</a></li>
                             <li class="{{active_endpoint('editor')}}"><a href="{{ url_for ('editor') }}">Редактор</a></li>
-                            {% if current_user.is_authenticated and (current_user.role == current_user.UserRole.admin or current_user.role == current_user.UserRole.designer) %}
+                            {% if current_user.is_authenticated and (current_user.is_admin() or current_user.is_designer()) %}
                               <li class="{{active_endpoint_startswith('admin')}}">
                                 <a href="{{ url_for ('admin') }}">Админ</a>
                               </li>

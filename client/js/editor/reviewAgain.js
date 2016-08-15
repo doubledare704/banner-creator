@@ -1,5 +1,6 @@
 import {editor} from './fabmain';
 import {disableControls} from './editor.js';
+import csrfToken from '../csrfHelper.js'
 
 require('./modals.js');
 const modal = document.getElementById('reviewModal');
@@ -25,6 +26,9 @@ function sendToReview(event) {
         {
             method: 'POST',
             credentials: 'same-origin',
+            headers: {
+                'X-CSRFToken': csrfToken()
+            },
             body: formData
         }
     )

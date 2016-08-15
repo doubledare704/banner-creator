@@ -1,9 +1,10 @@
 import {editor} from './fabmain.js';
+import csrfToken from '../csrfHelper.js'
 const saver = document.getElementById('progress_saver');
 
 function loadHist() {
     const previewId = saver.getAttribute('data-review');
-    fetch('/editor/history/' + previewId, {
+    fetch(`/editor/history/${previewId}`, {
             method: 'get',
             credentials: 'same-origin',
             headers: {
@@ -44,11 +45,12 @@ function sendTohistory() {
         hist_id: id,
         jsn: image_history
     };
-    fetch('/editor/history/' + id, {
+    fetch(`/editor/history/${id}`, {
         method: 'post',
         credentials: 'same-origin',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken()
         },
         body: JSON.stringify(data)
     })
