@@ -39,7 +39,7 @@
                 </section>
                 {% block reviewmodal %}
                     <section class="btn btn-default tooltipp" data-bazooka="setOriginalZoom" data-tooltip="На ревью">
-                        <a href="#" data-bazooka="openReviewModal">
+                        <a href="#" data-bazooka="openReviewModal" data-url="{{ url_for('review') }}">
                             <i class="material-icons">send</i>
                         </a>
                     </section>
@@ -153,14 +153,7 @@
         </div>
 
     </div>
-    {#  Include html for review modal window  #}
-    <div id="reviewModal" class="modal"
-            {% block bazookas %}
-         data-bazooka="sendToReview"
-            {% endblock %}
-    >
-        {% include 'editor/review_modal.html' %}
-    </div>
+
 {% endblock %}
 {% block scripts %}
     <script src="{{ url_for('static', filename='editorbundle.js') }}"></script>
