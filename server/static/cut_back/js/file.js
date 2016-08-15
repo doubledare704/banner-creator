@@ -1,5 +1,8 @@
 /* global MAIN, POP, LAYER, EXIF, HELPER, IMAGE, GUI */
 /* global SAVE_TYPES */
+function csrfToken() {
+  return document.querySelector('meta[name=csrf-token]').getAttribute('content');
+}
 
 var FILE = new FILE_CLASS();
 
@@ -108,7 +111,8 @@ function FILE_CLASS() {
             method: 'post',
             credentials: 'same-origin',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken()
             },
             body: JSON.stringify(data)
         })

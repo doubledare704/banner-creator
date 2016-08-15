@@ -4,13 +4,10 @@
 {% block content %}
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-1 col-sm-2 col-md-2 cols-xs-2 column_aside">
+            <div class="col-lg-1 col-sm-2 col-md-2 cols-xs-2 column_aside" data-bazooka="keysListen">
                 <section class="with_menu btn btn-default">
                     <a href="#">
-                        <i class="material-icons">sort_by_alpha</i>
-                    <span class="detail">
-                        Добавить текст
-                    </span>
+                        <i class="material-icons">text_format</i>
                     </a>
                     <div id="rightcol">
                         <h2>Выберите вариант текста</h2>
@@ -30,12 +27,9 @@
                         </ul>
                     </div>
                 </section>
-                <section class="btn btn-default">
+                <section class="btn btn-default tooltipp" data-tooltip="Добавить кнопку">
                     <a href="#" id="addButt">
                         <i class="material-icons">input</i>
-                        <span class="detail">
-                            Добавить кнопку
-                        </span>
                     </a>
                 </section>
 
@@ -44,26 +38,23 @@
                          data-bg-img-url="{{ url_for('uploaded_file', filename='') }}">
                 </section>
                 {% block reviewmodal %}
-                    <section class="btn btn-default" data-bazooka="setOriginalZoom">
+                    <section class="btn btn-default tooltipp" data-bazooka="setOriginalZoom" data-tooltip="На ревью">
                         <a href="#" data-bazooka="openReviewModal">
-                            <i class="material-icons">done_all</i>
-                            <span class="detail">Отправить на ревью</span>
+                            <i class="material-icons">send</i>
                         </a>
                     </section>
                 {% endblock %}
-                <section id="double" class="btn btn-default">
-                    <section>
-                        <a href="#" id="result_review"><i class="material-icons">description</i>Просмотреть
-                            результат</a>
+                <section id="double">
+                    <section class="btn btn-default">
+                        <a href="#" id="result_review"><i class="material-icons">description</i></a>
                     </section>
-                    <section>
-                        <a href="" id="continue"><i class="material-icons">flip_to_back</i>Продолжить редактировать</a>
+                    <section class="btn btn-default" id="continue">
+                        <a href=""><i class="material-icons">flip_to_back</i></a>
                     </section>
                 </section>
-                <section class="btn btn-default" data-bazooka="setOriginalZoom">
-                    <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i>
-                        <span>Скачать
-                        баннер</span></a>
+                <section class="btn btn-default tooltipp" data-bazooka="setOriginalZoom"
+                         data-tooltip="Скачать результат">
+                    <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i></a>
                 </section>
 
                 {% block saver %}
@@ -73,9 +64,6 @@
                 <section class="last-sec btn btn-default">
                     <a href="#">
                         <i class="material-icons">cloud_upload</i>
-                    <span class="download-file">
-                        Загрузить изображение
-                    </span>
                     </a>
                     <form id="upload-file" method="post" enctype="multipart/form-data">
                         <input type="file" name="file" id='inputted'/>
@@ -98,12 +86,9 @@
                         </div>
                     </div>
                 </section>
-            </div>
-            <div class="col-lg-1 col-sm-2 col-md-2 cols-xs-2 column_aside nopad" data-bazooka="keysListen">
-                <section data-bazooka="setGrid" class="btn btn-default">
+                <section data-bazooka="setGrid" class="btn btn-default tooltipp" data-tooltip="Отобразить сетку">
                     <a href="#">
                         <i class="material-icons">sync</i>
-                        <span>Добавить/ убрать сетку</span>
                     </a>
                 </section>
                 <section class="counter-grid btn btn-default disabled" id="gridder">
@@ -111,40 +96,35 @@
                         <i class="material-icons">code</i>
                         <input type="number" id="newGrid" class="form-control number-input" data-bazooka="setGridSize"
                                disabled/>
-                        <span>Поменять размер сетки</span>
                     </a>
                 </section>
-                <section class="btn btn-default" data-bazooka="setNormalZoom">
+                <section class="btn btn-default tooltipp" data-bazooka="setNormalZoom" data-tooltip="Увеличить">
                     <a href="#">
                         <i class="material-icons">zoom_in</i>
-                        <span>Увеличить</span>
-                        <span>ctrl +</span>
                     </a>
                 </section>
-                <section class="btn btn-default" data-bazooka="zoomOuter">
+                <section class="btn btn-default tooltipp" data-bazooka="zoomOuter" data-tooltip="Уменьшить">
                     <a href="#">
                         <i class="material-icons">zoom_out</i>
-                        <span>Уменьшить</span>
-                        <span>ctrl -</span>
                     </a>
                 </section>
-                <section class="btn btn-default" data-bazooka="setOriginalZoom">
+                <section class="btn btn-default tooltipp" data-bazooka="setOriginalZoom" data-tooltip="Вернуть размер">
                     <a href="#">
                         <i class="material-icons">zoom_out_map</i>
-                        <span>Оригинальный размер</span>
-                        <span>ctrl 0</span>
                     </a>
                 </section>
             </div>
-
-            <div class="col-lg-10 col-md-8 col-sm-8 col-xs-8" id="godparent">
+            <div class="col-lg-11 col-md-10 col-sm-10 col-xs-10" id="godparent">
                 <div class="button-group">
-                    <a href="#" class="btn btn-warning" id="del_item">
+                    <a href="#" class="btn btn-warning tooltipp" id="del_item" data-tooltip="Удаление">
                         <i class="material-icons">delete</i>
                     </a>
-                    <a href="#" class="btn btn-danger" data-bazooka="resetCanvas"><i class="material-icons">cancel</i></a>
-                    <a href="#" class="btn btn-default disabled " id="undo"><i class="material-icons">undo</i></a>
-                    <a href="#" class="btn btn-default disabled " id="redo"><i class="material-icons">redo</i></a>
+                    <a href="#" class="btn btn-danger tooltipp" data-bazooka="resetCanvas" data-tooltip="Очистить"><i
+                            class="material-icons">cancel</i></a>
+                    <a href="#" class="btn btn-default tooltipp disabled " id="undo" data-tooltip="Назад"><i
+                            class="material-icons">undo</i></a>
+                    <a href="#" class="btn btn-default tooltipp disabled " id="redo" data-tooltip="Вперед"><i
+                            class="material-icons">redo</i></a>
 
                 </div>
                 <section class="container2 forcanvas" id="parentWrap">

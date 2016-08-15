@@ -101,7 +101,8 @@ fileInput.addEventListener('click', function () {
     return false;
 });
 
-filetoeditor.addEventListener('change', () => {
+filetoeditor.addEventListener('change', (event) => {
+    event.preventDefault();
     const formData = new FormData();
     formData.append('file', filetoeditor.files[0]);
     fetch('/editor/local/',
@@ -144,7 +145,6 @@ downloadLink.addEventListener('click', function () {
         activeGroup = editor.canv.getActiveGroup();
     editor.downloadImage(link, activeObject, activeGroup);
 }, false);
-
 
 
 // adding undo redo

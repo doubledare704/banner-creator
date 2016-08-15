@@ -104,7 +104,6 @@ class BackgroundsContainer extends React.Component {
       <div>
         <a href="#" onClick={this.changeDisplay}>
           <i className="material-icons">image</i>
-          <span className="detail">Фоны</span>
         </a>
         <div className={!this.state.displayList ? 'hidden': ''} id="backgroundsContainer">
           <BackgroundsList urls={this.props.urls} />
