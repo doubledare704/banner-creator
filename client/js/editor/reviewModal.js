@@ -1,6 +1,6 @@
 import {editor} from './fabmain';
 import {disableControls} from './editor.js';
-import csrfToken from '../csrfHelper.js'
+import {csrfToken} from '../helpers';
 
 require('./modals.js');
 const modal = document.getElementById('reviewModal');

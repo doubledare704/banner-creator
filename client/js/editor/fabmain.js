@@ -2,7 +2,7 @@
 let fabric = require('fabric').fabric;
 
 import Editor from './editor.js';
-import csrfToken from '../csrfHelper.js'
+import {csrfToken} from '../helpers'
 
 let editor = new Editor('main', 960, 420);
 

@@ -1,5 +1,5 @@
 import {h} from 'bazooka';
-import csrfToken from './csrfHelper.js';
+import {csrfToken} from './helpers';
 import {activatePopUp} from './popUp.js';
 
 const BAZOOKA_PREFIX = 'users';

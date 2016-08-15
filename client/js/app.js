@@ -10,8 +10,9 @@ import toggleProfileForm from './profile/profile';
 import goToReview from './dashboard/designer_review';
 import showBannerPopup from './dashboard/designer_dashboard_banner';
 import imageSlider from './images/slider.jsx';
-import handleCreateProjectClick from './admin/create_project_field.js';
+import handleCreateProjectClick from './admin/create_project_field';
 import {uploadButton} from './helpers';
+import uploadFont from './admin/upload_font';
 
 require('./../css/main.styl');
 const Baz = require('bazooka');
@@ -30,6 +31,7 @@ Baz.register({
     'createProject': handleCreateProjectClick,
     'uploadButton': uploadButton,
     'projectsPanel': projectsPanel,
+    'uploadFont': uploadFont,
     // dashboard
     'goToReview': goToReview,
     'showBannerPopup': showBannerPopup

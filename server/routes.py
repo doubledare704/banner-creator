@@ -18,7 +18,6 @@ def setup_routes(app):
     app.add_url_rule('/index/', view_func=dashboard_views.dashboard, endpoint='index')
     app.add_url_rule('/backgrounds/', methods=['GET', 'POST'], view_func=backgrounds_page)
     app.add_url_rule('/uploads/<filename>', view_func=uploaded_file)
-    app.add_url_rule('/uploads/fonts/<filename>', view_func=main_views.uploaded_font)
     app.add_url_rule('/delete/', methods=['POST'], view_func=image_delete)
     app.add_url_rule('/rename/', methods=['POST'], view_func=image_rename)
     app.add_url_rule('/editor/', view_func=editor)

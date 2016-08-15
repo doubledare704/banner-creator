@@ -17,7 +17,7 @@
 
     <h3>Загрузить шрифт</h3>
     <div class="container">
-        <form class="form-horizontal" action="{{ url_for('add_font', project_id=project.id) }}" method=post enctype=multipart/form-data>
+        <form class="form-horizontal" data-bazooka="uploadFont" data-font-project-id="{{ project.id }}" action="{{ url_for('add_font', project_id=project.id) }}" method=post enctype=multipart/form-data>
             <div class="form-group">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             </div>

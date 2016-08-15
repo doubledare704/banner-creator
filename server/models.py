@@ -144,4 +144,4 @@ class Font(db.Model):
     __table_args__ = (UniqueConstraint('project_id', 'name', name='project_font'),)
 
     def url(self):
-        return url_for('uploaded_font', filename=self.filename)
+        return url_for('uploaded_file', filename=self.filename)

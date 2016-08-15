@@ -4,7 +4,7 @@ import {h} from 'bazooka';
 import moment from 'moment';
 import classNames from 'classnames';
 import {activatePopUp, deactivatePopUp} from '../popUp.js';
-import csrfToken from '../csrfHelper.js';
+import {csrfToken} from '../helpers';
 
 const BAZOOKA_PREFIX = 'users';
 
