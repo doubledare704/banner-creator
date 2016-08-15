@@ -15,26 +15,31 @@
     <h3>Загруженные шрифты</h3>
     <div data-bazooka="projectsPanel" data-projects-font-list="{{ fonts }}"></div>
 
-    <div>
+    <h3>Загрузить шрифт</h3>
+    <div class="container">
         <form class="form-horizontal" action="{{ url_for('add_font', project_id=project.id) }}" method=post enctype=multipart/form-data>
             <div class="form-group">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             </div>
             <div class="form-group">
-                <label for="font_name" class="col-md-2">Название шрифта</label>
-                <div class="col-md-10">
+                <label for="font_name" class="col-md-2">Имя шрифта</label>
+                <div class="col-md-4">
                     <input class="form-control" id="font_name" name="font_name" type="text" required>
                 </div>
             </div>
             <div class="form-group">
-                <button class="btn btn-default" data-bazooka="uploadButton">
-                    <i class="glyphicon glyphicon-cloud-upload"></i> Custom Upload
-                </button>
-                <input id="upload" type='file'>
-                <label for="upload"></label>
+                <div class="col-md-6">
+                    <button class="btn btn-default" data-bazooka="uploadButton">
+                        <i class="glyphicon glyphicon-cloud-upload"></i> Выбрать файл
+                    </button>
+                    <input name="font_file" id="upload" type='file', accept=".ttf, .otf, .woff, .woff2, .svg">
+                    <label for="upload"></label>
+                </div>
             </div>
             <div class="form-group">
-                <input class="btn btn-default" type="submit" role="button" value="Загрузить">
+                <div class="col-md-2">
+                    <input class="btn btn-default" type="submit" role="button" value="Отправить">
+                </div>
             </div>
         </form>
     </div>

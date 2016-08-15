@@ -11,5 +11,10 @@ export function uploadButton(node) {
         e.target.nextElementSibling.click();
     };
     const uploadButton = node.nextElementSibling;
-    uploadButton.onchange = (e) =>(uploadButton.labels[0].innerText = uploadButton.files[0].name );
+    const setLabelText = () =>(uploadButton.labels[0].innerText = uploadButton.files[0].name);
+    if (uploadButton.files.length > 0) {
+        setLabelText();
+    }
+    uploadButton.onchange = setLabelText;
 }
+

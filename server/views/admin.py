@@ -2,7 +2,7 @@ import json
 
 import os
 
-from werkzeug.exceptions import Forbidden, BadRequest
+from werkzeug.exceptions import Forbidden, BadRequest, UnprocessableEntity
 from werkzeug.utils import secure_filename
 
 from server.forms.create_project_form import CreateProjectForm
@@ -188,13 +188,17 @@ def project_page(project_id):
 
 @requires_roles('admin', 'designer')
 def add_font(project_id):
+    project = Project.query.get_or_404(project_id)
     form = FontUploadForm()
     if not form.validate_on_submit():
         raise BadRequest()
     name = form.data['font_name']
+    if Font.query.filter_by(name=name, project_id=project_id).first():
+        raise UnprocessableEntity
     file = form.data['font_file']
     _, extension = os.path.splitext(file.filename)
-    file.save(os.path.join(current_app.config['FONT_FOLDER'], secure_filename(file.filename)))
-    db.session.add(Font(name=name, project_id=project_id))
+    filename = "%s_%s" % (project.name, secure_filename('%s.%s' % (name, extension)))
+    file.save(os.path.join(current_app.config['FONT_FOLDER'], filename))
+    db.session.add(Font(name=name, project_id=project_id, filename=filename))
     db.session.commit()
-    return 'Created', 201
+    return redirect(url_for('admin_project_page', project_id=project_id))

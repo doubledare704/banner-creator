@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
-import {activatePopUp, deactivatePopUp} from '../popUp.js';
-import csrfToken from '../csrfHelper.js';
 
 const BAZOOKA_PREFIX = 'projects';
 
@@ -45,7 +43,6 @@ class FontPanel extends React.Component {
         };
 
         this.changeSelectedFont = this.changeSelectedFont.bind(this);
-        this.addFont = this.addFont.bind(this);
     }
 
     render() {
@@ -66,21 +63,13 @@ class FontPanel extends React.Component {
             selectedFont: this.state.fontList[e.target.selectedIndex]
         });
     }
-
-    addFont(name){
-        this.setState({
-            fontList: this.props.fontList.push(name)
-        });
-    }
 }
 
 export default function (node) {
     let {fontList} = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
-        <FontPanel
-            fontList={fontList}
-        />,
+        <FontPanel fontList={fontList}/>,
         node
     );
 }
