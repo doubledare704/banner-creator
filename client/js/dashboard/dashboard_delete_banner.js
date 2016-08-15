@@ -1,4 +1,4 @@
-import csrf from '../csrfHelper';
+import { csrf } from '../helpers';
 import { activatePopUp } from '../popUp';
 
 
