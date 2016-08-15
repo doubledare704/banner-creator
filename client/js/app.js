@@ -8,6 +8,7 @@ import users from './admin/users.jsx';
 import toggleProfileForm from './profile/profile';
 import goToReview from './dashboard/designer_review';
 import showBannerPopup from './dashboard/designer_dashboard_banner';
+import deleteReview from './dashboard/dashboard_delete_review';
 import imageSlider from './images/slider.jsx';
 
 require('./../css/main.styl');
@@ -26,7 +27,8 @@ Baz.register({
     'imageSlider': imageSlider,
   // dashboard
     'goToReview': goToReview,
-    'showBannerPopup': showBannerPopup
+    'showBannerPopup': showBannerPopup,
+    'deleteReview': deleteReview
 });
 
 Baz.watch();
