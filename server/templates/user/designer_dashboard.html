@@ -26,7 +26,9 @@
       </div>
     </div>
   {% else %}
-    <p class="dashboard-designer-empty-review bg-info">На ревью ничего не присылали, можно расслабиться и попить чайку...</p>
+    <p class="dashboard-designer-empty-review bg-info">На ревью ничего не присылали, можно расслабиться и попить чайку...
+      или <a href="{{ url_for('editor') }}">баннер создать</a>
+    </p>
   {% endfor %}
 
   <div class="pagination-container">
