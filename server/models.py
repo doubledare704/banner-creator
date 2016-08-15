@@ -59,6 +59,7 @@ class BannerReview(db.Model):
     designer_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     designer_imagename = db.Column(db.String(64), unique=True)
     designer_previewname = db.Column(db.String(64), unique=True)
+    active = db.Column(db.BOOLEAN, default=True, nullable=False)
 
     user = db.relationship("User", foreign_keys=[user_id])
     designer = db.relationship("User", foreign_keys=[designer_id])
@@ -112,6 +113,15 @@ class User(db.Model):
 
     def is_anonymous(self):
         return False
+
+    def is_user(self):
+        return self.role == User.UserRole.user
+
+    def is_designer(self):
+        return self.role == User.UserRole.designer
+
+    def is_admin(self):
+        return self.role == User.UserRole.admin
 
     def get_id(self):
         return unicode(self.id)

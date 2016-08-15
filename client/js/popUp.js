@@ -73,6 +73,8 @@ class PopUp extends React.Component {
     }
 }
 
+window.addEventListener('click', (e) => { deactivatePopUp() });
+
 export function activatePopUp(data) {
     ReactDOM.render(<PopUp
         confirm={data.confirm}

@@ -4,22 +4,25 @@
 
 {% block page_content %}
     <div class="row">
-        <div class="col-lg-3">
-            <ul class="dashboard-menu">
-                <li class="{% if request.url_rule.endpoint == 'dashboard' %}dashboard-menu-active{% endif %}">
+        <div class="col-sm-3 col-md-3 col-lg-2">
+            <ul class="nav nav-pills nav-stacked left-menu">
+                <li class="{{active_endpoint('dashboard')}}">
                     <a href="{{ url_for('dashboard') }}">Главная</a>
                 </li>
-                <li class="{% if request.url_rule.endpoint == 'dashboard_user_banners' %}dashboard-menu-active{% endif %}">
+                <li class="{{active_endpoint('dashboard_user_banners')}}">
                     <a href="{{ url_for('dashboard_user_banners') }}">Баннеры</a>
                 </li>
                 {% if current_user.role.name in ('designer', 'admin') %}
-                <li class="{% if request.url_rule.endpoint == 'dashboard_backgrounds' %}dashboard-menu-active{% endif %}">
+                <li class="{{active_endpoint('dashboard_backgrounds')}}">
                     <a href="{{ url_for('dashboard_backgrounds') }}">Загрузка фонов</a>
                 </li>
                 {% endif %}
+                <li class="{{ active_endpoint('dashboard_archive') }}">
+                  <a href="/dashboard/archive/">Архив</a>
+                </li>
             </ul>
         </div>
-        <div class="col-lg-9">
+        <div class="col-sm-9 col-md-9 col-lg-10 dashboard-content">
         {% block dashboard_content %}
         {% endblock dashboard_content %}
         </div>

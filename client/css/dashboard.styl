@@ -11,6 +11,8 @@ dashboard-comment-color = #dedede
   background-color: dashboard-common-color
   border-radius: 10px
   margin-bottom 10px
+  &:hover
+    box-shadow: 0 0 10px rgba(0,0,0,0.5)
 
 .dashboard-menu
   list-style: none
@@ -27,6 +29,9 @@ dashboard-comment-color = #dedede
       text-decoration: none
 
 .dashboard-reviwer-name
+  color: dashboard-menu-color
+
+.dashboard-review-date
   color: dashboard-menu-color
 
 .dashboard-show-banner
@@ -70,10 +75,41 @@ dashboard-comment-color = #dedede
     text-decoration: none
 
 .dashboard-comment-text
-  padding: 5px
+  padding: 10px
   border-radius: 5px
   background-color: dashboard-comment-color
 
 .review-section-rejected .dashboard-comment-text,
 .review-section-success .dashboard-comment-text
   background-color: whitesmoke
+
+.dashboard-review-container
+  cursor: pointer
+
+.dashboard-banner-preview:hover
+  cursor: zoom-in
+
+.dashboard-banner-container
+  .thumbnail:hover
+    box-shadow: 0 0 10px rgba(0,0,0,0.5)
+
+.dashboard-delete-btn
+  cursor: pointer
+  color: red
+  float: right
+  right: 0
+  display: none
+
+.review-section:hover
+  .dashboard-delete-btn
+    display: inline
+
+.dashboard-user-empty-review,
+.dashboard-designer-empty-review
+  padding: 10px
+  border-radius: 5px
+  font-size: 1.5em
+  font-family: Times New Roman
+  a
+    color: dashboard-menu-active-color
+    text-decoration: none
