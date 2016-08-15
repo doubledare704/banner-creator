@@ -33,7 +33,7 @@ function sendToReview(event) {
             document.getElementById('resulting').src = result.src;
             document.getElementById('continue').href += result.rev;
             document.getElementById('double').style.display = "block";
-            document.getElementById('continue').style.display = "block";
+            document.getElementById('continue').style.display = "inline-block";
             document.getElementById('result_review').style.display = "block";
             localStorage.clear();
         })
