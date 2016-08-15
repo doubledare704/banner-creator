@@ -2,7 +2,7 @@
 
 {% block dashboard_content %}
   {% for review in reviews.items %}
-    <div class="row dashboard-review-container">
+    <div class="dashboard-review-container">
       <div class="review-section row
         {% if review.status == review.Status.accepted %}
           review-section-success

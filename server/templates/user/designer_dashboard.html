@@ -5,7 +5,7 @@
 
 {% block dashboard_content %}
   {% for review in reviews.items %}
-    <div class="row dashboard-review-container" data-bazooka="goToReview" data-review-url="{{ url_for('review_image', img_id=review.banner.id) }}">
+    <div class="dashboard-review-container" data-bazooka="goToReview" data-review-url="{{ url_for('review_image', img_id=review.banner.id) }}">
       <div class="review-section row">
         <p class="dashboard-review-title">
           <span class="dashboard-reviwer-name">{{ review.designer.last_name }} {{ review.designer.first_name }}</span>
