@@ -19,5 +19,5 @@ export function uploadButton(node) {
 }
 
 export function csrfToken () {
-    document.querySelector('meta[name=csrf-token]').getAttribute('content');
+    return document.querySelector('meta[name=csrf-token]').getAttribute('content');
 }
