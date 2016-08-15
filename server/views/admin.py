@@ -81,9 +81,9 @@ def change_user(user_id):
     if not form.validate_on_submit():
         raise BadRequest()
     user = User.query.get_or_404(user_id)
-    user.first_name = form.data['first_name']
-    user.last_name = form.data['last_name']
-    user.role = form.data['role']
+    user.first_name = form.first_name.data
+    user.last_name = form.last_name.data
+    user.role = form.role.data
 
     db.session.add(user)
     db.session.commit()
@@ -175,7 +175,7 @@ def create_project():
     form = CreateProjectForm()
     if not form.validate_on_submit():
         raise BadRequest()
-    project = Project(name=form.data['project_name'])
+    project = Project(name=form.project_name.data)
     db.session.add(project)
     db.session.commit()
     return redirect(url_for('admin_project_page', project_id=project.id))
@@ -194,10 +194,10 @@ def add_font(project_id):
     form = FontUploadForm()
     if not form.validate_on_submit():
         raise BadRequest()
-    name = form.data['font_name']
+    name = form.font_name.data
     if Font.query.filter_by(name=name, project_id=project_id).first():
         raise UnprocessableEntity
-    file = form.data['font_file']
+    file = form.font_file.data
     _, extension = os.path.splitext(file.filename)
     filename = "%s_%s" % (project.name, secure_filename('%s.%s' % (name, extension)))
     file.save(os.path.join(current_app.config['FONT_FOLDER'], filename))

@@ -18,7 +18,7 @@ const FontSelect = (props) => (
 );
 
 const FontShower = (props) => {
-    let exampleStyle = {
+    const exampleStyle = {
         'font-family': props.name
     };
     return (<div className="col-md-9">
@@ -45,6 +45,12 @@ class FontPanel extends React.Component {
         this.changeSelectedFont = this.changeSelectedFont.bind(this);
     }
 
+    changeSelectedFont(e) {
+        this.setState({
+            selectedFont: this.state.fontList[e.target.selectedIndex]
+        });
+    }
+
     render() {
         let {fontList, selectedFont} = this.state;
         return (
@@ -56,12 +62,6 @@ class FontPanel extends React.Component {
                 <FontShower name={selectedFont}/>
             </div>
         );
-    }
-
-    changeSelectedFont(e) {
-        this.setState({
-            selectedFont: this.state.fontList[e.target.selectedIndex]
-        });
     }
 }
 

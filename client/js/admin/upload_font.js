@@ -42,8 +42,7 @@ function configUploadFont(projectId) {
 }
 
 
-export default function handleCreateProjectClick(node) {
+export default function handleUploadFont(node) {
     const {projectId} = h.getAttrs(BAZOOKA_PREFIX, node);
     node.onsubmit = configUploadFont(projectId);
-    console.log(node);
 }
