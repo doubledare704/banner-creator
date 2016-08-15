@@ -1,4 +1,6 @@
+from flask import current_app
 from flask import (render_template, request, flash)
+from flask import send_from_directory
 from flask_login import login_required, current_user
 
 
@@ -17,3 +19,9 @@ def user_profile():
     elif request.method == 'POST':
         flash('Профиль не изменен. Проверьте введенные данные.')
     return render_template('user/user_profile.html', form=form)
+
+
+def uploaded_font(filename):
+    return send_from_directory(
+        current_app.config['FONT_FOLDER'], filename
+    )

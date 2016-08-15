@@ -1,18 +1,18 @@
 import {h} from 'bazooka';
-import csrfToken from './csrfHelper.js'
+import {csrfToken} from './helpers';
+import {activatePopUp} from './popUp.js';
 
 const BAZOOKA_PREFIX = 'users';
 
-function ConfigLoginPopup(social_type) {
+function ConfigLoginPopup(socialType) {
     return (ev) => {
         ev.preventDefault();
-        console.log(ev);
-        const signinWin = window.open(`/login/${social_type}`, "SignIn", "width=780,height=410,toolbar=0," +
+        const signinWin = window.open(`/login/${socialType}`, "SignIn", "width=780,height=410,toolbar=0," +
             "scrollbars=0,status=0,resizable=0,location=0,menuBar=0");
         setTimeout(() => CheckLoginStatus(signinWin), 2000);
         signinWin.focus();
         return false;
-    }
+    };
 }
 
 function CheckLoginStatus(signinWin) {
@@ -37,8 +37,8 @@ function LogoutClick(e) {
             }
             return response.json();
         })
-        .then(({redirect_to})=> {
-            location.href = redirect_to
+        .then(({redirectTo})=> {
+            location.href = redirectTo;
         })
         .catch((response) => {
             console.error(response.message);

@@ -1,5 +1,5 @@
 import {editor} from './fabmain.js';
-import csrfToken from '../csrfHelper.js'
+import {csrfToken} from '../helpers';
 const saver = document.getElementById('progress_saver');
 
 function loadHist() {

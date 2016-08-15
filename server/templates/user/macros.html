@@ -7,6 +7,17 @@
 </div>
 {% endmacro %}
 
+{% macro load_project_fonts(project) %}
+    <style>
+        {% for font in project.fonts %}
+            @font-face {
+                font-family: {{ font.name }};
+                src: url({{ font.url() }}); /* Путь к файлу со шрифтом */
+           }
+        {% endfor %}
+    </style>
+{% endmacro %}
+
 {% macro render_pagination(pagination, endpoint) %}
 <nav class="pagination-container">
   <ul class="pagination">
