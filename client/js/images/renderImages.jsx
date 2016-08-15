@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
 import {activatePopUp} from '../popUp.js';
-import csrfToken from '../csrfHelper.js'
+import {csrfToken} from '../helpers';
 
 const BAZOOKA_PREFIX = 'body';
 

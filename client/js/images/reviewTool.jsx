@@ -4,7 +4,7 @@ import {h} from 'bazooka';
 import Editor from '../editor/editor.js';
 import {disableControls} from '../editor/editor.js';
 import {activatePopUp} from '../popUp.js';
-import csrfToken from '../csrfHelper.js'
+import {csrfToken} from '../helpers'
 
 const BAZOOKA_PREFIX = 'body';
 

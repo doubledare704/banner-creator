@@ -1,6 +1,6 @@
 import {editor} from './fabmain';
 import {disableControls} from './editor.js';
-import csrfToken from '../csrfHelper.js';
+import {csrfToken} from '../helpers';
 import { activateHtmlPopUp, deactivatePopUp } from '../popUp';
 
 
