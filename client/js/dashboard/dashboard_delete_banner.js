@@ -1,0 +1,30 @@
+import csrf from '../csrfHelper';
+import { activatePopUp } from '../popUp';
+
+
+export default function (node) {
+  node.addEventListener('click', (e) => {
+    e.preventDefault();
+    activatePopUp({
+      child: 'Удалить баннер?',
+      confirm: true,
+      confirmAction: () => {
+        fetch(node.dataset.url,
+          {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {'X-CSRFToken': csrf()}
+          })
+          .then((response) => {
+            if (response.status === 204) {
+              activatePopUp({child: 'Баннер успешно удален.', flash: true});
+              node.closest('.dashboard-banner-container').remove()
+            }
+            else {
+              activatePopUp({child: 'Ошибка при попытке удалить баннер. Попробуйте снова.', flash: true})
+            }
+          })
+      }
+    });
+  })
+}
