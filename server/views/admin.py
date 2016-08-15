@@ -39,9 +39,11 @@ def users_page():
     if search:
         query_db = query_db.filter((User.first_name.contains(search_query))
                                    | (User.last_name.contains(search_query))
-                                   | (User.email.contains(search_query)))
+                                   | (User.email.contains(search_query))).order_by(User.active.desc())
+    else:
+        query_db = query_db.filter_by(active=True)
 
-    query_db = query_db.filter_by(active=request.args.get('active', True)).order_by(User.created_at.desc())
+    query_db = query_db.order_by(User.created_at.desc())
 
     users_paginator = query_db.paginate(per_page=PER_PAGE)
 
@@ -53,7 +55,8 @@ def users_page():
                      'email': user.email,
                      'role': user.role.name,
                      'registration_date': user.created_at.isoformat(),
-                     'auth_by': user.social_type.name
+                     'auth_by': user.social_type.name,
+                     'active': user.active
                      }
         if user.gender:
             users_map['gender'] = user.gender.name
@@ -101,6 +104,15 @@ def remove_user(user_id):
     if user == current_user:
         raise Forbidden()
     user.active = False
+    db.session.add(user)
+    db.session.commit()
+    return 'OK', 200
+
+
+@requires_roles('admin')
+def activate_user(user_id):
+    user = User.query.get_or_404(user_id)
+    user.active = True
     db.session.add(user)
     db.session.commit()
     return 'OK', 200
