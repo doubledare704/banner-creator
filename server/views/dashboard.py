@@ -34,7 +34,8 @@ def dashboard():
 @login_required
 def user_banners():
     page = int(request.args.get('page', 1))  # get page number from url query string
-    banners = Banner.query.filter_by(user=current_user).order_by(Banner.id.desc()).paginate(page=page, per_page=10)
+    banners = Banner.query.filter_by(user=current_user, active=True).order_by(Banner.id.desc()
+                                                                              ).paginate(page=page, per_page=10)
     pagination = Pagination(per_page=10, page=page, total=banners.total, css_framework='bootstrap3')
     return render_template('user/user_banners.html', banners=banners, pagination=pagination)
 
@@ -84,7 +85,8 @@ def upload():
 def dashboard_archive():
     page = int(request.args.get('page', 1))  # get page number from url query string
     if current_user.is_designer() or current_user.is_admin():
-        reviews = BannerReview.query.filter_by(reviewed=True, designer_id=current_user.id).paginate(page=page, per_page=10)
+        reviews = BannerReview.query.filter_by(reviewed=True, designer_id=current_user.id
+                                               ).paginate(page=page, per_page=10)
         pagination = Pagination(per_page=10, page=page, total=reviews.total, css_framework='bootstrap3')
         return render_template('user/dashboard_designer_archive.html', reviews=reviews, pagination=pagination)
     elif current_user.is_user():
@@ -101,3 +103,16 @@ def delete_review(review_id):
     db.session.commit()
     return '', 204
 
+
+@login_required
+def delete_banner(banner_id):
+    banner = Banner.query.get_or_404(banner_id)
+    # check whether exist active reviews with this banner
+    reviews = BannerReview.query.filter_by(banner_id=banner.id)
+    # if there are such reviews then make them inactive
+    if reviews.count():
+        for review in reviews:
+            review.active = False
+    banner.active = False
+    db.session.commit()
+    return '', 204

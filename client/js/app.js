@@ -10,6 +10,7 @@ import toggleProfileForm from './profile/profile';
 import goToReview from './dashboard/designer_review';
 import showBannerPopup from './dashboard/designer_dashboard_banner';
 import deleteReview from './dashboard/dashboard_delete_review';
+import deleteBanner from './dashboard/dashboard_delete_banner';
 import imageSlider from './images/slider.jsx';
 import handleCreateProjectClick from './admin/create_project_field';
 import {uploadButton} from './helpers';
@@ -36,7 +37,8 @@ Baz.register({
     // dashboard
     'goToReview': goToReview,
     'showBannerPopup': showBannerPopup,
-    'deleteReview': deleteReview
+    'deleteReview': deleteReview,
+    'deleteBanner': deleteBanner
 });
 
 Baz.watch();
