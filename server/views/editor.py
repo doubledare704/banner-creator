@@ -26,7 +26,7 @@ def editor():
 def background_images(page=1):
     paginated_images = BackgroundImage.query.paginate(page, 4)
     serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active,
-                          "preview": image.preview}
+                          "preview": image.preview, "width": image.width, "height": image.height}
                          for image in paginated_images.items]
 
     return jsonify({"backgroundImages": serialized_images})

@@ -1,4 +1,4 @@
-import { csrf } from '../helpers';
+import { csrfToken } from '../helpers';
 import { activatePopUp } from '../popUp';
 
 
@@ -13,7 +13,7 @@ export default function (node) {
           {
             method: 'POST',
             credentials: 'same-origin',
-            headers: {'X-CSRFToken': csrf()}
+            headers: {'X-CSRFToken': csrfToken()}
           })
           .then((response) => {
             if (response.status === 204) {
