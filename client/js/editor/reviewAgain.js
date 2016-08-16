@@ -35,9 +35,8 @@ function sendToReview(event) {
         .then((res) => res.json())
         .then(function ({result}) {
             document.getElementById('resulting').src = result.src;
-            document.getElementById('continue').href += result.rev;
             document.getElementById('double').style.display = "block";
-            document.getElementById('result_review').style.display = "block";
+            document.getElementById('result_review').style.display = "inline-block";
             localStorage.clear();
         })
         .catch(function (error) {

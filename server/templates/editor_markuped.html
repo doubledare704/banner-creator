@@ -5,8 +5,8 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-1 col-sm-2 col-md-2 cols-xs-2 column_aside" data-bazooka="keysListen">
-                <section class="with_menu btn btn-default">
-                    <a href="#">
+                <section class="with_menu">
+                    <a href="#" class="btn btn-default">
                         <i class="material-icons">text_format</i>
                     </a>
                     <div id="rightcol">
@@ -27,42 +27,49 @@
                         </ul>
                     </div>
                 </section>
-                <section class="btn btn-default tooltipp" data-tooltip="Добавить кнопку">
-                    <a href="#" id="addButt">
+                <section>
+                    <a href="#" id="addButt" class="btn btn-default tooltipp" data-tooltip="Добавить кнопку">
                         <i class="material-icons">input</i>
                     </a>
                 </section>
 
-                <section id="backgroundSection" data-bazooka="backgroundsList" class="btn btn-default"
+                <section id="backgroundSection" data-bazooka="backgroundsList"
                          data-bg-view-url="{{ url_for('background_images') }}"
                          data-bg-img-url="{{ url_for('uploaded_file', filename='') }}">
                 </section>
                 {% block reviewmodal %}
-                    <section class="btn btn-default tooltipp" data-bazooka="setOriginalZoom" data-tooltip="На ревью">
-                        <a href="#" data-bazooka="openReviewModal" data-url="{{ url_for('review') }}">
+                    <section data-bazooka="setOriginalZoom">
+                        <a href="#" data-bazooka="openReviewModal" data-url="{{ url_for('review') }}"
+                           class="btn btn-default tooltipp" data-tooltip="На ревью">
                             <i class="material-icons">send</i>
                         </a>
                     </section>
                 {% endblock %}
-                <section id="double">
-                    <section class="btn btn-default">
-                        <a href="#" id="result_review"><i class="material-icons">description</i></a>
+
+                {% block additional %}
+                    <section id="double">
+                        <section>
+                            <a href="#" id="result_review" class="btn btn-default tooltipp"
+                               data-tooltip="Посмотреть результат"><i class="material-icons">description</i></a>
+                        </section>
+                        <section>
+                            <a href="" id="continue" class="btn btn-default tooltipp"
+                               data-tooltip="Продолжить редактировать"><i
+                                    class="material-icons">flip_to_back</i></a>
+                        </section>
                     </section>
-                    <section class="btn btn-default" id="continue">
-                        <a href=""><i class="material-icons">flip_to_back</i></a>
-                    </section>
-                </section>
-                <section class="btn btn-default tooltipp" data-bazooka="setOriginalZoom"
-                         data-tooltip="Скачать результат">
-                    <a href="#" class="special" id="download"><i class="material-icons">cloud_download</i></a>
+                {% endblock %}
+                <section data-bazooka="setOriginalZoom">
+                    <a href="#" class="btn btn-default tooltipp special" id="download" data-tooltip="Скачать результат"><i
+                            class="material-icons">cloud_download</i></a>
                 </section>
 
                 {% block saver %}
 
                 {% endblock %}
 
-                <section class="last-sec btn btn-default">
-                    <a href="#">
+                <section class="last-sec">
+                    <a href="#" class="btn btn-default">
                         <i class="material-icons">cloud_upload</i>
                     </a>
                     <form id="upload-file" method="post" enctype="multipart/form-data">
@@ -86,9 +93,9 @@
                         </div>
                     </div>
                 </section>
-                <section data-bazooka="setGrid" class="btn btn-default tooltipp" data-tooltip="Отобразить сетку">
-                    <a href="#">
-                        <i class="material-icons">sync</i>
+                <section data-bazooka="setGrid">
+                    <a href="#" class="btn btn-default tooltipp" data-tooltip="Отобразить сетку">
+                        <i class="material-icons">view_quilt</i>
                     </a>
                 </section>
                 <section class="counter-grid btn btn-default disabled" id="gridder">
