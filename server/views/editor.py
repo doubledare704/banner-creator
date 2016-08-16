@@ -1,10 +1,12 @@
 import base64
+import json
 import os
 import uuid
 from io import BytesIO
 
 from flask import (render_template, current_app, request, jsonify,
                    url_for)
+from flask.views import MethodView
 from flask_login import login_required, current_user
 from sqlalchemy import desc
 from werkzeug.datastructures import FileStorage
@@ -17,15 +19,14 @@ from server.utils.image import image_preview
 
 @login_required
 def editor():
-    designers = User.query.filter_by(role=User.UserRole.designer)
-    return render_template('editor_markuped.html', designers=designers)
+    return render_template('editor_markuped.html')
 
 
 @login_required
 def background_images(page=1):
     paginated_images = BackgroundImage.query.paginate(page, 4)
     serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active,
-                          "preview": image.preview}
+                          "preview": image.preview, "width": image.width, "height": image.height}
                          for image in paginated_images.items]
 
     return jsonify({"backgroundImages": serialized_images})
@@ -57,59 +58,7 @@ def history_image(history_image_id):
     else:
         edit_history = ImageHistory.query.filter_by(
             review_image=history_image_id).order_by(desc(ImageHistory.created)).first_or_404()
-        return jsonify({'fetch_history': edit_history.json_hist})
-
-
-@login_required
-def make_review():
-    form = request.form
-    if 'file' not in request.form:
-        return jsonify({'result': 'no field file in form'}), 406
-    else:
-        _, b64data = form['file'].split(',')
-        name = str(uuid.uuid4()) + '.png'
-        decoded_data = base64.b64decode(b64data)
-        file_ = FileStorage(BytesIO(decoded_data), filename=name)
-        filename = secure_filename(file_.filename)
-        file_.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-        preview_name = 'preview_' + filename
-        preview_file = image_preview(file_)
-        preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
-        if 'ids' in request.form:
-            comment_to_review = 'Относится к прошлому баннеру /editor/' + form['ids'] + ' ' + form.get('comment', '')
-        else:
-            comment_to_review = form.get('comment', '')
-
-        banner = Banner(
-            name=filename,
-            title=form.get('title', 'untitled'),
-            preview=preview_name,
-            user=current_user
-        )
-        db.session.add(banner)
-        db.session.commit()
-
-        designer = User.query.get(form['designer'])
-        review = BannerReview(
-            banner_id=banner.id,
-            user=current_user,
-            designer=designer,
-            comment=comment_to_review
-        )
-        db.session.expire_all()
-        db.session.add(review)
-        db.session.commit()
-
-        history = ImageHistory(
-            review_image=banner.id,
-            json_hist=form['file_json']
-        )
-        db.session.add(history)
-        review_jsoned = {
-            "src": url_for('uploaded_file', filename=filename),
-            "rev": history.review_image
-        }
-        return jsonify({'result': review_jsoned}), 201
+        return jsonify(fetch_history=edit_history.json_hist)
 
 
 @login_required
@@ -185,3 +134,62 @@ def load_all_cuts():
         })
 
     return jsonify({'result': cut_jsoned}), 201
+
+
+class ReviewView(MethodView):
+    decorators = [login_required]
+
+    def get(self):
+        designers = User.query.filter_by(role=User.UserRole.designer)
+        return render_template('editor/review_modal.html', designers=designers)
+
+    def post(self):
+        form = request.form
+        if 'file' not in request.form:
+            return jsonify({'result': 'no field file in form'}), 406
+        else:
+            _, b64data = form['file'].split(',')
+            name = str(uuid.uuid4()) + '.png'
+            decoded_data = base64.b64decode(b64data)
+            file_ = FileStorage(BytesIO(decoded_data), filename=name)
+            filename = secure_filename(file_.filename)
+            file_.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            preview_name = 'preview_' + filename
+            preview_file = image_preview(file_)
+            preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
+            if 'ids' in request.form:
+                comment_to_review = 'Относится к прошлому баннеру /editor/' + form['ids'] + ' ' + form.get('comment',
+                                                                                                           '')
+            else:
+                comment_to_review = form.get('comment', '')
+
+            banner = Banner(
+                name=filename,
+                title=form.get('title', 'untitled'),
+                preview=preview_name,
+                user=current_user
+            )
+            db.session.add(banner)
+            db.session.commit()
+
+            designer = User.query.get(form['designer'])
+            review = BannerReview(
+                banner_id=banner.id,
+                user=current_user,
+                designer=designer,
+                comment=comment_to_review
+            )
+            db.session.expire_all()
+            db.session.add(review)
+            db.session.commit()
+
+            history = ImageHistory(
+                review_image=banner.id,
+                json_hist=json.loads(form['file_json'])
+            )
+            db.session.add(history)
+            review_jsoned = {
+                "src": url_for('uploaded_file', filename=filename),
+                "rev": history.review_image
+            }
+            return jsonify({'result': review_jsoned}), 201

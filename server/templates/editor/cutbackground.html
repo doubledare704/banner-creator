@@ -8,6 +8,7 @@
     <meta name="keywords"
           content="photo, image, picture, transparent, layers, free, edit, html5, canvas, javascript, online, photoshop, gimp, effects, sharpen, blur, magic wand tool, clone tool, rotate, resize, photoshop online, online tools, tilt shift, sprites, keypoints"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='cut_back/styles/styles.css') }}"/>
     <link rel="shortcut icon" href="{{ url_for('static', filename='cut_back/img/favicon.png') }}"/>
     <style>
@@ -59,32 +60,12 @@
             </noscript>
         </div>
         <div style="clear:both;"></div>
-        <div id="main_color_container">
-            <input type="color" id="main_color" value="#0000ff" onchange="GUI.set_color(this);"/>
-            <div style="display:none;" id="main_color_alt" onclick="GUI.toggle_color_select();"></div>
-        </div>
-        <div class="block" id="all_colors"></div>
-        <div class="block">
-            <input type="text" id="color_hex" value="#000000"/><br/>
-            <div id="main_color_rgb">
-                <a class="red" href="#" title="Red" onclick="return false;">Red</a>
-                <input id="rgb_r" onKeyUp="GUI.set_color_rgb(this, 'r')" onchange="GUI.set_color_rgb(this, 'r')"
-                       type="number" value="255"/>
-                <br/>
-                <a class="green" href="#" title="Green" onclick="return false;">Green</a>
-                <input id="rgb_g" onKeyUp="GUI.set_color_rgb(this, 'g')" onchange="GUI.set_color_rgb(this, 'g')"
-                       type="number" value="255"/>
-                <br/>
-                <a class="blue" href="#" title="Blue" onclick="return false;">Blue</a>
-                <input id="rgb_b" onKeyUp="GUI.set_color_rgb(this, 'b')" onchange="GUI.set_color_rgb(this, 'b')"
-                       type="number" value="255"/>
-                <br/>
-                <a class="alpha" href="#" title="Alpha" onclick="return false;">Alpha</a>
-                <input id="rgb_a" onKeyUp="GUI.set_color_rgb(this, 'a')" onchange="GUI.set_color_rgb(this, 'a')"
-                       type="number" value="255"/>
-                <br/>
-            </div>
-        </div>
+        {#        <div id="main_color_container">#}
+        {#            <input type="color" id="main_color" value="#0000ff" onchange="GUI.set_color(this);"/>#}
+        {#            <div style="display:none;" id="main_color_alt" onclick="GUI.toggle_color_select();"></div>#}
+        {#        </div>#}
+        {#        <div class="block" id="all_colors"></div>#}
+        {#        call_menu(FILE, 'file_save');#}
         <div class="block" id="mouse_info">
             <span style="font-weight:bold;min-width:45px;display:block;float:left;" class="trn">Size:</span>
             <span id="mouse_info_size"></span><br/>
@@ -153,13 +134,13 @@
                 <li><a class="trn" onclick="call_menu(FILE, 'file_new');" href="#">Новый файл</a></li>
                 <li><a class="trn dots" onclick="call_menu(FILE, 'file_open');" href="#">Открыть</a></li>
                 <li><a class="trn dots" onclick="call_menu(FILE, 'file_save');" href="#">Сохранить как</a></li>
-                <li><a class="trn dots" onclick="call_menu(FILE, 'file_post');" href="#">Отправить на сервер</a></li>
-                <li><a class="trn dots" onclick="call_menu(FILE, 'file_print');" href="#">Печатать</a></li>
+{#                <li><a class="trn dots" onclick="call_menu(FILE, 'file_post');" href="#">Отправить на сервер</a></li>#}
             </ul>
         </li>
         <div>
             <ul>
-                <li><a class="trn" href="{{ url_for ('index') }}">Домой</a></li>
+                <li><a class="icon file trn" onclick="call_menu(FILE, 'file_post');" href="#">Сохранить и
+                    вернуться в редактор</a></li>
             </ul>
         </div>
         <li>

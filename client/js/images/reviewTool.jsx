@@ -4,6 +4,7 @@ import {h} from 'bazooka';
 import Editor from '../editor/editor.js';
 import {disableControls} from '../editor/editor.js';
 import {activatePopUp} from '../popUp.js';
+import {csrfToken} from '../helpers'
 
 const BAZOOKA_PREFIX = 'body';
 
@@ -89,6 +90,9 @@ class EditorWindow extends React.Component {
             {
                 method: 'POST',
                 credentials: 'same-origin',
+                headers: {
+                'X-CSRFToken': csrfToken()
+                },
                 body: formData
             }
         ).then(response => {

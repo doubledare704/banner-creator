@@ -1,9 +1,19 @@
 {% extends "editor_markuped.html" %}
 
+{% block additional %}
+    <section id="double">
+        <section>
+            <a href="#" id="result_review" class="btn btn-default tooltipp"
+               data-tooltip="Посмотреть результат"><i class="material-icons">description</i></a>
+        </section>
+    </section>
+{% endblock %}
+
 {% block saver %}
     <section data-bazooka="reloadHistory">
-        <a href="" id="progress_saver" data-bazooka="saveToHistory" data-review="{{ id_review }}"><i
-                class="material-icons">beenhere</i><span>Сохранить</span></a>
+        <a href="" id="progress_saver" class="btn btn-info tooltipp" data-tooltip="Сохранить"
+           data-bazooka="saveToHistory" data-review="{{ id_review }}"><i
+                class="material-icons">beenhere</i></a>
     </section>
 {% endblock %}
 

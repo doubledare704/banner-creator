@@ -1,8 +1,12 @@
 import json
+
 import os
 
-from werkzeug.exceptions import Forbidden, BadRequest
+from werkzeug.exceptions import Forbidden, BadRequest, UnprocessableEntity
+from werkzeug.utils import secure_filename
 
+from server.forms.create_project_form import CreateProjectForm
+from server.forms.font_upload_form import FontUploadForm
 from server.forms.user_edit_form import UserEditForm, USER_ROLES
 from flask_login import current_user
 
@@ -11,7 +15,7 @@ from flask_paginate import Pagination
 from werkzeug.exceptions import NotFound
 
 from server.db import db
-from server.models import User, BackgroundImage, Project
+from server.models import User, BackgroundImage, Project, Font
 from server.utils.auth import requires_roles
 
 PER_PAGE = 10
@@ -19,10 +23,10 @@ PER_PAGE = 10
 
 @requires_roles('admin', 'designer')
 def admin():
-    if current_user.role == User.UserRole.admin:
+    if current_user.is_admin():
         return redirect(url_for('admin_users'))
-    if current_user.role == User.UserRole.designer:
-        return redirect(url_for('admin_projects'))
+    if current_user.is_designer:
+        return redirect(url_for('default_project_page'))
 
 
 @requires_roles('admin')
@@ -35,9 +39,11 @@ def users_page():
     if search:
         query_db = query_db.filter((User.first_name.contains(search_query))
                                    | (User.last_name.contains(search_query))
-                                   | (User.email.contains(search_query)))
+                                   | (User.email.contains(search_query))).order_by(User.active.desc())
+    else:
+        query_db = query_db.filter_by(active=True)
 
-    query_db = query_db.filter_by(active=request.args.get('active', True)).order_by(User.created_at.desc())
+    query_db = query_db.order_by(User.created_at.desc())
 
     users_paginator = query_db.paginate(per_page=PER_PAGE)
 
@@ -49,7 +55,8 @@ def users_page():
                      'email': user.email,
                      'role': user.role.name,
                      'registration_date': user.created_at.isoformat(),
-                     'auth_by': user.social_type.name
+                     'auth_by': user.social_type.name,
+                     'active': user.active
                      }
         if user.gender:
             users_map['gender'] = user.gender.name
@@ -74,9 +81,9 @@ def change_user(user_id):
     if not form.validate_on_submit():
         raise BadRequest()
     user = User.query.get_or_404(user_id)
-    user.first_name = form.data['first_name']
-    user.last_name = form.data['last_name']
-    user.role = form.data['role']
+    user.first_name = form.first_name.data
+    user.last_name = form.last_name.data
+    user.role = form.role.data
 
     db.session.add(user)
     db.session.commit()
@@ -87,7 +94,8 @@ def change_user(user_id):
                          'gender': user.gender.name,
                          'role': user.role.name,
                          'registration_date': user.created_at.isoformat(),
-                         'auth_by': user.social_type.name
+                         'auth_by': user.social_type.name,
+                         'active': user.active
                          })
 
 
@@ -97,6 +105,15 @@ def remove_user(user_id):
     if user == current_user:
         raise Forbidden()
     user.active = False
+    db.session.add(user)
+    db.session.commit()
+    return 'OK', 200
+
+
+@requires_roles('admin')
+def activate_user(user_id):
+    user = User.query.get_or_404(user_id)
+    user.active = True
     db.session.add(user)
     db.session.commit()
     return 'OK', 200
@@ -141,16 +158,6 @@ def inactivate_image(image_id):
 
 
 @requires_roles('admin')
-def image_delete_from_db(image_id):
-    image = BackgroundImage.query.get_or_404(image_id)
-    os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.name))
-    os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.preview))
-    db.session.delete(image)
-    db.session.commit()
-    return '', 204
-
-
-@requires_roles('admin')
 def activate_image(image_id):
     image = BackgroundImage.query.get_or_404(image_id)
     image.active = True
@@ -160,19 +167,41 @@ def activate_image(image_id):
 
 
 @requires_roles('admin', 'designer')
-# def projects_page():
-#     projects_list = [
-#         {
-#             "id": project.id,
-#             'name': project.name
-#         } for project in Project.query.order_by(Project.name.asc()).all()]
-#
-#     return render_template('admin/projects.html', projects=projects_list)
-def projects_page():
-    if request.method == 'POST':
-        project_name = request.form['project']
-        if project_name:
-            db.session.add(Project(name=project_name))
-        return redirect(request.url)
-    projects = Project.query.all()
-    return render_template('admin/projects.html', projects=projects)
+def default_project_page():
+    return render_template('admin/projects_default.html')
+
+
+@requires_roles('admin')
+def create_project():
+    form = CreateProjectForm()
+    if not form.validate_on_submit():
+        raise BadRequest()
+    project = Project(name=form.project_name.data)
+    db.session.add(project)
+    db.session.commit()
+    return redirect(url_for('admin_project_page', project_id=project.id))
+
+
+@requires_roles('admin', 'designer')
+def project_page(project_id):
+    project = Project.query.get_or_404(project_id)
+    project_fonts = [font.name for font in project.fonts]
+    return render_template('admin/projects/fonts.html', project=project, fonts=json.dumps(project_fonts))
+
+
+@requires_roles('admin', 'designer')
+def add_font(project_id):
+    project = Project.query.get_or_404(project_id)
+    form = FontUploadForm()
+    if not form.validate_on_submit():
+        raise BadRequest()
+    name = form.font_name.data
+    if Font.query.filter_by(name=name, project_id=project_id).first():
+        raise UnprocessableEntity
+    file = form.font_file.data
+    _, extension = os.path.splitext(file.filename)
+    filename = "%s_%s" % (project.name, secure_filename('%s.%s' % (name, extension)))
+    file.save(os.path.join(current_app.config['FONT_FOLDER'], filename))
+    db.session.add(Font(name=name, project_id=project_id, filename=filename))
+    db.session.commit()
+    return redirect(url_for('admin_project_page', project_id=project_id))

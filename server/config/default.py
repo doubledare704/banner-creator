@@ -1,11 +1,11 @@
 import logging
 
-# Set debug to False in production
-WTF_CSRF_CHECK_DEFAULT = False
-WTF_CSRF_ENABLED = False
+WTF_CSRF_CHECK_DEFAULT = True
+WTF_CSRF_ENABLED = True
 
 # Settings for uploading images
-ALLOWED_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif')
+ALLOWED_IMAGES_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif')
+ALLOWED_FONTS_EXTENSIONS = ('.ttf', '.otf', '.woff', '.woff2', '.svg')
 
 # Database settings
 SQLALCHEMY_COMMIT_ON_TEARDOWN = True
