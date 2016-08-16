@@ -186,7 +186,7 @@ def create_project():
 def project_page(project_id):
     project = Project.query.get_or_404(project_id)
     project_fonts = [font.name for font in project.fonts]
-    return render_template('admin/project.html', project=project, fonts=json.dumps(project_fonts))
+    return render_template('admin/projects/fonts.html', project=project, fonts=json.dumps(project_fonts))
 
 
 @requires_roles('admin', 'designer')
