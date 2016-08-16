@@ -1,5 +1,5 @@
 import {editor} from './fabmain.js';
-import csrfToken from '../csrfHelper.js'
+import {csrfToken} from '../helpers';
 const saver = document.getElementById('progress_saver');
 
 function loadHist() {
@@ -16,6 +16,9 @@ function loadHist() {
         .then(function ({fetch_history}) {
             editor.canv.clear();
             let w, h;
+            let ar = fetch_history;
+            let rt = JSON.stringify(fetch_history);
+            
             if (fetch_history.hasOwnProperty('backgroundImage')) {
                 let unpack = fetch_history.backgroundImage;
                 w = unpack.width;

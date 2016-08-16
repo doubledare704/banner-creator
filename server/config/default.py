@@ -4,7 +4,8 @@ WTF_CSRF_CHECK_DEFAULT = True
 WTF_CSRF_ENABLED = True
 
 # Settings for uploading images
-ALLOWED_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif')
+ALLOWED_IMAGES_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif')
+ALLOWED_FONTS_EXTENSIONS = ('.ttf', '.otf', '.woff', '.woff2', '.svg')
 
 # Database settings
 SQLALCHEMY_COMMIT_ON_TEARDOWN = True

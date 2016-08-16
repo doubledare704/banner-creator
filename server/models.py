@@ -1,10 +1,13 @@
 import datetime
 import enum
 
+from flask import url_for
+
+from flask_login import unicode
+from sqlalchemy import UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.schema import Index
 from sqlalchemy.types import Enum
-from flask_login import unicode
 
 from server.db import db
 
@@ -23,6 +26,7 @@ class BaseImage(db.Model):
 
 class Banner(BaseImage):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     review = db.relationship('BannerReview', backref='banner',
                              uselist=False)
     history = db.relationship('ImageHistory', backref="parent")
@@ -34,12 +38,16 @@ class Image(BaseImage):
 
 class BackgroundImage(BaseImage):
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+    height = db.Column(db.Integer)
+    width = db.Column(db.Integer)
 
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), unique=True)
     background_images = db.relationship('BackgroundImage', backref='project', lazy='dynamic')
+    fonts = db.relationship('Font', backref='project')
+    banners = db.relationship('Banner', backref='project')
 
 
 class BannerReview(db.Model):
@@ -128,3 +136,16 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.first_name
+
+
+class Font(db.Model):
+    __tablename__ = 'font'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    filename = db.Column(db.String(255))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+
+    __table_args__ = (UniqueConstraint('project_id', 'name', name='project_font'),)
+
+    def url(self):
+        return url_for('uploaded_file', filename=self.filename)

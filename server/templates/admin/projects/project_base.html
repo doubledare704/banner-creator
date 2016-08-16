@@ -1,0 +1,23 @@
+{% extends "admin/admin.html" %}
+
+{% import 'user/macros.html' as macros %}
+
+{% block head %}
+    {{ super() }}
+    {{ macros.load_project_fonts(project) }}
+{% endblock %}
+
+{% block admin_content %}
+
+<h2>{{ project.name }}</h2>
+
+    <ul class= "nav nav-tabs">
+        <li><a href="">Шрифты</a></li>
+        <li><a href="">Заголовки</a></li>
+        <li><a href="">Фоны</a></li>
+        <li><a href="">Кнопка</a></li>
+    </ul>
+    <div class="container-fluid">{% block admin_projects_content %}{% endblock %}</div>
+
+
+{% endblock %}

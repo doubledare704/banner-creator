@@ -1,10 +1,11 @@
 import React from 'react';
 
-import {activatePopUp} from '../popUp';
+import { activatePopUp } from '../popUp';
+import { csrfToken } from '../helpers';
 
 
 function ConfirmationHeader(props) {
-  return <h2>{props.message}</h2>
+  return <h2 className="text-danger">{props.message}</h2>
 }
 
 
@@ -23,12 +24,14 @@ export default function (node) {
      const url = node.dataset.url;
      fetch(url, {
        method: 'POST',
-       credentials: 'same-origin'})
+       credentials: 'same-origin',
+       headers: {'X-CSRFToken': csrfToken()}
+     })
        .then(
          (response) => {
            if (response.status === 204) {
              activatePopUp({
-               child: <Message message="Ревью помещено в архив"/>,
+               child: <Message message="Ревью помещено в Архив"/>,
                flash: true
              });
              node.closest('.dashboard-content .row').remove();  // remove message from DOM

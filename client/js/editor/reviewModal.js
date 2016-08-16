@@ -1,9 +1,8 @@
 import {editor} from './fabmain';
 import {disableControls} from './editor.js';
-import csrfToken from '../csrfHelper.js'
+import {csrfToken} from '../helpers';
+import {activateHtmlPopUp, deactivatePopUp} from '../popUp';
 
-require('./modals.js');
-const modal = document.getElementById('reviewModal');
 
 function sendToReview(event) {
     let canvas = editor.canv;
@@ -18,7 +17,7 @@ function sendToReview(event) {
     // append image as base64 string
     formData.append('file', editor.canv.toDataURL("image/png", 1.0));
     formData.append('file_json', JSON.stringify(imageReview));
-    fetch('/api/review',
+    fetch(event.target.dataset.url,
         {
             method: 'POST',
             credentials: 'same-origin',
@@ -30,17 +29,26 @@ function sendToReview(event) {
     )
         .then((res) => res.json())
         .then(function ({result}) {
+            activateHtmlPopUp({
+                child: "<p class='alert alert-success'>Баннер успешно отправлен на ревью</p>",
+                flash: true
+            });
             document.getElementById('resulting').src = result.src;
-            document.getElementById('continue').href += result.rev;
+            if (document.getElementById('continue')) {
+                document.getElementById('continue').href += result.rev;
+                document.getElementById('continue').style.display = "inline-block";
+            }
             document.getElementById('double').style.display = "block";
-            document.getElementById('continue').style.display = "block";
-            document.getElementById('result_review').style.display = "block";
+            document.getElementById('result_review').style.display = "inline-block";
             localStorage.clear();
         })
         .catch(function (error) {
-            console.log('Request failed', error);
+            activateHtmlPopUp({
+                child: "<p class='alert alert-danger'>Ошибка при выполнении запроса. Попробуйте отправить повторно.</p>",
+                flash: true
+            });
         });
-    modal.style.display = "none";
+    deactivatePopUp();
 }
 
 module.exports = function (node) {
