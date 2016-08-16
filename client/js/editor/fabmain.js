@@ -197,7 +197,8 @@ function save() {
  */
 function replay(playStack, saveStack, buttonsOn, buttonsOff) {
     saveStack.push(state);
-    state = playStack.pop();
+    if (playStack.length > 0)
+        state = playStack.pop();
     let on = document.getElementById(buttonsOn);
     let off = document.getElementById(buttonsOff);
     // turn both buttons off for the moment to prevent rapid clicking
@@ -209,7 +210,7 @@ function replay(playStack, saveStack, buttonsOn, buttonsOff) {
         canvas.renderAll();
         // now turn the buttons back on if applicable
         on.classList.remove("disabled");
-        if (playStack.length < 1) {
+        if (playStack.length <= 1) {
             off.classList.remove("disabled");
 
         }
