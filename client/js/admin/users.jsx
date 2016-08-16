@@ -126,21 +126,21 @@ class User extends React.Component {
             closeAction: deactivatePopUp,
             child: <form className="form-horizontal" onSubmit={this.saveUser}>
                 <div className='form-group'>
-                    <label className="col-sm-2">First Name</label>
+                    <label className="col-sm-2">Имя</label>
                     <div className="col-sm-10">
                         <input type="text" name="first_name" defaultValue={user.first_name}
                                className="form-control"/>
                     </div>
                 </div>
                 <div className='form-group'>
-                    <label className="col-sm-2">Last Name</label>
+                    <label className="col-sm-2">Фамилия</label>
                     <div className="col-sm-10">
                         <input type="text" name="last_name" defaultValue={user.last_name}
                                className="form-control"/>
                     </div>
                 </div>
                 <div className='form-group'>
-                    <label className="col-sm-2">User role</label>
+                    <label className="col-sm-2">Роль</label>
                     <div className="col-sm-6">
                         <select name="role" className="form-control"
                                 defaultValue={user.role}>
@@ -154,8 +154,8 @@ class User extends React.Component {
                     </div>
                 </div>
                 <div className='form-group text-center'>
-                    <button type="submit" className='btn btn-success'>Save</button>
-                    <a className='btn btn-default' onClick={deactivatePopUp}>Close</a>
+                    <button type="submit" className='btn btn-success'>Сохранить</button>
+                    <a className='btn btn-default' onClick={deactivatePopUp}>Закрыть</a>
                 </div>
             </form>
         });
