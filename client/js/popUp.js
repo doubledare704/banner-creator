@@ -15,11 +15,11 @@ class PopUp extends React.Component {
     }
 
     componentDidUpdate() {
-        this.setFlash()
+        this.setFlash();
     }
 
     componentDidMount() {
-        this.setFlash()
+        this.setFlash();
     }
 
     setFlash(){
@@ -29,11 +29,11 @@ class PopUp extends React.Component {
     }
 
     closeAction() {
-        return this.props.onClose ? this.props.onClose() : this.defaultCloseAction()
+        return this.props.onClose ? this.props.onClose() : this.defaultCloseAction();
     }
 
     defaultCloseAction() {
-        return deactivatePopUp()
+        return deactivatePopUp();
     }
 
     confirmAction() {
@@ -73,7 +73,50 @@ class PopUp extends React.Component {
     }
 }
 
-window.addEventListener('click', (e) => { deactivatePopUp() });
+
+class PopUpHtml extends PopUp {
+    constructor() {
+        super();
+    }
+
+    render() {
+        if (this.props.isVisible) {
+            return (
+                <div className="modal-dialog modal-lg" id="popup">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <button type="button" className="close" onClick={this.closeAction}>&times;</button>
+                            {this.props.title ? <span dangerouslySetInnerHTML={{__html: this.props.title}}/> : null}
+                        </div>
+                        {this.props.children ? <div className="modal-body" dangerouslySetInnerHTML={{__html: this.props.children}}></div> : null}
+                        {this.props.confirm ?
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-success" onClick={this.confirmAction}>Да
+                                </button>
+                                <button type="button" className="btn btn-default" onClick={this.closeAction}>
+                                    Отменить
+                                </button>
+                            </div>
+                            : null
+                        }
+                    </div>
+                </div>
+            );
+        }
+        return null;
+    }
+}
+
+export function activateHtmlPopUp(data) {
+    ReactDOM.render(<PopUpHtml
+        confirm={data.confirm}
+        isVisible={true}
+        title={data.title}
+        flash={data.flash}
+        onClose={data.closeAction}
+        confirmAction={data.confirmAction}
+    >{data.child}</PopUpHtml>, popupNode);
+}
 
 export function activatePopUp(data) {
     ReactDOM.render(<PopUp

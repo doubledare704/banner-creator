@@ -49,7 +49,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="/" data-bazooka="authLogout" data-users-csrf-token="{{ csrf_token() }}">Выход</a>
+                            <a href="/" data-bazooka="authLogout">Выход</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -67,12 +67,12 @@
         {% endfor %}
 
         {% block page_content %}
-
         {% endblock %}
-        <div id="popup"></div>
     </div>
 
 {% endblock %}
+
+<div id="popup"></div>
 
 {% block scripts %}
 {% endblock %}

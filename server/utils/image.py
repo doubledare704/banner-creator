@@ -9,7 +9,7 @@ def allowed_file(filename):
     if not filename:
         return False
     name, extension = os.path.splitext(filename)
-    return extension in current_app.config['ALLOWED_EXTENSIONS']
+    return extension in current_app.config['ALLOWED_IMAGES_EXTENSIONS']
 
 
 def uploaded_file(filename):

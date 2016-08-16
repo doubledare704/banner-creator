@@ -14,11 +14,16 @@
         <h4 class="{% if not banner.title %}text-muted{% endif %}">{{ banner.title|default('нет названия', true) }}</h4>
         <div class="text-right">
           <a href="{{ url_for('continue_edit', history_image_id=banner.id) }}" class="btn btn-primary" role="button"> <span class="glyphicon glyphicon-pencil tooltipp" data-tooltip="Редактировать баннер"></span> </a>
-          <a href="#" class="btn btn-danger" role="button"> <span class="glyphicon glyphicon-trash tooltipp" data-tooltip="Удалить баннер"></span> </a>
+          <a href="#" class="btn btn-danger" role="button" data-bazooka="deleteBanner" data-url="{{ url_for('delete_banner', banner_id=banner.id) }}">
+            <span class="glyphicon glyphicon-trash tooltipp" data-tooltip="Удалить баннер"></span>
+          </a>
         </div>
       </div>
     </div>
   </div>
+  {% else %}
+    <p class="dashboard-designer-empty-review bg-info">У вас нет баннеров.<a href="{{ url_for('editor') }}"> Создать баннер</a>
+    </p>
   {% endfor %}
 </div>
 

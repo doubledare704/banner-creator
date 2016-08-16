@@ -4,7 +4,7 @@ import {h} from 'bazooka';
 import moment from 'moment';
 import classNames from 'classnames';
 import {activatePopUp, deactivatePopUp} from '../popUp.js';
-import csrfToken from '../csrfHelper.js'
+import {csrfToken} from '../helpers';
 
 const BAZOOKA_PREFIX = 'users';
 
@@ -13,12 +13,12 @@ class User extends React.Component {
         super(props);
 
         this.state = {
-            removed: false,
             user: this.props.user
         };
 
         this.showEditPopup = this.showEditPopup.bind(this);
         this.removeUser = this.removeUser.bind(this);
+        this.reactivate = this.reactivate.bind(this);
         this.saveUser = this.saveUser.bind(this);
     }
 
@@ -39,9 +39,10 @@ class User extends React.Component {
                         if (!response.ok) {
                             throw Error(response.statusText);
                         }
+                        user.active = false;
                         this.setState({
-                            removed: true
-                        })
+                            user: user
+                        });
                     })
                     .catch((response) => {
                         console.error(response.message);
@@ -58,7 +59,7 @@ class User extends React.Component {
     saveUser(e) {
         e.preventDefault();
         fetch(`/admin/users/${this.state.user.id}`, {
-            method: 'PUT',
+            method: 'POST',
             credentials: 'same-origin',
             headers: {
                 'X-CSRFToken': csrfToken()
@@ -75,7 +76,36 @@ class User extends React.Component {
                 this.setState({
                     user: user
                 });
-                deactivatePopUp()
+                deactivatePopUp();
+            })
+            .catch((response) => {
+                console.error(response.message);
+                activatePopUp({
+                    title: `Ошибка сервера`,
+                    confirm: false,
+                    flash: true,
+                });
+            });
+    }
+
+    reactivate(e) {
+        let {user} = this.state;
+        e.preventDefault();
+        fetch(`/admin/users/${user.id}`, {
+            method: 'PUT',
+            credentials: 'same-origin',
+            headers: {
+                'X-CSRFToken': csrfToken()
+            }
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
+                user.active = true;
+                this.setState({
+                    user: user
+                });
             })
             .catch((response) => {
                 console.error(response.message);
@@ -95,44 +125,44 @@ class User extends React.Component {
             title: "Изменение данных пользователя",
             closeAction: deactivatePopUp,
             child: <form className="form-horizontal" onSubmit={this.saveUser}>
-                    <div className='form-group'>
-                        <label className="col-sm-2">First Name</label>
-                        <div className="col-sm-10">
-                            <input type="text" name="first_name" defaultValue={user.first_name}
-                                   className="form-control"/>
-                        </div>
+                <div className='form-group'>
+                    <label className="col-sm-2">First Name</label>
+                    <div className="col-sm-10">
+                        <input type="text" name="first_name" defaultValue={user.first_name}
+                               className="form-control"/>
                     </div>
-                    <div className='form-group'>
-                        <label className="col-sm-2">Last Name</label>
-                        <div className="col-sm-10">
-                            <input type="text" name="last_name" defaultValue={user.last_name}
-                                   className="form-control"/>
-                        </div>
+                </div>
+                <div className='form-group'>
+                    <label className="col-sm-2">Last Name</label>
+                    <div className="col-sm-10">
+                        <input type="text" name="last_name" defaultValue={user.last_name}
+                               className="form-control"/>
                     </div>
-                    <div className='form-group'>
-                        <label className="col-sm-2">User role</label>
-                        <div className="col-sm-6">
-                            <select name="role" className="form-control"
-                                    defaultValue={user.role}>
-                                {
-                                    this.props.rolesList.map((role) => (
-                                            <option value={role}>{role}</option>
-                                        )
+                </div>
+                <div className='form-group'>
+                    <label className="col-sm-2">User role</label>
+                    <div className="col-sm-6">
+                        <select name="role" className="form-control"
+                                defaultValue={user.role}>
+                            {
+                                this.props.rolesList.map((role) => (
+                                        <option value={role}>{role}</option>
                                     )
-                                }
-                            </select>
-                        </div>
+                                )
+                            }
+                        </select>
                     </div>
-                    <div className='form-group text-center'>
-                        <button type="submit" className='btn btn-success'>Save</button>
-                        <a className='btn btn-default' onClick={deactivatePopUp}>Close</a>
-                    </div>
-                </form>
+                </div>
+                <div className='form-group text-center'>
+                    <button type="submit" className='btn btn-success'>Save</button>
+                    <a className='btn btn-default' onClick={deactivatePopUp}>Close</a>
+                </div>
+            </form>
         });
     }
 
     render() {
-        let {user, removed}= this.state;
+        let {user}= this.state;
         return (
             <tr>
                 <td>{user.first_name} {user.last_name}</td>
@@ -141,16 +171,16 @@ class User extends React.Component {
                 <td>{moment(user.registration_date).format("DD-MM-YYYY HH:mm")}</td>
                 <td>{user.auth_by}</td>
                 <td>
-                    <a className={classNames('btn btn-default btn-sm', {'hidden': removed})}
+                    <a className={classNames('btn btn-default btn-sm', {'hidden': !user.active})}
                        onClick={this.showEditPopup}><i className="glyphicon glyphicon-pencil"/> Изменить</a>
                     <a className={classNames('btn btn-danger btn-sm', {
                         'disabled': user.id === this.props.currentUserId,
-                        'hidden': removed
+                        'hidden': !user.active
                     })} onClick={this.removeUser}><i
                         className="glyphicon glyphicon-trash"/> Удалить
                     </a>
-                    <a className={classNames('btn btn-default disabled', {'hidden': !removed})}><i
-                        className="glyphicon glyphicon-remove"/>Удалено
+                    <a className={classNames('btn btn-default btn-sm', {'hidden': user.active})}
+                       onClick={this.reactivate}><i className="glyphicon glyphicon-repeat"/> Восстановить
                     </a>
                 </td>
             </tr>
@@ -158,8 +188,8 @@ class User extends React.Component {
     }
 }
 
-const UsersList = (props) => {
-    return <div>
+const UsersList = (props) => (
+    <div>
         <table className="table">
             <thead>
             <tr>
@@ -185,7 +215,7 @@ const UsersList = (props) => {
             </tbody>
         </table>
     </div>
-};
+);
 
 export default function (node) {
     let {usersList, usersRoles, currentUserId} = h.getAttrs(BAZOOKA_PREFIX, node);

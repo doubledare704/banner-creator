@@ -24,7 +24,7 @@
         <span class="dashboard-review-date">
           {% if review.created_at %}{{ review.created_at|format_date }}{% endif %}
         </span>
-        <span class="dashboard-delete-btn glyphicon glyphicon-trash" data-bazooka="deleteReview" data-url="{{ url_for('delete_review', review_id=review.id) }}"></span>
+        <span class="dashboard-delete-btn glyphicon glyphicon-remove" data-bazooka="deleteReview" data-url="{{ url_for('delete_review', review_id=review.id) }}"></span>
       </p>
 
       <div class="row">
