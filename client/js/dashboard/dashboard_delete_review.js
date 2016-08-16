@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {activatePopUp} from '../popUp';
-import {csrf} from '../helpers';
+import { activatePopUp } from '../popUp';
+import { csrfToken } from '../helpers';
 
 
 function ConfirmationHeader(props) {
@@ -25,7 +25,7 @@ export default function (node) {
      fetch(url, {
        method: 'POST',
        credentials: 'same-origin',
-       headers: {'X-CSRFToken': csrf()}
+       headers: {'X-CSRFToken': csrfToken()}
      })
        .then(
          (response) => {
