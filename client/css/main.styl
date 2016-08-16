@@ -7,33 +7,16 @@ html, body
   height 100%
 
 .column_aside
-  height 800px
-  display flex
-  flex-wrap wrap
-  flex-direction column
-  align-items stretch
-  position relative
-
   section
-    text-align center
-    align-content center
     position relative
-    height 80px
-    width 80px
-    border 1px solid #000
-    margin 7px 0 0 0
 
     a
       color #000000
       text-decoration none
       font-size 12px
 
-  span
-    display block
-    font-size 12px
 
 section#double
-  height 160px
   display none
 
   section
@@ -47,7 +30,7 @@ section.last-sec
 section.with_menu:hover > #rightcol
   display block
 
-.container
+.container2
   order: 2
   flex-basis 100%
   height 100%
@@ -75,23 +58,31 @@ section.with_menu:hover > #rightcol
     padding-right 20px
 
 .container-content
-  margin 5% 0%
+  margin 1% 0%
+  display inline-block
+
+.canvas-container
+  margin 0
 
 .forcanvas
   padding 0
   margin 0
+  overflow auto
+  max-height 730px
 
 .nopad
   padding 0
 
 section.counter-grid
   height auto
+  width 80%
 
   .number-input
     display block
     margin 0 auto
     width 55%
     height 25%
+    padding 6px 0
 
 canvas#main
   border 2px solid #000000
@@ -113,8 +104,6 @@ canvas#main
       margin: 2px
       img
         border: 1px solid black
-        height: 100px
-        width: 100px
 
 #rightcol
   display none
@@ -247,7 +236,7 @@ canvas#main
   text-align left
   padding-left 20px
   top -150%
-  left 79px
+  left 47px
   z-index 2
 
   .uploadings
@@ -273,8 +262,19 @@ section.last-sec:hover > .rightcol2
     color #000000
     text-decoration none
 
-.list-cuted
+#list-cuted
   display none
+  overflow auto
+  background-color #fff
+  flex-wrap wrap
+  flex-direction row
+  position absolute
+  top 25%
+  left 170px
+  border 1px dashed #000
+  min-height 160px
+  max-height 500px
+  width 777px
 
   div
     flex-basis 250px
@@ -283,18 +283,8 @@ section.last-sec:hover > .rightcol2
     .boxer
       height 156px
 
-#from_db:hover .list-cuted
+#list-cuted.flexic
   display flex
-  overflow auto
-  background-color #fff
-  flex-wrap wrap
-  flex-direction row
-  position absolute
-  top -250%
-  left 70px
-  border 1px dashed #000
-  height 700px
-  width 1277px
 
 #cutters
   cursor: pointer;

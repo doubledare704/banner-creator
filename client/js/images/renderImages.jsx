@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
 import {activatePopUp} from '../popUp.js';
+import {csrfToken} from '../helpers';
 
 const BAZOOKA_PREFIX = 'body';
 
@@ -143,7 +144,8 @@ class ImagesList extends React.Component {
                 credentials: 'same-origin',
                 method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken()
                 },
                 body: JSON.stringify({id: id})
             }).then(response => {
@@ -174,7 +176,8 @@ class ImagesList extends React.Component {
                 credentials: 'same-origin',
                 method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken()
                 },
                 body: JSON.stringify({id: id, title: title})
             }).then(response => {

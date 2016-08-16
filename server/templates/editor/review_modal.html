@@ -1,50 +1,38 @@
-{#<div id="reviewModal" class="modal"#}
-{#        {% block bazookas %}#}
-{#     data-bazooka="sendToReview"#}
-{#        {% endblock %}#}
-{#>#}
-    <div class="modal-content">
-        <div class="modal-header">
-            <span class="close">×</span>
-            <h2>Отправить на ревью</h2>
-        </div>
-        <div class="modal-body">
-            <form action="{{ url_for('make_review') }}" method="post" id="braveForm">
-                <div class="row">
-                    <div class="form-group">
-                        <label class="col-md-6">Название баннера
-                            <input type="text" name="title" class="form-control"/>
-                        </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group">
-                        <label class="col-md-6">Добавить комментарий
-                            <textarea name="comment" id="reviewComment" class="form-control"></textarea>
-                        </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group">
-                        <label class="col-md-6">Выберите, кому отправить
-                            <select name="designer" class="form-control">
-                                {% for designer in designers %}
-                                    <option value="{{ designer.id }}">{{ designer.last_name }} {{ designer.first_name }}</option>
-                                {% endfor %}
-                            </select>
-                        </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group">
-                        <div class="col-md-6">
-                            <input type="submit" class="btn btn-success" value="Отправить">
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-        </div>
+<h2>Отправить на ревью</h2>
+<form action="{{ url_for('review') }}" method="post" id="braveForm" data-bazooka="sendToReview" data-url="{{ url_for('review') }}">
+  <div class="form-group">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  </div>
+  <div class="row">
+    <div class="form-group">
+      <label class="col-md-6">Название баннера
+        <input type="text" name="title" class="form-control"/>
+      </label>
     </div>
-{#</div>#}
+  </div>
+  <div class="row">
+    <div class="form-group">
+      <label class="col-md-6">Добавить комментарий
+        <textarea name="comment" id="reviewComment" class="form-control"></textarea>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group">
+      <label class="col-md-6">Выберите, кому отправить
+        <select name="designer" class="form-control">
+          {% for designer in designers %}
+            <option value="{{ designer.id }}">{{ designer.last_name }} {{ designer.first_name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group">
+      <div class="col-md-6">
+        <input type="submit" class="btn btn-success" value="Отправить">
+      </div>
+    </div>
+</div>
+</form>

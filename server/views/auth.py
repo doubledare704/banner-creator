@@ -52,4 +52,4 @@ def authorize(social_network_name):
 @login_required
 def log_out():
     logout_user()
-    return jsonify({'redirect_to': url_for('index')})
+    return jsonify({'redirectTo': url_for('index')})

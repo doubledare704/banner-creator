@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
-import {activatePopUp} from '../popUp.js';
+import {activatePopUp} from '../popUp';
+import {csrfToken} from '../helpers';
 
 
 const BAZOOKA_PREFIX = 'backgrounds-admin';
@@ -26,29 +27,29 @@ class TableRow extends React.Component {
 
     //if background is inactive, we add the button which activate them
     addActivateButton() {
-        if ( !this.props.tablerow.active ) {
+        if (!this.props.tablerow.active) {
             return <Button name="Активировать" clickAction={this.props.onRowActivate(this.props.tablerow)}/>
         }
     }
 
     render() {
-        const buttonName = this.props.backgroundStatus ? "Деактивировать" : "Удалить";
-
         return (
             <tr>
                 <td>
                     {this.props.tablerow.title}
                 </td>
                 <td>
-                    <img src={this.props.tablerow.preview} alt="cat" />
-                </td>
-                <td className="for-delete">
-                    <Button name={buttonName} clickAction={this.props.onTableRowDelete(this.props.tablerow)}/>
+                    <img src={this.props.tablerow.preview} alt="image"/>
                 </td>
                 <td>
-                    {this.addActivateButton()}
+                    {
+                        this.props.backgroundStatus ?
+                            <Button name="Деактивировать"
+                                    clickAction={this.props.onTableRowDelete(this.props.tablerow)}/>
+                            : this.addActivateButton()
+                    }
                 </td>
-           </tr>
+            </tr>
         );
     }
 }
@@ -60,27 +61,27 @@ class Table extends React.Component {
         return (
             <table className="table text-center" id="backgrounds-table">
                 <thead>
-                    <tr>
-                        <th>Название</th>
-                        <th>Картинка</th>
-                        <th>
-                        </th>
-                        <th>
-                        </th>
-                    </tr>
+                <tr>
+                    <th>Название</th>
+                    <th>Картинка</th>
+                    <th>
+                    </th>
+                    <th>
+                    </th>
+                </tr>
                 </thead>
                 <tbody>
-                    {
-                        this.props.backgrounds.map((tablerow) =>
-                                <TableRow
-                                    key={tablerow.id}
-                                    tablerow={tablerow}
-                                    onTableRowDelete={this.props.onTableRowRemove}
-                                    backgroundStatus={this.props.backgroundStatus}
-                                    onRowActivate={this.props.onTableRowActivate}
-                                />
-                        )
-                    }
+                {
+                    this.props.backgrounds.map((tablerow) =>
+                        <TableRow
+                            key={tablerow.id}
+                            tablerow={tablerow}
+                            onTableRowDelete={this.props.onTableRowRemove}
+                            backgroundStatus={this.props.backgroundStatus}
+                            onRowActivate={this.props.onTableRowActivate}
+                        />
+                    )
+                }
                 </tbody>
             </table>
         );
@@ -99,16 +100,16 @@ class BackgroundsAdmin extends React.Component {
 
     handleTableRowRemove = (tablerow) => {
         return () => {
-
-            //if the background is active, we change status on inactive
-            if (tablerow.active === true) {
                 const index = this.state.backgrounds.indexOf(tablerow);
 
-                fetch(
-                    `/admin/inactivate_image/${this.state.backgrounds[index].id}`,
-                    {credentials: 'same-origin',
-                        method: "POST"}
-                ).then((response) => {
+                fetch(`/admin/inactivate_image/${this.state.backgrounds[index].id}`,{
+                    credentials: 'same-origin',
+                    method: "POST",
+                    headers: {
+                        'X-CSRFToken': csrfToken()
+                    }
+                })
+                    .then((response) => {
                     if (response.status === 200) {
                         activatePopUp({
                             title: "Фон стал неактивным",
@@ -120,30 +121,6 @@ class BackgroundsAdmin extends React.Component {
                         });
                     }
                 });
-
-            //if the background is inactive we delete this background from DB
-            } else {
-                const index = this.state.backgrounds.indexOf(tablerow);
-
-                activatePopUp({
-                        title: "Вы действительно хотите удалить картинку?",
-                        confirm: true,
-                        confirmAction:
-                            () => {
-                                fetch(
-                                    `/admin/delete_image/${this.state.backgrounds[index].id}`,
-                                    {credentials: 'same-origin',
-                                        method: "POST"}
-                                ).then((response) => {
-                                    if (response.status === 204) {
-                                        this.state.backgrounds.splice(index, 1);
-                                        this.setState({backgrounds: this.state.backgrounds});
-                                    }
-                                });
-                            }
-                });
-
-            }
         }
     };
 
@@ -152,22 +129,25 @@ class BackgroundsAdmin extends React.Component {
         return () => {
             const index = this.state.backgrounds.indexOf(tablerow);
 
-            fetch(
-                `/admin/activate_image/${this.state.backgrounds[index].id}`,
-                {credentials: 'same-origin',
-                    method: "POST"}
-            ).then((response) => {
-                if (response.status === 200) {
-                    activatePopUp({
-                        title: "Фон стал активным",
-                        flash: true
-                    });
-                    this.state.backgrounds.splice(index, 1);
-                    this.setState({
-                        backgrounds: this.state.backgrounds
-                    });
+            fetch(`/admin/activate_image/${this.state.backgrounds[index].id}`, {
+                credentials: 'same-origin',
+                method: "POST",
+                headers: {
+                    'X-CSRFToken': csrfToken()
                 }
-            });
+            })
+                .then((response) => {
+                    if (response.status === 200) {
+                        activatePopUp({
+                            title: "Фон стал активным",
+                            flash: true
+                        });
+                        this.state.backgrounds.splice(index, 1);
+                        this.setState({
+                            backgrounds: this.state.backgrounds
+                        });
+                    }
+                });
         }
     };
 
@@ -183,16 +163,14 @@ class BackgroundsAdmin extends React.Component {
                 />
             </div>
         );
-    } 
+    }
 }
 
 export default (node) => {
-    let {backgrounds} = h.getAttrs(BAZOOKA_PREFIX, node);
-    let {tab} = h.getAttrs(BAZOOKA_PREFIX, node);
+    let {backgrounds, tab} = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
-
-        <BackgroundsAdmin backgrounds = {backgrounds} selectedTab={tab}/>,
+        <BackgroundsAdmin backgrounds={backgrounds} selectedTab={tab}/>,
         node
     );
 }

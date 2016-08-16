@@ -29,7 +29,7 @@ class TestAuth(unittest.TestCase):
         with app.app_context():
             response = self.client.get(url_for('index'))
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.headers['location'], url_for('login_page', _external=True) + '?next=%2F')
+        self.assertEqual(response.headers['location'], url_for('login_page', _external=True) + '?next=%2Findex%2F')
 
     def test_log_out(self):
         with app.app_context():

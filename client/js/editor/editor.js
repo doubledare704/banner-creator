@@ -9,6 +9,11 @@ function inArray(needle, haystack) {
     return false;
 }
 
+// converter pt to px
+function ptToPx(points) {
+    return Math.round(points * 1.333333)
+}
+
 // extend function without jquery https://gist.github.com/cfv1984/6319681685f78333d98a
 var extend = function () {
 
@@ -89,7 +94,7 @@ function createArrowHead(points) {
     angle *= 180 / Math.PI;
     angle += 90;
 
-    let triangle = new fabric.Triangle({
+    return new fabric.Triangle({
         angle: angle,
         fill: 'red',
         top: y2,
@@ -99,8 +104,6 @@ function createArrowHead(points) {
         originX: 'center',
         originY: 'center'
     });
-
-    return triangle;
 }
 
 function createLine(points) {
@@ -139,36 +142,30 @@ export default class Editor {
 
     //sets background
     setBackground(imgsrc) {
-        var sX = 1;
-        var sY = 1;
-        let cdim = [this.canv.width, this.canv.height];
         let c = this.canv;
         fabric.Image.fromURL(imgsrc, function (img) {
-            let originalsize = img.getOriginalSize();
-            if (originalsize.width > cdim[0]) {
-                sX = cdim[0] / originalsize.width + 0.005;
-                sY = sX;
-            }
-            let center = c.getCenter();
-            c.setBackgroundImage(imgsrc, c.renderAll.bind(c), {
-                scaleY: sY,
-                scaleX: sX,
-                top: center.top,
-                left: center.left,
-                originX: 'center',
-                originY: 'center'
-            });
+            (function getCanvasAtResoution(newWidth, newHeight) {
+                let can = c;
+                if (can.width != newWidth || can.height != newHeight) {
+                    can.setWidth(newWidth);
+                    can.setHeight(newHeight);
+                    can.renderAll();
+                    can.calcOffset();
+                }
+            })(img.width, img.height);
+            c.setBackgroundImage(imgsrc, c.renderAll.bind(c), {});
         });
     }
+
 
     setFont(family, size, color, texts, backgroundColor = 'transparent', opacity = 1) {
         let obj = new fabric.IText(
             texts,
             {
                 fontFamily: family,
-                left: 500,
-                top: 100,
-                fontSize: size,
+                left: 500 * this.seekAndResize(),
+                top: 100 * this.seekAndResize(),
+                fontSize: ptToPx(size) * this.seekAndResize(),
                 fill: color,
                 backgroundColor: backgroundColor
             }).setOpacity(opacity);
@@ -181,18 +178,18 @@ export default class Editor {
             texts,
             {
                 fontFamily: family,
-                left: 500,
-                top: 100,
-                fontSize: size,
+                left: 500 * this.seekAndResize(),
+                top: 100 * this.seekAndResize(),
+                fontSize: ptToPx(size) * this.seekAndResize(),
                 fill: color,
                 styles: {
                     0: {
-                        0: {fontSize: size - 15},
-                        1: {fontSize: size - 15},
+                        0: {fontSize: ptToPx(13)},
+                        1: {fontSize: ptToPx(13)},
 
-                        9: {fontSize: size - 15},
-                        10: {fontSize: size - 15},
-                        11: {fontSize: size - 15}
+                        9: {fontSize: ptToPx(13)},
+                        10: {fontSize: ptToPx(13)},
+                        11: {fontSize: ptToPx(13)}
                     }
                 }
             });
@@ -208,8 +205,8 @@ export default class Editor {
 
     addButton(w = 120, h = 30, fontFamily = 'Roboto', fontSize = 13, fontText = 'Смотреть >', textColor = '#3c3c3c') {
         let border = new fabric.Rect({
-            width: w,
-            height: h,
+            width: w * this.seekAndResize(),
+            height: h * this.seekAndResize(),
             fill: 'transparent',
             stroke: '#3c3c3c',
             strokeWidth: 1,
@@ -218,16 +215,16 @@ export default class Editor {
         });
         let texting = new fabric.IText(fontText, {
             fontFamily: fontFamily,
-            fontSize: fontSize,
+            fontSize: fontSize * this.seekAndResize(),
             fill: textColor,
             top: h / 4,
             left: w / 4.4
         });
-        texting.setTop(h / 2 - texting.getHeight() / 2);
-        texting.setLeft(w / 2 - texting.getWidth() / 2);
+        texting.setTop(border.height / 2 - texting.getHeight() / 2);
+        texting.setLeft(border.width / 2 - texting.getWidth() / 2);
         let group = new fabric.Group([border, texting], {
-            left: 200,
-            top: 100
+            left: 200 * this.seekAndResize(),
+            top: 100 * this.seekAndResize()
         });
         this.canv.add(group);
     }
@@ -305,7 +302,7 @@ export default class Editor {
             scaleY: 0.5
         }))
     }
-    
+
     // change grid size
     setNewGridSize(gridSize = 10) {
         // create grid
@@ -322,7 +319,7 @@ export default class Editor {
             this.addGrid(gridSize)
         }
     }
-    
+
     // add grid for canvas
     setGridToCanv(gridSize = 10) {
         // create grid
@@ -360,13 +357,15 @@ export default class Editor {
 
 
     // util func for adding  grid to canvas
-    addGrid(gridSize = 10) {
+    addGrid(gridSize = 15) {
         let canvas = this.canv;
-        for (var i = 0; i < (canvas.width / gridSize); i++) {
-            canvas.add(new fabric.Line([i * gridSize, 0, i * gridSize, canvas.width], {
+        for (let i = 0; i < (canvas.width / gridSize); i++) {
+            canvas.add(new fabric.Line([i * gridSize, 0, i * gridSize, canvas.height], {
                 stroke: '#A1A1A1',
                 selectable: false
             }));
+        }
+        for (let i = 0; i < (canvas.height / gridSize); i++) {
             canvas.add(new fabric.Line([0, i * gridSize, canvas.width, i * gridSize], {
                 stroke: '#A1A1A1',
                 selectable: false
@@ -389,6 +388,32 @@ export default class Editor {
         toDeleteObjs.forEach(function (object) {
             canvas.remove(object);
         });
+    }
+
+    // resize calc for buttons and texts
+    seekAndResize() {
+        const defwidth = 960;
+        const defheight = 420;
+        let realWidth = this.canv.getWidth();
+        let realHeight = this.canv.getHeight();
+        let coef = 0;
+        if (realHeight > realHeight) {
+            if (realHeight > defheight) {
+                coef = realHeight / defheight
+            }
+            else {
+                coef = 1
+            }
+        }
+        else {
+            if (realWidth > defwidth) {
+                coef = realWidth / defwidth
+            }
+            else {
+                coef = 1
+            }
+        }
+        return coef
     }
 }
 
