@@ -19,6 +19,7 @@ from server.utils.image import image_preview
 
 @login_required
 def editor():
+    proj_id = request.args.get('project_id')
     return render_template('editor_markuped.html')
 
 

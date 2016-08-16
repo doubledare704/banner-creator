@@ -28,18 +28,33 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                            <li class="{{active_endpoint_startswith('dashboard')}}"><a href="{{ url_for('dashboard') }}">Кабинет</a></li>
-                            <li class="{{active_endpoint('editor')}}"><a href="{{ url_for ('editor') }}">Редактор</a></li>
-                            {% if current_user.is_authenticated and (current_user.is_admin() or current_user.is_designer()) %}
-                              <li class="{{active_endpoint_startswith('admin')}}">
-                                <a href="{{ url_for ('admin') }}">Админ</a>
-                              </li>
-                            {% endif %}
-                            <li class="{{active_endpoint('backgrounds_page')}}"><a href="{{ url_for('backgrounds_page') }}">Все фоны</a></li>
+                    <li class="{{ active_endpoint_startswith('dashboard') }}"><a href="{{ url_for('dashboard') }}">Кабинет</a>
+                    </li>
+                    <li class="{{ active_endpoint('editor') }}"><a href="{{ url_for ('editor') }}">Редактор</a></li>
+                    <li class="{{ active_endpoint('editor') }}">
+                        <div class="dropdown" id="dropdowns">
+                            <button class="btn btn-default dropdown-toggle" data-bazooka="dropDown" type="button" data-toggle="dropdown">
+                                Проект
+                                <span class="caret"></span></button>
+                            <ul class="dropdown-menu" id="dropmenu">
+                                {% for project in projects_list() %}
+                                    <li><a href="{{ url_for('editor', project_id=project.id) }}">{{ project.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
+
+                    {% if current_user.is_authenticated and (current_user.is_admin() or current_user.is_designer()) %}
+                        <li class="{{ active_endpoint_startswith('admin') }}">
+                            <a href="{{ url_for ('admin') }}">Админ</a>
+                        </li>
+                    {% endif %}
+                    <li class="{{ active_endpoint('backgrounds_page') }}"><a href="{{ url_for('backgrounds_page') }}">Все
+                        фоны</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}
-                        <li class="{{active_endpoint('user_profile')}}">
+                        <li class="{{ active_endpoint('user_profile') }}">
                             <a href="{{ url_for('user_profile') }}">
                                 {% if current_user.first_name or current_user.last_name %}
                                     {{ current_user.first_name }} {{ current_user.last_name }}
