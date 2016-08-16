@@ -138,6 +138,7 @@ class ImagesList extends React.Component {
     }
 
     handleDelete(id) {
+        console.log(this.state.displayedImages);
         return () => {
             fetch("/delete/", {
                 credentials: 'same-origin',
@@ -149,7 +150,7 @@ class ImagesList extends React.Component {
             }).then(response => {
                 if (response.status !== 200) {
                     activatePopUp({
-                       title: <h2 className="text-center">Што то не так ошибка {response.status} </h2>
+                       title: <h2 className="text-center">Что-то не так, ошибка: {response.status} </h2>
                     });
                     return response.status;
                 }
@@ -180,7 +181,7 @@ class ImagesList extends React.Component {
             }).then(response => {
                 if (response.status !== 200) {
                     activatePopUp({
-                       title: <h2 className="text-center">Што то не так ошибка  {response.status} </h2>
+                       title: <h2 className="text-center">Что-то не так, ошибка:  {response.status} </h2>
                     });
                     return response.status;
                 }
@@ -204,9 +205,37 @@ class ImagesList extends React.Component {
     }
 
     render() {
+        const projects = this.props.projects;
         const filteredImages = this.props.imageArray.filter((el) => el.title.toLowerCase().indexOf(this.state.searchQuery) !==-1);
         return (
             <div>
+                <div><h2>Загрузка фонов</h2></div>
+                  <form id="image-form"  className="form-inline"  enctype="multipart/form-data" >
+                    <div className="row">
+                      <div className="form-group col-lg-3">
+                        <label><span>Выберите проект: </span>
+                          <select name="project" className="form-control">
+                              {projects.map(function(project) {
+                                  return <option key={project.id} value={project.id}>{project.name}</option>;
+                                })}
+                          </select>
+                        </label>
+                      </div>
+                        <div className="form-group col-lg-6">
+                          <label>Выберите файлы:
+                            <input id="input"  type="file"  name="file[]" accept="image/gif, image/jpeg, image/jpg, image/png" multiple />
+                          </label>
+                        </div>
+                    </div>
+                    <br/>
+                    <div className="row">
+                      <div className="form-group col-lg-3">
+                        <input data-bazooka="uploadFiles"  className="btn btn-primary" type="submit" value="Загрузить"/>
+                      </div>
+                        <div id="demo" ></div>
+                    </div>
+                  </form>
+                  <hr/>
                 <div className="form-inline">
                         <div className="form-group">
                             <input type="text" placeholder="Поиск..." className="search-field" onChange={this.handleSearch} />
@@ -234,10 +263,10 @@ class ImagesList extends React.Component {
 }
 
 export default function(node) {
-    const {imageArray} = h.getAttrs(BAZOOKA_PREFIX, node);
+    const {imageArray,projects} = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
-        <ImagesList imageArray={ imageArray }/>,
+        <ImagesList imageArray={ imageArray } projects={ projects }/>,
         node
     );
 }

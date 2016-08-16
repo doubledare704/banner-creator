@@ -2,7 +2,7 @@ import json
 import uuid
 import os
 
-from flask import render_template, request, redirect, current_app,url_for
+from flask import render_template, request, redirect, current_app, url_for
 from server.utils.image import allowed_file, image_preview
 from werkzeug.utils import secure_filename
 
@@ -16,16 +16,16 @@ from server.db import db
 @login_required
 def dashboard():
     page = int(request.args.get('page', 1))  # get page number from url query string
-    if current_user.role == User.UserRole.user:
-        reviews = BannerReview.query.filter_by(user_id=current_user.id).order_by(BannerReview.created_at.desc()
-                                                                                 ).paginate(page=page, per_page=10)
-        pagination = Pagination(per_page=10, page=page, total=reviews.total, css_framework='bootstrap3')
-        return render_template('user/user_dashboard.html', reviews=reviews, pagination=pagination)
-    elif current_user.role == User.UserRole.designer:
+    if current_user.role == User.UserRole.designer or current_user.role == User.UserRole.admin:
         reviews = BannerReview.query.filter_by(designer_id=current_user.id).order_by(BannerReview.created_at.desc()
                                                                                      ).paginate(page=page, per_page=10)
         pagination = Pagination(per_page=10, page=page, total=reviews.total, css_framework='bootstrap3')
         return render_template('user/designer_dashboard.html', reviews=reviews, pagination=pagination)
+    else:
+        reviews = BannerReview.query.filter_by(user_id=current_user.id).order_by(BannerReview.created_at.desc()
+                                                                                 ).paginate(page=page, per_page=10)
+        pagination = Pagination(per_page=10, page=page, total=reviews.total, css_framework='bootstrap3')
+        return render_template('user/user_dashboard.html', reviews=reviews, pagination=pagination)
 
 
 @login_required
@@ -39,7 +39,12 @@ def user_banners():
 @login_required
 def dashboard_backgrounds():
     images = BackgroundImage.query.filter_by(active=True)
-    projects = Project.query.all()
+    projects_query = Project.query.all()
+    projects = json.dumps(
+        [{'id': project.id,
+          'name': project.name
+          }
+         for project in projects_query])
     image_json = json.dumps(
         [{'id': image.id,
           'url': '/uploads/' + image.name,
@@ -53,25 +58,36 @@ def dashboard_backgrounds():
 
 @login_required
 def upload():
-    uploaded_files = request.files.getlist("file[]")
-    project = request.form['project']
-    project_prefix=Project.query.get(project).name
-    for file in uploaded_files:
-        if file and allowed_file(file.filename):
+    if 'file' not in request.files:
+        return '', 204
+    else:
+        file = request.files['file']
+        print(secure_filename(file.filename), request.form['project'])
 
-            filename = str(uuid.uuid1()).replace("-", "") + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
-            title = project_prefix + file.filename
-            preview_name = 'preview_' + filename
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-            preview_file = image_preview(file)
-            preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
-
-            image = BackgroundImage(
-                name=filename,
-                title=title,
-                preview=preview_name,
-                project_id=project
-            )
-            db.session.add(image)
-
-    return redirect(url_for('dashboard_backgrounds'))
+        # uploaded_files = request.files.getlist("file[]")
+        # print(uploaded_files)
+        # project = request.form['project']
+        # project_prefix=Project.query.get(project).name
+        # count=0
+        # for file in uploaded_files:
+        #     if file and allowed_file(file.filename):
+        #
+        #         filename = str(uuid.uuid1()).replace("-", "") + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
+        #         title = project_prefix + file.filename
+        #         preview_name = 'preview_' + filename
+        #         file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+        #         preview_file = image_preview(file)
+        #         preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
+        #
+        #         image = BackgroundImage(
+        #             name=filename,
+        #             title=title,
+        #             preview=preview_name,
+        #             project_id=project
+        #         )
+        #         db.session.add(image)
+        #         count+=1
+        #         print(count)
+        #         print(file)
+        return '', 200
+        # return redirect(url_for('dashboard_backgrounds'))

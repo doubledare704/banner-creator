@@ -4,15 +4,27 @@
 
 {% block page_content %}
 
-
     <div class="container">
         <div class="row">
             <div class="col-sm-3 col-md-3 col-lg-2">
-                <h2>Меню</h2>
-                <ul class="nav nav-pills nav-stacked" role="tablist">
-                    <li><a href="{{ url_for('users_page')}}">Пользователи</a></li>
-                    <li><a href="{{ url_for ('admin_backgrounds', tab='active') }}">Фоны</a></li>
-                    <li><a href="{{ url_for('admin_projects')}}">Проекты</a></li>
+                <ul class="nav nav-pills nav-stacked left-menu" role="tablist">
+                    {% if current_user.is_admin %}
+                        <li class="{{active_endpoint('admin_users')}}"><a href="{{ url_for('admin_users')}}">Пользователи</a></li>
+                        <li class="{{active_endpoint('admin_backgrounds')}}"><a href="{{ url_for ('admin_backgrounds', tab='active') }}">Фоны</a></li>
+                    {% endif %}
+                    {% for project in projects_list() %}
+                        <li><a href="{{ url_for('admin_projects')}}">{{project.name}}</a></li>
+                    {% endfor %}
+                    <form method="post" class="form-inline">
+                        <div class="input-group">
+                          <input type="text" id="project" name="project" class="form-control" required placeholder="Введите имя">
+                            <span class="input-group-btn">
+                                 <button type="submit" class="btn btn-default">
+                                    <i class = "glyphicon glyphicon-ok"></i>
+                                 </button>
+                            </span>
+                        </div>
+                    </form>
                 </ul>
             </div>
 
@@ -28,4 +40,3 @@
     {{ super() }}
     <script src="{{ url_for('static', filename='adminbundle.js') }}"></script>
 {% endblock %}
-

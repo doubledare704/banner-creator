@@ -3,16 +3,24 @@
 {% import 'user/macros.html' as macros %}
 
 {% block dashboard_content %}
+<div class="row">
   {% for banner in banners.items %}
-  <div class="dashboard-banners-container">
-    <p class="dashboard-banner-title">{{ banner.title }}</p>
-
-    {{ macros.render_banner_container('Показать баннер', banner.name, banner.id) }}
-
-    <a href="{{ url_for('continue_edit', history_image_id=banner.id) }}" class="btn btn-default">
-        Редактировать <i class="glyphicon glyphicon-picture"></i></a>
+  <div class="col-md-6 dashboard-banner-container">
+    <div class="thumbnail">
+      <div class="img-wrapper dashboard-banner-preview" data-bazooka="showBannerPopup" data-banner-url="{{ url_for('uploaded_file', filename=banner.name) }}">
+        <img class="img-responsive" style="height: inherit" src="{{ url_for('uploaded_file', filename=banner.preview) }}" alt="Loading...">
+      </div>
+      <div class="caption">
+        <h4 class="{% if not banner.title %}text-muted{% endif %}">{{ banner.title|default('нет названия', true) }}</h4>
+        <div class="text-right">
+          <a href="{{ url_for('continue_edit', history_image_id=banner.id) }}" class="btn btn-primary" role="button"> <span class="glyphicon glyphicon-pencil tooltipp" data-tooltip="Редактировать баннер"></span> </a>
+          <a href="#" class="btn btn-danger" role="button"> <span class="glyphicon glyphicon-trash tooltipp" data-tooltip="Удалить баннер"></span> </a>
+        </div>
+      </div>
+    </div>
   </div>
   {% endfor %}
+</div>
 
   <div class="pagination-container">
     {{ pagination.links }}

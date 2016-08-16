@@ -5,6 +5,9 @@ require('./modals.js');
 const modal = document.getElementById('reviewModal');
 
 function sendToReview(event) {
+    let canvas = editor.canv;
+    let objs = canvas.getObjects();
+    editor.filterAndDelete(objs);
     event.preventDefault();
     const saver = document.getElementById('progress_saver');
     const previewId = saver.getAttribute('data-review');

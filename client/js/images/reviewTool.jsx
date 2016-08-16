@@ -8,10 +8,12 @@ import {activatePopUp} from '../popUp.js';
 const BAZOOKA_PREFIX = 'body';
 
 class EditorWindow extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state={
-            count_comment:0
+            countComment:0,
+            commentOn: true,
+            commentsArr: []
         };
         this.addText = this.addText.bind(this);
         this.deleteObject = this.deleteObject.bind(this);
@@ -34,17 +36,18 @@ class EditorWindow extends React.Component {
     }
 
     addText() {
-        this.editor.setFont("Roboto", 28, "#000", "...замечание","#ff9900", 0.6);
+        this.editor.setFont("Roboto", 28, "#000", "...замечание", "#ff9900", 0.6);
         this.editor.addDot();
     }
 
-    addDot(){
+    addDot() {
         this.editor.addDot();
+        this.setState({commentOn: !this.state.commentOn});
     }
 
     deleteObject() {
-         let activeObject = this.editor.canv.getActiveObject(),
-             activeGroup = this.editor.canv.getActiveGroup();
+        let activeObject = this.editor.canv.getActiveObject(),
+            activeGroup = this.editor.canv.getActiveGroup();
         this.editor.deleteObject(activeObject, activeGroup);
     }
 
@@ -60,16 +63,19 @@ class EditorWindow extends React.Component {
         this.editor.addEllipse();
     }
 
-    fileInput(){
+    fileInput() {
         this.editor.setBackground(this.props.imageUrl);
     }
 
     sendToReview(status, commentClouds){
         const img_id = this.props.imageId;
         const comment = this.refs.comment.value;
+        let canvas = this.editor.canv;
+        let objs = canvas.getObjects();
+        this.editor.filterAndDelete(objs);
         let activeObject = this.editor.canv.getActiveObject(),
-             activeGroup = this.editor.canv.getActiveGroup();
-        disableControls(activeObject,activeGroup );
+            activeGroup = this.editor.canv.getActiveGroup();
+        disableControls(activeObject, activeGroup);
         const formData = new FormData();
         let imageReview = this.editor.canv.toJSON();
         formData.append('id', img_id);
@@ -86,47 +92,89 @@ class EditorWindow extends React.Component {
                 body: formData
             }
         ).then(response => {
-            if (response.status !== 200) {
+            if (!response.ok) {
                 activatePopUp({
-                    title: <p>Што то не так ошибка {response.status} </p>
+                    title: <p>Что-то не так, ошибка: {response.status} </p>
                 });
                 return response.status;
             }
             activatePopUp({
                 title: <h3 className="text-center">"Отправлено, перейти обратно в кабинет ?" </h3>,
                 confirm: true,
-                confirmAction: () => window.location.href="/"
+                confirmAction: () => window.location.href = "/"
             });
 
         })
     }
 
     clickComment(event){
-        let count_comment = this.state.count_comment;
+        if(!this.state.commentOn){
+            console.log("NOOOOO!");
+            event.stopPropagation();
+            return ''
+        }
         let node = event.target;
-        let commentDiv=node.parentNode.parentNode;
+        let commentParentDiv=node.parentNode.parentNode;
         let X = ((event.clientX-node.getBoundingClientRect().left)/960)*100;
         let Y = ((event.clientY-node.getBoundingClientRect().top)/420)*100;
+        let commentDiv = document.createElement("DIV");
+        commentDiv.style.cssText = `left: ${X}%; top: ${Y}%; position: absolute;`;
+
         let commentInput = document.createElement("TEXTAREA");
-        commentInput.name = `comment${count_comment}`;
-        commentInput.style.cssText = `left: ${X}%; top: ${Y}%; position: absolute; font-family: Arial, sans-serif; font-size: 13px;text-align: left;line-height: 120%;`;
-        let textComment =  document.createTextNode("comment");
-        commentInput.appendChild(textComment);
+        commentInput.name = `comment${this.state.countComment}`;
+        commentInput.style.cssText = 'margin-left: 15px; margin-top: -5px; color: #fff; background-color: rgba(113,113,113,0.7); height: 100%;';
+        //commentInput.placeholder = "Прокоментировать";
+
+        let icon = document.createElement("IMG");
+        icon.src = this.props.pointerUrl;
+        icon.style.cssText = "position: absolute; left: 1%; top: 1%; height: 20px; width: 20px;";
+
+        let close = document.createElement("DIV");
+        close.className = "glyphicon glyphicon-remove";
+        close.addEventListener('click', e => e.target.parentNode.parentNode.removeChild(e.target.parentNode));
+
+        commentDiv.appendChild(icon);
+        commentDiv.appendChild(document.createElement("BR"));
         commentDiv.appendChild(commentInput);
-        commentInput.addEventListener('click', e => e.stopPropagation());
-        this.setState({count_comment: count_comment+1});
+        commentDiv.appendChild(close);
+        commentDiv.addEventListener('click', e => e.stopPropagation());
+        commentParentDiv.appendChild(commentDiv);
+        // this.setState(
+        //     {
+        //         commentsArr: this.state.commentsArr.push(
+        //             {
+        //                 'id': this.state.countComment,
+        //                 'style':
+        //                 {
+        //                     'left': X,
+        //                     'top': Y,
+        //                     'position': "absolute",
+        //                     'margin-left': "15px",
+        //                     'margin-top': "-5px",
+        //                     'color': "#fff",
+        //                     'background-color': "rgba(113,113,113,0.7)",
+        //                     'height': "100%"
+        //                 }
+        //             }
+        //         )
+        //     });
+        this.setState({countComment: this.state.countComment+1});
+        console.log(this.props.pointerUrl);
     }
     
     getComments(){
         let commentsArray = document.getElementsByTagName("TEXTAREA");
-        let commentClouds = {};
+        //console.log(commentsArray);
+        let commentClouds = [];
         if(commentsArray.length > 1) {
             for (let i = 0; i < commentsArray.length - 1; i++) {
-                commentClouds[commentsArray[i].name] =
+                commentClouds.push(
                 {
+                    id: i,
+                    name: commentsArray[i].name,
                     text: commentsArray[i].value,
                     style: commentsArray[i].attributes[1].value
-                }
+                });
             }
         }
         return JSON.stringify(commentClouds)
@@ -140,7 +188,7 @@ class EditorWindow extends React.Component {
 
     notAccepted(){
         const status = "not_accepted";
-        commentClouds = this.getComments();
+        //this.getComments();
         this.sendToReview(status, this.getComments());
 
     }
@@ -201,17 +249,22 @@ class EditorWindow extends React.Component {
                     </div>
 
 
-
-                </div>
+            </div>
         );
     }
 }
 
 export default function (node) {
-    const { imageUrl, imageId } = h.getAttrs(BAZOOKA_PREFIX, node);
+    const { imageUrl, imageId, pointerUrl } = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
-        <EditorWindow width={960} height={420} imageUrl={imageUrl} imageId = {imageId} />,
+        <EditorWindow
+            width = {960}
+            height = {420}
+            imageUrl = {imageUrl}
+            imageId = {imageId}
+            pointerUrl = {pointerUrl}
+        />,
         node
     );
 }

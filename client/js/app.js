@@ -6,7 +6,10 @@ import reviewTool from './images/reviewTool.jsx'
 import reviewAdmin from './admin/reviewsAdmin.jsx';
 import users from './admin/users.jsx';
 import toggleProfileForm from './profile/profile';
-import imageSlider from './images/slider.jsx';
+import goToReview from './dashboard/designer_review';
+import showBannerPopup from './dashboard/designer_dashboard_banner';
+import reviewResult from './images/reviewResult.jsx';
+import uploadFiles from './images/uploadFiles';
 
 require('./../css/main.styl');
 const Baz = require('bazooka');
@@ -16,13 +19,16 @@ Baz.register({
     'renderImages': renderImages,
     'reviewTool': reviewTool,
     'showBanner': showBanner,
-    'loginClick': loginClick,
     'reviewAdmin': reviewAdmin,
     'usersList': users,
     'toggleProfileForm': toggleProfileForm,
-    'auth_logout': logoutClick,
-    'auth_login': loginClick,
-    'imageSlider': imageSlider
+    "authLogout": logoutClick,
+    'authLogin': loginClick,
+    'goToReview': goToReview,
+    'showBannerPopup': showBannerPopup,
+    'reviewResult': reviewResult,
+    'uploadFiles' : uploadFiles
+  // dashboard
 });
 
 Baz.watch();

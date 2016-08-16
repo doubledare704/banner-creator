@@ -5,6 +5,9 @@ require('./modals.js');
 const modal = document.getElementById('reviewModal');
 
 function sendToReview(event) {
+    let canvas = editor.canv;
+    let objs = canvas.getObjects();
+    editor.filterAndDelete(objs);
     event.preventDefault();
     let o = editor.canv.getActiveObject(),
         g = editor.canv.getActiveGroup();

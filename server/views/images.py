@@ -6,54 +6,13 @@ import uuid
 from io import BytesIO
 
 from flask import (render_template, redirect, current_app, request, jsonify,)
-from flask_login import login_required
+from flask_login import login_required,current_user
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
 from server.db import db
 from server.models import Banner, BannerReview, BackgroundImage
 from server.utils.image import allowed_file, image_resize, image_preview
-
-
-@login_required
-def index():
-    '''function that renders all backgrounds - route: /index'''
-    if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            return json.dumps([{'message': 'No file part !'}])
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit a empty part without filename
-        if file.filename == '':
-            return json.dumps([{'message': 'No selected file'}])
-        if file and allowed_file(file.filename):
-            filename = str(uuid.uuid1()).replace("-", "") + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
-            preview_name = 'preview_' + filename
-            original_file = image_resize(file)
-            original_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-            preview_file = image_preview(file)
-            preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
-            title = request.form['title']
-            image = BackgroundImage(
-                name=filename,
-                title=title,
-                preview=preview_name
-            )
-            db.session.add(image)
-            return redirect(request.url)
-
-    images = BackgroundImage.query.filter_by(active=True)
-    image_json = json.dumps(
-        [{'id': image.id,
-          'url': '/uploads/' + image.name,
-          'title': image.title,
-          'preview': '/uploads/' + image.preview
-          }
-         for image in images
-         ])
-
-    return render_template('images/list.html', image_json=image_json)
 
 
 @login_required
@@ -115,3 +74,12 @@ def review_action():
         banner_review.comment_clouds = form['commentClouds']
 
         return '', 200
+@login_required
+def review_result(img_id):
+    review = BannerReview.query.get_or_404(img_id)
+    image_url = '/uploads/' + review.designer_imagename
+    return render_template(
+        'images/review_result.html',
+        image_url=image_url,
+        comments_json=review.comment_clouds
+    )

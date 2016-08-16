@@ -1,6 +1,7 @@
 @require '~normalize-styl'
 @require 'dashboard.styl'
 @require 'user_profile.styl'
+@require 'admin.styl'
 
 html, body
   height 100%
@@ -74,7 +75,23 @@ section.with_menu:hover > #rightcol
     padding-right 20px
 
 .container-content
-  margin 10%
+  margin 5% 0%
+
+.forcanvas
+  padding 0
+  margin 0
+
+.nopad
+  padding 0
+
+section.counter-grid
+  height auto
+
+  .number-input
+    display block
+    margin 0 auto
+    width 55%
+    height 25%
 
 canvas#main
   border 2px solid #000000
@@ -119,13 +136,16 @@ canvas#main
     cursor pointer
 
   .head1
-    font-size 24px
+    font-size 40px
 
   .head2
-    font-size 18px
+    font-size 30px
 
   .head3
-    font-size 12px
+    font-size 17px
+
+  .head4
+    font-size 13px
 
 #inputted
   display none
@@ -285,6 +305,9 @@ section.last-sec:hover > .rightcol2
   border: 1px solid red
   width: 960px
   height: 420px
+  background-position: center center
+  background-repeat: no-repeat
+  background-size: contain
 
 
 
