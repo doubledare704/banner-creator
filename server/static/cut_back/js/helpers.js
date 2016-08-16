@@ -169,11 +169,11 @@ function HELPER_CLASS() {
 		return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
 	};
 	
-	this.chech_input_color_support = function (id) {
-		if (document.getElementById(id).value != undefined && document.getElementById(id).value[0] == '#')
-			return true;
-		return false;
-	};
+	// this.chech_input_color_support = function (id) {
+	// 	if (document.getElementById(id).value != undefined && document.getElementById(id).value[0] == '#')
+	// 		return true;
+	// 	return false;
+	// };
 	
 	this.b64toBlob = function(b64Data, contentType, sliceSize) {
 		contentType = contentType || '';
