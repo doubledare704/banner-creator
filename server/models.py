@@ -1,14 +1,13 @@
 import datetime
 import enum
 
-import os
-from flask import current_app
 from flask import url_for
+
+from flask_login import unicode
 from sqlalchemy import UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.schema import Index
 from sqlalchemy.types import Enum
-from flask_login import unicode
 
 from server.db import db
 
@@ -38,6 +37,8 @@ class Image(BaseImage):
 
 class BackgroundImage(BaseImage):
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+    height = db.Column(db.Integer)
+    width = db.Column(db.Integer)
 
 
 class Project(db.Model):
