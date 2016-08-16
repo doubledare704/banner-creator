@@ -102,7 +102,7 @@ class BackgroundsContainer extends React.Component {
   render() {
     return (
       <div>
-        <a href="#" onClick={this.changeDisplay}>
+        <a href="#" className="btn btn-default" onClick={this.changeDisplay}>
           <i className="material-icons">image</i>
         </a>
         <div className={!this.state.displayList ? 'hidden': ''} id="backgroundsContainer">

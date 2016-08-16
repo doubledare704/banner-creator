@@ -1,4 +1,5 @@
 import base64
+import json
 import os
 import uuid
 from io import BytesIO
@@ -6,7 +7,6 @@ from io import BytesIO
 from flask import (render_template, current_app, request, jsonify,
                    url_for)
 from flask.views import MethodView
-
 from flask_login import login_required, current_user
 from sqlalchemy import desc
 from werkzeug.datastructures import FileStorage
@@ -58,7 +58,7 @@ def history_image(history_image_id):
     else:
         edit_history = ImageHistory.query.filter_by(
             review_image=history_image_id).order_by(desc(ImageHistory.created)).first_or_404()
-        return jsonify({'fetch_history': edit_history.json_hist})
+        return jsonify(fetch_history=edit_history.json_hist)
 
 
 @login_required
@@ -185,7 +185,7 @@ class ReviewView(MethodView):
 
             history = ImageHistory(
                 review_image=banner.id,
-                json_hist=form['file_json']
+                json_hist=json.loads(form['file_json'])
             )
             db.session.add(history)
             review_jsoned = {

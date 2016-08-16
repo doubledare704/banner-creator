@@ -1,7 +1,7 @@
 import {editor} from './fabmain';
 import {disableControls} from './editor.js';
 import {csrfToken} from '../helpers';
-import { activateHtmlPopUp, deactivatePopUp } from '../popUp';
+import {activateHtmlPopUp, deactivatePopUp} from '../popUp';
 
 
 function sendToReview(event) {
@@ -30,20 +30,22 @@ function sendToReview(event) {
         .then((res) => res.json())
         .then(function ({result}) {
             activateHtmlPopUp({
-              child: "<p class='alert alert-success'>Баннер успешно отправлен на ревью</p>",
-              flash: true
+                child: "<p class='alert alert-success'>Баннер успешно отправлен на ревью</p>",
+                flash: true
             });
             document.getElementById('resulting').src = result.src;
-            document.getElementById('continue').href += result.rev;
+            if (document.getElementById('continue')) {
+                document.getElementById('continue').href += result.rev;
+                document.getElementById('continue').style.display = "inline-block";
+            }
             document.getElementById('double').style.display = "block";
-            document.getElementById('continue').style.display = "inline-block";
-            document.getElementById('result_review').style.display = "block";
+            document.getElementById('result_review').style.display = "inline-block";
             localStorage.clear();
         })
         .catch(function (error) {
             activateHtmlPopUp({
-              child: "<p class='alert alert-danger'>Ошибка при выполнении запроса. Попробуйте отправить повторно.</p>",
-              flash: true
+                child: "<p class='alert alert-danger'>Ошибка при выполнении запроса. Попробуйте отправить повторно.</p>",
+                flash: true
             });
         });
     deactivatePopUp();
