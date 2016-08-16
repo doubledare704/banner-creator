@@ -16,51 +16,60 @@ const beforeCutter = document.getElementById('cutters');
 const allCutted = document.getElementById('from_db');
 
 // loads all cuted backgrounds from db
-allCutted.addEventListener('mouseover', function popList() {
-    const lister = document.getElementsByClassName('list-cuted');
-    fetch('/editor/cut-choose/',
-        {
-            method: 'get',
-            credentials: 'same-origin',
-            headers: {
-                'Content-Type': 'application/json'
+allCutted.addEventListener('click', function popList(event) {
+    const lister = document.getElementById('list-cuted');
+    if (!lister.classList.contains('hidden')) {
+        lister.classList.remove('flexic');
+        lister.classList.add('hidden');
+    }
+    else {
+        lister.innerHTML = '';
+        lister.classList.remove('hidden');
+        lister.classList.add('flexic');
+        fetch('/editor/cut-choose/',
+            {
+                method: 'get',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             }
-        }
-    )
-        .then((res) => res.json())
-        .then(function ({result}) {
-            for (var i = 0; i < result.length; i++) {
-                var elem = document.createElement("div");
-                elem.innerHTML = "<img class='boxer' src=" + result[i].preview + " href=" + result[i].url + " />";
-                lister[0].appendChild(elem);
-            }
-            allCutted.removeEventListener('mouseover', popList);
-            const cut_list = document.querySelectorAll('.list-cuted div img');
-            for (let i = 0; i < cut_list.length; i++) {
-                cut_list[i].addEventListener('click', function () {
-                    let url = this.getAttribute("href");
-                    if (url) {
-                        fabric.Image.fromURL(url, (img) => {
+        )
+            .then((res) => res.json())
+            .then(function ({result}) {
+                for (var i = 0; i < result.length; i++) {
+                    var elem = document.createElement("div");
+                    elem.innerHTML = "<img class='boxer' src=" + result[i].preview + " href=" + result[i].url + " />";
+                    lister.innerHTML += elem.outerHTML;
+                }
+                const cut_list = document.querySelectorAll('#list-cuted div img');
+                event.stopPropagation();
+                for (let i = 0; i < cut_list.length; i++) {
+                    cut_list[i].addEventListener('click', function () {
+                        let url = this.getAttribute("href");
+                        if (url) {
+                            fabric.Image.fromURL(url, (img) => {
 
-                            let originalsize = img.getOriginalSize();
-                            let imgratio = img.width / img.height;
-                            let newsize = [editor.canv.width * 0.5, editor.canv.width * 0.5 / imgratio];
+                                let originalsize = img.getOriginalSize();
+                                let imgratio = img.width / img.height;
+                                let newsize = [editor.canv.width * 0.5, editor.canv.width * 0.5 / imgratio];
 
-                            if (originalsize.width > editor.canv.width || originalsize.height > editor.canv.height) {
-                                img.set({
-                                    width: newsize[0],
-                                    height: newsize[1]
-                                })
-                            }
-                            editor.canv.add(img);
-                        });
-                    }
-                });
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+                                if (originalsize.width > editor.canv.width || originalsize.height > editor.canv.height) {
+                                    img.set({
+                                        width: newsize[0],
+                                        height: newsize[1]
+                                    })
+                                }
+                                editor.canv.add(img);
+                            });
+                        }
+                    });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
 });
 
 // save to local storage
