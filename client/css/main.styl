@@ -262,18 +262,8 @@ section.last-sec:hover > .rightcol2
     color #000000
     text-decoration none
 
-.list-cuted
+#list-cuted
   display none
-
-  div
-    flex-basis 250px
-    overflow hidden
-
-    .boxer
-      height 156px
-
-#from_db:hover .list-cuted
-  display flex
   overflow auto
   background-color #fff
   flex-wrap wrap
@@ -282,8 +272,19 @@ section.last-sec:hover > .rightcol2
   top 25%
   left 170px
   border 1px dashed #000
-  height 700px
+  min-height 160px
+  max-height 500px
   width 777px
+
+  div
+    flex-basis 250px
+    overflow hidden
+
+    .boxer
+      height 156px
+
+#list-cuted.flexic
+  display flex
 
 #cutters
   cursor: pointer;
