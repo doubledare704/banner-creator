@@ -26,6 +26,7 @@ class BaseImage(db.Model):
 
 class Banner(BaseImage):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     review = db.relationship('BannerReview', backref='banner',
                              uselist=False)
     history = db.relationship('ImageHistory', backref="parent")
@@ -46,6 +47,7 @@ class Project(db.Model):
     name = db.Column(db.String(250), unique=True)
     background_images = db.relationship('BackgroundImage', backref='project', lazy='dynamic')
     fonts = db.relationship('Font', backref='project')
+    banners = db.relationship('Banner', backref='project')
 
 
 class BannerReview(db.Model):
