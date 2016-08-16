@@ -3,6 +3,16 @@
 {% import 'user/macros.html' as macros %}
 
 {% block dashboard_content %}
+<form>
+  <div class="row">
+    <div class="form-group">
+      <div class="input-group col-lg-6 col-md-6 col-sm-6">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+        <input type="text" class="form-control" name="title" placeholder="Поиск по названию">
+      </div>
+    </div>
+  </div>
+</form>
 <div class="row">
   {% for banner in banners.items %}
   <div class="col-md-6 dashboard-banner-container">
