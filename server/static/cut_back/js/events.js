@@ -16,8 +16,8 @@ document.onmouseup = EVENTS.mouse_release;	//mouse resease
 document.addEventListener("mousewheel", EVENTS.mouse_wheel_handler, false);	//mouse scroll
 document.addEventListener("DOMMouseScroll", EVENTS.mouse_wheel_handler, false);	//mouse scroll
 document.oncontextmenu = function (e) { return EVENTS.mouse_right_click(e); };	//mouse right click
-document.getElementById('color_hex').onkeyup = function (e) { GUI.set_color_manual(e); };	//on main color type
-document.getElementById('color_hex').onpaste = function (e) { GUI.set_color_manual(e); }; // on paste in main color input
+// document.getElementById('color_hex').onkeyup = function (e) { GUI.set_color_manual(e); };	//on main color type
+// document.getElementById('color_hex').onpaste = function (e) { GUI.set_color_manual(e); }; // on paste in main color input
 
 //windows touch
 document.addEventListener('MSPointerDown', EVENTS.mouse_click, false);
