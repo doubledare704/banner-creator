@@ -3,7 +3,7 @@ from server.views import views as main_views, dashboard as dashboard_views
 from server.views.admin import (
     admin, backgrounds, inactivate_image, activate_image, users_page, remove_user, change_user,
     default_project_page, create_project, project_page, add_font, activate_user,
-    change_headers)
+    change_headers, change_project_button)
 from server.views.auth import login_page, authorize, oauth_callback, log_out
 from server.views.editor import (continue_edit, history_image, cuts_background,
                                  save_cuted, load_from_pc, load_all_cuts,
@@ -22,8 +22,6 @@ def setup_routes(app):
     app.add_url_rule('/delete/', methods=['POST'], view_func=image_delete)
     app.add_url_rule('/rename/', methods=['POST'], view_func=image_rename)
     app.add_url_rule('/editor/', view_func=editor)
-    app.add_url_rule('/api/backgrounds/', view_func=background_images)
-    app.add_url_rule('/api/backgrounds/<int:page>', view_func=background_images)
 
     # user profile
     app.add_url_rule('/profile/', methods=['GET', 'POST'], view_func=main_views.user_profile)
@@ -53,6 +51,7 @@ def setup_routes(app):
     app.add_url_rule('/admin/projects/', methods=['POST'], view_func=create_project)
     app.add_url_rule('/admin/projects/<int:project_id>/fonts/', methods=['POST'], view_func=add_font)
     app.add_url_rule('/admin/projects/<int:project_id>/headers/', methods=['POST'], view_func=change_headers)
+    app.add_url_rule('/admin/projects/<int:project_id>/button/', methods=['POST'], view_func=change_project_button)
 
     app.add_url_rule('/admin/users', view_func=users_page, endpoint='admin_users')
     app.add_url_rule('/admin/users/<int:user_id>', methods=['POST'], view_func=change_user)
@@ -67,6 +66,8 @@ def setup_routes(app):
     app.add_url_rule('/editor/local/', methods=['POST'], view_func=load_from_pc)
     app.add_url_rule('/editor/cut-choose/', view_func=load_all_cuts)
     app.add_url_rule('/editor/review/', view_func=ReviewView.as_view('review'))
+    app.add_url_rule('/editor/backgrounds/', view_func=background_images)
+
 
     # auth routes
     app.add_url_rule('/login', view_func=login_page)

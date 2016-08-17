@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Создание банера{% endblock %}
 
+{% import 'user/macros.html' as macros %}
+
+{% block head %}
+    {{ super() }}
+    {{ macros.load_project_fonts(project) }}
+{% endblock %}
+
 {% block content %}
     <div class="container-fluid">
         <div class="row">
@@ -12,28 +19,42 @@
                     <div id="rightcol">
                         <h2>Выберите вариант текста</h2>
                         <ul>
-                            <li class="head1" data-size="30" data-text="Header text">H1 подзаголовок</li>
-                            <li class="head2" data-size="20" data-text="Header text">H2 подзаголовок</li>
-                            <li class="head3" data-size="10" data-text="Header text">H3 подзаголовок
+                            {% if fonts|length < 1 %}
+                                <li class="head3">В проекте нет избранных шрифтов и стилей к заголовкам. Обратитесь к
+                                    администратору или дизайнеру, чтобы заполнить.
+                                </li>
+                            {% elif fonts|length < 5 %}
+                                <li class="head3">В проекте не заголовки имеют свои стили. Обратитесь к
+                                    администратору или дизайнеру, чтобы заполнить.
+                                </li>
+                            {% else %}
+                                {% for font in fonts[:3] %}
+                                    <li class="head{{ loop.index }}" data-font="{{ font.name }}"
+                                        data-size="{{ font.size }}" data-text="Заголовок">H1
+                                        подзаголовок
+                                    </li>
+                                {% endfor %}
                                 <hr>
-                            </li>
-                            <li class="head3" data-size="24" data-type="p" data-text="от 1 700 грн">Цена от для большого
-                                банера
-                            </li>
-                            <li class="head4" data-size="15" data-type="p" data-text="от 1 700 грн">Цена от для
-                                маленького
-                                банера
-                            </li>
+                                {% for font in fonts[3:] %}
+                                    <li class="price{{ loop.index }}" data-font="{{ font.name }}"
+                                        data-size="{{ font.size }}" data-type="p"
+                                        data-text="от 1 700 грн">Цена от для
+                                        большого
+                                        банера
+                                    </li>
+                                {% endfor %}
+
+                            {% endif %}
                         </ul>
                     </div>
                 </section>
                 <section>
-                    <a href="#" id="addButt" class="btn btn-default tooltipp" data-tooltip="Добавить кнопку">
+                    <a href="#" id="addButt" class="btn btn-default tooltipp" data-button="{{ button }}" data-tooltip="Добавить кнопку">
                         <i class="material-icons">input</i>
                     </a>
                 </section>
 
-                <section id="backgroundSection" data-bazooka="backgroundsList"
+                <section id="backgroundSection" data-bazooka="backgroundsList" data-project="{{ p_id }}"
                          data-bg-view-url="{{ url_for('background_images') }}"
                          data-bg-img-url="{{ url_for('uploaded_file', filename='') }}">
                 </section>
