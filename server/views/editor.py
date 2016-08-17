@@ -69,7 +69,7 @@ def cuts_background():
 
 @login_required
 def save_cuted():
-    if 'file' not in request.json:
+    if 'file' and 'u_id' not in request.json:
         return jsonify({'result': 'no field file in form'}), 404
     else:
         _, b64data = request.json['file'].split(',')
@@ -83,7 +83,10 @@ def save_cuted():
         preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
         title = random_name
 
+        user = User.query.get_or_404(request.json['u_id'])
+
         img_cutted = Image(
+            user_id= user.id,
             name=filename,
             title=title,
             preview=preview_name
@@ -126,7 +129,7 @@ def load_from_pc():
 
 @login_required
 def load_all_cuts():
-    allimages = Image.query.all()
+    allimages = Image.query.filter_by(user_id=current_user.id)
     cut_jsoned = []
     for img in allimages:
         cut_jsoned.append({
