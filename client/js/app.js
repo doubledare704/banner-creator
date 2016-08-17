@@ -4,7 +4,6 @@ import projectsPanel from './admin/projects.jsx';
 import showBanner from './dashboard/dashboard';
 import {loginClick, logoutClick} from './authHelper';
 import reviewTool from './images/reviewTool.jsx';
-import reviewAdmin from './admin/reviewsAdmin.jsx';
 import users from './admin/users.jsx';
 import toggleProfileForm from './profile/profile';
 import goToReview from './dashboard/designer_review';
@@ -25,7 +24,6 @@ Baz.register({
     'renderImages': renderImages,
     'reviewTool': reviewTool,
     'showBanner': showBanner,
-    'reviewAdmin': reviewAdmin,
     'usersList': users,
     'toggleProfileForm': toggleProfileForm,
     "authLogout": logoutClick,

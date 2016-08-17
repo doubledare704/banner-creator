@@ -2,11 +2,12 @@ import datetime
 import enum
 
 from flask import url_for
+
+from flask_login import unicode
 from sqlalchemy import UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.schema import Index
 from sqlalchemy.types import Enum
-from flask_login import unicode
 
 from server.db import db
 
@@ -25,6 +26,7 @@ class BaseImage(db.Model):
 
 class Banner(BaseImage):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     review = db.relationship('BannerReview', backref='banner',
                              uselist=False)
     history = db.relationship('ImageHistory', backref="parent")
@@ -36,6 +38,8 @@ class Image(BaseImage):
 
 class BackgroundImage(BaseImage):
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+    height = db.Column(db.Integer)
+    width = db.Column(db.Integer)
 
 
 class Project(db.Model):
@@ -44,6 +48,7 @@ class Project(db.Model):
     background_images = db.relationship('BackgroundImage', backref='project', lazy='dynamic')
     fonts = db.relationship('Font', backref='project')
     headers = db.relationship('Header', backref='project')
+    banners = db.relationship('Banner', backref='project')
 
 
 class BannerReview(db.Model):

@@ -4,10 +4,10 @@ import os
 
 from flask import render_template, request, redirect, current_app,url_for
 
+import PIL
 from flask_login import current_user, login_required
 from flask_paginate import Pagination
 from werkzeug.utils import secure_filename
-
 
 from server.utils.image import allowed_file, image_preview
 from server.models import User, BannerReview, Banner, BackgroundImage, Project
@@ -34,8 +34,11 @@ def dashboard():
 @login_required
 def user_banners():
     page = int(request.args.get('page', 1))  # get page number from url query string
-    banners = Banner.query.filter_by(user=current_user, active=True).order_by(Banner.id.desc()
-                                                                              ).paginate(page=page, per_page=10)
+    title = request.args.get('title', '')
+    banners = Banner.query.filter_by(user=current_user, active=True
+                                     ).filter(Banner.title.contains(title)
+                                     ).order_by(Banner.id.desc()
+                                     ).paginate(page=page, per_page=10)
     pagination = Pagination(per_page=10, page=page, total=banners.total, css_framework='bootstrap3')
     return render_template('user/user_banners.html', banners=banners, pagination=pagination)
 
@@ -70,11 +73,14 @@ def upload():
             preview_file = image_preview(file)
             preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
 
+            width, height = PIL.Image.open(file).size  # get image size
             image = BackgroundImage(
                 name=filename,
                 title=title,
                 preview=preview_name,
-                project_id=project
+                project_id=project,
+                width = width,
+                height = height
             )
             db.session.add(image)
 

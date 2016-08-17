@@ -1,14 +1,14 @@
 """create headers
 
 Revision ID: 40cde3c7eadb
-Revises: 6ddd40dc3e15
+Revises: 57efb7c54e86
 Create Date: 2016-08-16 16:05:14.477752
 
 """
 
 # revision identifiers, used by Alembic.
 revision = '40cde3c7eadb'
-down_revision = '6ddd40dc3e15'
+down_revision = '57efb7c54e86'
 
 from alembic import op
 import sqlalchemy as sa
