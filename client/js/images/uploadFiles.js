@@ -46,8 +46,9 @@ function uploadFiles (){
                 console.log(y);
                 activatePopUp({child: <h4 className="text-center">Загружено {y} из {all} файлов </h4> ,
                     confirm: true,
-                    confirmAction: () => {files.value = ""; progr.style.cssText = `width: 0%;`;}
+                    confirmAction: () => {window.location.href = "/dashboard/backgrounds/";}
                 });
+
 
             }
         })

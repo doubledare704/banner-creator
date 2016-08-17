@@ -241,7 +241,7 @@ class ImagesList extends React.Component {
                   <hr/>
                 <div className="form-inline">
                         <div className="form-group">
-                            <input type="text" placeholder="Поиск..." className="search-field" onChange={this.handleSearch} />
+                            <input type="text" placeholder="Поиск..." className="form-control" onChange={this.handleSearch} />
                         </div>
                 </div>
                      <hr/>

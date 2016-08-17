@@ -13,6 +13,8 @@ import deleteBanner from './dashboard/dashboard_delete_banner';
 import handleCreateProjectClick from './admin/create_project_field';
 import {uploadButton} from './helpers';
 import uploadFont from './admin/upload_font';
+import projectsHeaders from './admin/headers.jsx';
+import {dropDown} from './projects/dropdown';
 import uploadFiles from './images/uploadFiles';
 import reviewResult from './images/reviewResult.jsx';
 
@@ -32,10 +34,13 @@ Baz.register({
     'uploadButton': uploadButton,
     'projectsPanel': projectsPanel,
     'uploadFont': uploadFont,
+    'projectsHeaders': projectsHeaders,
+    // dashboard
     'goToReview': goToReview,
     'showBannerPopup': showBannerPopup,
     'deleteReview': deleteReview,
     'deleteBanner': deleteBanner,
+    'dropDown': dropDown,
     'uploadFiles' : uploadFiles,
     'reviewResult': reviewResult
 });

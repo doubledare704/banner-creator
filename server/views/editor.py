@@ -19,6 +19,7 @@ from server.utils.image import image_preview
 
 @login_required
 def editor():
+    proj_id = request.args.get('project_id')
     return render_template('editor_markuped.html')
 
 
@@ -68,8 +69,8 @@ def cuts_background():
 
 @login_required
 def save_cuted():
-    if 'file' not in request.json:
-        return jsonify({'result': 'no field file in form'}), 406
+    if 'file' and 'u_id' not in request.json:
+        return jsonify({'result': 'no field file in form'}), 404
     else:
         _, b64data = request.json['file'].split(',')
         random_name = request.json['name']
@@ -82,7 +83,10 @@ def save_cuted():
         preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
         title = random_name
 
+        user = User.query.get_or_404(request.json['u_id'])
+
         img_cutted = Image(
+            user_id= user.id,
             name=filename,
             title=title,
             preview=preview_name
@@ -99,7 +103,7 @@ def save_cuted():
 @login_required
 def load_from_pc():
     if not request.files:
-        return jsonify({'result': 'no field file in form'}), 406
+        return jsonify({'result': 'no field file in form'}), 404
     else:
         file_ = request.files['file']
         name = str(uuid.uuid4()) + '.png'
@@ -125,7 +129,7 @@ def load_from_pc():
 
 @login_required
 def load_all_cuts():
-    allimages = Image.query.all()
+    allimages = Image.query.filter_by(user_id=current_user.id)
     cut_jsoned = []
     for img in allimages:
         cut_jsoned.append({
@@ -146,7 +150,7 @@ class ReviewView(MethodView):
     def post(self):
         form = request.form
         if 'file' not in request.form:
-            return jsonify({'result': 'no field file in form'}), 406
+            return jsonify({'result': 'no field file in form'}), 404
         else:
             _, b64data = form['file'].split(',')
             name = str(uuid.uuid4()) + '.png'

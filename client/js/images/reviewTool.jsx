@@ -1,91 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
-import Editor from '../editor/editor.js';
-import {disableControls} from '../editor/editor.js';
 import {activatePopUp} from '../popUp.js';
 import {csrfToken} from '../helpers'
 
 const BAZOOKA_PREFIX = 'body';
 
-class EditorWindow extends React.Component {
+class ReviewWindow extends React.Component {
     constructor(props) {
         super(props);
         this.state={
             countComment:0,
-            commentOn: true,
             commentsArr: []
         };
-        this.addText = this.addText.bind(this);
-        this.deleteObject = this.deleteObject.bind(this);
-        this.addArrow = this.addArrow.bind(this);
-        this.addRectangle = this.addRectangle.bind(this);
-        this.addEllipse = this.addEllipse.bind(this);
-        this.fileInput = this.fileInput.bind(this);
-        this.sendToReview = this.sendToReview.bind(this);
-        this.addDot = this.addDot.bind(this);
         this.accepted = this.accepted.bind(this);
         this.notAccepted = this.notAccepted.bind(this);
         this.clickComment = this.clickComment.bind(this);
         this.getComments = this.getComments.bind(this);
     }
 
-    componentDidMount() {
-        let canvas = ReactDOM.findDOMNode(this.refs.canvas);
-        this.editor = new Editor(canvas, this.props.width, this.props.height);
-        this.fileInput();
-    }
-
-    addText() {
-        this.editor.setFont("Roboto", 28, "#000", "...замечание", "#ff9900", 0.6);
-        this.editor.addDot();
-    }
-
-    addDot() {
-        this.editor.addDot();
-        this.setState({commentOn: !this.state.commentOn});
-    }
-
-    deleteObject() {
-        let activeObject = this.editor.canv.getActiveObject(),
-            activeGroup = this.editor.canv.getActiveGroup();
-        this.editor.deleteObject(activeObject, activeGroup);
-    }
-
-    addArrow() {
-        this.editor.addArrow();
-    }
-
-    addRectangle() {
-        this.editor.addRectangle();
-    }
-
-    addEllipse() {
-        this.editor.addEllipse();
-    }
-
-    fileInput() {
-        this.editor.setBackground(this.props.imageUrl);
-    }
-
     sendToReview(status, commentClouds){
         const img_id = this.props.imageId;
-        const comment = this.refs.comment.value;
-        let canvas = this.editor.canv;
-        let objs = canvas.getObjects();
-        this.editor.filterAndDelete(objs);
-        let activeObject = this.editor.canv.getActiveObject(),
-            activeGroup = this.editor.canv.getActiveGroup();
-        disableControls(activeObject, activeGroup);
+
         const formData = new FormData();
-        let imageReview = this.editor.canv.toJSON();
+
         formData.append('id', img_id);
         formData.append('status', status);
         formData.append('comment', comment);
         formData.append('commentClouds', commentClouds);
         // append image as base64 string
-        formData.append('file', this.editor.canv.toDataURL("image/png", 1.0));
-        formData.append('file_json', JSON.stringify(imageReview));
+        formData.append('file', ); // file Id or something
         fetch("/review_action/",
             {
                 method: 'POST',
@@ -112,37 +56,37 @@ class EditorWindow extends React.Component {
     }
 
     clickComment(event){
-        if(!this.state.commentOn){
-            console.log("NOOOOO!");
-            event.stopPropagation();
-            return ''
-        }
+        
         let node = event.target;
-        let commentParentDiv=node.parentNode.parentNode;
-        let X = ((event.clientX-node.getBoundingClientRect().left)/960)*100;
-        let Y = ((event.clientY-node.getBoundingClientRect().top)/420)*100;
+        //let commentParentDiv=node.parentNode.parentNode;
+        let X = ((event.clientX-node.getBoundingClientRect().left)/960)*100 + 2;
+        let Y = ((event.clientY-node.getBoundingClientRect().top)/420)*100 -5;
         let commentDiv = document.createElement("DIV");
+        commentDiv.className = "dashboard-media-body";
         commentDiv.style.cssText = `left: ${X}%; top: ${Y}%; position: absolute;`;
 
         let commentInput = document.createElement("TEXTAREA");
         commentInput.name = `comment${this.state.countComment}`;
-        commentInput.style.cssText = 'margin-left: 15px; margin-top: -5px; color: #fff; background-color: rgba(113,113,113,0.7); height: 100%;';
-        //commentInput.placeholder = "Прокоментировать";
+        commentInput.style.cssText = 'margin-left: 13px; margin-top: -5px; background-color: #f5f5f5; border: 1px solid #f5f5f5; height: 100%;';
+        commentInput.placeholder = "Коммент...";
 
-        let icon = document.createElement("IMG");
-        icon.src = this.props.pointerUrl;
-        icon.style.cssText = "position: absolute; left: 1%; top: 1%; height: 20px; width: 20px;";
 
-        let close = document.createElement("DIV");
-        close.className = "glyphicon glyphicon-remove";
-        close.addEventListener('click', e => e.target.parentNode.parentNode.removeChild(e.target.parentNode));
+        let sp = document.createElement("SPAN");
+        let xt = document.createTextNode("x");
+        sp.className = "label label-danger";
+        sp.style.cssText = "top: -5%; left: 5%; margin-left: 4px;";
+        sp.appendChild(xt);
+        sp.addEventListener('click', e => e.target.parentNode.parentNode.removeChild(e.target.parentNode));
 
-        commentDiv.appendChild(icon);
-        commentDiv.appendChild(document.createElement("BR"));
-        commentDiv.appendChild(commentInput);
-        commentDiv.appendChild(close);
+        let p = document.createElement("P");
+        p.className = "dashboard-well";
+        p.appendChild(commentInput);
+        p.appendChild(sp);
+
+
+        commentDiv.appendChild(p);
         commentDiv.addEventListener('click', e => e.stopPropagation());
-        commentParentDiv.appendChild(commentDiv);
+        node.appendChild(commentDiv);
         // this.setState(
         //     {
         //         commentsArr: this.state.commentsArr.push(
@@ -163,25 +107,29 @@ class EditorWindow extends React.Component {
         //         )
         //     });
         this.setState({countComment: this.state.countComment+1});
-        console.log(this.props.pointerUrl);
     }
-    
+
     getComments(){
-        let commentsArray = document.getElementsByTagName("TEXTAREA");
-        //console.log(commentsArray);
+        let commentsArray = document.getElementsByClassName("dashboard-media-body");
+
+        console.log(commentsArray);
+        
         let commentClouds = [];
-        if(commentsArray.length > 1) {
-            for (let i = 0; i < commentsArray.length - 1; i++) {
+        if(commentsArray.length > 0) {
+            for (let i = 0; i < commentsArray.length; i++) {
                 commentClouds.push(
                 {
                     id: i,
-                    name: commentsArray[i].name,
-                    text: commentsArray[i].value,
-                    style: commentsArray[i].attributes[1].value
+                    style: {
+                        left: commentsArray[i].style.left,
+                        top: commentsArray[i].style.top
+                    }
+
                 });
             }
         }
-        return JSON.stringify(commentClouds)
+        console.log(commentClouds);
+        // return JSON.stringify(commentClouds)
     }
 
     accepted(){
@@ -191,83 +139,39 @@ class EditorWindow extends React.Component {
     }
 
     notAccepted(){
+        console.log('CLICKED');
         const status = "not_accepted";
-        //this.getComments();
-        this.sendToReview(status, this.getComments());
+        this.getComments();
+        //this.sendToReview(status, this.getComments());
 
     }
 
     render() {
         return (<div>
-                    <div onClick={this.clickComment} className="comment-wrapper">
-                        <canvas id="main" ref="canvas"></canvas>
-                    </div>
-
-                    <div className="btn btn-default btn-wrapper">
-                        <i className="glyphicon glyphicon-text-height"/>
-                        <span onClick={this.addText}>екст</span>
-                    </div>
-
-                    <div className="btn btn-default btn-wrapper">
-                        <i className="glyphicon glyphicon-certificate"/>
-                        <span onClick={this.addDot}> Точка</span>
-                    </div>
-
-                    <div className="btn btn-default btn-wrapper">
-                        <i className="glyphicon glyphicon-arrow-right"/>
-                        <span onClick={this.addArrow}>Стрелка</span>
-                    </div>
-
-                    <div className="btn btn-default btn-wrapper">
-                        <i className="glyphicon glyphicon-unchecked"/>
-                        <span onClick={this.addRectangle}>Прямоуголник</span>
-                    </div>
-
-                    <div className="btn btn-default btn-wrapper">
-                        <i className="glyphicon glyphicon-unchecked"/>
-                        <span onClick={this.addEllipse}>Елипс</span>
-                    </div>
-
-                    <div className="btn btn-danger btn-wrapper">
-                        <i className="glyphicon glyphicon-trash"/>
-                        <span onClick={this.deleteObject}>Удали</span>
+                    <div onClick={this.clickComment} className="dashboard-comment-wrapper" style={{backgroundImage: `url(${this.props.imageUrl})`}}>
                     </div>
 
                     <div className="col-lg-10">
-                         <div className="form-group">
-                          <label for="comment">Коментарий:</label>
-                          <textarea className="form-control" ref="comment" name="main_comment" rows="5" id="comment"></textarea>
-                        </div>
-                        <form className="form-inline" action="" method="post">
-
-                            <div className="btn btn-danger form-group btn-wrapper">
+                            <button onClick={this.notAccepted} className="btn btn-danger form-group btn-wrapper">
                                 <i className="glyphicon glyphicon-remove"/>
-                                <span onClick={this.notAccepted}> Не Принят</span>
-                            </div>
+                            </button>
 
-                            <div className="btn btn-success form-group btn-wrapper">
+                            <button onClick={this.accepted} className="btn btn-success form-group btn-wrapper">
                                 <i className="glyphicon glyphicon-ok"/>
-                                <span onClick={this.accepted}> Принят</span>
-                            </div>
-                        </form>
+                            </button>
                     </div>
-
-
             </div>
         );
     }
 }
 
 export default function (node) {
-    const { imageUrl, imageId, pointerUrl } = h.getAttrs(BAZOOKA_PREFIX, node);
+    const { imageUrl, imageId } = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
-        <EditorWindow
-            width = {960}
-            height = {420}
+        <ReviewWindow
             imageUrl = {imageUrl}
             imageId = {imageId}
-            pointerUrl = {pointerUrl}
         />,
         node
     );

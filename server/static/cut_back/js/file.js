@@ -82,6 +82,9 @@ function FILE_CLASS() {
     this.SAVE_TO_SERVER = function () {
         var tempCanvas = document.createElement("canvas");
         var tempCtx = tempCanvas.getContext("2d");
+        var user_id = document.getElementById('wrapper').getAttribute('current_user');
+        user_id = parseInt(user_id);
+        console.log(user_id);
         tempCanvas.width = WIDTH;
         tempCanvas.height = HEIGHT;
         //take data
@@ -96,7 +99,7 @@ function FILE_CLASS() {
 
         //trim
         var trim_info = IMAGE.trim_info(tempCanvas);
-        tmp_data = tempCtx.getImageData(0, 0, WIDTH, HEIGHT);
+        var tmp_data = tempCtx.getImageData(0, 0, WIDTH, HEIGHT);
         tempCtx.clearRect(0, 0, WIDTH, HEIGHT);
         tempCanvas.width = WIDTH - trim_info.right - trim_info.left;
         tempCanvas.height = HEIGHT - trim_info.bottom - trim_info.top;
@@ -105,7 +108,8 @@ function FILE_CLASS() {
         var random_name = Math.random().toString(36).substr(2, 12) + '.png';
         var data = {
             file: image_base64,
-            name: 'cutted' + random_name
+            name: 'cutted' + random_name,
+            u_id: user_id
         };
         fetch('/editor/cut_saved/', {
             method: 'post',
