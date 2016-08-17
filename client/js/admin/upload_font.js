@@ -17,7 +17,7 @@ function configUploadFont(projectId) {
         })
             .then((response) => {
                     if (response.ok) {
-                        location.reload();
+                        return location.reload();
                     }
                     let errorMessage;
                     switch (response.status) {

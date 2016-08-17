@@ -1,4 +1,5 @@
 import json
+import uuid
 
 import os
 
@@ -203,10 +204,10 @@ def project_page(project_id):
             } for header in project.headers}
         return render_template('admin/projects/headers.html', project=project, fonts=json.dumps(project_fonts),
                                headers=json.dumps(project_headers))
-        # elif tab == 'background':
-        #     return render_template('admin/projects/headers.html', project=project, fonts=json.dumps(project_fonts))
-        # elif tab == 'button':
-        #     return render_template('admin/projects/headers.html', project=project, fonts=json.dumps(project_fonts))
+    # elif tab == 'background':
+    #     return render_template('admin/projects/headers.html', project=project, fonts=json.dumps(project_fonts))
+    elif tab == 'button':
+        return render_template('admin/projects/button.html', project=project)
 
 
 @requires_roles('admin', 'designer')
@@ -245,3 +246,20 @@ def change_headers(project_id):
             db.session.add(Header(name=name, font_id=header['font_id'], size=header['size'], project_id=project_id))
     db.session.commit()
     return 'OK', 200
+
+
+@requires_roles('admin', 'designer')
+def change_project_button(project_id):
+    project = Project.query.get_or_404(project_id)
+    if 'button_file' not in request.files:
+        return BadRequest()
+    file = request.files['button_file']
+    if file.filename == '':
+        return BadRequest()
+    _, extension = os.path.splitext(file.filename)
+    if file and extension == ".png":
+        filename = str(uuid.uuid1()).replace("-", "") + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
+        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+        project.button = filename
+        db.session.add(project)
+    return redirect(url_for('admin_project_page', project_id=project.id, tab='button'))
