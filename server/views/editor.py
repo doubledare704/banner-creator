@@ -38,7 +38,7 @@ def background_images():
 @login_required
 def continue_edit(history_image_id):
     edit = ImageHistory.query.filter_by(review_image=history_image_id).first_or_404()
-    designers = User.query.filter_by(role=User.UserRole.designer)
+    designers = User.query.filter_by(role=User.UserRole.designer).filter(User.id != current_user.id)
     return render_template('editor_history.html', id_review=edit.review_image, designers=designers)
 
 
@@ -146,7 +146,7 @@ class ReviewView(MethodView):
     decorators = [login_required]
 
     def get(self):
-        designers = User.query.filter_by(role=User.UserRole.designer)
+        designers = User.query.filter_by(role=User.UserRole.designer).filter(User.id != current_user.id)
         return render_template('editor/review_modal.html', designers=designers)
 
     def post(self):
