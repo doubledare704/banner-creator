@@ -46,6 +46,7 @@ class BackgroundImage(BaseImage):
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), unique=True)
+    button = db.Column(db.String(36), unique=True)
     background_images = db.relationship('BackgroundImage', backref='project', lazy='dynamic')
     fonts = db.relationship('Font', backref='project')
     headers = db.relationship('Header', backref='project')
