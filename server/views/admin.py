@@ -168,7 +168,7 @@ def activate_image(image_id):
 
 @requires_roles('admin', 'designer')
 def default_project_page():
-    return render_template('admin/projects_default.html')
+    return render_template('admin/projects/projects_default.html')
 
 
 @requires_roles('admin')
@@ -184,9 +184,28 @@ def create_project():
 
 @requires_roles('admin', 'designer')
 def project_page(project_id):
+    tab = request.args.get('tab', 'fonts')
     project = Project.query.get_or_404(project_id)
-    project_fonts = [font.name for font in project.fonts]
-    return render_template('admin/projects/fonts.html', project=project, fonts=json.dumps(project_fonts))
+
+    if tab == 'fonts':
+        project_fonts = [font.name for font in project.fonts]
+        return render_template('admin/projects/fonts.html', project=project, fonts=json.dumps(project_fonts))
+
+    # TODO optimize queries to db: non-lazy load, limit
+    elif tab == 'headers':
+        project_fonts = [font.name for font in project.fonts]
+        project_headers = {
+            header.name: {
+                'id': header.id,
+                'font': header.font,
+                'size': header.size
+            } for header in project.headers}
+        return render_template('admin/projects/headers.html', project=project, fonts=json.dumps(project_fonts),
+                               headers=json.dumps(project_headers))
+        # elif tab == 'background':
+        #     return render_template('admin/projects/headers.html', project=project, fonts=json.dumps(project_fonts))
+        # elif tab == 'button':
+        #     return render_template('admin/projects/headers.html', project=project, fonts=json.dumps(project_fonts))
 
 
 @requires_roles('admin', 'designer')
@@ -205,3 +224,8 @@ def add_font(project_id):
     db.session.add(Font(name=name, project_id=project_id, filename=filename))
     db.session.commit()
     return redirect(url_for('admin_project_page', project_id=project_id))
+
+
+@requires_roles('admin', 'designer')
+def change_headers():
+    pass

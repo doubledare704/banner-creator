@@ -33,7 +33,6 @@ function configUploadFont(projectId) {
                     }
                     activatePopUp({
                         title: errorMessage,
-                        confirm: false,
                         flash: true,
                     });
                 }
