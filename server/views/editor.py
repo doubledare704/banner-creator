@@ -70,7 +70,7 @@ def cuts_background():
 @login_required
 def save_cuted():
     if 'file' not in request.json:
-        return jsonify({'result': 'no field file in form'}), 406
+        return jsonify({'result': 'no field file in form'}), 404
     else:
         _, b64data = request.json['file'].split(',')
         random_name = request.json['name']
@@ -100,7 +100,7 @@ def save_cuted():
 @login_required
 def load_from_pc():
     if not request.files:
-        return jsonify({'result': 'no field file in form'}), 406
+        return jsonify({'result': 'no field file in form'}), 404
     else:
         file_ = request.files['file']
         name = str(uuid.uuid4()) + '.png'
@@ -147,7 +147,7 @@ class ReviewView(MethodView):
     def post(self):
         form = request.form
         if 'file' not in request.form:
-            return jsonify({'result': 'no field file in form'}), 406
+            return jsonify({'result': 'no field file in form'}), 404
         else:
             _, b64data = form['file'].split(',')
             name = str(uuid.uuid4()) + '.png'
