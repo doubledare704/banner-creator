@@ -30,15 +30,16 @@
                 <ul class="nav navbar-nav">
                     <li class="{{ active_endpoint_startswith('dashboard') }}"><a href="{{ url_for('dashboard') }}">Кабинет</a>
                     </li>
-                    <li class="{{ active_endpoint('editor') }}"><a href="{{ url_for ('editor') }}">Редактор</a></li>
                     <li class="{{ active_endpoint('editor') }}">
                         <div class="dropdown" id="dropdowns">
-                            <button class="btn btn-default dropdown-toggle" data-bazooka="dropDown" type="button" data-toggle="dropdown">
+                            <button class="btn btn-default dropdown-toggle" data-bazooka="dropDown" type="button"
+                                    data-toggle="dropdown">
                                 Создать баннер под проект
                                 <span class="caret"></span></button>
                             <ul class="dropdown-menu" id="dropmenu">
                                 {% for project in projects_list() %}
-                                    <li><a href="{{ url_for('editor', project_id=project.id) }}">{{ project.name }}</a></li>
+                                    <li><a href="{{ url_for('editor', project_id=project.id) }}">{{ project.name }}</a>
+                                    </li>
                                 {% endfor %}
                             </ul>
                         </div>

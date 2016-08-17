@@ -45,24 +45,11 @@
                                 {% endfor %}
 
                             {% endif %}
-                            {#                            {% for font in fonts[:3] %}#}
-                            {#                                <li class="head{{ loop.index }}" data-font="{{ font.name }}" data-size="{{ font.size }}" data-text="Заголовок">H1#}
-                            {#                                    подзаголовок#}
-                            {#                                </li>#}
-                            {#                            {% endfor %}#}
-                            {#                            <hr>#}
-                            {#                            {% for font in fonts[3:] %}#}
-                            {#                                <li class="price{{ loop.index}}" data-font="{{ font.name }}" data-size="{{ font.size }}" data-type="p"#}
-                            {#                                    data-text="от 1 700 грн">Цена от для#}
-                            {#                                    большого#}
-                            {#                                    банера#}
-                            {#                                </li>#}
-                            {#                            {% endfor %}#}
                         </ul>
                     </div>
                 </section>
                 <section>
-                    <a href="#" id="addButt" class="btn btn-default tooltipp" data-tooltip="Добавить кнопку">
+                    <a href="#" id="addButt" class="btn btn-default tooltipp" data-button="{{ button }}" data-tooltip="Добавить кнопку">
                         <i class="material-icons">input</i>
                     </a>
                 </section>
