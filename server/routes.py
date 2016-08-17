@@ -11,13 +11,12 @@ from server.views.editor import (continue_edit, history_image, cuts_background,
 from server.views.images import (
     image_delete, image_rename,
     review_tool, review_image, review_action,
-    backgrounds_page)
+    review_result)
 
 
 def setup_routes(app):
     """Here we map routes to handlers."""
     app.add_url_rule('/index/', view_func=dashboard_views.dashboard, endpoint='index')
-    app.add_url_rule('/backgrounds/', methods=['GET', 'POST'], view_func=backgrounds_page)
     app.add_url_rule('/uploads/<filename>', view_func=uploaded_file)
     app.add_url_rule('/delete/', methods=['POST'], view_func=image_delete)
     app.add_url_rule('/rename/', methods=['POST'], view_func=image_rename)

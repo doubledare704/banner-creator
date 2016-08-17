@@ -331,6 +331,39 @@ export default class Editor {
             scaleY: 0.5
         }))
     }
+    
+    // change grid size
+    setNewGridSize(gridSize = 10) {
+        // create grid
+        let canvas = this.canv;
+        let objs = canvas.getObjects();
+        let typesObj = objs.map(function (a) {
+            return a.type;
+        });
+        if (inArray('line', typesObj)) {
+            this.filterAndDelete(objs);
+            this.addGrid(gridSize);
+        }
+        else {
+            this.addGrid(gridSize)
+        }
+    }
+    
+    // add grid for canvas
+    setGridToCanv(gridSize = 10) {
+        // create grid
+        let canvas = this.canv;
+        let objs = canvas.getObjects();
+        let typesObj = objs.map(function (a) {
+            return a.type;
+        });
+        if (inArray('line', typesObj)) {
+            this.filterAndDelete(objs);
+        }
+        else {
+            this.addGrid(gridSize)
+        }
+    }
 
     // change grid size
     setNewGridSize(gridSize = 10) {
