@@ -15,7 +15,7 @@
         <li class="{{active_tab('fonts')}}"><a href="{{ url_for('admin_project_page', project_id=project.id, tab='fonts')}}">Шрифты</a></li>
         <li class="{{active_tab('headers')}}"><a href="{{ url_for('admin_project_page', project_id=project.id, tab='headers')}}">Стили</a></li>
         <li><a href="">Фоны</a></li>
-        <li><a href="">Кнопка</a></li>
+        <li class="{{active_tab('button')}}><a href="{{ url_for('admin_project_page', project_id=project.id, tab='button')}}">Кнопка</a></li>
     </ul>
     <div class="container-fluid">{% block admin_projects_content %}{% endblock %}</div>
 
