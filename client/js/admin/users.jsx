@@ -48,7 +48,6 @@ class User extends React.Component {
                         console.error(response.message);
                         activatePopUp({
                             title: `Ошибка сервера`,
-                            confirm: false,
                             flash: true,
                         });
                     });
@@ -82,7 +81,6 @@ class User extends React.Component {
                 console.error(response.message);
                 activatePopUp({
                     title: `Ошибка сервера`,
-                    confirm: false,
                     flash: true,
                 });
             });
@@ -111,7 +109,6 @@ class User extends React.Component {
                 console.error(response.message);
                 activatePopUp({
                     title: `Ошибка сервера`,
-                    confirm: false,
                     flash: true,
                 });
             });
@@ -121,7 +118,6 @@ class User extends React.Component {
         this.setState({isUserEditMode: true});
         let {user}= this.state;
         activatePopUp({
-            confirm: false,
             title: "Изменение данных пользователя",
             closeAction: deactivatePopUp,
             child: <form className="form-horizontal" onSubmit={this.saveUser}>

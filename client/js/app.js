@@ -14,6 +14,7 @@ import imageSlider from './images/slider.jsx';
 import handleCreateProjectClick from './admin/create_project_field';
 import {uploadButton} from './helpers';
 import uploadFont from './admin/upload_font';
+import projectsHeaders from './admin/headers.jsx';
 import {dropDown} from './projects/dropdown';
 
 require('./../css/main.styl');
@@ -33,6 +34,7 @@ Baz.register({
     'uploadButton': uploadButton,
     'projectsPanel': projectsPanel,
     'uploadFont': uploadFont,
+    'projectsHeaders': projectsHeaders,
     // dashboard
     'goToReview': goToReview,
     'showBannerPopup': showBannerPopup,
