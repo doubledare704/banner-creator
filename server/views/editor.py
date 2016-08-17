@@ -20,7 +20,7 @@ from server.utils.image import image_preview
 @login_required
 def editor():
     proj_id = request.args.get('project_id')
-    return render_template('editor_markuped.html')
+    return render_template('editor_markuped.html', p_id=proj_id)
 
 
 @login_required
@@ -86,7 +86,7 @@ def save_cuted():
         user = User.query.get_or_404(request.json['u_id'])
 
         img_cutted = Image(
-            user_id= user.id,
+            user_id=user.id,
             name=filename,
             title=title,
             preview=preview_name
