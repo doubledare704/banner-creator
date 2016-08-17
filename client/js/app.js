@@ -15,6 +15,7 @@ import handleCreateProjectClick from './admin/create_project_field';
 import {uploadButton} from './helpers';
 import uploadFont from './admin/upload_font';
 import projectsHeaders from './admin/headers.jsx';
+import {dropDown} from './projects/dropdown';
 
 require('./../css/main.styl');
 const Baz = require('bazooka');
@@ -38,7 +39,8 @@ Baz.register({
     'goToReview': goToReview,
     'showBannerPopup': showBannerPopup,
     'deleteReview': deleteReview,
-    'deleteBanner': deleteBanner
+    'deleteBanner': deleteBanner,
+    'dropDown': dropDown
 });
 
 Baz.watch();
