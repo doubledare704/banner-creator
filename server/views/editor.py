@@ -8,19 +8,22 @@ from flask import (render_template, current_app, request, jsonify,
                    url_for)
 from flask.views import MethodView
 from flask_login import login_required, current_user
-from sqlalchemy import desc
+from sqlalchemy import desc, asc
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
 from server.db import db
-from server.models import Image, ImageHistory, Banner, BannerReview, User, BackgroundImage
+from server.models import Image, ImageHistory, Banner, BannerReview, User, BackgroundImage, Project, Header, Font
 from server.utils.image import image_preview
 
 
 @login_required
 def editor():
     proj_id = request.args.get('project_id')
-    return render_template('editor_markuped.html', p_id=proj_id)
+    current_project = Project.query.get_or_404(proj_id)
+    fonts = Header.query.filter_by(
+        project_id=proj_id).order_by(asc(Header.name)).join(Font).add_columns(Font.name, Header.size).all()
+    return render_template('editor_markuped.html', p_id=proj_id, project=current_project, fonts=fonts)
 
 
 @login_required

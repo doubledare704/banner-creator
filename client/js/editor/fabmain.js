@@ -96,11 +96,12 @@ for (var i = 0; i < addtexts.length; i++) {
         let sizes = this.getAttribute("data-size");
         let texting = this.getAttribute("data-text");
         let typings = this.getAttribute("data-type");
+        let fonter = this.getAttribute("data-type");
         if (typings) {
-            editor.setPrice('Roboto', sizes, '#000', texting);
+            editor.setPrice(fonter, sizes, '#000', texting);
         }
         else {
-            editor.setFont('Roboto', sizes, '#000', texting);
+            editor.setFont(fonter, sizes, '#000', texting);
         }
     });
 }
