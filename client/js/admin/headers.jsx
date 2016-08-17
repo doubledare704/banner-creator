@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
 import {activatePopUp} from '../popUp.js';
+import {csrfToken} from '../helpers';
 
 const BAZOOKA_PREFIX = 'projects';
 
@@ -21,7 +22,7 @@ const FontSelect = (props) => (
             <option disabled value="">Не выбрано</option>
             {
                 props.fontList.map((font) => (
-                        <option value={font}>{font}</option>
+                        <option value={font[1]}>{font[0]}</option>
                     )
                 )
             }
@@ -31,7 +32,7 @@ const FontSelect = (props) => (
 
 const SizeSelect = (props) => (
     <div className="col-md-1">
-        <input className="form-control" type="number" min="5" onChange={props.changeSize}/>
+        <input className="form-control" type="number" min="5" onChange={props.changeSize} defaultValue={props.size}/>
     </div>
 );
 
@@ -67,7 +68,8 @@ class HeadersPanel extends React.Component {
             if (!headers[name]) {
                 headers[name] = {}
             }
-            headers[name].font = fontList[e.target.selectedIndex - 1];
+            headers[name].font_name = fontList[e.target.selectedIndex - 1][0];
+            headers[name].font_id = e.target.value;
             this.setState({
                 headers: headers
             });
@@ -89,17 +91,21 @@ class HeadersPanel extends React.Component {
 
     save() {
         const {headers} = this.state;
-        if (Object.keys(headers).length < HEADERS_ORDER.length){
+        let hasEmpty = !Object.keys(headers).every((header) => {
+            return headers[header].font_name && headers[header].size
+        });
+        if (hasEmpty || Object.keys(headers).length < HEADERS_ORDER.length) {
             activatePopUp({
-                    title: 'Шрифт и размер должны быть проставлены для всех пунктов',
-                    flash: true,
-                });
+                title: 'Шрифт и размер должны быть проставлены для всех пунктов',
+                flash: true,
+            });
             return
         }
-        fetch(`/admin/projects/${this.state.project_id}/headers/`, {
+        fetch(`/admin/projects/${this.props.projectId}/headers/`, {
             method: 'POST',
             credentials: 'same-origin',
             headers: {
+                'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken()
             },
             body: JSON.stringify(this.state.headers)
@@ -128,7 +134,7 @@ class HeadersPanel extends React.Component {
                             <Header
                                 fontList={fontList}
                                 name={name}
-                                font={(headers[name] || {font: ""}).font}
+                                font={(headers[name] || {font_name: ""}).font_name}
                                 size={(headers[name] || {}).size}
                                 changeFont={this.configChangeSelectedFont(name)}
                                 changeSize={this.configChangeSize(name)}
@@ -160,7 +166,7 @@ class Header extends React.Component {
                     changeSelected={this.props.changeFont}
                 />
                 <SizeSelect
-                    font={font}
+                    size={size}
                     changeSize={this.props.changeSize}
                 />
                 <HeaderShower
@@ -175,13 +181,13 @@ class Header extends React.Component {
 
 
 export default function (node) {
-    let {fontList, headers, project_id} = h.getAttrs(BAZOOKA_PREFIX, node);
+    let {fontList, headers, projectId} = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
         <HeadersPanel
             fontList={fontList}
             headers={headers}
-            project_id={project_id}
+            projectId={projectId}
         />,
         node
     );

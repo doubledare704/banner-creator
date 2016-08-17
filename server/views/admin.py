@@ -15,7 +15,7 @@ from flask_paginate import Pagination
 from werkzeug.exceptions import NotFound
 
 from server.db import db
-from server.models import User, BackgroundImage, Project, Font
+from server.models import User, BackgroundImage, Project, Font, Header
 from server.utils.auth import requires_roles
 
 PER_PAGE = 10
@@ -193,11 +193,12 @@ def project_page(project_id):
 
     # TODO optimize queries to db: non-lazy load, limit
     elif tab == 'headers':
-        project_fonts = [font.name for font in project.fonts]
+        project_fonts = [[font.name, font.id] for font in project.fonts]
         project_headers = {
             header.name: {
                 'id': header.id,
-                'font': header.font,
+                'font_name': header.font.name,
+                'font_id': header.font.id,
                 'size': header.size
             } for header in project.headers}
         return render_template('admin/projects/headers.html', project=project, fonts=json.dumps(project_fonts),
@@ -227,5 +228,20 @@ def add_font(project_id):
 
 
 @requires_roles('admin', 'designer')
-def change_headers():
-    pass
+def change_headers(project_id):
+    project = Project.query.get_or_404(project_id)
+    new_headers = request.json
+
+    # existing headers
+    for header in project.headers:
+        new_header = new_headers[header.name]
+        header.font_id = new_header['font_id']  # not valid
+        header.size = new_header['size']
+        db.session.add(header)
+
+    # new headers
+    for name, header in new_headers.items():
+        if not header.get('id', None):
+            db.session.add(Header(name=name, font_id=header['font_id'], size=header['size'], project_id=project_id))
+    db.session.commit()
+    return 'OK', 200
