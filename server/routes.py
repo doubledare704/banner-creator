@@ -22,8 +22,6 @@ def setup_routes(app):
     app.add_url_rule('/delete/', methods=['POST'], view_func=image_delete)
     app.add_url_rule('/rename/', methods=['POST'], view_func=image_rename)
     app.add_url_rule('/editor/', view_func=editor)
-    app.add_url_rule('/api/backgrounds/', view_func=background_images)
-    app.add_url_rule('/api/backgrounds/<int:page>', view_func=background_images)
 
     # user profile
     app.add_url_rule('/profile/', methods=['GET', 'POST'], view_func=main_views.user_profile)
@@ -67,6 +65,8 @@ def setup_routes(app):
     app.add_url_rule('/editor/local/', methods=['POST'], view_func=load_from_pc)
     app.add_url_rule('/editor/cut-choose/', view_func=load_all_cuts)
     app.add_url_rule('/editor/review/', view_func=ReviewView.as_view('review'))
+    app.add_url_rule('/editor/backgrounds/', view_func=background_images)
+
 
     # auth routes
     app.add_url_rule('/login', view_func=login_page)
