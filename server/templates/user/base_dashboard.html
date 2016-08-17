@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-sm-3 col-md-3 col-lg-2">
             <ul class="nav nav-pills nav-stacked left-menu">
-                <li class="{{active_endpoint('dashboard')}}">
+                <li class="{{ active_endpoint('dashboard') or active_endpoint('dashboard_additional_reviews') }}">
                     <a href="{{ url_for('dashboard') }}">Главная</a>
                 </li>
                 <li class="{{active_endpoint('dashboard_user_banners')}}">
