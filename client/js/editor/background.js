@@ -92,20 +92,21 @@ class BackgroundsList extends React.Component {
 class BackgroundsContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { displayList: false };
+    this.state = { displayList: false, btnClass: 'btn-default' };
     this.changeDisplay = this.changeDisplay.bind(this)
   }
 
   changeDisplay() {
     this.setState({
-      displayList: !this.state.displayList
+      displayList: !this.state.displayList,
+      btnClass: this.state.btnClass === 'btn-primary' ? 'btn-default' : 'btn-primary'
     })
   }
 
   render() {
     return (
       <div>
-        <a href="#" className="btn btn-default" onClick={this.changeDisplay}>
+        <a href="#" className={`btn ${this.state.btnClass}`} onClick={this.changeDisplay}>
           <i className="material-icons">image</i>
         </a>
         <div className={!this.state.displayList ? 'hidden': ''} id="backgroundsContainer">

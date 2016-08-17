@@ -1,4 +1,13 @@
-import { activateHtmlPopUp } from '../popUp';
+import React from 'react';
+import { activatePopUp } from '../popUp';
+
+
+function PopUpForm(props) {
+  return (
+    <div dangerouslySetInnerHTML={{__html: props.form}}>
+    </div>
+  )
+}
 
 
 export default function(node) {
@@ -7,7 +16,7 @@ export default function(node) {
       {credentials: 'same-origin'})
       .then((res) => res.text())
       .then((text) => {
-        activateHtmlPopUp({child: text})
+        activatePopUp({child: <PopUpForm form={text} />})
       });
   });
 };
