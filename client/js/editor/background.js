@@ -39,7 +39,12 @@ class BackgroundsList extends React.Component {
   }
 
   getImages() {
+    // compose proper url for requests
     const { viewUrl } = this.props.urls;
+    const url = new URL(window.location.origin + viewUrl);
+    // append corresponding query params to url
+    url.searchParams.append('page', this.state.page);
+    url.searchParams.append('project', this.props.project);
 
     if (this.state.isBlocked) {
       return;
@@ -47,7 +52,7 @@ class BackgroundsList extends React.Component {
     this.setState({
       isBlocked: true
     });
-    fetch(viewUrl + this.state.page, {credentials: 'same-origin'})
+    fetch(url, {credentials: 'same-origin'})
     .then((response) => {
       if (response.status == 200) {
         response.json().then(({ backgroundImages }) => {
@@ -110,7 +115,7 @@ class BackgroundsContainer extends React.Component {
           <i className="material-icons">image</i>
         </a>
         <div className={!this.state.displayList ? 'hidden': ''} id="backgroundsContainer">
-          <BackgroundsList urls={this.props.urls} />
+          <BackgroundsList urls={this.props.urls} project={this.props.project}/>
         </div>
       </div>
     )
@@ -118,7 +123,7 @@ class BackgroundsContainer extends React.Component {
 }
 
 
-module.exports = function(node) {
+export default function(node) {
   const VIEW_URLS = h.getAttrs(BAZOOKA_PREFIX, node);
-  ReactDOM.render(<BackgroundsContainer urls={VIEW_URLS} />, node);
+  ReactDOM.render(<BackgroundsContainer urls={VIEW_URLS} project={node.dataset.project} />, node);
 };
