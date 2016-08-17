@@ -44,7 +44,6 @@ function LogoutClick(e) {
             console.error(response.message);
             activatePopUp({
                 title: `Ошибка сервера`,
-                confirm: false,
                 flash: true,
             });
         });
