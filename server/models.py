@@ -33,6 +33,7 @@ class Banner(BaseImage):
 
 
 class Image(BaseImage):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     description = db.Column(db.Text, nullable=True)
 
 
