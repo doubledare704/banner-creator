@@ -1,0 +1,17 @@
+{% extends "admin/projects/project_base.html" %}
+
+{% block admin_projects_content %}
+    <div class="row">
+        <h3>Стили</h3>
+        <div class="container">
+            <div class="row disperse">
+                <div class="col-md-3"><strong>Тип заголовка</strong></div>
+                <div class="col-md-2 text-center"><strong>Шрифт</strong></div>
+                <div class="col-md-1 text-center"><strong>Размер</strong></div>
+                <div class="col-md-3"><strong>Пример оформления</strong></div>
+            </div>
+        </div>
+        <div data-bazooka="projectsHeaders" data-projects-font-list="{{ fonts }}"
+             data-projects-headers="{{ headers }}" data-projects-project_id="{{ project.id }}"></div>
+    </div>
+{% endblock %}

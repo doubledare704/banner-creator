@@ -1,8 +1,6 @@
 import datetime
 import enum
 
-import os
-from flask import current_app
 from flask import url_for
 from sqlalchemy import UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSON
@@ -45,6 +43,7 @@ class Project(db.Model):
     name = db.Column(db.String(250), unique=True)
     background_images = db.relationship('BackgroundImage', backref='project', lazy='dynamic')
     fonts = db.relationship('Font', backref='project')
+    headers = db.relationship('Header', backref='project')
 
 
 class BannerReview(db.Model):
@@ -141,8 +140,18 @@ class Font(db.Model):
     name = db.Column(db.String(255))
     filename = db.Column(db.String(255))
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+    headers = db.relationship('Header', backref='font')
 
     __table_args__ = (UniqueConstraint('project_id', 'name', name='project_font'),)
 
     def url(self):
         return url_for('uploaded_file', filename=self.filename)
+
+
+class Header(db.Model):
+    __tablename__ = 'header'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), index=True)
+    font_id = db.Column(db.Integer, db.ForeignKey('font.id'))
+    size = db.Column(db.Integer())
