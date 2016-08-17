@@ -13,6 +13,8 @@ import deleteBanner from './dashboard/dashboard_delete_banner';
 import handleCreateProjectClick from './admin/create_project_field';
 import {uploadButton} from './helpers';
 import uploadFont from './admin/upload_font';
+import uploadFiles from './images/uploadFiles';
+import reviewResult from './images/reviewResult.jsx';
 
 require('./../css/main.styl');
 const Baz = require('bazooka');
@@ -33,9 +35,9 @@ Baz.register({
     'goToReview': goToReview,
     'showBannerPopup': showBannerPopup,
     'deleteReview': deleteReview,
-    'deleteBanner': deleteBanner
-    'uploadFiles' : uploadFiles
-    'reviewResult': reviewResult,
+    'deleteBanner': deleteBanner,
+    'uploadFiles' : uploadFiles,
+    'reviewResult': reviewResult
 });
 
 Baz.watch();

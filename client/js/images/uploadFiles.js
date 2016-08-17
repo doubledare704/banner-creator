@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {csrfToken} from '../helpers';
 import {activatePopUp} from '../popUp.js';
 
 function uploadFiles (){
@@ -17,15 +17,18 @@ function uploadFiles (){
     bar.appendChild(progr);
 
     for(let i = 0; i<files.files.length; i++){
-        y++;
+
         form.delete('file');
         form.append('file', files.files[i]);
-        fetch("/upload/",{
+        fetch("/upload",{
         method: 'POST',
         credentials: 'same-origin',
+        headers: {
+            'X-CSRFToken': csrfToken()
+        },
         body: form
     }).then(response => {
-            if(response.status === 204){
+            if(response.status === 400){
                     activatePopUp({title: <h4 className="text-center"> Нет файла: {response.status} {response.statusText}  </h4>});
                     return response.status;
                 }
@@ -38,17 +41,18 @@ function uploadFiles (){
             x=((i+1)/all)*100;
             progr.style.cssText = `width: ${x}%;`;
             progr.innerHTML = `${i+1} из ${all} Загружено`;
+            y++;
+            if(y===all){
+                console.log(y);
+                activatePopUp({child: <h4 className="text-center">Загружено {y} из {all} файлов </h4> ,
+                    confirm: true,
+                    confirmAction: () => {files.value = ""; progr.style.cssText = `width: 0%;`;}
+                });
 
+            }
         })
 
     }
-
-    // activatePopUp({child: <h4 className="text-center">Загружено {y} из {all} файлов </h4> ,
-    //     confirm: true,
-    //     confirmAction: () => {files.value = ""; progr.style.cssText = `width: 0%;`;}
-    // });
-
-
 }
 
 export default function (node) {
