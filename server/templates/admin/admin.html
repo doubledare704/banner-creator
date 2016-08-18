@@ -15,20 +15,22 @@
                     {% for project_point in projects_list() %}
                         <li class="{{active_project(project_point.id, project)}}"><a href="{{ url_for('admin_project_page', project_id=project_point.id)}}">{{project_point.name}}</a></li>
                     {% endfor %}
-                    <li><a href="" data-bazooka="createProject"><i class="glyphicon glyphicon-plus"></i> Создать проект</a></li>
-                    <form action="{{ url_for('create_project') }}" method="post" class="form-inline hidden">
-                        <div class="input-group">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        </div>
-                        <div class="input-group">
-                          <input type="text" id="project" name="project_name" class="form-control" required placeholder="Введите имя">
-                            <span class="input-group-btn">
-                                 <button type="submit" class="btn btn-default">
-                                    <i class = "glyphicon glyphicon-ok"></i>
-                                 </button>
-                            </span>
-                        </div>
-                    </form>
+                    {% if current_user.is_admin() %}
+                        <li><a href="" data-bazooka="createProject"><i class="glyphicon glyphicon-plus"></i> Создать проект</a></li>
+                        <form action="{{ url_for('create_project') }}" method="post" class="form-inline hidden">
+                            <div class="input-group">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            </div>
+                            <div class="input-group">
+                              <input type="text" id="project" name="project_name" class="form-control" required placeholder="Введите имя">
+                                <span class="input-group-btn">
+                                     <button type="submit" class="btn btn-default">
+                                        <i class = "glyphicon glyphicon-ok"></i>
+                                     </button>
+                                </span>
+                            </div>
+                        </form>
+                    {% endif %}
                 </ul>
             </div>
 
