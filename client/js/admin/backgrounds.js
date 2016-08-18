@@ -94,17 +94,18 @@ class Backgrounds extends ImagesList {
         return (
             <div>
                 <div><h2>Загрузка фонов</h2></div>
-                <form id="image-form" className="form-inline" enctype="multipart/form-data">
+                <form id="image-form" className="form-inline" formEncType="multipart/form-data">
                     <div className="row">
                         <div className="form-group col-lg-6">
-                            <label>Выберите файлы:
-                                <input id="input"  type="file"  name="file[]" accept="image/gif, image/jpeg, image/jpg, image/png" multiple />
-                            </label>
+                                <button className="btn btn-default" data-bazooka="uploadButton">
+                                    <i className="glyphicon glyphicon-cloud-upload"/> Выберите файлы
+                                </button>
+                                <input id="input" className="upload" type="file" name="file[]"
+                                       accept="image/gif, image/jpeg, image/jpg, image/png" multiple="true" hidden="true"/>
+                                <label htmlFor="input"/>
                         </div>
                         <div>
-                            <label>Выберите файлы:
-                                <input name="project" hidden="true" value={this.props.projectId}/>
-                            </label>
+                            <input name="project" hidden="true" value={this.props.projectId}/>
                         </div>
                     </div>
                     <br/>
@@ -140,15 +141,15 @@ class Backgrounds extends ImagesList {
                     }
                 </div>
             </div>
-        );
+    );
     }
-}
+    }
 
-export default function (node) {
-    const {imageArray, projectId} = h.getAttrs(BAZOOKA_PREFIX, node);
+    export default function (node) {
+        const {imageArray, projectId} = h.getAttrs(BAZOOKA_PREFIX, node);
 
-    ReactDOM.render(
+        ReactDOM.render(
         <Backgrounds imageArray={imageArray} projectId={projectId}/>,
         node
-    );
-}
+        );
+    }
