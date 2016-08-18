@@ -18,6 +18,7 @@ import {dropDown} from './projects/dropdown';
 import uploadFiles from './images/uploadFiles';
 import reviewResult from './images/reviewResult.jsx';
 import backgrounds from './admin/backgrounds';
+import saveBanner from './dashboard/save_banner';
 
 require('./../css/main.styl');
 const Baz = require('bazooka');
@@ -44,7 +45,8 @@ Baz.register({
     'deleteBanner': deleteBanner,
     'dropDown': dropDown,
     'uploadFiles' : uploadFiles,
-    'reviewResult': reviewResult
+    'reviewResult': reviewResult,
+    'saveBanner': saveBanner
 });
 
 Baz.watch();
