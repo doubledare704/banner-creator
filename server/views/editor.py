@@ -61,15 +61,23 @@ def history_image(history_image_id):
             return jsonify({'result': 'no hist_id or jsn field'})
         else:
             hist_id = request.json['hist_id']
+            banner = Banner.query.get_or_404(hist_id)
             new_history_json = request.json['jsn']
             history = ImageHistory(
                 review_image=hist_id,
                 json_hist=new_history_json
             )
+            _, b64data = request.json['image'].split(',')
+            decoded_data = base64.b64decode(b64data)
+            file_ = FileStorage(BytesIO(decoded_data), filename=banner.name)
+            file_.save(os.path.join(current_app.config['UPLOAD_FOLDER'], file_.filename))
+            preview_name = 'preview_' + file_.filename
+            preview_file = image_preview(file_)
+            preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
             db.session.add(history)
             db.session.flush()
 
-            return jsonify({'result': 'ok'})
+            return '', 200
     else:
         edit_history = ImageHistory.query.filter_by(
             review_image=history_image_id).order_by(desc(ImageHistory.created)).first_or_404()

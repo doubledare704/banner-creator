@@ -9,12 +9,10 @@
     </section>
 {% endblock %}
 
-{% block saver %}
-    <section data-bazooka="reloadHistory">
-        <a href="" id="progress_saver" class="btn btn-info tooltipp" data-tooltip="Сохранить"
+{% block additional_buttons %}
+        <a href="#" id="progress_saver" class="btn btn-info tooltipp" data-tooltip="Сохранить изменения"
            data-bazooka="saveToHistory" data-review="{{ id_review }}"><i
-                class="material-icons">beenhere</i></a>
-    </section>
+                class="material-icons">save</i></a>
 {% endblock %}
 
 {% block bazookas %}

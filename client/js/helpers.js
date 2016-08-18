@@ -1,3 +1,5 @@
+import React from 'react';
+
 // check whether an element isn't visible on page
 export function isHidden(elem) {
     const style = window.getComputedStyle(elem);
@@ -26,3 +28,17 @@ export function uploadButton(node) {
 export function csrfToken() {
     return document.querySelector('meta[name=csrf-token]').getAttribute('content');
 }
+
+export function SuccessAlert(props) {
+    return (
+      <p className="alert alert-success">
+          {props.text}
+      </p>
+)}
+
+export function ErrorAlert(props) {
+    return (
+      <p className="alert alert-danger">
+          {props.text}
+      </p>
+)}
