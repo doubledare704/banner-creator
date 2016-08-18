@@ -76,7 +76,9 @@ allCutted.addEventListener('click', function popList(event) {
 // save to local storage
 beforeCutter.addEventListener('click', function () {
     let bannerStory = editor.canv.toJSON();
+    let projectIDToLeave = document.getElementById('backgroundSection').getAttribute('data-project');
     bannerStory = JSON.stringify(bannerStory);
+    localStorage.setItem('projectId', projectIDToLeave);
     localStorage.setItem('canvasStory', bannerStory);
     localStorage.setItem('gridSize', document.getElementById('newGrid').value);
 });
