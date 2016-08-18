@@ -5,14 +5,15 @@ function showBanner(e) {
   const node = e.target;
   let nodeParent = node.parentNode;
   if (nodeParent.nodeName !== 'DIV') { nodeParent = nodeParent.parentNode }
-  const imageNode = nodeParent.lastElementChild;
-  if (helpers.isHidden(imageNode)) {
+  const imageWrapper = nodeParent.lastElementChild;
+  const imageNode = imageWrapper.lastElementChild;
+  if (helpers.isHidden(imageWrapper)) {
     const imgSrcAttr = imageNode.getAttribute('imgSrc');
     imageNode.setAttribute('src', imgSrcAttr);
-    imageNode.style.display = 'block';
+    imageWrapper.style.display = 'block';
   }
   else {
-    imageNode.style.display = 'none';
+    imageWrapper.style.display = 'none';
   }
 }
 
