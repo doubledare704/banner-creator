@@ -30,3 +30,9 @@ def init_custom_filters(app):
         if request.args.get('tab') == tab_name:
             return 'active'
         return ""
+
+    @app.template_global('active_project')
+    def active_project(item_id, project):
+        if project and item_id == project.id:
+            return 'active'
+        return ""

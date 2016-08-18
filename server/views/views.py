@@ -3,7 +3,6 @@ from flask import (render_template, request, flash)
 from flask import send_from_directory
 from flask_login import login_required, current_user
 
-
 from server.db import db
 from server.forms import profile_form
 from server.models import User
@@ -25,3 +24,19 @@ def uploaded_font(filename):
     return send_from_directory(
         current_app.config['FONT_FOLDER'], filename
     )
+
+
+def page_not_found(e):
+    return render_template('error_pages/404.html'), 404
+
+
+def forbidden(e):
+    return render_template('error_pages/403.html'), 403
+
+
+def bad_request(e):
+    return render_template('error_pages/400.html'), 400
+
+
+def internal_server_error(e):
+    return render_template('error_pages/500.html'), 500

@@ -12,6 +12,7 @@ from werkzeug.utils import secure_filename
 from server.utils.image import allowed_file, image_preview
 from server.models import User, BannerReview, Banner, BackgroundImage, Project
 from server.db import db
+from server.utils.auth import requires_roles
 
 
 @login_required
@@ -29,6 +30,16 @@ def dashboard():
                                                ).paginate(page=page, per_page=10)
         pagination = Pagination(per_page=10, page=page, total=reviews.total, css_framework='bootstrap3')
         return render_template('user/user_dashboard.html', reviews=reviews, pagination=pagination)
+
+
+@requires_roles('designer', 'admin')
+def additional_reviews():
+    page = int(request.args.get('page', 1))  # get page number from url query string
+    reviews = BannerReview.query.filter_by(user_id=current_user.id, active=True
+                                           ).order_by(BannerReview.created_at.desc()
+                                           ).paginate(page=page, per_page=10)
+    pagination = Pagination(per_page=10, page=page, total=reviews.total, css_framework='bootstrap3')
+    return render_template('user/user_dashboard.html', reviews=reviews, pagination=pagination)
 
 
 @login_required
@@ -97,13 +108,26 @@ def dashboard_archive():
     page = int(request.args.get('page', 1))  # get page number from url query string
     if current_user.is_designer() or current_user.is_admin():
         reviews = BannerReview.query.filter_by(reviewed=True, designer_id=current_user.id
+                                               ).order_by(BannerReview.created_at.desc()
                                                ).paginate(page=page, per_page=10)
         pagination = Pagination(per_page=10, page=page, total=reviews.total, css_framework='bootstrap3')
         return render_template('user/dashboard_designer_archive.html', reviews=reviews, pagination=pagination)
     elif current_user.is_user():
-        reviews = BannerReview.query.filter_by(active=False, user_id=current_user.id).paginate(page=page, per_page=10)
+        reviews = BannerReview.query.filter_by(active=False, user_id=current_user.id
+                                               ).order_by(BannerReview.created_at.desc()
+                                               ).paginate(page=page, per_page=10)
         pagination = Pagination(per_page=10, page=page, total=reviews.total, css_framework='bootstrap3')
         return render_template('user/dashboard_user_archive.html', reviews=reviews, pagination=pagination)
+
+
+@requires_roles('designer', 'admin')
+def additional_dashboard_archive():
+    page = int(request.args.get('page', 1))  # get page number from url query string
+    reviews = BannerReview.query.filter_by(active=False, user_id=current_user.id
+                                           ).order_by(BannerReview.created_at.desc()
+                                           ).paginate(page=page, per_page=10)
+    pagination = Pagination(per_page=10, page=page, total=reviews.total, css_framework='bootstrap3')
+    return render_template('user/dashboard_user_archive.html', reviews=reviews, pagination=pagination)
 
 
 @login_required
