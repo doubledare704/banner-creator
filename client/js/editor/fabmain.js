@@ -1,5 +1,6 @@
 //load fabric
 let fabric = require('fabric').fabric;
+require('./modals.js');
 
 import Editor from './editor.js';
 import {csrfToken} from '../helpers'
@@ -88,7 +89,8 @@ deleteFabricItem.addEventListener('click', function () {
 });
 
 addbutton.addEventListener('click', function () {
-    editor.addButton();
+    let url_iamge = addbutton.getAttribute('data-button');
+    editor.addButton(url_iamge);
 });
 
 for (var i = 0; i < addtexts.length; i++) {
@@ -96,11 +98,12 @@ for (var i = 0; i < addtexts.length; i++) {
         let sizes = this.getAttribute("data-size");
         let texting = this.getAttribute("data-text");
         let typings = this.getAttribute("data-type");
+        let fonter = this.getAttribute("data-font");
         if (typings) {
-            editor.setPrice('Roboto', sizes, '#000', texting);
+            editor.setPrice(fonter, sizes, '#000', texting);
         }
         else {
-            editor.setFont('Roboto', sizes, '#000', texting);
+            editor.setFont(fonter, sizes, '#000', texting);
         }
     });
 }
@@ -197,7 +200,8 @@ function save() {
  */
 function replay(playStack, saveStack, buttonsOn, buttonsOff) {
     saveStack.push(state);
-    state = playStack.pop();
+    if (playStack.length > 0)
+        state = playStack.pop();
     let on = document.getElementById(buttonsOn);
     let off = document.getElementById(buttonsOff);
     // turn both buttons off for the moment to prevent rapid clicking
@@ -209,7 +213,7 @@ function replay(playStack, saveStack, buttonsOn, buttonsOff) {
         canvas.renderAll();
         // now turn the buttons back on if applicable
         on.classList.remove("disabled");
-        if (playStack.length < 1) {
+        if (playStack.length <= 1) {
             off.classList.remove("disabled");
 
         }

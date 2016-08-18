@@ -3,39 +3,57 @@
 {% import 'user/macros.html' as macros %}
 
 {% block dashboard_content %}
-<div class="row">
-  {% for banner in banners.items %}
-  <div class="col-md-6 dashboard-banner-container">
-    <div class="thumbnail">
-      <div class="img-wrapper dashboard-banner-preview" data-bazooka="showBannerPopup" data-banner-url="{{ url_for('uploaded_file', filename=banner.name) }}">
-        <img class="img-responsive" style="height: inherit" src="{{ url_for('uploaded_file', filename=banner.preview) }}" alt="Loading...">
-      </div>
-      <div class="caption">
-        <h4 class="{% if not banner.title %}text-muted{% endif %}">{{ banner.title|default('нет названия', true) }}</h4>
-        <div class="text-right">
-          <a href="{{ url_for('uploaded_file', filename=banner.name) }}" class="btn btn-default tooltipp" download="{{ banner.name }}"
-          data-tooltip="Скачать баннер">
-            <span class=" glyphicon glyphicon-floppy-save"></span>
-          </a>
-          <a href="{{ url_for('continue_edit', history_image_id=banner.id) }}" class="btn btn-primary tooltipp" role="button"
-          data-tooltip="Редактировать баннер">
-            <span class="glyphicon glyphicon-pencil "></span>
-          </a>
-          <a href="#" class="btn btn-danger tooltipp" role="button" data-tooltip="Удалить баннер" data-bazooka="deleteBanner"
-          data-url="{{ url_for('delete_banner', banner_id=banner.id) }}">
-            <span class="glyphicon glyphicon-trash "></span>
-          </a>
-        </div>
-      </div>
+    {% if banners.items %}
+        <form>
+            <div class="row">
+                <div class="form-group">
+                    <div class="input-group col-lg-6 col-md-6 col-sm-6">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                        <input type="text" class="form-control" name="title" placeholder="Поиск по названию">
+                    </div>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+    <div class="row">
+        {% for banner in banners.items %}
+            <div class="col-md-6 dashboard-banner-container">
+                <div class="thumbnail">
+                    <div class="img-wrapper dashboard-banner-preview" data-bazooka="showBannerPopup"
+                         data-banner-url="{{ url_for('uploaded_file', filename=banner.name) }}">
+                        <img class="img-responsive" style="height: inherit"
+                             src="{{ url_for('uploaded_file', filename=banner.preview) }}" alt="Loading...">
+                    </div>
+                    <div class="caption">
+                        <h4 class="{% if not banner.title %}text-muted{% endif %}">{{ banner.title|default('нет названия', true) }}</h4>
+                        <div class="text-right">
+                            <a href="{{ url_for('uploaded_file', filename=banner.name) }}"
+                               class="btn btn-default tooltipp" download="{{ banner.name }}"
+                               data-tooltip="Скачать баннер">
+                                <span class=" glyphicon glyphicon-floppy-save"></span>
+                            </a>
+                            <a href="{{ url_for('continue_edit', history_image_id=banner.id, project_id=banner.project_id) }}"
+                               class="btn btn-primary tooltipp" role="button"
+                               data-tooltip="Редактировать баннер">
+                                <span class="glyphicon glyphicon-pencil "></span>
+                            </a>
+                            <a href="#" class="btn btn-danger tooltipp" role="button" data-tooltip="Удалить баннер"
+                               data-bazooka="deleteBanner"
+                               data-url="{{ url_for('delete_banner', banner_id=banner.id) }}">
+                                <span class="glyphicon glyphicon-trash "></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="dashboard-designer-empty-review bg-info">У вас нет баннеров.<a href="{{ url_for('editor') }}">
+                Создать баннер</a>
+            </p>
+        {% endfor %}
     </div>
-  </div>
-  {% else %}
-    <p class="dashboard-designer-empty-review bg-info">У вас нет баннеров.<a href="{{ url_for('editor') }}"> Создать баннер</a>
-    </p>
-  {% endfor %}
-</div>
 
-  <div class="pagination-container">
-    {{ pagination.links }}
-  </div>
+    <div class="pagination-container">
+        {{ pagination.links }}
+    </div>
 {% endblock dashboard_content %}

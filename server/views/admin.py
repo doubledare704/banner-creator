@@ -1,4 +1,5 @@
 import json
+import uuid
 
 import os
 
@@ -15,7 +16,7 @@ from flask_paginate import Pagination
 from werkzeug.exceptions import NotFound
 
 from server.db import db
-from server.models import User, BackgroundImage, Project, Font
+from server.models import User, BackgroundImage, Project, Font, Header
 from server.utils.auth import requires_roles
 
 PER_PAGE = 10
@@ -168,7 +169,7 @@ def activate_image(image_id):
 
 @requires_roles('admin', 'designer')
 def default_project_page():
-    return render_template('admin/projects_default.html')
+    return render_template('admin/projects/projects_default.html')
 
 
 @requires_roles('admin')
@@ -184,9 +185,34 @@ def create_project():
 
 @requires_roles('admin', 'designer')
 def project_page(project_id):
+    tab = request.args.get('tab', 'fonts')
     project = Project.query.get_or_404(project_id)
-    project_fonts = [font.name for font in project.fonts]
-    return render_template('admin/projects/fonts.html', project=project, fonts=json.dumps(project_fonts))
+
+    if tab == 'fonts':
+        project_fonts = [font.name for font in project.fonts]
+        return render_template('admin/projects/fonts.html', project=project, fonts=json.dumps(project_fonts))
+
+    # TODO optimize queries to db: non-lazy load, limit
+    elif tab == 'headers':
+        project_fonts = [[font.name, font.id] for font in project.fonts]
+        project_headers = {
+            header.name: {
+                'id': header.id,
+                'font_name': header.font.name,
+                'font_id': header.font.id,
+                'size': header.size
+            } for header in project.headers}
+        return render_template('admin/projects/headers.html', project=project, fonts=json.dumps(project_fonts),
+                               headers=json.dumps(project_headers))
+    elif tab == 'background':
+        image_json = [{'id': image.id,
+                       'url': '/uploads/' + image.name,
+                       'title': image.title,
+                       'preview': '/uploads/' + image.preview
+                       } for image in project.background_images if image.active]
+        return render_template('admin/projects/backgrounds.html', project=project, image_json=json.dumps(image_json))
+    elif tab == 'button':
+        return render_template('admin/projects/button.html', project=project)
 
 
 @requires_roles('admin', 'designer')
@@ -205,3 +231,40 @@ def add_font(project_id):
     db.session.add(Font(name=name, project_id=project_id, filename=filename))
     db.session.commit()
     return redirect(url_for('admin_project_page', project_id=project_id))
+
+
+@requires_roles('admin', 'designer')
+def change_headers(project_id):
+    project = Project.query.get_or_404(project_id)
+    new_headers = request.json
+
+    # existing headers
+    for header in project.headers:
+        new_header = new_headers[header.name]
+        header.font_id = new_header['font_id']  # not valid
+        header.size = new_header['size']
+        db.session.add(header)
+
+    # new headers
+    for name, header in new_headers.items():
+        if not header.get('id', None):
+            db.session.add(Header(name=name, font_id=header['font_id'], size=header['size'], project_id=project_id))
+    db.session.commit()
+    return 'OK', 200
+
+
+@requires_roles('admin', 'designer')
+def change_project_button(project_id):
+    project = Project.query.get_or_404(project_id)
+    if 'button_file' not in request.files:
+        return BadRequest()
+    file = request.files['button_file']
+    if file.filename == '':
+        return BadRequest()
+    _, extension = os.path.splitext(file.filename)
+    if file and extension == ".png":
+        filename = str(uuid.uuid1()).replace("-", "") + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
+        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+        project.button = filename
+        db.session.add(project)
+    return redirect(url_for('admin_project_page', project_id=project.id, tab='button'))

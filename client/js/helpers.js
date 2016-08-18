@@ -11,13 +11,18 @@ export function uploadButton(node) {
         e.target.nextElementSibling.click();
     };
     const uploadButton = node.nextElementSibling;
-    const setLabelText = () =>(uploadButton.labels[0].innerText = uploadButton.files[0].name);
+
+    const setLabelText = () => (
+        uploadButton.files.length === 1 ? uploadButton.labels[0].innerText = uploadButton.files[0].name :
+            uploadButton.labels[0].innerText = `Выбрано файлов: ${uploadButton.files.length}`
+);
+
     if (uploadButton.files.length > 0) {
         setLabelText();
     }
     uploadButton.onchange = setLabelText;
 }
 
-export function csrfToken () {
+export function csrfToken() {
     return document.querySelector('meta[name=csrf-token]').getAttribute('content');
 }

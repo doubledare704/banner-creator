@@ -1,0 +1,5 @@
+{% extends "admin/projects/project_base.html" %}
+
+{% block admin_projects_content %}
+    <div data-bazooka="backgrounds" data-backgrounds-image-array='{{ image_json }}' data-backgrounds-project-id='{{ project.id }}'></div>
+{% endblock %}

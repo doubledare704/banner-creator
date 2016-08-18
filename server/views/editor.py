@@ -8,23 +8,35 @@ from flask import (render_template, current_app, request, jsonify,
                    url_for)
 from flask.views import MethodView
 from flask_login import login_required, current_user
-from sqlalchemy import desc
+from sqlalchemy import desc, asc
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
 from server.db import db
-from server.models import Image, ImageHistory, Banner, BannerReview, User, BackgroundImage
+from server.models import Image, ImageHistory, Banner, BannerReview, User, BackgroundImage, Project, Header, Font
 from server.utils.image import image_preview
 
 
 @login_required
 def editor():
-    return render_template('editor_markuped.html')
+    proj_id = request.args.get('project_id')
+    current_project = Project.query.get_or_404(proj_id)
+    button = current_project.button
+    if button:
+        button_url = url_for('uploaded_file', filename=button)
+    else:
+        button_url = ''
+    fonts = Header.query.filter_by(
+        project_id=proj_id).order_by(asc(Header.name)).join(Font).add_columns(Font.name, Header.size).all()
+    return render_template('editor_markuped.html', p_id=proj_id, project=current_project, fonts=fonts,
+                           button=button_url)
 
 
 @login_required
-def background_images(page=1):
-    paginated_images = BackgroundImage.query.paginate(page, 4)
+def background_images():
+    page = int(request.args.get('page', 1))
+    project_id = int(request.args.get('project', 0))
+    paginated_images = BackgroundImage.query.filter_by(project_id=project_id).paginate(page, 4)
     serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active,
                           "preview": image.preview, "width": image.width, "height": image.height}
                          for image in paginated_images.items]
@@ -34,9 +46,12 @@ def background_images(page=1):
 
 @login_required
 def continue_edit(history_image_id):
+    proj_id = request.args.get('project_id')
+    current_project = Project.query.get_or_404(proj_id)
     edit = ImageHistory.query.filter_by(review_image=history_image_id).first_or_404()
     designers = User.query.filter_by(role=User.UserRole.designer)
-    return render_template('editor_history.html', id_review=edit.review_image, designers=designers)
+    return render_template('editor_history.html', p_id=proj_id, id_review=edit.review_image, designers=designers,
+                           project=current_project)
 
 
 @login_required
@@ -68,8 +83,8 @@ def cuts_background():
 
 @login_required
 def save_cuted():
-    if 'file' not in request.json:
-        return jsonify({'result': 'no field file in form'}), 406
+    if 'file' and 'u_id' not in request.json:
+        return jsonify({'result': 'no field file in form'}), 404
     else:
         _, b64data = request.json['file'].split(',')
         random_name = request.json['name']
@@ -82,7 +97,10 @@ def save_cuted():
         preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
         title = random_name
 
+        user = User.query.get_or_404(request.json['u_id'])
+
         img_cutted = Image(
+            user_id=user.id,
             name=filename,
             title=title,
             preview=preview_name
@@ -99,7 +117,7 @@ def save_cuted():
 @login_required
 def load_from_pc():
     if not request.files:
-        return jsonify({'result': 'no field file in form'}), 406
+        return jsonify({'result': 'no field file in form'}), 404
     else:
         file_ = request.files['file']
         name = str(uuid.uuid4()) + '.png'
@@ -125,7 +143,7 @@ def load_from_pc():
 
 @login_required
 def load_all_cuts():
-    allimages = Image.query.all()
+    allimages = Image.query.filter_by(user_id=current_user.id)
     cut_jsoned = []
     for img in allimages:
         cut_jsoned.append({
@@ -146,9 +164,10 @@ class ReviewView(MethodView):
     def post(self):
         form = request.form
         if 'file' not in request.form:
-            return jsonify({'result': 'no field file in form'}), 406
+            return jsonify({'result': 'no field file in form'}), 404
         else:
             _, b64data = form['file'].split(',')
+            p_id = form['project']
             name = str(uuid.uuid4()) + '.png'
             decoded_data = base64.b64decode(b64data)
             file_ = FileStorage(BytesIO(decoded_data), filename=name)
@@ -165,6 +184,7 @@ class ReviewView(MethodView):
 
             banner = Banner(
                 name=filename,
+                project_id=p_id,
                 title=form.get('title', 'untitled'),
                 preview=preview_name,
                 user=current_user
@@ -190,6 +210,7 @@ class ReviewView(MethodView):
             db.session.add(history)
             review_jsoned = {
                 "src": url_for('uploaded_file', filename=filename),
-                "rev": history.review_image
+                "rev": history.review_image,
+                "url": url_for('editor')
             }
             return jsonify({'result': review_jsoned}), 201

@@ -1,0 +1,39 @@
+{% extends "admin/projects/project_base.html" %}
+
+{% block admin_projects_content %}
+    <div class="row">
+        <h3>Кнопка проекта</h3>
+        <div class="container">
+            <div class="row">
+                {% if project.button %}
+                    <img src="{{ url_for('uploaded_file', filename=project.button) }}" alt="Кнопка проекта">
+                {% endif %}
+            </div>
+        </div>
+        <h3>Загрузить новую кнопку</h3>
+        <div class="container">
+            <div class="row">
+                <form action="{{ url_for('change_project_button', project_id=project.id) }}" method=post
+                      enctype=multipart/form-data>
+                    <div class="form-group">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    </div>
+                    <div class="form-group">
+                        <div>
+                            <button class="btn btn-default" data-bazooka="uploadButton">
+                                <i class="glyphicon glyphicon-cloud-upload"></i> Выбрать файл
+                            </button>
+                            <input class="upload" name="button_file" id="upload" type='file' accept="image/png" required>
+                            <label for="upload"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div>
+                            <input class="btn btn-primary" type="submit" role="button" value="Отправить">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
