@@ -49,8 +49,7 @@ def continue_edit(history_image_id):
     proj_id = request.args.get('project_id')
     current_project = Project.query.get_or_404(proj_id)
     edit = ImageHistory.query.filter_by(review_image=history_image_id).first_or_404()
-    designers = User.query.filter_by(role=User.UserRole.designer).filter(User.id != current_user.id)
-    return render_template('editor_history.html', p_id=proj_id, id_review=edit.review_image, designers=designers,
+    return render_template('editor_history.html', p_id=proj_id, id_review=edit.review_image,
                            project=current_project)
 
 
@@ -166,7 +165,7 @@ class ReviewView(MethodView):
     decorators = [login_required]
 
     def get(self):
-        designers = User.query.filter_by(role=User.UserRole.designer).filter(User.id != current_user.id)
+        designers = User.query.filter(User.role.in_(['admin', 'designer'])).filter(User.id != current_user.id)
         return render_template('editor/review_modal.html', designers=designers)
 
     def post(self):
