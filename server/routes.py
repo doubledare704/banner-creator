@@ -38,6 +38,10 @@ def setup_routes(app):
                      endpoint='dashboard_archive')
     app.add_url_rule('/dashboard/banners/del/<int:banner_id>', methods=['POST'],
                      view_func=dashboard_views.delete_banner)
+    app.add_url_rule('/dashboard/reviews/', view_func=dashboard_views.additional_reviews,
+                     endpoint='dashboard_additional_reviews')
+    app.add_url_rule('/dashboard/archive/as_user/', view_func=dashboard_views.additional_dashboard_archive,
+                     endpoint='dashboard_additional_archive')
 
     # admin
     app.add_url_rule('/admin/', view_func=admin)
