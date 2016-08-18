@@ -3,7 +3,7 @@
 {% import 'user/macros.html' as macros %}
 
 {% block dashboard_content %}
-    {% if banners.items %}
+    {% if banners.items or 'title' in request.args %}
         <form>
             <div class="row">
                 <div class="form-group">
@@ -47,10 +47,13 @@
                 </div>
             </div>
         {% else %}
-          <div class="row">
-            <p class="dashboard-designer-empty-review bg-info">У вас нет баннеров.
+            <p class="dashboard-designer-empty-review bg-info">
+              {% if 'title' in request.args %}
+                Ничего не найдено.
+              {% else %}
+                У вас нет баннеров.
+              {% endif %}
             </p>
-          </div>
         {% endfor %}
     </div>
 
