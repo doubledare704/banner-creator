@@ -35,7 +35,6 @@ function sendToReview(event) {
                 child: "<p class='alert alert-success'>Баннер успешно отправлен на ревью</p>",
                 flash: true
             });
-            // let proj_id = document.getElementById('backgroundSection').getAttribute('data-project');
             let host_url = result.url;
             host_url += result.rev;
             host_url += '?project_id=' + proj_id;
