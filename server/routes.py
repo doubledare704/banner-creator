@@ -10,8 +10,9 @@ from server.views.editor import (continue_edit, history_image, cuts_background,
                                  background_images, editor, ReviewView)
 from server.views.images import (
     image_delete, image_rename,
-    review_tool, review_image, review_action,
-    )
+    review_tool, review_image,
+    review_action,review_result
+)
 from server.views.views import page_not_found, bad_request, internal_server_error, forbidden
 
 
@@ -78,9 +79,11 @@ def setup_routes(app):
     app.add_url_rule('/login/authorized/<social_network_name>/', view_func=oauth_callback)
     app.add_url_rule('/logout', methods=['POST'], view_func=log_out)
 
+    #reviews
     app.add_url_rule('/review/', methods=['GET', 'POST'], view_func=review_tool)
     app.add_url_rule('/review_image/<int:img_id>', methods=['GET', 'POST'], view_func=review_image)
     app.add_url_rule('/review_action/', methods=['GET', 'POST'], view_func=review_action)
+    app.add_url_rule('/review_result/<int:img_id>', methods=['GET', 'POST'], view_func=review_result)
 
     app.register_error_handler(400, bad_request)
     app.register_error_handler(403, forbidden)

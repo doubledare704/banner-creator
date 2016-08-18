@@ -23,10 +23,9 @@ class DeleteButton extends React.Component {
     render() {
         return (
             <div className="btn-wrapper">
-                <div className="btn btn-default">
+                <button onClick={this.onDelete} className="btn btn-danger">
                     <i className="glyphicon glyphicon-trash"/>
-                    <span onClick={this.onDelete} >Удали</span>
-                </div>
+                </button>
             </div>
         );
     }
@@ -78,10 +77,9 @@ class RenameButton extends React.Component {
             <div className="btn-wrapper">
                 { this.state.renamed ? activatePopUp({child: <h2> <RenameInput id={this.props.id} handleRename = {this.props.handleRename}/> </h2>    ,
                     flash: false }) : null }
-                <div className="btn btn-default">
+                <button onClick={this.onClick} className="btn btn-primary">
                     <i className="glyphicon glyphicon-pencil"/>
-                    <span onClick={this.onClick} >Переименуй</span>
-                </div>
+                </button>
             </div>
         );
     }
@@ -105,19 +103,18 @@ export class Image extends React.Component {
         return (
             <div className="col-lg-6">
                 <div className="thumbnail">
-                    <div className="img-wrapper" style={{backgroundImage: `url(${this.props.preview})`}} >
+                    <div onClick={this.handlePreview} className="img-wrapper dashboard-banner-preview" style={{backgroundImage: `url(${this.props.preview})`}} >
                         </div>
                         <div className="caption">
                            <h6> {this.props.title} </h6>
-                            <a onClick={this.handlePreview} className="btn btn-default btn-wrapper" role="button">
-                            Смотри
-                            </a>
-                                <RenameButton
-                                    title={this.props.title}
-                                    id={this.props.id}
-                                    handleRename={this.props.handleRename}
-                                />
-                            <DeleteButton id={this.props.id} handleDelete= {this.props.handleDelete} />
+                            <div className="text-right">
+                                    <RenameButton
+                                        title={this.props.title}
+                                        id={this.props.id}
+                                        handleRename={this.props.handleRename}
+                                    />
+                                <DeleteButton id={this.props.id} handleDelete= {this.props.handleDelete} />
+                            </div>
                     </div>
                 </div>
             </div>
