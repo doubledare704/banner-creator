@@ -1,7 +1,7 @@
 /* global MAIN, POP, LAYER, EXIF, HELPER, IMAGE, GUI */
 /* global SAVE_TYPES */
 function csrfToken() {
-  return document.querySelector('meta[name=csrf-token]').getAttribute('content');
+    return document.querySelector('meta[name=csrf-token]').getAttribute('content');
 }
 
 var FILE = new FILE_CLASS();
@@ -18,7 +18,7 @@ function FILE_CLASS() {
      */
     this.file_info = {
         general: [],
-        exif: [],
+        exif: []
     };
 
     /**
@@ -47,10 +47,7 @@ function FILE_CLASS() {
                 var width = parseInt(response.width);
                 var height = parseInt(response.height);
 
-                if (response.transparency == 'Yes')
-                    GUI.TRANSPARENCY = true;
-                else
-                    GUI.TRANSPARENCY = false;
+                GUI.TRANSPARENCY = response.transparency == 'Yes';
 
                 GUI.ZOOM = 100;
                 WIDTH = width;
@@ -106,6 +103,8 @@ function FILE_CLASS() {
         tempCtx.putImageData(tmp_data, -trim_info.left, -trim_info.top);
         var image_base64 = tempCanvas.toDataURL("image/png", 1.0);
         var random_name = Math.random().toString(36).substr(2, 12) + '.png';
+        var prefix_back = '?project_id=';
+        prefix_back += localStorage.projectId;
         var data = {
             file: image_base64,
             name: 'cutted' + random_name,
@@ -123,7 +122,8 @@ function FILE_CLASS() {
             .then((res) => res.json())
             .then(function ({result}) {
                 localStorage.setItem('file_cuted', result.file);
-                window.location.href=result.src
+                window.location.href = result.src + prefix_back;
+                localStorage.removeItem('projectId');
             })
             .catch(function (error) {
                 console.log('Request failed', error);
