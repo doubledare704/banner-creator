@@ -99,13 +99,13 @@
                     <div class="rightcol2">
                         <h2>Выберите вариант загрузки</h2>
                         <div class="uploadings">
-                            <div class="lm"><a href="{{ url_for ('cuts_background') }}" id="cutters"><i
+                            <div class="lm"><a data-bazooka="setOriginalZoom" href="{{ url_for ('cuts_background') }}" id="cutters"><i
                                     class="material-icons">exit_to_app</i>Нужно вырезать фон</a>
                             </div>
                             <div id="local_load" class="lm"><a href="#" id="input"><i
                                     class="material-icons">find_in_page</i>Загрузить
                                 из ПК</a></div>
-                            <div id="from_db" class="lm"><a><i class="material-icons">line_style</i>Загрузить из
+                            <div id="from_db" class="lm"><a href="#"><i class="material-icons">line_style</i>Загрузить из
                                 базы</a>
                                 <div class="hidden" id="list-cuted">
 
@@ -136,7 +136,7 @@
                         <i class="material-icons">zoom_out</i>
                     </a>
                 </section>
-                <section class="btn btn-default tooltipp" data-bazooka="setOriginalZoom" data-tooltip="Вернуть размер">
+                <section id="reseter" class="btn btn-default tooltipp" data-bazooka="setOriginalZoom" data-tooltip="Вернуть размер">
                     <a href="#">
                         <i class="material-icons">zoom_out_map</i>
                     </a>
