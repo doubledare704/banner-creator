@@ -204,8 +204,13 @@ def project_page(project_id):
             } for header in project.headers}
         return render_template('admin/projects/headers.html', project=project, fonts=json.dumps(project_fonts),
                                headers=json.dumps(project_headers))
-    # elif tab == 'background':
-    #     return render_template('admin/projects/headers.html', project=project, fonts=json.dumps(project_fonts))
+    elif tab == 'background':
+        image_json = [{'id': image.id,
+                       'url': '/uploads/' + image.name,
+                       'title': image.title,
+                       'preview': '/uploads/' + image.preview
+                       } for image in project.background_images if image.active]
+        return render_template('admin/projects/backgrounds.html', project=project, image_json=json.dumps(image_json))
     elif tab == 'button':
         return render_template('admin/projects/button.html', project=project)
 

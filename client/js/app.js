@@ -17,6 +17,7 @@ import projectsHeaders from './admin/headers.jsx';
 import {dropDown} from './projects/dropdown';
 import uploadFiles from './images/uploadFiles';
 import reviewResult from './images/reviewResult.jsx';
+import backgrounds from './admin/backgrounds';
 
 require('./../css/main.styl');
 const Baz = require('bazooka');
@@ -35,6 +36,7 @@ Baz.register({
     'projectsPanel': projectsPanel,
     'uploadFont': uploadFont,
     'projectsHeaders': projectsHeaders,
+    'backgrounds': backgrounds,
     // dashboard
     'goToReview': goToReview,
     'showBannerPopup': showBannerPopup,

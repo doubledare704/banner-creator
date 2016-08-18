@@ -1,14 +1,14 @@
 """JSON column for banner_review added
 
 Revision ID: 71984638bfcf
-Revises: 155c90535909
+Revises: 83aa90f15b01
 Create Date: 2016-08-17 13:02:38.743130
 
 """
 
 # revision identifiers, used by Alembic.
 revision = '71984638bfcf'
-down_revision = '155c90535909'
+down_revision = '83aa90f15b01'
 
 from alembic import op
 import sqlalchemy as sa

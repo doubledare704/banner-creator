@@ -87,7 +87,7 @@ class RenameButton extends React.Component {
     }
 }
 
-class Image extends React.Component {
+export class Image extends React.Component {
 
     constructor(props) {
         super(props);
@@ -125,7 +125,7 @@ class Image extends React.Component {
         }
     }
 
-class ImagesList extends React.Component {
+export class ImagesList extends React.Component {
 
     constructor(props) {
         super(props);
