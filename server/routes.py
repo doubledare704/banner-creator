@@ -41,6 +41,8 @@ def setup_routes(app):
                      view_func=dashboard_views.delete_banner)
     app.add_url_rule('/dashboard/reviews/', view_func=dashboard_views.additional_reviews,
                      endpoint='dashboard_additional_reviews')
+    app.add_url_rule('/dashboard/archive/as_user/', view_func=dashboard_views.additional_dashboard_archive,
+                     endpoint='dashboard_additional_archive')
 
     # admin
     app.add_url_rule('/admin/', view_func=admin)

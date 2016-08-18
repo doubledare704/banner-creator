@@ -17,7 +17,7 @@
                     <a href="{{ url_for('dashboard_backgrounds') }}">Загрузка фонов</a>
                 </li>
                 {% endif %}
-                <li class="{{ active_endpoint('dashboard_archive') }}">
+                <li class="{{ active_endpoint('dashboard_archive') or active_endpoint('dashboard_additional_archive') }}">
                   <a href="/dashboard/archive/">Архив</a>
                 </li>
             </ul>
