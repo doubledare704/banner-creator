@@ -42,7 +42,7 @@ def requires_roles(*roles):
         @login_required
         def wrapped(*args, **kwargs):
             if current_user.role.name not in roles:
-                return Forbidden()
+                raise Forbidden()
             return f(*args, **kwargs)
         return wrapped
     return wrapper

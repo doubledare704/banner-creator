@@ -257,10 +257,10 @@ def change_headers(project_id):
 def change_project_button(project_id):
     project = Project.query.get_or_404(project_id)
     if 'button_file' not in request.files:
-        return BadRequest()
+        raise BadRequest()
     file = request.files['button_file']
     if file.filename == '':
-        return BadRequest()
+        raise BadRequest()
     _, extension = os.path.splitext(file.filename)
     if file and extension == ".png":
         filename = str(uuid.uuid1()).replace("-", "") + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
