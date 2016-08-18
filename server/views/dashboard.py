@@ -108,11 +108,14 @@ def dashboard_archive():
     page = int(request.args.get('page', 1))  # get page number from url query string
     if current_user.is_designer() or current_user.is_admin():
         reviews = BannerReview.query.filter_by(reviewed=True, designer_id=current_user.id
+                                               ).order_by(BannerReview.created_at.desc()
                                                ).paginate(page=page, per_page=10)
         pagination = Pagination(per_page=10, page=page, total=reviews.total, css_framework='bootstrap3')
         return render_template('user/dashboard_designer_archive.html', reviews=reviews, pagination=pagination)
     elif current_user.is_user():
-        reviews = BannerReview.query.filter_by(active=False, user_id=current_user.id).paginate(page=page, per_page=10)
+        reviews = BannerReview.query.filter_by(active=False, user_id=current_user.id
+                                               ).order_by(BannerReview.created_at.desc()
+                                               ).paginate(page=page, per_page=10)
         pagination = Pagination(per_page=10, page=page, total=reviews.total, css_framework='bootstrap3')
         return render_template('user/dashboard_user_archive.html', reviews=reviews, pagination=pagination)
 
@@ -120,7 +123,9 @@ def dashboard_archive():
 @requires_roles('designer', 'admin')
 def additional_dashboard_archive():
     page = int(request.args.get('page', 1))  # get page number from url query string
-    reviews = BannerReview.query.filter_by(active=False, user_id=current_user.id).paginate(page=page, per_page=10)
+    reviews = BannerReview.query.filter_by(active=False, user_id=current_user.id
+                                           ).order_by(BannerReview.created_at.desc()
+                                           ).paginate(page=page, per_page=10)
     pagination = Pagination(per_page=10, page=page, total=reviews.total, css_framework='bootstrap3')
     return render_template('user/dashboard_user_archive.html', reviews=reviews, pagination=pagination)
 
