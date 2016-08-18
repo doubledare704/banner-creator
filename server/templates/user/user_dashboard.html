@@ -27,22 +27,14 @@
         <span class="dashboard-delete-btn glyphicon glyphicon-remove" data-bazooka="deleteReview" data-url="{{ url_for('delete_review', review_id=review.id) }}"></span>
       </p>
 
-      <div class="row">
+      <div class="row dashboard-review-container" data-bazooka="goToReview" data-review-url="{{ url_for('review_result', img_id=review.id) }}">
         <div class="col-lg-6">
           <p>Название баннера: <span class="dashboard-banner-title {% if not review.banner.title %}text-muted{% endif %}">{{ review.banner.title|default('нет названия', true) }}</span></p>
-          {% if review.designer_comment %}
-            <p class="dashboard-comment-text"><b>Комментарий дизайнера: </b><br>{{ review.designer_comment }}</p>
-          {% endif %}
         </div>
         <div class="col-lg-4 col-lg-offset-2 dashboard-banner-preview" data-bazooka="showBannerPopup" data-banner-url="{{ url_for('uploaded_file', filename=review.banner.name) }}">
           <img src="{{ url_for('uploaded_file', filename=review.banner.preview) }}">
         </div>
       </div>
-
-      {{ macros.render_banner_container('Показать баннер', review.banner.name) }}
-      {% if review.reviewed %}
-        {{ macros.render_banner_container('Показать результат ревью', review.designer_imagename) }}
-      {% endif %}
     </div>
   </div>
   {% else %}

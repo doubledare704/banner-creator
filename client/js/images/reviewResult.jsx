@@ -7,14 +7,23 @@ const BAZOOKA_PREFIX = 'body';
 class Comments extends React.Component{
     constructor(props){
         super(props);
+
     }
     
     render(){
-        const style = this.props.style;
-        const name = this.props.name;
+        const divStyle = {
+            left: this.props.style.left,
+            top: this.props.style.top,
+            position: "absolute",
+        };
+        const pStyle ={
+            marginLeft: '13px',
+            marginTop: '-5px',
+            backgroundColor: '#f5f5f5'
+        };
         return(
-            <div name={name} style={style}>
-                {this.props.text}
+            <div className = "dashboard-user-media-body" style={ divStyle }>
+                <p className = "dashboard-well"><span style={ pStyle }>{this.props.text}</span></p>
             </div>
 
         );
@@ -24,21 +33,26 @@ class Comments extends React.Component{
 class ReviewResult extends React.Component{
     constructor(props){
         super(props);
+        this.state = {
+            show: true
+        };
+        this.showComment = this.showComment.bind(this);
+    }
+
+    showComment(){
+        this.setState({show: !this.state.show});
     }
 
     render(){
+        const btn = this.state.show ? "glyphicon glyphicon-eye-close" : "glyphicon glyphicon-eye-open";
         return(
-            <div className="comment-wrapper" style={{backgroundImage: `url(${this.props.imageUrl})`}}>
-                {
-                    this.props.reviewComments.map(el => {
-                        return <Comments
-                            key={ el.id }
-                            name={ el.name }
-                            text={ el.text }
-                            style={ el.style }
-                        />;
-                    })
-                }
+            <div>
+                <button onClick={this.showComment} className="btn btn-primary form-group btn-wrapper tooltipp" data-tooltip="спрятать/показать">
+                    <i className={btn}/>
+                </button>
+                <div className="dashboard-comment-wrapper" style={{backgroundImage: `url(${this.props.imageUrl})`}}>
+                    { this.state.show ? this.props.reviewComments.map(el => {return <Comments key={ el.comment_id } style={ el.style } text={ el.text }/>;}): null }
+                </div>
             </div>
         );
     }

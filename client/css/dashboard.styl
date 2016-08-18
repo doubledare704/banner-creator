@@ -126,24 +126,24 @@ dashboard-comment-color = #dedede
     line-height: 10px;
 }
 
-.dashboard-comments .dashboard-media-body p {
-    position: relative;
-    background: #F7F7F7;
-    padding: 15px;
-    margin-top: 50px;
-}
 
-.dashboard-media-body p::before {
+.dashboard-user-media-body p {
+  position: relative;
+  background: #F7F7F7;
+  //padding: 15px;
+  margin-top: 50px;
+}
+.dashboard-user-media-body p::before {
     background-color: #F7F7F7;
     box-shadow: -2px 2px 2px 0 rgba( 178, 178, 178, .4 );
     content: "\00a0";
     display: block;
-    height: 30px;
-    left: -14px;
+    height: 10px;
+    left: -5px;
     position: absolute;
-    top: 7px;
+    top: 2px;
     transform: rotate( 48deg );
-    width:  30px;
+    width:  10px;
 }
 
 .dashboard-white {
@@ -163,10 +163,10 @@ dashboard-comment-color = #dedede
 
 .dashboard-comment-wrapper
   position: relative
-  margin: 50px
+  margin: 1px
   border: 1px solid red
-  width: 960px
-  height: 420px
+  width: 1097px
+  height: 480px
   background-position: center center
   background-repeat: no-repeat
-  background-size: fill
+  background-size: contain
