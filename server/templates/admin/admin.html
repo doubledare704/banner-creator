@@ -12,8 +12,8 @@
                         <li class="{{active_endpoint('admin_users')}}"><a href="{{ url_for('admin_users')}}">Пользователи</a></li>
                         <li class="{{active_endpoint('admin_backgrounds')}}"><a href="{{ url_for ('admin_backgrounds', tab='active') }}">Фоны</a></li>
                     {% endif %}
-                    {% for project in projects_list() %}
-                        <li><a href="{{ url_for('admin_project_page', project_id=project.id)}}">{{project.name}}</a></li>
+                    {% for project_point in projects_list() %}
+                        <li class="{{active_project(project_point.id, project)}}"><a href="{{ url_for('admin_project_page', project_id=project_point.id)}}">{{project_point.name}}</a></li>
                     {% endfor %}
                     <li><a href="" data-bazooka="createProject"><i class="glyphicon glyphicon-plus"></i> Создать проект</a></li>
                     <form action="{{ url_for('create_project') }}" method="post" class="form-inline hidden">
