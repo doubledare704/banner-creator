@@ -33,9 +33,13 @@ function sendToReview(event) {
                 child: "<p class='alert alert-success'>Баннер успешно отправлен на ревью</p>",
                 flash: true
             });
+            let proj_id = document.getElementById('backgroundSection').getAttribute('data-project');
+            let host_url = result.url;
+            host_url += result.rev;
+            host_url += '?project_id='+proj_id;
             document.getElementById('resulting').src = result.src;
             if (document.getElementById('continue')) {
-                document.getElementById('continue').href += result.rev;
+                document.getElementById('continue').href = host_url;
                 document.getElementById('continue').style.display = "inline-block";
             }
             document.getElementById('double').style.display = "block";

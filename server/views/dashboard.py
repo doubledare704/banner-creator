@@ -57,7 +57,12 @@ def user_banners():
 @login_required
 def dashboard_backgrounds():
     images = BackgroundImage.query.filter_by(active=True)
-    projects = Project.query.all()
+    projects_query = Project.query.all()
+    projects = json.dumps(
+        [{'id': project.id,
+          'name': project.name
+          }
+         for project in projects_query])
     image_json = json.dumps(
         [{'id': image.id,
           'url': '/uploads/' + image.name,
@@ -71,31 +76,31 @@ def dashboard_backgrounds():
 
 @login_required
 def upload():
-    uploaded_files = request.files.getlist("file[]")
-    project = request.form['project']
-    project_prefix=Project.query.get(project).name
-    for file in uploaded_files:
-        if file and allowed_file(file.filename):
+    '''controller for uploading files. used in fileform in designer"s dashboard'''
+    file = request.files['file']
+    if file.filename == '':
+        return json.dumps([{'message': 'No selected file'}]), 304
+    project_id = request.form['project']
+    project_prefix=Project.query.get(project_id).name
 
-            filename = str(uuid.uuid1()).replace("-", "") + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
-            title = project_prefix + file.filename
-            preview_name = 'preview_' + filename
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-            preview_file = image_preview(file)
-            preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
-
-            width, height = PIL.Image.open(file).size  # get image size
-            image = BackgroundImage(
-                name=filename,
-                title=title,
-                preview=preview_name,
-                project_id=project,
-                width = width,
-                height = height
-            )
-            db.session.add(image)
-
-    return redirect(url_for('dashboard_backgrounds'))
+    if file and allowed_file(file.filename):
+        filename = str(uuid.uuid1()).replace("-", "") + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
+        preview_name = 'preview_' + filename
+        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+        preview_file = image_preview(file)
+        preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
+        title = project_prefix + file.filename
+        width, height = PIL.Image.open(file).size  # get image size
+        image = BackgroundImage(
+            name=filename,
+            title=title,
+            preview=preview_name,
+            project_id=project_id,
+            width = width,
+            height = height
+        )
+        db.session.add(image)
+        return json.dumps({'result': 'file saved'}), 200
 
 
 @login_required

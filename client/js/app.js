@@ -10,12 +10,14 @@ import goToReview from './dashboard/designer_review';
 import showBannerPopup from './dashboard/designer_dashboard_banner';
 import deleteReview from './dashboard/dashboard_delete_review';
 import deleteBanner from './dashboard/dashboard_delete_banner';
-import imageSlider from './images/slider.jsx';
 import handleCreateProjectClick from './admin/create_project_field';
 import {uploadButton} from './helpers';
 import uploadFont from './admin/upload_font';
 import projectsHeaders from './admin/headers.jsx';
 import {dropDown} from './projects/dropdown';
+import uploadFiles from './images/uploadFiles';
+import reviewResult from './images/reviewResult.jsx';
+import backgrounds from './admin/backgrounds';
 
 require('./../css/main.styl');
 const Baz = require('bazooka');
@@ -29,18 +31,20 @@ Baz.register({
     'toggleProfileForm': toggleProfileForm,
     "authLogout": logoutClick,
     'authLogin': loginClick,
-    'imageSlider': imageSlider,
     'createProject': handleCreateProjectClick,
     'uploadButton': uploadButton,
     'projectsPanel': projectsPanel,
     'uploadFont': uploadFont,
     'projectsHeaders': projectsHeaders,
+    'backgrounds': backgrounds,
     // dashboard
     'goToReview': goToReview,
     'showBannerPopup': showBannerPopup,
     'deleteReview': deleteReview,
     'deleteBanner': deleteBanner,
-    'dropDown': dropDown
+    'dropDown': dropDown,
+    'uploadFiles' : uploadFiles,
+    'reviewResult': reviewResult
 });
 
 Baz.watch();

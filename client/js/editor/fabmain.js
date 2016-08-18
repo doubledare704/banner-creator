@@ -1,5 +1,6 @@
 //load fabric
 let fabric = require('fabric').fabric;
+require('./modals.js');
 
 import Editor from './editor.js';
 import {csrfToken} from '../helpers'
@@ -88,7 +89,8 @@ deleteFabricItem.addEventListener('click', function () {
 });
 
 addbutton.addEventListener('click', function () {
-    editor.addButton();
+    let url_iamge = addbutton.getAttribute('data-button');
+    editor.addButton(url_iamge);
 });
 
 for (var i = 0; i < addtexts.length; i++) {
@@ -96,11 +98,12 @@ for (var i = 0; i < addtexts.length; i++) {
         let sizes = this.getAttribute("data-size");
         let texting = this.getAttribute("data-text");
         let typings = this.getAttribute("data-type");
+        let fonter = this.getAttribute("data-font");
         if (typings) {
-            editor.setPrice('Roboto', sizes, '#000', texting);
+            editor.setPrice(fonter, sizes, '#000', texting);
         }
         else {
-            editor.setFont('Roboto', sizes, '#000', texting);
+            editor.setFont(fonter, sizes, '#000', texting);
         }
     });
 }

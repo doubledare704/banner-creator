@@ -8,19 +8,28 @@ from flask import (render_template, current_app, request, jsonify,
                    url_for)
 from flask.views import MethodView
 from flask_login import login_required, current_user
-from sqlalchemy import desc
+from sqlalchemy import desc, asc
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
 from server.db import db
-from server.models import Image, ImageHistory, Banner, BannerReview, User, BackgroundImage
+from server.models import Image, ImageHistory, Banner, BannerReview, User, BackgroundImage, Project, Header, Font
 from server.utils.image import image_preview
 
 
 @login_required
 def editor():
     proj_id = request.args.get('project_id')
-    return render_template('editor_markuped.html', p_id=proj_id)
+    current_project = Project.query.get_or_404(proj_id)
+    button = current_project.button
+    if button:
+        button_url = url_for('uploaded_file', filename=button)
+    else:
+        button_url = ''
+    fonts = Header.query.filter_by(
+        project_id=proj_id).order_by(asc(Header.name)).join(Font).add_columns(Font.name, Header.size).all()
+    return render_template('editor_markuped.html', p_id=proj_id, project=current_project, fonts=fonts,
+                           button=button_url)
 
 
 @login_required
@@ -37,9 +46,12 @@ def background_images():
 
 @login_required
 def continue_edit(history_image_id):
+    proj_id = request.args.get('project_id')
+    current_project = Project.query.get_or_404(proj_id)
     edit = ImageHistory.query.filter_by(review_image=history_image_id).first_or_404()
     designers = User.query.filter_by(role=User.UserRole.designer).filter(User.id != current_user.id)
-    return render_template('editor_history.html', id_review=edit.review_image, designers=designers)
+    return render_template('editor_history.html', p_id=proj_id, id_review=edit.review_image, designers=designers,
+                           project=current_project)
 
 
 @login_required
@@ -196,6 +208,7 @@ class ReviewView(MethodView):
             db.session.add(history)
             review_jsoned = {
                 "src": url_for('uploaded_file', filename=filename),
-                "rev": history.review_image
+                "rev": history.review_image,
+                "url": url_for('editor')
             }
             return jsonify({'result': review_jsoned}), 201

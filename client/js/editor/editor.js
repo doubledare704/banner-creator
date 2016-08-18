@@ -203,8 +203,13 @@ export default class Editor {
         });
     }
 
-    addButton(w = 120, h = 30, fontFamily = 'Roboto', fontSize = 13, fontText = 'Смотреть >', textColor = '#3c3c3c') {
-        let border = new fabric.Rect({
+    addButton(url, w = 120, h = 30, fontFamily = 'Roboto', fontSize = 13, fontText = 'Смотреть', textColor = '#3c3c3c') {
+
+        if(url){
+            this.addImage(url)
+        }
+        else {
+            let border = new fabric.Rect({
             width: w * this.seekAndResize(),
             height: h * this.seekAndResize(),
             fill: 'transparent',
@@ -227,6 +232,30 @@ export default class Editor {
             top: 100 * this.seekAndResize()
         });
         this.canv.add(group);
+        }
+        // let border = new fabric.Rect({
+        //     width: w * this.seekAndResize(),
+        //     height: h * this.seekAndResize(),
+        //     fill: 'transparent',
+        //     stroke: '#3c3c3c',
+        //     strokeWidth: 1,
+        //     rx: 5,
+        //     ry: 5
+        // });
+        // let texting = new fabric.IText(fontText, {
+        //     fontFamily: fontFamily,
+        //     fontSize: fontSize * this.seekAndResize(),
+        //     fill: textColor,
+        //     top: h / 4,
+        //     left: w / 4.4
+        // });
+        // texting.setTop(border.height / 2 - texting.getHeight() / 2);
+        // texting.setLeft(border.width / 2 - texting.getWidth() / 2);
+        // let group = new fabric.Group([border, texting], {
+        //     left: 200 * this.seekAndResize(),
+        //     top: 100 * this.seekAndResize()
+        // });
+        // this.canv.add(group);
     }
 
     // downloads an image
@@ -301,6 +330,39 @@ export default class Editor {
             fill: 'transparent',
             scaleY: 0.5
         }))
+    }
+    
+    // change grid size
+    setNewGridSize(gridSize = 10) {
+        // create grid
+        let canvas = this.canv;
+        let objs = canvas.getObjects();
+        let typesObj = objs.map(function (a) {
+            return a.type;
+        });
+        if (inArray('line', typesObj)) {
+            this.filterAndDelete(objs);
+            this.addGrid(gridSize);
+        }
+        else {
+            this.addGrid(gridSize)
+        }
+    }
+    
+    // add grid for canvas
+    setGridToCanv(gridSize = 10) {
+        // create grid
+        let canvas = this.canv;
+        let objs = canvas.getObjects();
+        let typesObj = objs.map(function (a) {
+            return a.type;
+        });
+        if (inArray('line', typesObj)) {
+            this.filterAndDelete(objs);
+        }
+        else {
+            this.addGrid(gridSize)
+        }
     }
 
     // change grid size
