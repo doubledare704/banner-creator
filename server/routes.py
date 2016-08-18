@@ -11,8 +11,9 @@ from server.views.editor import (continue_edit, history_image, cuts_background,
 from server.views.images import (
     image_delete, image_rename,
     review_tool, review_image,
-    review_action,review_result
-)
+    review_action,review_result,
+    refresh
+    )
 from server.views.views import page_not_found, bad_request, internal_server_error, forbidden
 
 
@@ -44,6 +45,7 @@ def setup_routes(app):
                      endpoint='dashboard_additional_reviews')
     app.add_url_rule('/dashboard/archive/as_user/', view_func=dashboard_views.additional_dashboard_archive,
                      endpoint='dashboard_additional_archive')
+    app.add_url_rule('/refresh/', methods=['GET'], view_func=refresh)
 
     # admin
     app.add_url_rule('/admin/', view_func=admin)

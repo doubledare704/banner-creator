@@ -47,18 +47,18 @@ class ReviewWindow extends React.Component {
     }
 
     clickComment(event){
-        
         let node = event.target;
         let X = ((event.clientX-node.getBoundingClientRect().left)/1097)*100+0.4;
-        let Y = ((event.clientY-node.getBoundingClientRect().top)/480)*100-13;
+        let Y = ((event.clientY-node.getBoundingClientRect().top)/480)*100-2;
         let commentDiv = document.createElement("DIV");
         commentDiv.className = "dashboard-user-media-body";
         commentDiv.style.cssText = `left: ${X}%; top: ${Y}%; position: absolute;`;
 
         let commentInput = document.createElement("TEXTAREA");
-        commentInput.style.cssText = 'margin-left: 13px; margin-top: -5px; background-color: #f5f5f5; border: 1px solid #f5f5f5; height: 100%;';
+        commentInput.cols = 9;
+        commentInput.rows = 1;
+        commentInput.style.cssText = 'margin-left: 9px; margin-top: 3px; background-color: #f5f5f5; border: 0px solid #f5f5f5; height: 100%;';
         commentInput.placeholder = "Коммент...";
-
 
         let sp = document.createElement("SPAN");
         let xt = document.createTextNode("x");
@@ -72,11 +72,9 @@ class ReviewWindow extends React.Component {
         p.appendChild(commentInput);
         p.appendChild(sp);
 
-
         commentDiv.appendChild(p);
         commentDiv.addEventListener('click', e => e.stopPropagation());
         node.appendChild(commentDiv);
-
     }
 
     getComments(){
