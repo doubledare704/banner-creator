@@ -14,8 +14,10 @@ function sendToReview(event) {
     disableControls(o, g);
     const formData = new FormData(event.target);
     let imageReview = editor.canv.toJSON();
+    let proj_id = document.getElementById('backgroundSection').getAttribute('data-project');
     // append image as base64 string
     formData.append('file', editor.canv.toDataURL("image/png", 1.0));
+    formData.append('project', proj_id);
     formData.append('file_json', JSON.stringify(imageReview));
     fetch(event.target.dataset.url,
         {
@@ -33,10 +35,10 @@ function sendToReview(event) {
                 child: "<p class='alert alert-success'>Баннер успешно отправлен на ревью</p>",
                 flash: true
             });
-            let proj_id = document.getElementById('backgroundSection').getAttribute('data-project');
+            // let proj_id = document.getElementById('backgroundSection').getAttribute('data-project');
             let host_url = result.url;
             host_url += result.rev;
-            host_url += '?project_id='+proj_id;
+            host_url += '?project_id=' + proj_id;
             document.getElementById('resulting').src = result.src;
             if (document.getElementById('continue')) {
                 document.getElementById('continue').href = host_url;

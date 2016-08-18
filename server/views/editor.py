@@ -167,6 +167,7 @@ class ReviewView(MethodView):
             return jsonify({'result': 'no field file in form'}), 404
         else:
             _, b64data = form['file'].split(',')
+            p_id = form['project']
             name = str(uuid.uuid4()) + '.png'
             decoded_data = base64.b64decode(b64data)
             file_ = FileStorage(BytesIO(decoded_data), filename=name)
@@ -183,6 +184,7 @@ class ReviewView(MethodView):
 
             banner = Banner(
                 name=filename,
+                project_id=p_id,
                 title=form.get('title', 'untitled'),
                 preview=preview_name,
                 user=current_user

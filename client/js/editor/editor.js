@@ -163,8 +163,8 @@ export default class Editor {
             texts,
             {
                 fontFamily: family,
-                left: 500 * this.seekAndResize(),
-                top: 100 * this.seekAndResize(),
+                left: this.canv.getWidth() / 2 * this.seekAndResize(),
+                top: this.canv.getHeight() / 4 * this.seekAndResize(),
                 fontSize: ptToPx(size) * this.seekAndResize(),
                 fill: color,
                 backgroundColor: backgroundColor
@@ -205,33 +205,33 @@ export default class Editor {
 
     addButton(url, w = 120, h = 30, fontFamily = 'Roboto', fontSize = 13, fontText = 'Смотреть', textColor = '#3c3c3c') {
 
-        if(url){
+        if (url) {
             this.addImage(url)
         }
         else {
             let border = new fabric.Rect({
-            width: w * this.seekAndResize(),
-            height: h * this.seekAndResize(),
-            fill: 'transparent',
-            stroke: '#3c3c3c',
-            strokeWidth: 1,
-            rx: 5,
-            ry: 5
-        });
-        let texting = new fabric.IText(fontText, {
-            fontFamily: fontFamily,
-            fontSize: fontSize * this.seekAndResize(),
-            fill: textColor,
-            top: h / 4,
-            left: w / 4.4
-        });
-        texting.setTop(border.height / 2 - texting.getHeight() / 2);
-        texting.setLeft(border.width / 2 - texting.getWidth() / 2);
-        let group = new fabric.Group([border, texting], {
-            left: 200 * this.seekAndResize(),
-            top: 100 * this.seekAndResize()
-        });
-        this.canv.add(group);
+                width: w * this.seekAndResize(),
+                height: h * this.seekAndResize(),
+                fill: 'transparent',
+                stroke: '#3c3c3c',
+                strokeWidth: 1,
+                rx: 5,
+                ry: 5
+            });
+            let texting = new fabric.IText(fontText, {
+                fontFamily: fontFamily,
+                fontSize: fontSize * this.seekAndResize(),
+                fill: textColor,
+                top: h / 4,
+                left: w / 4.4
+            });
+            texting.setTop(border.height / 2 - texting.getHeight() / 2);
+            texting.setLeft(border.width / 2 - texting.getWidth() / 2);
+            let group = new fabric.Group([border, texting], {
+                left: 200 * this.seekAndResize(),
+                top: 100 * this.seekAndResize()
+            });
+            this.canv.add(group);
         }
         // let border = new fabric.Rect({
         //     width: w * this.seekAndResize(),
@@ -331,7 +331,7 @@ export default class Editor {
             scaleY: 0.5
         }))
     }
-    
+
     // change grid size
     setNewGridSize(gridSize = 10) {
         // create grid
@@ -348,7 +348,7 @@ export default class Editor {
             this.addGrid(gridSize)
         }
     }
-    
+
     // add grid for canvas
     setGridToCanv(gridSize = 10) {
         // create grid
