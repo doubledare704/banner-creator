@@ -41,6 +41,8 @@ function resetZoom() {
 function zoomOut() {
     canvasScale = canvasScale / SCALE_FACTOR;
 
+    localStorage.setItem('canvasScale', canvasScale);
+
     canvas.setHeight(canvas.getHeight() * (1 / SCALE_FACTOR));
     canvas.setWidth(canvas.getWidth() * (1 / SCALE_FACTOR));
 
@@ -74,6 +76,7 @@ function zoomOut() {
 
 function zoomIn() {
     canvasScale = canvasScale * SCALE_FACTOR;
+    localStorage.setItem('canvasScale', canvasScale);
 
     canvas.setHeight(canvas.getHeight() * SCALE_FACTOR);
     canvas.setWidth(canvas.getWidth() * SCALE_FACTOR);

@@ -1,4 +1,4 @@
-import {editor} from './fabmain.js';
+import {editor, resizeIfBackground} from './fabmain.js';
 import {csrfToken} from '../helpers';
 const saver = document.getElementById('progress_saver');
 
@@ -15,22 +15,7 @@ function loadHist() {
         .then((result) => result.json())
         .then(function ({fetch_history}) {
             editor.canv.clear();
-            let w, h;
-            if (fetch_history.hasOwnProperty('backgroundImage')) {
-                let unpack = fetch_history.backgroundImage;
-                w = unpack.width;
-                h = unpack.height;
-                (function getCanvasAtResoution(newWidth, newHeight) {
-                    let can = editor.canv;
-                    if (can.width != newWidth || can.height != newHeight) {
-                        can.setWidth(newWidth);
-                        can.setHeight(newHeight);
-                        can.renderAll();
-                        can.calcOffset();
-                    }
-                })(w, h);
-            }
-            editor.canv.loadFromJSON(fetch_history, editor.canv.renderAll.bind(editor.canv))
+            resizeIfBackground(fetch_history);
         })
         .catch(function (error) {
             console.log(error);

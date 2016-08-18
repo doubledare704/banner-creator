@@ -3,8 +3,7 @@ let fabric = require('fabric').fabric;
 require('./modals.js');
 
 import Editor from './editor.js';
-import {csrfToken} from '../helpers'
-
+import {csrfToken} from '../helpers';
 let editor = new Editor('main', 960, 420);
 
 const fileInput = document.getElementById('input');
@@ -75,6 +74,7 @@ allCutted.addEventListener('click', function popList(event) {
 
 // save to local storage
 beforeCutter.addEventListener('click', function () {
+    resetforSaveEdit();
     let bannerStory = editor.canv.toJSON();
     let projectIDToLeave = document.getElementById('backgroundSection').getAttribute('data-project');
     bannerStory = JSON.stringify(bannerStory);
@@ -271,7 +271,8 @@ window.onload = function () {
 
     if (localStorage['canvasStory']) {
         editor.canv.clear();
-        editor.canv.loadFromJSON(localStorage.getItem('canvasStory'), editor.canv.renderAll.bind(editor.canv))
+        let canvasStory = localStorage.getItem('canvasStory');
+        resizeIfBackground(canvasStory, true);
     }
     if (localStorage['file_cuted']) {
         fabric.Image.fromURL(localStorage.getItem('file_cuted'), (img) => {
@@ -287,7 +288,6 @@ window.onload = function () {
                 })
             }
             editor.canv.add(img);
-            filetoeditor.value = ""
         });
     }
     if (localStorage['gridSize']) {
@@ -296,10 +296,69 @@ window.onload = function () {
     }
 };
 
+function resizeIfBackground(jsonResul, ifParse = false) {
+    editor.canv.clear();
+    if (ifParse) {
+        jsonResul = JSON.parse(jsonResul);
+    }
+    let w, h;
+    if (jsonResul.hasOwnProperty('backgroundImage')) {
+        let unpack = jsonResul.backgroundImage;
+        w = unpack.width;
+        h = unpack.height;
+        (function getCanvasAtResoution(newWidth, newHeight) {
+            let can = editor.canv;
+            if (can.width != newWidth || can.height != newHeight) {
+                can.setWidth(newWidth);
+                can.setHeight(newHeight);
+                can.renderAll();
+                can.calcOffset();
+            }
+        })(w, h);
+    }
+    editor.canv.loadFromJSON(jsonResul, editor.canv.renderAll.bind(editor.canv))
+}
+
+function resetforSaveEdit() {
+    let canvasScale = localStorage.canvasScale;
+    let canvas = editor.canv;
+    canvas.setHeight(canvas.getHeight() * (1 / canvasScale));
+    canvas.setWidth(canvas.getWidth() * (1 / canvasScale));
+    if (canvas.backgroundImage) {
+        canvas.backgroundImage.width = canvas.getWidth();
+        canvas.backgroundImage.height = canvas.getHeight();
+    }
+
+    let objects = canvas.getObjects();
+    for (let i in objects) {
+        let scaleX = objects[i].scaleX;
+        let scaleY = objects[i].scaleY;
+        let left = objects[i].left;
+        let top = objects[i].top;
+
+        let tempScaleX = scaleX * (1 / canvasScale);
+        let tempScaleY = scaleY * (1 / canvasScale);
+        let tempLeft = left * (1 / canvasScale);
+        let tempTop = top * (1 / canvasScale);
+
+        objects[i].scaleX = tempScaleX;
+        objects[i].scaleY = tempScaleY;
+        objects[i].left = tempLeft;
+        objects[i].top = tempTop;
+
+        objects[i].setCoords();
+    }
+
+    canvas.renderAll();
+
+    localStorage.setItem('canvasScale', 1);
+}
+
 module.exports = {
     'editor': editor,
     'fabric': fabric,
     'resetCanvas': resetCanvas,
     'deleteKeyup': deleteKeyup,
-    'redoUndo': redoUndo
+    'redoUndo': redoUndo,
+    'resizeIfBackground': resizeIfBackground
 };
