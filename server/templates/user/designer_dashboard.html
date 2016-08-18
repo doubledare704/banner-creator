@@ -38,9 +38,11 @@
       </div>
     </div>
   {% else %}
-    <p class="dashboard-designer-empty-review bg-info">На ревью ничего не присылали, можно расслабиться и попить чайку...
-      или <a href="{{ url_for('editor') }}">баннер создать</a>
-    </p>
+    <div class="row">
+      <p class="dashboard-designer-empty-review bg-info">На ревью ничего не присылали, можно расслабиться и попить чайку...
+        или баннер создать
+      </p>
+    </div>
   {% endfor %}
 
   <div class="pagination-container">

@@ -47,9 +47,10 @@
                 </div>
             </div>
         {% else %}
-            <p class="dashboard-designer-empty-review bg-info">У вас нет баннеров.<a href="{{ url_for('editor') }}">
-                Создать баннер</a>
+          <div class="row">
+            <p class="dashboard-designer-empty-review bg-info">У вас нет баннеров.
             </p>
+          </div>
         {% endfor %}
     </div>
 
