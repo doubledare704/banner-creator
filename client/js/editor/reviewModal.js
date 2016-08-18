@@ -1,7 +1,8 @@
+import React from 'react';
 import {editor} from './fabmain';
 import {disableControls} from './editor.js';
-import {csrfToken} from '../helpers';
-import {activateHtmlPopUp, deactivatePopUp} from '../popUp';
+import {csrfToken, ErrorAlert, SuccessAlert} from '../helpers';
+import {activatePopUp, deactivatePopUp} from '../popUp';
 
 
 function sendToReview(event) {
@@ -31,8 +32,8 @@ function sendToReview(event) {
     )
         .then((res) => res.json())
         .then(function ({result}) {
-            activateHtmlPopUp({
-                child: "<p class='alert alert-success'>Баннер успешно отправлен на ревью</p>",
+            activatePopUp({
+                child: <SuccessAlert text="Баннер успешно отправлен на ревью"/>,
                 flash: true
             });
             let host_url = result.url;
@@ -48,8 +49,8 @@ function sendToReview(event) {
             localStorage.clear();
         })
         .catch(function (error) {
-            activateHtmlPopUp({
-                child: "<p class='alert alert-danger'>Ошибка при выполнении запроса. Попробуйте отправить повторно.</p>",
+            activatePopUp({
+                child: <ErrorAlert text="Ошибка при выполнении запроса. Попробуйте отправить повторно."/>,
                 flash: true
             });
         });
