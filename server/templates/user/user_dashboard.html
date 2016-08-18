@@ -42,6 +42,14 @@
       <div class="row dashboard-review-container" data-bazooka="goToReview" data-review-url="{{ url_for('review_result', img_id=review.id) }}">
         <div class="col-lg-6">
           <p>Название баннера: <span class="dashboard-banner-title {% if not review.banner.title %}text-muted{% endif %}">{{ review.banner.title|default('нет названия', true) }}</span></p>
+          {% if review.status == review.Status.accepted %}
+          <p>
+            <a class="btn btn-default tooltipp" data-tooltip="Скачать баннер"
+              href="{{ url_for('uploaded_file', filename=review.banner.name) }}" download data-bazooka="saveBanner">
+              <span class="glyphicon glyphicon-floppy-save"></span>
+            </a>
+          </p>
+          {% endif %}
         </div>
         <div class="col-lg-4 col-lg-offset-2 dashboard-banner-preview" data-bazooka="showBannerPopup" data-banner-url="{{ url_for('uploaded_file', filename=review.banner.name) }}">
           <img src="{{ url_for('uploaded_file', filename=review.banner.preview) }}">
@@ -50,7 +58,9 @@
     </div>
   </div>
   {% else %}
-  <p class="dashboard-user-empty-review bg-info"><a href="{{ url_for('editor') }}">Создайте баннер</a> и отправьте его на ревью.</p>
+    <div class="row">
+      <p class="dashboard-user-empty-review bg-info">Создайте баннер и отправьте его на ревью.</p>
+    </div>
   {% endfor %}
 
   <div class="pagination-container">
