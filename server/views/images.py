@@ -51,11 +51,11 @@ def review_image(img_id):
 def review_action():
     '''handles the confirm action in review tool '''
     form = request.form
-    banner_review = BannerReview.query.get_or_404(form['id'])
-    banner_review.reviewed = True
-    banner_review.changed_at = datetime.datetime.utcnow()
-    banner_review.status = form['status']
-    banner_review.comment_clouds = form['commentClouds']
+    banner = Banner.query.get_or_404(form['id'])
+    banner.review.reviewed = True
+    banner.review.changed_at = datetime.datetime.utcnow()
+    banner.review.status = form['status']
+    banner.review.comment_clouds = form['commentClouds']
     return '', 200
 
 
@@ -68,3 +68,16 @@ def review_result(img_id):
         image_url=image_url,
         comments_json=review.comment_clouds
     )
+
+@login_required
+def refresh():
+    images = BackgroundImage.query.filter_by(active=True)
+    image_json = json.dumps(
+        [{'id': image.id,
+          'url': '/uploads/' + image.name,
+          'title': image.title,
+          'preview': '/uploads/' + image.preview
+          }
+         for image in images
+         ])
+    return image_json, 200

@@ -47,11 +47,13 @@ class RenameInput extends React.Component {
 
     render() {
         return (
-            <div className="btn-wrapper text-center">
-                <input type="text" ref="rename" onChange={this.onInput}  required/>
-                <input type="submit" value="Переименуй" 
-                       onClick={this.props.handleRename(this.props.id, this.state.newtitle)}
-                />
+            <div>
+                Новое имя: <input type="text" ref="rename" onChange={this.onInput}  required/>
+                <button onClick={this.props.handleRename(this.props.id, this.state.newtitle)}
+                        className="btn btn-primary btn-wrapper">
+                    <i className="glyphicon glyphicon-pencil"/>
+                </button>
+
             </div>
             );
         }
@@ -75,7 +77,8 @@ class RenameButton extends React.Component {
     render() {
         return (
             <div className="btn-wrapper">
-                { this.state.renamed ? activatePopUp({child: <h2> <RenameInput id={this.props.id} handleRename = {this.props.handleRename}/> </h2>    ,
+                { this.state.renamed ? activatePopUp({
+                    child: <h2 className="text-center"><RenameInput id={this.props.id} handleRename={this.props.handleRename}/></h2>,
                     flash: false }) : null }
                 <button onClick={this.onClick} className="btn btn-primary">
                     <i className="glyphicon glyphicon-pencil"/>
@@ -94,7 +97,7 @@ export class Image extends React.Component {
 
     handlePreview() {
         activatePopUp({
-            child: <div className="img-popup" style={{backgroundImage: `url(${this.props.url})`}} ></div>,
+            child: <div className="img-popup" style={{backgroundImage: `url(${this.props.url})`}}></div>,
             flash: false
         });
     }
@@ -103,7 +106,9 @@ export class Image extends React.Component {
         return (
             <div className="col-lg-6">
                 <div className="thumbnail">
-                    <div onClick={this.handlePreview} className="img-wrapper dashboard-banner-preview" style={{backgroundImage: `url(${this.props.preview})`}} >
+                    <div onClick={this.handlePreview}
+                         className="img-wrapper dashboard-banner-preview"
+                         style={{backgroundImage: `url(${this.props.preview})`}}>
                         </div>
                         <div className="caption">
                            <h6> {this.props.title} </h6>
@@ -133,10 +138,10 @@ export class ImagesList extends React.Component {
         this.handleDelete = this.handleDelete.bind(this);
         this.handleRename = this.handleRename.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
+        this.imageUpload = this.imageUpload.bind(this);
     }
 
     handleDelete(id) {
-        console.log(this.state.displayedImages);
         return () => {
             fetch("/delete/", {
                 credentials: 'same-origin',
@@ -204,13 +209,82 @@ export class ImagesList extends React.Component {
         this.setState({searchQuery});
     }
 
+    imageUpload(){
+        let form = new FormData(this.refs.imageform);
+        let files = this.refs.fileInput.files;
+        let x, y=0;
+        let all = files.length;
+        let progr = document.createElement("DIV");
+        progr.className ="progress-bar progress-bar-striped";
+        progr.role = "progressbar";
+
+        let bar = document.getElementById("bar");
+        bar.className="progress";
+        bar.style.cssText = "display: block;";
+        bar.appendChild(progr);
+
+        for(let i = 0; i<all; i++){
+
+            form.delete('file');
+            form.append('file', files[i]);
+            fetch("/upload",{
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'X-CSRFToken': csrfToken()
+            },
+            body: form
+        }).then(response => {
+                if(response.status === 400){
+                        activatePopUp({
+                            title: <h4 className="text-center">Нет файла: {response.status} {response.statusText} </h4>});
+                        return response.status;
+                    }
+                if (!response.ok) {
+                    activatePopUp({
+                        title: <h4 className="text-center">Что-то не так, ошибка: {response.status} {response.statusText}</h4>
+                    });
+                    return response.status;
+                }
+                x=((i+1)/all)*100;
+                progr.style.cssText = `width: ${x}%;`;
+                progr.innerHTML = `${i+1} из ${all} Загружено`;
+                y++;
+                if(y===all){
+                    activatePopUp({child: <h4 className="text-center">Загружено {y} из {all} файлов </h4> ,
+                        confirm: true,
+                        confirmAction: () => {
+                                fetch("/refresh/",{
+                                method: 'GET',
+                                credentials: 'same-origin',
+                                headers:{
+                                    'X-CSRFToken': csrfToken()
+                                }
+                            })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        this.setState({displayedImages: data});
+                                        this.refs.filelable.innerHTML="";
+                                        progr.style.cssText = "width: 0%;";
+                                        bar.style.cssText = "display: none;";
+                                    })
+                        }
+                    });
+                }
+            }).then()
+
+        }
+    }
+
     render() {
         const projects = this.props.projects;
-        const filteredImages = this.props.imageArray.filter((el) => el.title.toLowerCase().indexOf(this.state.searchQuery) !==-1);
+        const filteredImages = this.state.displayedImages.filter(
+            (el) => el.title.toLowerCase().indexOf(this.state.searchQuery) !==-1
+        );
         return (
             <div>
                 <div><h2>Загрузка фонов</h2></div>
-                  <form id="image-form"  className="form-inline"  enctype="multipart/form-data" >
+                  <form ref="imageform"  className="form-inline"  enctype="multipart/form-data" >
                     <div className="row">
                       <div className="form-group col-lg-3">
                         <label><span>Выберите проект: </span>
@@ -222,23 +296,29 @@ export class ImagesList extends React.Component {
                         </label>
                       </div>
                         <div className="form-group col-lg-6">
-                          <label>Выберите файлы:
-                            <input id="input"  type="file"  name="file[]" accept="image/gif, image/jpeg, image/jpg, image/png" multiple />
-                          </label>
+                                <button className="btn btn-default" data-bazooka="uploadButton">
+                                    <i className="glyphicon glyphicon-cloud-upload"/> Выберите файлы
+                                </button>
+                                <input id="input" ref="fileInput" className="upload" type="file" name="file[]"
+                                       accept="image/gif, image/jpeg, image/jpg, image/png" multiple="true" hidden="true"/>
+                                <label ref="filelable" htmlFor="input"/>
                         </div>
                     </div>
                     <br/>
                     <div className="row">
                       <div className="form-group col-lg-3">
-                        <input data-bazooka="uploadFiles"  className="btn btn-primary" type="submit" value="Загрузить"/>
+                        <input onClick={this.imageUpload} className="btn btn-primary"  value="Загрузить"/>
                       </div>
-                        <div id="demo" ></div>
+                        <div id="bar" ></div>
                     </div>
                   </form>
                   <hr/>
                 <div className="form-inline">
                         <div className="form-group">
-                            <input type="text" placeholder="Поиск..." className="form-control" onChange={this.handleSearch} />
+                            <input type="text" placeholder="Поиск..."
+                                   className="form-control"
+                                   onChange={this.handleSearch}
+                            />
                         </div>
                 </div>
                      <hr/>
