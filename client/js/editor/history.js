@@ -1,5 +1,9 @@
+import React from 'react';
 import {editor} from './fabmain.js';
 import {csrfToken} from '../helpers';
+import {activatePopUp} from '../popUp';
+import {disableControls} from './editor';
+import {ErrorAlert, SuccessAlert} from '../helpers';
 const saver = document.getElementById('progress_saver');
 
 function loadHist() {
@@ -39,9 +43,15 @@ function loadHist() {
 function sendTohistory() {
     const id = saver.getAttribute('data-review');
     let image_history = editor.canv.toJSON();
+      let o = editor.canv.getActiveObject(),
+          g = editor.canv.getActiveGroup();
+    disableControls(o, g);
+    const image = editor.canv.toDataURL("image/png", 1.0);
     const data = {
         hist_id: id,
-        jsn: image_history
+        jsn: image_history,
+        image: image
+
     };
     fetch(`/editor/history/${id}`, {
         method: 'post',
@@ -52,10 +62,10 @@ function sendTohistory() {
         },
         body: JSON.stringify(data)
     })
-        .then((res) => res.json())
-        .catch(function (error) {
-            console.log('Request failed', error);
-        });
+        .then((response) => {
+          if (response.status == 200) { activatePopUp({child: <SuccessAlert text="Изменения сохранены" />, flash: true})}
+          else { activatePopUp({child: <ErrorAlert text="Ошибка при попытке сохранить изменения."/>, flash: true}) }
+        })
 }
 
 function reloadHistory(node) {
@@ -63,7 +73,8 @@ function reloadHistory(node) {
 }
 
 function saveToHistory(node) {
-    node.addEventListener('click', sendTohistory)
+    node.addEventListener('click', sendTohistory);
+    node.onload = loadHist();
 }
 module.exports = {
     'reloadHistory': reloadHistory,
