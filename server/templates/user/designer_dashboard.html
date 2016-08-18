@@ -4,6 +4,18 @@
 
 
 {% block dashboard_content %}
+{% if current_user.role.name in ('designer', 'admin') %}
+<div class="row">
+  <ul class="nav nav-tabs dashboard-designer-tabs">
+    <li class="{{ active_endpoint('dashboard') }}">
+      <a href="{{ url_for('dashboard') }}">Мне отправили на ревью</a>
+    </li>
+    <li class="{{ active_endpoint('dashboard_additional_reviews') }}">
+      <a href="{{ url_for('dashboard_additional_reviews') }}">Я отправил</a>
+    </li>
+  </ul>
+</div>
+{% endif %}
   {% for review in reviews.items %}
     <div class="dashboard-review-container" data-bazooka="goToReview" data-review-url="{{ url_for('review_image', img_id=review.banner.id) }}">
       <div class="review-section row">

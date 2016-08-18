@@ -4,6 +4,18 @@
 
 
 {% block dashboard_content %}
+{% if current_user.role.name in ('designer', 'admin') %}
+<div class="row">
+  <ul class="nav nav-tabs dashboard-designer-tabs">
+    <li class="{{ active_endpoint('dashboard') }}">
+      <a href="{{ url_for('dashboard') }}">Мне отправили на ревью</a>
+    </li>
+    <li class="{{ active_endpoint('dashboard_additional_reviews') }}">
+      <a href="{{ url_for('dashboard_additional_reviews') }}">Я отправил</a>
+    </li>
+  </ul>
+</div>
+{% endif %}
   {% for review in reviews.items %}
   <div class="row">
     <div class="review-section
@@ -39,10 +51,6 @@
         </div>
       </div>
 
-      {{ macros.render_banner_container('Показать баннер', review.banner.name) }}
-      {% if review.reviewed %}
-        {{ macros.render_banner_container('Показать результат ревью', review.designer_imagename) }}
-      {% endif %}
     </div>
   </div>
   {% else %}

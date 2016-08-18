@@ -49,7 +49,7 @@ def continue_edit(history_image_id):
     proj_id = request.args.get('project_id')
     current_project = Project.query.get_or_404(proj_id)
     edit = ImageHistory.query.filter_by(review_image=history_image_id).first_or_404()
-    designers = User.query.filter_by(role=User.UserRole.designer)
+    designers = User.query.filter_by(role=User.UserRole.designer).filter(User.id != current_user.id)
     return render_template('editor_history.html', p_id=proj_id, id_review=edit.review_image, designers=designers,
                            project=current_project)
 
@@ -158,7 +158,7 @@ class ReviewView(MethodView):
     decorators = [login_required]
 
     def get(self):
-        designers = User.query.filter_by(role=User.UserRole.designer)
+        designers = User.query.filter_by(role=User.UserRole.designer).filter(User.id != current_user.id)
         return render_template('editor/review_modal.html', designers=designers)
 
     def post(self):
@@ -167,6 +167,7 @@ class ReviewView(MethodView):
             return jsonify({'result': 'no field file in form'}), 404
         else:
             _, b64data = form['file'].split(',')
+            p_id = form['project']
             name = str(uuid.uuid4()) + '.png'
             decoded_data = base64.b64decode(b64data)
             file_ = FileStorage(BytesIO(decoded_data), filename=name)
@@ -183,6 +184,7 @@ class ReviewView(MethodView):
 
             banner = Banner(
                 name=filename,
+                project_id=p_id,
                 title=form.get('title', 'untitled'),
                 preview=preview_name,
                 user=current_user
