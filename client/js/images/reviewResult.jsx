@@ -17,8 +17,8 @@ class Comments extends React.Component{
             position: "absolute",
         };
         const pStyle ={
-            marginLeft: '13px',
-            marginTop: '-5px',
+            marginLeft: '7px',
+            marginTop: '0px',
             backgroundColor: '#f5f5f5'
         };
         return(
