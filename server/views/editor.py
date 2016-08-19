@@ -36,7 +36,7 @@ def editor():
 def background_images():
     page = int(request.args.get('page', 1))
     project_id = int(request.args.get('project', 0))
-    paginated_images = BackgroundImage.query.filter_by(project_id=project_id).paginate(page, 4)
+    paginated_images = BackgroundImage.query.filter_by(project_id=project_id, active=True).paginate(page, 4)
     serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active,
                           "preview": image.preview, "width": image.width, "height": image.height}
                          for image in paginated_images.items]
