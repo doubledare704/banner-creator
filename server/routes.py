@@ -45,6 +45,8 @@ def setup_routes(app):
                      endpoint='dashboard_additional_reviews')
     app.add_url_rule('/dashboard/archive/as_user/', view_func=dashboard_views.additional_dashboard_archive,
                      endpoint='dashboard_additional_archive')
+    app.add_url_rule('/dashboard/banners/copy', view_func=dashboard_views.copy_banner, methods=['POST'],
+                     endpoint='dashboard_copy_banner')
     app.add_url_rule('/refresh/', methods=['GET'], view_func=refresh)
 
     # admin

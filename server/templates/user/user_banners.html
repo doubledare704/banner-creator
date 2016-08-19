@@ -32,6 +32,10 @@
                                data-tooltip="Скачать баннер">
                                 <span class=" glyphicon glyphicon-floppy-save"></span>
                             </a>
+                            <a class="btn btn-warning tooltipp" data-bazooka="copyBanner" data-tooltip="Скопировать баннер"
+                            data-banner-id="{{ banner.id }}" data-url="{{ url_for('dashboard_copy_banner') }}">
+                              <span class="glyphicon glyphicon-duplicate"></span>
+                            </a>
                             <a href="{{ url_for('continue_edit', history_image_id=banner.id, project_id=banner.project_id) }}"
                                class="btn btn-primary tooltipp" role="button"
                                data-tooltip="Редактировать баннер">
