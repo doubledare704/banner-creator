@@ -158,20 +158,26 @@ export default class Editor {
     }
 
 
-    setFont(family, size, color, texts, backgroundColor = 'transparent', opacity = 1) {
+    setFont(family, size, color, texts, header='') {
         let obj = new fabric.IText(
             texts,
             {
                 fontFamily: family,
-                left: this.canv.getWidth() / 2 * this.seekAndResize(),
-                top: this.canv.getHeight() / 4 * this.seekAndResize(),
                 fontSize: ptToPx(size) * this.seekAndResize(),
                 fill: color,
-                backgroundColor: backgroundColor,
+                backgroundColor: 'transparent',
                 lockScalingX: true,
                 lockScalingY: true
-            }).setOpacity(opacity);
+                // lockMovementY: true
+            }).setOpacity(1);
         this.canv.add(obj);
+        this.canv.centerObject(obj);
+        if (header){
+            obj.set({lockMovementY: true})
+        }
+        obj.set({top: 50});
+        obj.setCoords();
+        this.canv.setActiveObject(obj);
         this.canv.renderAll();
     }
 
@@ -180,12 +186,12 @@ export default class Editor {
             texts,
             {
                 fontFamily: family,
-                left: 500 * this.seekAndResize(),
-                top: 100 * this.seekAndResize(),
+                top: this.canv.getHeight() - 90,
                 fontSize: ptToPx(size) * this.seekAndResize(),
                 fill: color,
                 lockScalingX: true,
                 lockScalingY: true,
+                lockMovementY: true,
                 styles: {
                     0: {
                         0: {fontSize: ptToPx(13)},

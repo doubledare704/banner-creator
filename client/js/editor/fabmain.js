@@ -101,11 +101,12 @@ for (var i = 0; i < addtexts.length; i++) {
         let texting = this.getAttribute("data-text");
         let typings = this.getAttribute("data-type");
         let fonter = this.getAttribute("data-font");
+        let header = this.getAttribute('data-header');
         if (typings) {
             editor.setPrice(fonter, sizes, '#000', texting);
         }
         else {
-            editor.setFont(fonter, sizes, '#000', texting);
+            editor.setFont(fonter, sizes, '#000', texting, header);
         }
     });
 }

@@ -29,7 +29,11 @@
                                 </li>
                             {% else %}
                                 {% for font in fonts[:3] %}
-                                    <li class="head{{ loop.index }}" data-font="{{ font.name }}"
+                                    <li class="head{{ loop.index }}"
+                                        {% if loop.first %}
+                                            data-header="main"
+                                        {% endif %}
+                                        data-font="{{ font.name }}"
                                         data-size="{{ font.size }}" data-text="Заголовок">H1
                                         подзаголовок
                                     </li>
