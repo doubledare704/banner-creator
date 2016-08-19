@@ -3,7 +3,7 @@ from server.views import views as main_views, dashboard as dashboard_views
 from server.views.admin import (
     admin, backgrounds, inactivate_image, activate_image, users_page, remove_user, change_user,
     default_project_page, create_project, project_page, add_font, activate_user,
-    change_headers, change_project_button, remove_project_button)
+    change_headers, change_project_button, remove_project_button, image_delete_from_db)
 from server.views.auth import login_page, authorize, oauth_callback, log_out
 from server.views.editor import (continue_edit, history_image, cuts_background,
                                  save_cuted, load_from_pc, load_all_cuts,
@@ -51,6 +51,7 @@ def setup_routes(app):
     app.add_url_rule('/admin/', view_func=admin)
     app.add_url_rule('/admin/backgrounds/', view_func=backgrounds, endpoint='admin_backgrounds')
     app.add_url_rule('/admin/inactivate_image/<int:image_id>', methods=['POST'], view_func=inactivate_image)
+    app.add_url_rule('/admin/delete_image/<int:image_id>', methods=['POST'], view_func=image_delete_from_db)
     app.add_url_rule('/admin/activate_image/<int:image_id>', methods=['POST'], view_func=activate_image)
 
     app.add_url_rule('/admin/projects/<int:project_id>', view_func=project_page, endpoint='admin_project_page')

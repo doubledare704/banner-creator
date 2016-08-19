@@ -159,6 +159,16 @@ def inactivate_image(image_id):
 
 
 @requires_roles('admin')
+def image_delete_from_db(image_id):
+    image = BackgroundImage.query.get_or_404(image_id)
+    os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.name))
+    os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], image.preview))
+    db.session.delete(image)
+    db.session.commit()
+    return '', 204
+
+
+@requires_roles('admin')
 def activate_image(image_id):
     image = BackgroundImage.query.get_or_404(image_id)
     image.active = True
