@@ -167,7 +167,9 @@ export default class Editor {
                 top: this.canv.getHeight() / 4 * this.seekAndResize(),
                 fontSize: ptToPx(size) * this.seekAndResize(),
                 fill: color,
-                backgroundColor: backgroundColor
+                backgroundColor: backgroundColor,
+                lockScalingX: true,
+                lockScalingY: true
             }).setOpacity(opacity);
         this.canv.add(obj);
         this.canv.renderAll();
@@ -182,6 +184,8 @@ export default class Editor {
                 top: 100 * this.seekAndResize(),
                 fontSize: ptToPx(size) * this.seekAndResize(),
                 fill: color,
+                lockScalingX: true,
+                lockScalingY: true,
                 styles: {
                     0: {
                         0: {fontSize: ptToPx(13)},
