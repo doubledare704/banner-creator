@@ -17,9 +17,10 @@ function loadHist() {
         }
     )
         .then((result) => result.json())
-        .then(function ({fetch_history}) {
+        .then(function ({fetch_history, banner_title}) {
             editor.canv.clear();
             resizeIfBackground(fetch_history);
+            saver.dataset.banner_title = banner_title;
         })
         .catch(function (error) {
             console.log(error);
@@ -37,7 +38,7 @@ function sendTohistory() {
         jsn: image_history,
         image: image
 
-    };
+    }
     fetch(`/editor/history/${id}`, {
         method: 'post',
         credentials: 'same-origin',

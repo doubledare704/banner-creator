@@ -4,6 +4,8 @@ import {disableControls} from './editor.js';
 import {csrfToken, ErrorAlert, SuccessAlert} from '../helpers';
 import {activatePopUp, deactivatePopUp} from '../popUp';
 
+const saver = document.getElementById('progress_saver');
+
 
 function sendToReview(event) {
     let canvas = editor.canv;
@@ -20,6 +22,9 @@ function sendToReview(event) {
     formData.append('file', editor.canv.toDataURL("image/png", 1.0));
     formData.append('project', proj_id);
     formData.append('file_json', JSON.stringify(imageReview));
+    let banner_id;
+    if (saver) { banner_id = saver.dataset.review }
+    if (banner_id) { formData.append('banner_id', banner_id)}
     fetch(event.target.dataset.url,
         {
             method: 'POST',
@@ -47,6 +52,10 @@ function sendToReview(event) {
             document.getElementById('double').style.display = "block";
             document.getElementById('result_review').style.display = "inline-block";
             localStorage.clear();
+            setTimeout(function () {
+              window.location.href = host_url;
+            }, 1500);
+
         })
         .catch(function (error) {
             activatePopUp({

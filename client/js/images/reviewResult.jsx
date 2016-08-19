@@ -19,11 +19,12 @@ class Comments extends React.Component{
         const pStyle ={
             marginLeft: '7px',
             marginTop: '0px',
-            backgroundColor: '#f5f5f5'
+            backgroundColor: '#f5f5f5',
+            whiteSpace: 'pre'
         };
         return(
             <div className = "dashboard-user-media-body" style={ divStyle }>
-                <p className = "dashboard-well"><span style={ pStyle }>{this.props.text}</span></p>
+                <p className = "dashboard-well"><div style={ pStyle }>{this.props.text}</div></p>
             </div>
 
         );
