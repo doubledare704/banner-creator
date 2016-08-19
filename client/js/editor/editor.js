@@ -167,7 +167,9 @@ export default class Editor {
                 top: this.canv.getHeight() / 4 * this.seekAndResize(),
                 fontSize: ptToPx(size) * this.seekAndResize(),
                 fill: color,
-                backgroundColor: backgroundColor
+                backgroundColor: backgroundColor,
+                lockScalingX: true,
+                lockScalingY: true
             }).setOpacity(opacity);
         this.canv.add(obj);
         this.canv.renderAll();
@@ -182,6 +184,8 @@ export default class Editor {
                 top: 100 * this.seekAndResize(),
                 fontSize: ptToPx(size) * this.seekAndResize(),
                 fill: color,
+                lockScalingX: true,
+                lockScalingY: true,
                 styles: {
                     0: {
                         0: {fontSize: ptToPx(13)},
@@ -420,6 +424,21 @@ export default class Editor {
             }
         }
         return coef
+    }
+
+    setColorToObjects(obj, objects, col) {
+        let canvas = this.canv;
+        if (obj) {
+            obj.setColor(col)
+        }
+        else if (objects) {
+            const objectsInGroup = objects.getObjects();
+            // canvas.discardActiveGroup();
+            objectsInGroup.forEach(function (object) {
+                object.setColor(col)
+            });
+        }
+        canvas.renderAll();
     }
 }
 

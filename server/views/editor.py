@@ -201,10 +201,15 @@ class ReviewView(MethodView):
                 db.session.add(banner)
             else:
                 banner = Banner.query.get_or_404(banner_id)
+                # delete old banner from file system
+                os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], banner.name))
+                os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], banner.preview))
+                # update banner object
                 banner.name = filename
                 banner.preview = preview_name
                 banner.title = form.get('title', 'untitled')
                 BannerReview.query.filter_by(banner_id=banner_id).delete()
+
             db.session.commit()
 
             designer = User.query.get(form['designer'])

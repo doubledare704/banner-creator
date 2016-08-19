@@ -14,7 +14,7 @@ class Comments extends React.Component{
         const divStyle = {
             left: this.props.style.left,
             top: this.props.style.top,
-            position: "absolute",
+            position: "absolute"
         };
         const pStyle ={
             marginLeft: '7px',
@@ -48,7 +48,7 @@ class ReviewResult extends React.Component{
         const btn = this.state.show ? "glyphicon glyphicon-eye-close" : "glyphicon glyphicon-eye-open";
         return(
             <div>
-                <button onClick={this.showComment} className="btn btn-primary form-group btn-wrapper tooltipp" data-tooltip="спрятать/показать">
+                <button onClick={this.showComment} className="btn btn-primary form-group btn-wrapper tooltipp" data-tooltip="спрячь/покажи">
                     <i className={btn}/>
                 </button>
                 <div className="dashboard-comment-wrapper" style={{backgroundImage: `url(${this.props.imageUrl})`}}>
