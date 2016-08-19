@@ -47,10 +47,10 @@ function sendToReview(event) {
             document.getElementById('resulting').src = result.src;
             if (document.getElementById('continue')) {
                 document.getElementById('continue').href = host_url;
-                document.getElementById('continue').style.display = "inline-block";
+                // document.getElementById('continue').style.display = "inline-block";
             }
-            document.getElementById('double').style.display = "block";
-            document.getElementById('result_review').style.display = "inline-block";
+            // document.getElementById('double').style.display = "block";
+            // document.getElementById('result_review').style.display = "inline-block";
             localStorage.clear();
             setTimeout(function () {
               window.location.href = host_url;
