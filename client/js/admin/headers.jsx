@@ -44,6 +44,17 @@ const HeaderShower = (props) => {
     if (props.size) {
         headerStyle['font-size'] = props.size;
     }
+    if (props.name.startsWith('price')){
+        let headerPriceStyle = headerStyle;
+         if (props.size) {
+             headerPriceStyle.size = headerPriceStyle / 2;
+         }
+        return (<div className="col-md-3">
+            <span style={headerPriceStyle}>от</span>
+            <span style={headerStyle}> 10 </span>
+            <span style={headerPriceStyle}>грн</span>
+        </div>)
+    }
     return (<div className="col-md-3" style={headerStyle}>{HEADERS_TEXTS[props.name]}</div>)
 };
 
