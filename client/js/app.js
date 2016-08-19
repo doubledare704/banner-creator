@@ -19,6 +19,7 @@ import uploadFiles from './images/uploadFiles';
 import reviewResult from './images/reviewResult.jsx';
 import backgrounds from './admin/backgrounds';
 import saveBanner from './dashboard/save_banner';
+import removeProjectButton from './admin/button.jsx';
 
 require('./../css/main.styl');
 const Baz = require('bazooka');
@@ -38,6 +39,7 @@ Baz.register({
     'uploadFont': uploadFont,
     'projectsHeaders': projectsHeaders,
     'backgrounds': backgrounds,
+    'removeProjectButton': removeProjectButton,
     // dashboard
     'goToReview': goToReview,
     'showBannerPopup': showBannerPopup,

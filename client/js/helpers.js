@@ -14,10 +14,11 @@ export function uploadButton(node) {
     };
     const uploadButton = node.nextElementSibling;
 
-    const setLabelText = () => (
-        uploadButton.files.length === 1 ? uploadButton.labels[0].innerText = uploadButton.files[0].name :
-            uploadButton.labels[0].innerText = `Выбрано файлов: ${uploadButton.files.length}`
-);
+    const setLabelText = () => {
+        const label = document.querySelector('input.upload[type="file"]+label');
+        uploadButton.files.length === 1 ? label.innerText = uploadButton.files[0].name :
+            label.innerText = `Выбрано файлов: ${uploadButton.files.length}`;
+    };
 
     if (uploadButton.files.length > 0) {
         setLabelText();

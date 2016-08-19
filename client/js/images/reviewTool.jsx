@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
 import {activatePopUp} from '../popUp.js';
-import {csrfToken} from '../helpers'
+import {csrfToken} from '../helpers';
+import autosize from './autosize';
 
 const BAZOOKA_PREFIX = 'body';
 
@@ -57,13 +58,14 @@ class ReviewWindow extends React.Component {
         let commentInput = document.createElement("TEXTAREA");
         commentInput.cols = 9;
         commentInput.rows = 1;
-        commentInput.style.cssText = 'margin-left: 9px; margin-top: 3px; background-color: #f5f5f5; border: 0px solid #f5f5f5; height: 100%;';
+        commentInput.style.cssText = 'margin-left: 9px; margin-top: 3px; margin-right: 20px; background-color: #f5f5f5; border: 0px solid #f5f5f5; height: 100%;';
         commentInput.placeholder = "Коммент...";
+        commentInput.addEventListener('keydown', e => autosize(e.target));
 
-        let sp = document.createElement("SPAN");
+        let sp = document.createElement("DIV");
         let xt = document.createTextNode("x");
         sp.className = "label label-danger";
-        sp.style.cssText = "top: -5%; left: 5%; margin-left: 4px;";
+        sp.style.cssText = "top: 0%; left: 84%; position: absolute; cursor: pointer;";
         sp.appendChild(xt);
         sp.addEventListener('click', e => e.target.parentNode.parentNode.removeChild(e.target.parentNode));
 

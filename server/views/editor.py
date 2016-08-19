@@ -36,7 +36,7 @@ def editor():
 def background_images():
     page = int(request.args.get('page', 1))
     project_id = int(request.args.get('project', 0))
-    paginated_images = BackgroundImage.query.filter_by(project_id=project_id).paginate(page, 4)
+    paginated_images = BackgroundImage.query.filter_by(project_id=project_id, active=True).paginate(page, 4)
     serialized_images = [{"id": image.id, "name": image.name, "title": image.title, "active": image.active,
                           "preview": image.preview, "width": image.width, "height": image.height}
                          for image in paginated_images.items]
@@ -80,7 +80,7 @@ def history_image(history_image_id):
     else:
         edit_history = ImageHistory.query.filter_by(
             review_image=history_image_id).order_by(desc(ImageHistory.created)).first_or_404()
-        return jsonify(fetch_history=edit_history.json_hist)
+        return jsonify(fetch_history=edit_history.json_hist, banner_title=edit_history.parent.title)
 
 
 @login_required
@@ -173,6 +173,7 @@ class ReviewView(MethodView):
         if 'file' not in request.form:
             return jsonify({'result': 'no field file in form'}), 404
         else:
+            banner_id = form.get('banner_id', 0)
             _, b64data = form['file'].split(',')
             p_id = form['project']
             name = str(uuid.uuid4()) + '.png'
@@ -189,14 +190,26 @@ class ReviewView(MethodView):
             else:
                 comment_to_review = form.get('comment', '')
 
-            banner = Banner(
-                name=filename,
-                project_id=p_id,
-                title=form.get('title', 'untitled'),
-                preview=preview_name,
-                user=current_user
-            )
-            db.session.add(banner)
+            if not banner_id:
+                banner = Banner(
+                    name=filename,
+                    project_id=p_id,
+                    title=form.get('title', 'untitled'),
+                    preview=preview_name,
+                    user=current_user
+                )
+                db.session.add(banner)
+            else:
+                banner = Banner.query.get_or_404(banner_id)
+                # delete old banner from file system
+                os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], banner.name))
+                os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], banner.preview))
+                # update banner object
+                banner.name = filename
+                banner.preview = preview_name
+                banner.title = form.get('title', 'untitled')
+                BannerReview.query.filter_by(banner_id=banner_id).delete()
+
             db.session.commit()
 
             designer = User.query.get(form['designer'])

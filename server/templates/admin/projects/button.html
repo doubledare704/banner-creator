@@ -7,6 +7,11 @@
             <div class="row">
                 {% if project.button %}
                     <img src="{{ url_for('uploaded_file', filename=project.button) }}" alt="Кнопка проекта">
+                    <br>
+                    <button data-bazooka="removeProjectButton" data-project-button-project-id="{{ project.id }}"
+                            class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i> Удалить кнопку</button>
+                {% else %}
+                    <p>Кнопка для проекта не выбрана. Загрузите кнопку с помощью формы ниже.</p>
                 {% endif %}
             </div>
         </div>
@@ -24,7 +29,7 @@
                                 <i class="glyphicon glyphicon-cloud-upload"></i> Выбрать файл
                             </button>
                             <input class="upload" name="button_file" id="upload" type='file' accept="image/png" required>
-                            <label for="upload"></label>
+                            <label id="custom-upload-button-label" for="upload"></label>
                         </div>
                     </div>
                     <div class="form-group">

@@ -102,7 +102,7 @@ class Backgrounds extends ImagesList {
                                 </button>
                                 <input id="input" className="upload" type="file" name="file[]"
                                        accept="image/gif, image/jpeg, image/jpg, image/png" multiple="true" hidden="true"/>
-                                <label htmlFor="input"/>
+                                <label id="custom-upload-button-label" htmlFor="input"/>
                         </div>
                         <div>
                             <input name="project" hidden="true" value={this.props.projectId}/>

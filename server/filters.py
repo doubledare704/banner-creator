@@ -11,7 +11,7 @@ def init_custom_filters(app):
 
     @app.template_global('projects_list')
     def projects_list():
-        return Project.query.all()
+        return Project.query.order_by(Project.name).all()
 
     @app.template_global('active_endpoint')
     def active_endpoint(endpoint):
