@@ -250,11 +250,22 @@ function resetCanvas(node) {
     node.addEventListener('click', resetAll);
 }
 
+function setColorObjs(node) {
+    let handler = function setCols() {
+        let activeObject = editor.canv.getActiveObject(),
+            activeGroup = editor.canv.getActiveGroup();
+        let colorToSend = '#' + node.value;
+        editor.setColorToObjects(activeObject, activeGroup, colorToSend)
+    };
+    node.onchange = handler;
+    node.oninput = handler;
+}
+
 function deleteKeyup(node) {
     node.onload = document.addEventListener('keydown', function (event) {
         var key = event.keyCode || event.charCode;
 
-        if (key == 8 || key == 46) {
+        if (key == 46) {
             let activeObject = editor.canv.getActiveObject(),
                 activeGroup = editor.canv.getActiveGroup();
             editor.deleteObject(activeObject, activeGroup);
@@ -360,5 +371,6 @@ module.exports = {
     'resetCanvas': resetCanvas,
     'deleteKeyup': deleteKeyup,
     'redoUndo': redoUndo,
-    'resizeIfBackground': resizeIfBackground
+    'resizeIfBackground': resizeIfBackground,
+    'setColorObjs': setColorObjs
 };

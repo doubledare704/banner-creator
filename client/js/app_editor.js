@@ -1,4 +1,4 @@
-import {fabric, resetCanvas, deleteKeyup, redoUndo} from './editor/fabmain';
+import {fabric, resetCanvas, deleteKeyup, redoUndo, setColorObjs} from './editor/fabmain';
 import {reloadHistory, saveToHistory} from './editor/history';
 import {setGrid, setGridSize} from './editor/grids';
 import backgroundsList from './editor/background';
@@ -30,7 +30,8 @@ Baz.register({
     'resetCanvas': resetCanvas,
     'deleteKeyup': deleteKeyup,
     'redoUndo': redoUndo,
-    'dropDown': dropDown
+    'dropDown': dropDown,
+    'setColorObjs':setColorObjs
 });
 
 Baz.watch();
