@@ -89,7 +89,8 @@ class HeadersPanel extends React.Component {
         }
     }
 
-    save() {
+    save(e) {
+        e.preventDefault();
         const {headers} = this.state;
         let hasEmpty = !Object.keys(headers).every((header) => {
             return headers[header].font_name && headers[header].size
@@ -134,7 +135,8 @@ class HeadersPanel extends React.Component {
                             <Header
                                 fontList={fontList}
                                 name={name}
-                                font={(headers[name] || {font_name: ""}).font_name}
+                                font_name={(headers[name] || {font_name: ""}).font_name}
+                                font_id={(headers[name] || {font_id: ""}).font_id}
                                 size={(headers[name] || {}).size}
                                 changeFont={this.configChangeSelectedFont(name)}
                                 changeSize={this.configChangeSize(name)}
@@ -156,13 +158,13 @@ class Header extends React.Component {
     }
 
     render() {
-        let {fontList, name, font, size} = this.props;
+        let {fontList, name, font_name, font_id, size} = this.props;
         return (
             <div className="row disperse">
                 <div className="col-md-3">{HEADERS_TEXTS[name]}</div>
                 <FontSelect
                     fontList={fontList}
-                    font={font}
+                    font={font_id}
                     changeSelected={this.props.changeFont}
                 />
                 <SizeSelect
@@ -170,7 +172,7 @@ class Header extends React.Component {
                     changeSize={this.props.changeSize}
                 />
                 <HeaderShower
-                    font={font}
+                    font={font_name}
                     size={size}
                     name={name}
                 />

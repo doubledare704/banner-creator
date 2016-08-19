@@ -226,7 +226,7 @@ def add_font(project_id):
         raise UnprocessableEntity
     file = form.font_file.data
     _, extension = os.path.splitext(file.filename)
-    filename = "%s_%s" % (project.name, secure_filename('%s.%s' % (name, extension)))
+    filename = "%s_%s" % (project.name, secure_filename(name + extension))
     file.save(os.path.join(current_app.config['FONT_FOLDER'], filename))
     db.session.add(Font(name=name, project_id=project_id, filename=filename))
     db.session.commit()
@@ -268,3 +268,12 @@ def change_project_button(project_id):
         project.button = filename
         db.session.add(project)
     return redirect(url_for('admin_project_page', project_id=project.id, tab='button'))
+
+
+@requires_roles('admin', 'designer')
+def remove_project_button(project_id):
+    project = Project.query.get_or_404(project_id)
+    project.button = None
+    db.session.add(project)
+    return 'OK', 200
+

@@ -295,13 +295,14 @@ export class ImagesList extends React.Component {
                           </select>
                         </label>
                       </div>
+                        <br/>
                         <div className="form-group col-lg-6">
                                 <button className="btn btn-default" data-bazooka="uploadButton">
                                     <i className="glyphicon glyphicon-cloud-upload"/> Выберите файлы
                                 </button>
                                 <input id="input" ref="fileInput" className="upload" type="file" name="file[]"
                                        accept="image/gif, image/jpeg, image/jpg, image/png" multiple="true" hidden="true"/>
-                                <label ref="filelable" htmlFor="input"/>
+                                <label id="custom-upload-button-label" ref="filelable" htmlFor="input"/>
                         </div>
                     </div>
                     <br/>
