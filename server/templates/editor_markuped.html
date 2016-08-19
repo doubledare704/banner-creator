@@ -39,7 +39,7 @@
                                     <li class="price{{ loop.index }}" data-font="{{ font.name }}"
                                         data-size="{{ font.size }}" data-type="p"
                                         data-text="от 1 700 грн">Цена от для
-                                        большого
+                                        маленького
                                         банера
                                     </li>
                                 {% endfor %}
@@ -48,8 +48,16 @@
                         </ul>
                     </div>
                 </section>
+
+                <section id="selectcolor">
+                    <a href="#">
+                        <input class="jscolor btn btn-default" id="colorpicker" value="000000" data-bazooka="setColorObjs">
+                    </a>
+                </section>
+
                 <section>
-                    <a href="#" id="addButt" class="btn btn-default tooltipp" data-button="{{ button }}" data-tooltip="Добавить кнопку">
+                    <a href="#" id="addButt" class="btn btn-default tooltipp" data-button="{{ button }}"
+                       data-tooltip="Добавить кнопку">
                         <i class="material-icons">input</i>
                     </a>
                 </section>
@@ -99,13 +107,15 @@
                     <div class="rightcol2">
                         <h2>Выберите вариант загрузки</h2>
                         <div class="uploadings">
-                            <div class="lm"><a data-bazooka="setOriginalZoom" href="{{ url_for ('cuts_background') }}" id="cutters"><i
+                            <div class="lm"><a data-bazooka="setOriginalZoom" href="{{ url_for ('cuts_background') }}"
+                                               id="cutters"><i
                                     class="material-icons">exit_to_app</i>Нужно вырезать фон</a>
                             </div>
                             <div id="local_load" class="lm"><a href="#" id="input"><i
                                     class="material-icons">find_in_page</i>Загрузить
                                 из ПК</a></div>
-                            <div id="from_db" class="lm"><a href="#"><i class="material-icons">line_style</i>Загрузить из
+                            <div id="from_db" class="lm"><a href="#"><i class="material-icons">line_style</i>Загрузить
+                                из
                                 базы</a>
                                 <div class="hidden" id="list-cuted">
 
@@ -119,25 +129,24 @@
                         <i class="material-icons">view_quilt</i>
                     </a>
                 </section>
-                <section class="counter-grid btn btn-default disabled" id="gridder">
-                    <a href="#">
-                        <i class="material-icons">code</i>
+                <section class="counter-grid disabled tooltipp" data-tooltip="Отобразить сетку" id="gridder">
+                    <a href="#" class="btn btn-default">
                         <input type="number" id="newGrid" class="form-control number-input" data-bazooka="setGridSize"
                                disabled/>
                     </a>
                 </section>
-                <section class="btn btn-default tooltipp" data-bazooka="setNormalZoom" data-tooltip="Увеличить">
-                    <a href="#">
+                <section data-bazooka="setNormalZoom">
+                    <a href="#" class="btn btn-default tooltipp" data-tooltip="Увеличить">
                         <i class="material-icons">zoom_in</i>
                     </a>
                 </section>
-                <section class="btn btn-default tooltipp" data-bazooka="zoomOuter" data-tooltip="Уменьшить">
-                    <a href="#">
+                <section data-bazooka="zoomOuter">
+                    <a href="#" class="btn btn-default tooltipp" data-tooltip="Уменьшить">
                         <i class="material-icons">zoom_out</i>
                     </a>
                 </section>
-                <section id="reseter" class="btn btn-default tooltipp" data-bazooka="setOriginalZoom" data-tooltip="Вернуть размер">
-                    <a href="#">
+                <section id="reseter" data-bazooka="setOriginalZoom">
+                    <a href="#" class="btn btn-default tooltipp" data-tooltip="Вернуть размер">
                         <i class="material-icons">zoom_out_map</i>
                     </a>
                 </section>
@@ -153,8 +162,8 @@
                             class="material-icons">undo</i></a>
                     <a href="#" class="btn btn-default tooltipp disabled " id="redo" data-tooltip="Вперед"><i
                             class="material-icons">redo</i></a>
-                  {% block additional_buttons %}
-                  {% endblock additional_buttons %}
+                    {% block additional_buttons %}
+                    {% endblock additional_buttons %}
 
                 </div>
                 <section class="container2 forcanvas" id="parentWrap">
@@ -187,4 +196,5 @@
 {% endblock %}
 {% block scripts %}
     <script src="{{ url_for('static', filename='editorbundle.js') }}"></script>
+    <script src="{{ url_for('static', filename='colorpick/jscolor.min.js') }}"></script>
 {% endblock %}

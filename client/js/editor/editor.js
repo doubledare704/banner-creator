@@ -421,6 +421,21 @@ export default class Editor {
         }
         return coef
     }
+
+    setColorToObjects(obj, objects, col) {
+        let canvas = this.canv;
+        if (obj) {
+            obj.setColor(col)
+        }
+        else if (objects) {
+            const objectsInGroup = objects.getObjects();
+            // canvas.discardActiveGroup();
+            objectsInGroup.forEach(function (object) {
+                object.setColor(col)
+            });
+        }
+        canvas.renderAll();
+    }
 }
 
 
