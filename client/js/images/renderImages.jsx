@@ -14,7 +14,7 @@ class DeleteButton extends React.Component {
       }
 
     onDelete() {
-        activatePopUp({child: <h2 className="text-center">Удалить?</h2> ,
+        activatePopUp({child: <h3 className="text-center">Удалить?</h3> ,
         confirm: true,
         confirmAction: this.props.handleDelete(this.props.id)
         });
@@ -78,9 +78,9 @@ class RenameButton extends React.Component {
         return (
             <div className="btn-wrapper">
                 { this.state.renamed ? activatePopUp({
-                    child: <h2 className="text-center"><RenameInput id={this.props.id} handleRename={this.props.handleRename}/></h2>,
+                    child: <h3 className="text-center"><RenameInput id={this.props.id} handleRename={this.props.handleRename}/></h3>,
                     flash: false }) : null }
-                <button onClick={this.onClick} className="btn btn-primary">
+                <button onClick={this.onClick} className="btn btn-primary btn-wrapper">
                     <i className="glyphicon glyphicon-pencil"/>
                 </button>
             </div>
@@ -154,7 +154,7 @@ export class ImagesList extends React.Component {
             }).then(response => {
                 if (response.status !== 200) {
                     activatePopUp({
-                       title: <h2 className="text-center">Что-то не так, ошибка: {response.status} </h2>
+                       title: <h3 className="text-center">Что-то не так, ошибка: {response.status} </h3>
                     });
                     return response.status;
                 }
@@ -166,7 +166,7 @@ export class ImagesList extends React.Component {
                     displayedImages: displayedImages
                     });
                 activatePopUp({
-                    title: <h2 className="text-center"> Удален </h2>,
+                    title: <h3 className="text-center"> Удален </h3>,
                     flash: true
                 });
             });
@@ -186,7 +186,7 @@ export class ImagesList extends React.Component {
             }).then(response => {
                 if (response.status !== 200) {
                     activatePopUp({
-                       title: <h2 className="text-center">Что-то не так, ошибка:  {response.status} </h2>
+                       title: <h3 className="text-center">Что-то не так, ошибка:  {response.status} </h3>
                     });
                     return response.status;
                 }
@@ -197,7 +197,7 @@ export class ImagesList extends React.Component {
                 renameEl[0].title = title;
                 this.setState({displayedImages: this.props.imageArray});
                 activatePopUp({
-                    title: <h2 className="text-center"> Переименовано </h2>,
+                    title: <h3 className="text-center"> Переименовано </h3>,
                     flash: true
                 })
             });

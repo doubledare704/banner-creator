@@ -34,12 +34,12 @@ class ReviewWindow extends React.Component {
         ).then(response => {
             if (!response.ok) {
                 activatePopUp({
-                    title: <p>Что-то не так, ошибка: {response.status} </p>
+                    title: <h3>Что-то не так, ошибка: {response.status} </h3>
                 });
                 return response.status;
             }
             activatePopUp({
-                title: <h3 className="text-center">"Отправлено, перейти обратно в кабинет ?" </h3>,
+                title: <h3 className="text-center">Отправлено, перейти обратно в кабинет ?</h3>,
                 confirm: true,
                 confirmAction: () => window.location.href = "/"
             });
@@ -56,7 +56,7 @@ class ReviewWindow extends React.Component {
         commentDiv.style.cssText = `left: ${X}%; top: ${Y}%; position: absolute;`;
 
         let commentInput = document.createElement("TEXTAREA");
-        commentInput.cols = 9;
+        commentInput.cols = 10;
         commentInput.rows = 1;
         commentInput.style.cssText = 'margin-left: 9px; margin-top: 3px; margin-right: 20px; background-color: #f5f5f5; border: 0px solid #f5f5f5; height: 100%;';
         commentInput.placeholder = "Коммент...";
@@ -119,10 +119,10 @@ class ReviewWindow extends React.Component {
 
     render() {
         return (<div>
-                    <button onClick={this.notAccepted} className="btn btn-danger form-group btn-wrapper tooltipp" data-tooltip="НЕПРИНЯТ">
+                    <button onClick={this.notAccepted} className="btn btn-danger form-group btn-wrapper tooltipp" data-tooltip="отклонить">
                         <i className="glyphicon glyphicon-remove"/>
                     </button>
-                    <button onClick={this.accepted} className="btn btn-success form-group btn-wrapper tooltipp" data-tooltip="ПРИНЯТ">
+                    <button onClick={this.accepted} className="btn btn-success form-group btn-wrapper tooltipp" data-tooltip="принять">
                         <i className="glyphicon glyphicon-ok"/>
                     </button>
                     <div onClick={this.clickComment} className="dashboard-comment-wrapper" style={{backgroundImage: `url(${this.props.imageUrl})`}}>
