@@ -308,7 +308,6 @@ window.onload = function () {
 };
 
 function resizeIfBackground(jsonResul, ifParse = false) {
-    editor.canv.clear();
     if (ifParse) {
         jsonResul = JSON.parse(jsonResul);
     }
@@ -332,34 +331,35 @@ function resizeIfBackground(jsonResul, ifParse = false) {
 
 function resetforSaveEdit() {
     let canvasScale = localStorage.canvasScale;
-    let canvas = editor.canv;
-    canvas.setHeight(canvas.getHeight() * (1 / canvasScale));
-    canvas.setWidth(canvas.getWidth() * (1 / canvasScale));
-    if (canvas.backgroundImage) {
-        canvas.backgroundImage.width = canvas.getWidth();
-        canvas.backgroundImage.height = canvas.getHeight();
+    if (canvasScale) {
+        let canvas = editor.canv;
+        canvas.setHeight(canvas.getHeight() * (1 / canvasScale));
+        canvas.setWidth(canvas.getWidth() * (1 / canvasScale));
+        if (canvas.backgroundImage) {
+            canvas.backgroundImage.width = canvas.getWidth();
+            canvas.backgroundImage.height = canvas.getHeight();
+        }
+
+        let objects = canvas.getObjects();
+        for (let i in objects) {
+            let scaleX = objects[i].scaleX;
+            let scaleY = objects[i].scaleY;
+            let left = objects[i].left;
+            let top = objects[i].top;
+
+            let tempScaleX = scaleX * (1 / canvasScale);
+            let tempScaleY = scaleY * (1 / canvasScale);
+            let tempLeft = left * (1 / canvasScale);
+            let tempTop = top * (1 / canvasScale);
+
+            objects[i].scaleX = tempScaleX;
+            objects[i].scaleY = tempScaleY;
+            objects[i].left = tempLeft;
+            objects[i].top = tempTop;
+
+            objects[i].setCoords();
+        }
     }
-
-    let objects = canvas.getObjects();
-    for (let i in objects) {
-        let scaleX = objects[i].scaleX;
-        let scaleY = objects[i].scaleY;
-        let left = objects[i].left;
-        let top = objects[i].top;
-
-        let tempScaleX = scaleX * (1 / canvasScale);
-        let tempScaleY = scaleY * (1 / canvasScale);
-        let tempLeft = left * (1 / canvasScale);
-        let tempTop = top * (1 / canvasScale);
-
-        objects[i].scaleX = tempScaleX;
-        objects[i].scaleY = tempScaleY;
-        objects[i].left = tempLeft;
-        objects[i].top = tempTop;
-
-        objects[i].setCoords();
-    }
-
     canvas.renderAll();
 
     localStorage.setItem('canvasScale', 1);
