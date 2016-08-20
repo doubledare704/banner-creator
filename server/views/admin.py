@@ -199,12 +199,12 @@ def project_page(project_id):
     project = Project.query.get_or_404(project_id)
 
     if tab == 'fonts':
-        project_fonts = json.dumps([{'name': font.name, 'id': font.id} for font in project.fonts])
+        project_fonts = json.dumps([{'readable_name': font.readable_name, 'name': font.name, 'id': font.id} for font in project.fonts])
         return render_template('admin/projects/fonts.html', project=project, fonts=project_fonts)
 
     # TODO optimize queries to db: non-lazy load, limit
     elif tab == 'headers':
-        project_fonts = [{'name': font.name, 'id': font.id} for font in project.fonts]
+        project_fonts = [{'readable_name': font.readable_name, 'name': font.name, 'id': font.id} for font in project.fonts]
         project_headers = {
             header.name: {
                 'id': header.id,
@@ -227,18 +227,19 @@ def project_page(project_id):
 
 @requires_roles('admin', 'designer')
 def add_font(project_id):
-    project = Project.query.get_or_404(project_id)
+    Project.query.get_or_404(project_id)
     form = FontUploadForm()
     if not form.validate_on_submit():
         raise BadRequest()
-    name = form.font_name.data
-    if Font.query.filter_by(name=name, project_id=project_id).first():
+    readable_name = form.font_name.data
+    if Font.query.filter_by(readable_name=readable_name, project_id=project_id).first():
         raise UnprocessableEntity
     file = form.font_file.data
     _, extension = os.path.splitext(file.filename)
-    filename = "%s_%s" % (project.name, secure_filename(name + extension))
+    name = 'f%s' % str(uuid.uuid1()).replace("-", "")
+    filename = secure_filename(name + extension)
     file.save(os.path.join(current_app.config['FONT_FOLDER'], filename))
-    db.session.add(Font(name=name, project_id=project_id, filename=filename))
+    db.session.add(Font(readable_name=readable_name, name=name, project_id=project_id, filename=filename))
     db.session.commit()
     return "OK", 201
 
