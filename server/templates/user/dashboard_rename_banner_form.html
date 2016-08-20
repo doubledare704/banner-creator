@@ -1,0 +1,11 @@
+<form data-bazooka="renameBannerForm" class="form-inline" data-banner-id="{{ banner.id }}"
+data-url="{{ url_for('dashboard_rename_banner') }}" method="post">
+    <div class="row">
+        <div class="form-group col-lg-5">
+            <label>Название баннера:
+                <input type="text" name="title" class="form-control" value="{{ banner.title }}">
+            </label>
+        </div>
+        <button type="submit" class="btn btn-success">Сохранить</button>
+    </div>
+</form>
