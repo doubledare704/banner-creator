@@ -199,8 +199,8 @@ def project_page(project_id):
     project = Project.query.get_or_404(project_id)
 
     if tab == 'fonts':
-        project_fonts = [{'name': font.name, 'id': font.id} for font in project.fonts]
-        return render_template('admin/projects/fonts.html', project=project, fonts=json.dumps(project_fonts))
+        project_fonts = json.dumps([{'name': font.name, 'id': font.id} for font in project.fonts])
+        return render_template('admin/projects/fonts.html', project=project, fonts=project_fonts)
 
     # TODO optimize queries to db: non-lazy load, limit
     elif tab == 'headers':
@@ -240,7 +240,7 @@ def add_font(project_id):
     file.save(os.path.join(current_app.config['FONT_FOLDER'], filename))
     db.session.add(Font(name=name, project_id=project_id, filename=filename))
     db.session.commit()
-    return redirect(url_for('admin_project_page', project_id=project_id))
+    return "OK", 201
 
 
 @requires_roles('admin')
