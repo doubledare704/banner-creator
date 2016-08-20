@@ -4,6 +4,7 @@ import os
 import shutil
 
 from flask import render_template, request, redirect, current_app, url_for, jsonify
+from flask.views import MethodView
 
 import PIL
 from flask_login import current_user, login_required
@@ -188,3 +189,20 @@ def copy_banner():
         db.session.commit()
         return render_template('user/dashboard_copy_banner.html', banner=copy_banner_obj)
     return '', 400
+
+
+class RenameBanner(MethodView):
+    decorators = [login_required]
+
+    def get(self):
+        banner_id = request.args.get('id', 0)
+        banner = Banner.query.filter_by(id=banner_id, user=current_user).first_or_404()
+        return render_template('user/dashboard_rename_banner_form.html', banner=banner)
+
+    def post(self):
+        banner_id = request.form.get('banner_id', 0)
+        banner_new_title = request.form.get('title', '')
+        banner = Banner.query.filter_by(id=banner_id, user=current_user).first_or_404()
+        banner.title = banner_new_title
+        db.session.commit()
+        return banner.title, 200
