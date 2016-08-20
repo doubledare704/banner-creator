@@ -199,12 +199,12 @@ def project_page(project_id):
     project = Project.query.get_or_404(project_id)
 
     if tab == 'fonts':
-        project_fonts = [font.name for font in project.fonts]
+        project_fonts = [{'name': font.name, 'id': font.id} for font in project.fonts]
         return render_template('admin/projects/fonts.html', project=project, fonts=json.dumps(project_fonts))
 
     # TODO optimize queries to db: non-lazy load, limit
     elif tab == 'headers':
-        project_fonts = [[font.name, font.id] for font in project.fonts]
+        project_fonts = [{'name': font.name, 'id': font.id} for font in project.fonts]
         project_headers = {
             header.name: {
                 'id': header.id,
@@ -241,6 +241,15 @@ def add_font(project_id):
     db.session.add(Font(name=name, project_id=project_id, filename=filename))
     db.session.commit()
     return redirect(url_for('admin_project_page', project_id=project_id))
+
+
+@requires_roles('admin')
+def remove_font(font_id):
+    font = Font.query.get_or_404(font_id)
+    os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], font.filename))
+    db.session.delete(font)
+    db.session.commit()
+    return '', 204
 
 
 @requires_roles('admin', 'designer')

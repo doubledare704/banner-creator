@@ -148,7 +148,7 @@ class Font(db.Model):
     name = db.Column(db.String(255))
     filename = db.Column(db.String(255))
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
-    headers = db.relationship('Header', backref='font')
+    headers = db.relationship('Header', backref='font', cascade="delete")
 
     __table_args__ = (UniqueConstraint('project_id', 'name', name='project_font'),)
 
