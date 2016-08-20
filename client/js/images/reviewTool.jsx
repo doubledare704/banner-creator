@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
 import {activatePopUp} from '../popUp.js';
-import {csrfToken} from '../helpers';
+import {csrfToken, SuccessAlert, ErrorAlert} from '../helpers';
 import autosize from './autosize';
 
 const BAZOOKA_PREFIX = 'body';
@@ -34,12 +34,13 @@ class ReviewWindow extends React.Component {
         ).then(response => {
             if (!response.ok) {
                 activatePopUp({
-                    title: <h3>Что-то не так, ошибка: {response.status} </h3>
-                });
+                    child: <ErrorAlert text="Произошла ошибка. Попробуйте повторить попытку."/>,
+                    flash: true}
+                );
                 return response.status;
             }
             activatePopUp({
-                title: <h3 className="text-center">Отправлено, перейти обратно в кабинет ?</h3>,
+                child: <SuccessAlert text="Отправлено, перейти обратно в кабинет ?"/>,
                 confirm: true,
                 confirmAction: () => window.location.href = "/"
             });
@@ -58,7 +59,8 @@ class ReviewWindow extends React.Component {
         let commentInput = document.createElement("TEXTAREA");
         commentInput.cols = 10;
         commentInput.rows = 1;
-        commentInput.style.cssText = 'margin-left: 9px; margin-top: 3px; margin-right: 20px; background-color: #f5f5f5; border: 0px solid #f5f5f5; height: 100%;';
+        commentInput.style.cssText = 'margin-left: 9px; margin-top: 3px;' +
+            ' margin-right: 20px; background-color: #f5f5f5; border: 0px solid #f5f5f5; height: 100%;';
         commentInput.placeholder = "Коммент...";
         commentInput.addEventListener('keydown', e => autosize(e.target));
 
@@ -110,22 +112,23 @@ class ReviewWindow extends React.Component {
     }
 
     notAccepted(){
-        console.log('CLICKED');
         const status = "not_accepted";
-        //this.getComments();
         this.sendToReview(status, this.getComments());
 
     }
 
     render() {
         return (<div>
-                    <button onClick={this.notAccepted} className="btn btn-danger form-group btn-wrapper tooltipp" data-tooltip="отклонить">
+                    <button onClick={this.notAccepted}
+                            className="btn btn-danger form-group btn-wrapper tooltipp" data-tooltip="отклонить">
                         <i className="glyphicon glyphicon-remove"/>
                     </button>
-                    <button onClick={this.accepted} className="btn btn-success form-group btn-wrapper tooltipp" data-tooltip="принять">
+                    <button onClick={this.accepted}
+                            className="btn btn-success form-group btn-wrapper tooltipp" data-tooltip="принять">
                         <i className="glyphicon glyphicon-ok"/>
                     </button>
-                    <div onClick={this.clickComment} className="dashboard-comment-wrapper" style={{backgroundImage: `url(${this.props.imageUrl})`}}>
+                    <div onClick={this.clickComment}
+                         className="dashboard-comment-wrapper" style={{backgroundImage: `url(${this.props.imageUrl})`}}>
                     </div>
             </div>
         );

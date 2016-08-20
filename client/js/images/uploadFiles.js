@@ -29,12 +29,14 @@ function uploadFiles (){
         body: form
     }).then(response => {
             if(response.status === 400){
-                    activatePopUp({title: <h4 className="text-center"> Нет файла: {response.status} {response.statusText}  </h4>});
+                    activatePopUp({child: <ErrorAlert text="Нет файла"/>,
+                            flash: true
+                    });
                     return response.status;
                 }
             if (!response.ok) {
                 activatePopUp({
-                    title: <h4 className="text-center">Что-то не так, ошибка: {response.status} {response.statusText} </h4>
+                    child: <ErrorAlert text="Произошла ошибка. Попробуйте повторить попытку."/>, flash: true
                 });
                 return response.status;
             }
