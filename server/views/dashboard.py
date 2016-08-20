@@ -48,7 +48,7 @@ def user_banners():
     page = int(request.args.get('page', 1))  # get page number from url query string
     title = request.args.get('title', '')
     banners = Banner.query.filter_by(user=current_user, active=True
-                                     ).filter(Banner.title.contains(title)
+                                     ).filter(Banner.title.ilike('%{}%'.format(title))
                                      ).order_by(Banner.id.desc()
                                      ).paginate(page=page, per_page=10)
     pagination = Pagination(per_page=10, page=page, total=banners.total, css_framework='bootstrap3')
