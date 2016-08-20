@@ -1,0 +1,35 @@
+<div class="thumbnail">
+    <div class="img-wrapper dashboard-banner-preview" data-bazooka="showBannerPopup"
+         data-banner-url="{{ url_for('uploaded_file', filename=banner.name) }}">
+        <img class="img-responsive" style="height: inherit"
+             src="{{ url_for('uploaded_file', filename=banner.preview) }}" alt="Loading...">
+    </div>
+    <div class="caption">
+        <h4 id="dashboard-banner-title-{{ banner.id }}" class="{% if not banner.title %}text-muted{% endif %}">{{ banner.title|default('нет названия', true) }}</h4>
+        <div class="text-right">
+            <a href="{{ url_for('uploaded_file', filename=banner.name) }}"
+               class="btn btn-default tooltipp" download="{{ banner.name }}"
+               data-tooltip="Скачать баннер">
+                <span class=" glyphicon glyphicon-floppy-save"></span>
+            </a>
+            <a class="btn btn-default tooltipp" data-bazooka="renameBanner" data-tooltip="Переименовать баннер"
+            data-url="{{ url_for('dashboard_rename_banner') }}" data-banner-id="{{ banner.id }}">
+                <span class="glyphicon glyphicon-font"></span>
+            </a>
+            <a class="btn btn-warning tooltipp" data-bazooka="copyBanner" data-tooltip="Скопировать баннер"
+            data-banner-id="{{ banner.id }}" data-url="{{ url_for('dashboard_copy_banner') }}">
+              <span class="glyphicon glyphicon-duplicate"></span>
+            </a>
+            <a href="{{ url_for('continue_edit', history_image_id=banner.id, project_id=banner.project_id) }}"
+               class="btn btn-primary tooltipp" role="button"
+               data-tooltip="Редактировать баннер">
+                <span class="glyphicon glyphicon-pencil "></span>
+            </a>
+            <a href="#" class="btn btn-danger tooltipp" role="button" data-tooltip="Удалить баннер"
+               data-bazooka="deleteBanner"
+               data-url="{{ url_for('delete_banner', banner_id=banner.id) }}">
+                <span class="glyphicon glyphicon-trash "></span>
+            </a>
+        </div>
+    </div>
+</div>

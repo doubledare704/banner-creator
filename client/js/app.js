@@ -20,6 +20,9 @@ import reviewResult from './images/reviewResult.jsx';
 import backgrounds from './admin/backgrounds';
 import saveBanner from './dashboard/save_banner';
 import removeProjectButton from './admin/button.jsx';
+import copyBanner from './dashboard/dashboard_copy_banner';
+import renameBanner from './dashboard/dashboard_rename_banner';
+import renameBannerForm from './dashboard/dashboard_rename_banner_form';
 
 require('./../css/main.styl');
 const Baz = require('bazooka');
@@ -48,7 +51,10 @@ Baz.register({
     'dropDown': dropDown,
     'uploadFiles' : uploadFiles,
     'reviewResult': reviewResult,
-    'saveBanner': saveBanner
+    'saveBanner': saveBanner,
+    'copyBanner': copyBanner,
+    'renameBanner': renameBanner,
+    'renameBannerForm': renameBannerForm
 });
 
 Baz.watch();

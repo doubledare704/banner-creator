@@ -1,8 +1,10 @@
 import json
 import uuid
 import os
+import shutil
 
-from flask import render_template, request, redirect, current_app,url_for
+from flask import render_template, request, redirect, current_app, url_for, jsonify
+from flask.views import MethodView
 
 import PIL
 from flask_login import current_user, login_required
@@ -10,7 +12,7 @@ from flask_paginate import Pagination
 from werkzeug.utils import secure_filename
 
 from server.utils.image import allowed_file, image_preview
-from server.models import User, BannerReview, Banner, BackgroundImage, Project
+from server.models import User, BannerReview, Banner, BackgroundImage, Project, ImageHistory
 from server.db import db
 from server.utils.auth import requires_roles
 
@@ -47,7 +49,7 @@ def user_banners():
     page = int(request.args.get('page', 1))  # get page number from url query string
     title = request.args.get('title', '')
     banners = Banner.query.filter_by(user=current_user, active=True
-                                     ).filter(Banner.title.contains(title)
+                                     ).filter(Banner.title.ilike('%{}%'.format(title))
                                      ).order_by(Banner.id.desc()
                                      ).paginate(page=page, per_page=10)
     pagination = Pagination(per_page=10, page=page, total=banners.total, css_framework='bootstrap3')
@@ -151,3 +153,56 @@ def delete_banner(banner_id):
     banner.active = False
     db.session.commit()
     return '', 204
+
+
+@login_required
+def copy_banner():
+    banner_id = request.form.get('banner_id', 0)
+    if banner_id:
+        banner = Banner.query.get(banner_id)
+        # copy banner files
+        copy_banner_image = os.path.join(current_app.config['UPLOAD_FOLDER'], banner.name)
+        copy_banner_image_preview = os.path.join(current_app.config['UPLOAD_FOLDER'], banner.preview)
+        banner_name = secure_filename(str(uuid.uuid4()) + '.png')  # generate and normalize new filename
+        banner_preview_name = 'preview_' + banner_name  # generate and normalize new preview filename
+
+        shutil.copyfile(copy_banner_image, os.path.join(current_app.config['UPLOAD_FOLDER'], banner_name))
+        shutil.copyfile(copy_banner_image_preview, os.path.join(current_app.config['UPLOAD_FOLDER'],
+                                                                banner_preview_name))
+        copy_banner_obj = Banner(
+            title='Копия ' + banner.title,
+            name=banner_name,
+            preview=banner_preview_name,
+            user=current_user,
+            project_id=banner.project_id,
+
+        )
+        db.session.add(copy_banner_obj)
+        db.session.commit()
+        copy_image_history = ImageHistory.query.filter_by(
+            review_image=banner.id).order_by(ImageHistory.created.desc()).first_or_404()
+        image_history = ImageHistory(
+            review_image=copy_banner_obj.id,
+            json_hist=copy_image_history.json_hist
+        )
+        db.session.add(image_history)
+        db.session.commit()
+        return render_template('user/dashboard_copy_banner.html', banner=copy_banner_obj)
+    return '', 400
+
+
+class RenameBanner(MethodView):
+    decorators = [login_required]
+
+    def get(self):
+        banner_id = request.args.get('id', 0)
+        banner = Banner.query.filter_by(id=banner_id, user=current_user).first_or_404()
+        return render_template('user/dashboard_rename_banner_form.html', banner=banner)
+
+    def post(self):
+        banner_id = request.form.get('banner_id', 0)
+        banner_new_title = request.form.get('title', '')
+        banner = Banner.query.filter_by(id=banner_id, user=current_user).first_or_404()
+        banner.title = banner_new_title
+        db.session.commit()
+        return banner.title, 200
