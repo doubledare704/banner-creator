@@ -48,7 +48,7 @@ class ReviewResult extends React.Component{
         const btn = this.state.show ? "glyphicon glyphicon-eye-close" : "glyphicon glyphicon-eye-open";
         return(
             <div>
-                <button onClick={this.showComment} className="btn btn-primary form-group btn-wrapper tooltipp" data-tooltip="спрячь/покажи">
+                <button onClick={this.showComment} className="btn btn-primary form-group btn-wrapper">
                     <i className={btn}/>
                 </button>
                 <div className="dashboard-comment-wrapper" style={{backgroundImage: `url(${this.props.imageUrl})`}}>
