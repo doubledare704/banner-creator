@@ -254,7 +254,11 @@ export class ImagesList extends React.Component {
                     activatePopUp({child: <h4 className="text-center">Загружено {y} из {all} файлов </h4> ,
                         confirm: true,
                         confirmAction: () => {
-                                fetch("/refresh/",{
+                                let url = "/refresh/";
+                                if (this.props.projectId){
+                                    url += this.props.projectId
+                                }
+                                fetch(url, {
                                 method: 'GET',
                                 credentials: 'same-origin',
                                 headers:{
@@ -277,7 +281,7 @@ export class ImagesList extends React.Component {
     }
 
     render() {
-        const projects = this.props.projects;
+        const {projects, projectId} = this.props;
         const filteredImages = this.state.displayedImages.filter(
             (el) => el.title.toLowerCase().indexOf(this.state.searchQuery) !==-1
         );
@@ -286,15 +290,21 @@ export class ImagesList extends React.Component {
                 <div><h2>Загрузка фонов</h2></div>
                   <form ref="imageform"  className="form-inline"  enctype="multipart/form-data" >
                     <div className="row">
-                      <div className="form-group col-lg-3">
-                        <label><span>Выберите проект: </span>
-                          <select name="project" className="form-control">
-                              {projects.map(function(project) {
-                                  return <option key={project.id} value={project.id}>{project.name}</option>;
-                                })}
-                          </select>
-                        </label>
-                      </div>
+                        {projectId ?
+                            <div>
+                                <input name="project" hidden="true" value={projectId}/>
+                            </div>
+                            :
+                            <div className="form-group col-lg-3">
+                                <label><span>Выберите проект: </span>
+                                    <select name="project" className="form-control">
+                                        {projects.map(function (project) {
+                                            return <option key={project.id} value={project.id}>{project.name}</option>;
+                                        })}
+                                    </select>
+                                </label>
+                            </div>
+                        }
                         <br/>
                         <div className="form-group col-lg-6">
                                 <button className="btn btn-default" data-bazooka="uploadButton">
@@ -344,10 +354,10 @@ export class ImagesList extends React.Component {
 }
 
 export default function(node) {
-    const {imageArray,projects} = h.getAttrs(BAZOOKA_PREFIX, node);
+    const {imageArray,projects, projectId} = h.getAttrs(BAZOOKA_PREFIX, node);
 
     ReactDOM.render(
-        <ImagesList imageArray={ imageArray } projects={ projects }/>,
+        <ImagesList imageArray={ imageArray } projects={ projects } projectId={ projectId }/>,
         node
     );
 }

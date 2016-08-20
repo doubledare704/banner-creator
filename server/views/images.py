@@ -69,9 +69,12 @@ def review_result(img_id):
         comments_json=review.comment_clouds
     )
 
+
 @login_required
-def refresh():
+def refresh(project_id=None):
     images = BackgroundImage.query.filter_by(active=True)
+    if project_id:
+        images = images.filter_by(project_id=project_id)
     image_json = json.dumps(
         [{'id': image.id,
           'url': '/uploads/' + image.name,
