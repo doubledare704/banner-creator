@@ -75,11 +75,21 @@ def history_image(history_image_id):
             )
             _, b64data = request.json['image'].split(',')
             decoded_data = base64.b64decode(b64data)
-            file_ = FileStorage(BytesIO(decoded_data), filename=banner.name)
-            file_.save(os.path.join(current_app.config['UPLOAD_FOLDER'], file_.filename))
-            preview_name = 'preview_' + file_.filename
+            name = str(uuid.uuid4()) + '.png'
+            file_ = FileStorage(BytesIO(decoded_data), filename=name)
+            filename = secure_filename(file_.filename)
+            file_.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            preview_name = 'preview_' + filename
             preview_file = image_preview(file_)
             preview_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], preview_name))
+
+            # delete old banner from file system
+            os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], banner.name))
+            os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], banner.preview))
+            # update banner object
+            banner.name = filename
+            banner.preview = preview_name
+
             db.session.add(history)
             db.session.flush()
 

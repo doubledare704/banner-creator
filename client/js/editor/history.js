@@ -28,12 +28,12 @@ function loadHist() {
 }
 function sendTohistory() {
     const id = saver.getAttribute('data-review');
-    let image_history = editor.canv.toJSON();
     let objs = editor.canv.getObjects();
     editor.filterAndDelete(objs);
       let o = editor.canv.getActiveObject(),
           g = editor.canv.getActiveGroup();
     disableControls(o, g);
+    let image_history = editor.canv.toJSON();
     const image = editor.canv.toDataURL("image/png", 1.0);
     const data = {
         hist_id: id,
