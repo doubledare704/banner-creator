@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
 import {ImagesList, Image} from '../images/renderImages.jsx';
 import {activatePopUp} from '../popUp.js';
-import {csrfToken} from '../helpers';
+import {csrfToken, SuccessAlert, ErrorAlert} from '../helpers';
 
 const BAZOOKA_PREFIX = 'backgrounds';
 
@@ -33,10 +33,7 @@ class Backgrounds extends ImagesList {
                 body: JSON.stringify({id: id})
             }).then(response => {
                 if (response.status !== 200) {
-                    activatePopUp({
-                        title: <h2 className="text-center">Что-то не так, ошибка: {response.status} </h2>
-                    });
-                    return response.status;
+                    throw Error(response.statusText);
                 }
                 const displayedImages = this.props.imageArray.filter(
                     el => el.id !== id
@@ -46,10 +43,17 @@ class Backgrounds extends ImagesList {
                     displayedImages: displayedImages
                 });
                 activatePopUp({
-                    title: <h2 className="text-center"> Удален </h2>,
+                    child: <SuccessAlert text="Удален"/>,
                     flash: true
                 });
-            });
+            })
+                .catch((response) => {
+                    console.error(response.message);
+                    activatePopUp({
+                        child: <ErrorAlert text="Произошла ошибка. Попробуйте обновить страницу и повторить попытку"/>,
+                        flash: true,
+                    });
+                });
         };
     }
 
@@ -65,10 +69,7 @@ class Backgrounds extends ImagesList {
                 body: JSON.stringify({id: id, title: title})
             }).then(response => {
                 if (response.status !== 200) {
-                    activatePopUp({
-                        title: <h2 className="text-center">Что-то не так, ошибка: {response.status} </h2>
-                    });
-                    return response.status;
+                    throw Error(response.statusText);
                 }
 
                 const renameEl = this.props.imageArray.filter(
@@ -77,9 +78,16 @@ class Backgrounds extends ImagesList {
                 renameEl[0].title = title;
                 this.setState({displayedImages: this.props.imageArray});
                 activatePopUp({
-                    title: <h2 className="text-center"> Переименовано </h2>,
+                    child: <SuccessAlert text="Переименовано"/>,
                     flash: true
                 })
+            })
+            .catch((response) => {
+                console.error(response.message);
+                activatePopUp({
+                    child: <ErrorAlert text="Произошла ошибка. Попробуйте обновить страницу и повторить попытку"/>,
+                    flash: true,
+                });
             });
         };
     }

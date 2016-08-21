@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
 import {activatePopUp} from '../popUp.js';
-import {csrfToken} from '../helpers';
+import {csrfToken, SuccessAlert, ErrorAlert} from '../helpers';
 
 
 const BAZOOKA_PREFIX = 'projects';
@@ -89,7 +89,7 @@ class FontPanel extends React.Component {
                     .catch((response) => {
                         console.error(response.message);
                         activatePopUp({
-                            title: 'Ошибка сервера',
+                            child: <ErrorAlert text="Произошла ошибка. Попробуйте обновить страницу и повторить попытку"/>,
                             flash: true,
                         });
                     });

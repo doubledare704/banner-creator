@@ -1,6 +1,6 @@
 import {h} from 'bazooka';
 import {activatePopUp} from '../popUp';
-import {csrfToken} from '../helpers';
+import {csrfToken, ErrorAlert} from '../helpers';
 
 const BAZOOKA_PREFIX = 'project-button';
 
@@ -23,7 +23,7 @@ function removeButtonClick(projectId) {
             .catch((response) => {
                 console.error(response.message);
                 activatePopUp({
-                    title: `Ошибка сервера`,
+                    child: <ErrorAlert text="Произошла ошибка. Попробуйте обновить страницу и повторить попытку"/>,
                     flash: true,
                 });
             });

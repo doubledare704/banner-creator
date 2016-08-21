@@ -43,7 +43,7 @@ function LogoutClick(e) {
         .catch((response) => {
             console.error(response.message);
             activatePopUp({
-                title: `Ошибка сервера`,
+                child: <ErrorAlert text="Произошла ошибка. Попробуйте обновить страницу и повторить попытку"/>,
                 flash: true,
             });
         });

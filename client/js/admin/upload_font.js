@@ -1,6 +1,7 @@
+import React from 'react';
 import {h} from 'bazooka';
 import {activatePopUp} from '../popUp.js';
-import {csrfToken} from '../helpers';
+import {csrfToken, SuccessAlert, ErrorAlert} from '../helpers';
 const BAZOOKA_PREFIX = 'font';
 
 
@@ -19,24 +20,23 @@ function configUploadFont(projectId) {
                     if (response.ok) {
                         return location.reload();
                     }
-                    let errorMessage;
-                    switch (response.status) {
-                        case 422:
-                            errorMessage = 'Шрифт с таким именем уже существует';
-                            break;
-                        case 400:
-                            errorMessage = 'Ошибка сервера. Возможно, Вы не выбрали файл';
-                            break;
-                        default:
-                            console.error(response.statusText);
-                            errorMessage = 'Ошибка сервера.';
+                    if (response.status === 422) {
+                        activatePopUp({
+                            child: <ErrorAlert text='Шрифт с таким именем уже существует'/>,
+                            flash: true,
+                        });
+                    } else {
+                        throw Error(response.statusText);
                     }
-                    activatePopUp({
-                        title: errorMessage,
-                        flash: true,
-                    });
                 }
-            );
+            )
+            .catch((response) => {
+                console.error(response.message);
+                activatePopUp({
+                    child: <ErrorAlert text="Произошла ошибка. Попробуйте обновить страницу и повторить попытку"/>,
+                    flash: true,
+                });
+            });
     };
 }
 
