@@ -67,59 +67,6 @@ var extend = function () {
 // initial fabric
 let fabric = require('fabric').fabric;
 
-
-// Additional functions for review tool
-
-function setLineControls(line) {
-    line.setControlVisible("tr", false);
-    line.setControlVisible("tl", false);
-    line.setControlVisible("br", false);
-    line.setControlVisible("bl", false);
-    line.setControlVisible("ml", false);
-    line.setControlVisible("mr", false);
-}
-
-function createArrowHead(points) {
-    let headLength = 15,
-        x1 = points[0],
-        y1 = points[1],
-        x2 = points[2],
-        y2 = points[3],
-
-        dx = x2 - x1,
-        dy = y2 - y1,
-
-        angle = Math.atan2(dy, dx);
-
-    angle *= 180 / Math.PI;
-    angle += 90;
-
-    return new fabric.Triangle({
-        angle: angle,
-        fill: 'red',
-        top: y2,
-        left: x2,
-        height: headLength,
-        width: headLength,
-        originX: 'center',
-        originY: 'center'
-    });
-}
-
-function createLine(points) {
-    let line = new fabric.Line(points,
-        {
-            strokeWidth: 3,
-            stroke: 'red',
-            originX: 'center',
-            originY: 'center',
-            lockScalingX: true
-        });
-    setLineControls(line);
-    return line;
-}
-// end
-
 fabric.Object.prototype.set({
     transparentCorners: false,
     borderColor: '#000',
@@ -269,50 +216,6 @@ export default class Editor {
 
     }
 
-    addArrow() {
-        let pts = [100, 200, 100, 100];
-        let triangle = createArrowHead(pts);
-        let line = createLine(pts);
-        let grp = new fabric.Group([triangle, line]);
-        setLineControls(grp);
-        this.canv.add(grp);
-    }
-
-    addDot() {
-        let circle = new fabric.Circle({
-            radius: 6,
-            fill: 'black',
-            stroke: '#ff9900',
-            strokeWidth: 3,
-            left: 490,
-            top: 90
-        });
-        this.canv.add(circle);
-        this.canv.renderAll();
-    }
-
-    addRectangle() {
-        this.canv.add(new fabric.Rect({
-            width: 200,
-            height: 100,
-            left: 100,
-            top: 100,
-            stroke: 'red',
-            fill: 'transparent'
-        }))
-    }
-
-    addEllipse() {
-        this.canv.add(new fabric.Circle({
-            radius: 100,
-            left: 100,
-            top: 100,
-            stroke: 'red',
-            fill: 'transparent',
-            scaleY: 0.5
-        }))
-    }
-
     // change grid size
     setNewGridSize(gridSize = 10) {
         // create grid
@@ -345,26 +248,6 @@ export default class Editor {
             this.addGrid(gridSize)
         }
     }
-
-    setTextInItext(texter) {
-        let act = this.canv.getActiveObject();
-        if (act) {
-            let objs = act.getObjects();
-            for (let i = 0; i < objs.length; i++) {
-                if (objs[i].text) {
-                    if (texter.length < 1) {
-                        texter = ' ';
-                    }
-                    objs[i].setText(texter);
-                }
-                else if (objs[i].type === 'rect') {
-                    objs[i].setWidth(texter.length * 11);
-                }
-            }
-            this.canv.renderAll();
-        }
-    }
-
 
     // util func for adding  grid to canvas
     addGrid(gridSize = 15) {
@@ -439,6 +322,62 @@ export default class Editor {
             });
         }
         canvas.renderAll();
+    }
+
+    setAdaptiveGrid() {
+        let canvas = this.canv;
+        let currentCursor = 0;
+        let padding = {
+            'sides': 52,
+            'top': 30,
+            'bottom': 20
+        };
+        let productSize = {
+            'width': 285,
+            'height': 200
+        };
+        console.log(padding, productSize);
+        for (let i = 0; i < 3; i++) {
+            canvas.add(new fabric.Line([padding.sides, padding.top * (i + 1), canvas.getWidth() - padding.sides, padding.top * (i + 1)], {
+                stroke: '#ff6600',
+                selectable: false,
+                hasControls: false,
+                hasBorders: false,
+                lockMovementX: true,
+                lockMovementY: true
+            }));
+            currentCursor = (i + 1) * padding.top;
+        }
+        for (let i = 0; i < 4; i++) {
+            canvas.add(new fabric.Line([padding.sides + (i * productSize.width), currentCursor, padding.sides + (i * productSize.width), currentCursor + productSize.height], {
+                stroke: '#ff6600',
+                selectable: false,
+                hasControls: false,
+                hasBorders: false,
+                lockMovementX: true,
+                lockMovementY: true
+            }));
+        }
+        currentCursor += productSize.height;
+        console.log(currentCursor);
+        let tempPadding = 20;
+        for (let i = 0; i < 5; i++) {
+            canvas.add(new fabric.Line([padding.sides, currentCursor, canvas.getWidth() - padding.sides, currentCursor], {
+                stroke: '#ff6600',
+                selectable: false,
+                hasControls: false,
+                hasBorders: false,
+                lockMovementX: true,
+                lockMovementY: true
+            }));
+            if (i % 2 === 0) {
+                tempPadding = 20
+            }
+            else {
+                tempPadding = 40
+            }
+            currentCursor += tempPadding
+        }
     }
 }
 

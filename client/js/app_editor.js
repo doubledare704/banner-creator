@@ -1,6 +1,6 @@
 import {fabric, resetCanvas, deleteKeyup, redoUndo, setColorObjs} from './editor/fabmain';
 import {reloadHistory, saveToHistory} from './editor/history';
-import {setGrid, setGridSize} from './editor/grids';
+import {setGrid, setGridSize, adaptiveGrid} from './editor/grids';
 import backgroundsList from './editor/background';
 import openReviewModal from './editor/review';
 import sendToReview from './editor/reviewModal';
@@ -31,7 +31,8 @@ Baz.register({
     'deleteKeyup': deleteKeyup,
     'redoUndo': redoUndo,
     'dropDown': dropDown,
-    'setColorObjs':setColorObjs
+    'setColorObjs': setColorObjs,
+    'adaptiveGrid': adaptiveGrid
 });
 
 Baz.watch();

@@ -16,7 +16,7 @@ function loadGrid() {
         defaultGrid = innumber.value;
     }
     else {
-        defaultGrid = 15;
+        defaultGrid = 10;
         innumber.value = defaultGrid;
     }
     editor.setGridToCanv(defaultGrid);
@@ -33,6 +33,22 @@ function loadGrid() {
             innumber.setAttribute("disabled", "disabled");
         }
     }
+
+    let trigger = document.getElementById('gridTrigger');
+    if (trigger.innerText.includes('on')) {
+        trigger.innerText = 'grid_off'
+    }
+    else {
+        trigger.innerText = 'grid_on'
+    }
+}
+
+function adaptgrid() {
+    editor.setAdaptiveGrid();
+}
+
+function adaptiveGrid(node) {
+    node.addEventListener('click', adaptgrid);
 }
 function setGrid(node) {
     node.addEventListener('click', loadGrid);
@@ -43,5 +59,6 @@ function setGridSize(node) {
 
 module.exports = {
     'setGrid': setGrid,
-    'setGridSize': setGridSize
+    'setGridSize': setGridSize,
+    'adaptiveGrid': adaptiveGrid
 };

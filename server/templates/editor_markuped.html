@@ -51,7 +51,8 @@
 
                 <section id="selectcolor">
                     <a href="#">
-                        <input class="jscolor btn btn-default" id="colorpicker" value="000000" data-bazooka="setColorObjs">
+                        <input class="jscolor btn btn-default" id="colorpicker" value="000000"
+                               data-bazooka="setColorObjs">
                     </a>
                 </section>
 
@@ -126,12 +127,13 @@
                 </section>
                 <section data-bazooka="setGrid">
                     <a href="#" class="btn btn-default tooltipp" data-tooltip="Отобразить сетку">
-                        <i class="material-icons">view_quilt</i>
+                        <i id="gridTrigger" class="material-icons">grid_on</i>
                     </a>
                 </section>
                 <section class="counter-grid disabled tooltipp" data-tooltip="Отобразить сетку" id="gridder">
                     <a href="#" class="btn btn-default">
-                        <input type="number" id="newGrid" class="form-control number-input" min="5" data-bazooka="setGridSize"
+                        <input type="number" id="newGrid" class="form-control number-input" min="5"
+                               data-bazooka="setGridSize"
                                disabled/>
                     </a>
                 </section>
@@ -162,6 +164,9 @@
                             class="material-icons">undo</i></a>
                     <a href="#" class="btn btn-default tooltipp disabled " id="redo" data-tooltip="Вперед"><i
                             class="material-icons">redo</i></a>
+                    <a href="#" class="btn btn-default tooltipp" data-bazooka="adaptiveGrid" data-tooltip="Адаптивная сетка">
+                        <i id="gridTrigger" class="material-icons">grid_on</i>
+                    </a>
                     {% block additional_buttons %}
                     {% endblock additional_buttons %}
 
