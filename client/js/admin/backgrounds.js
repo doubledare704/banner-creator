@@ -97,12 +97,12 @@ class Backgrounds extends ImagesList {
                 <form id="image-form" className="form-inline" formEncType="multipart/form-data">
                     <div className="row">
                         <div className="form-group col-lg-6">
-                                <button className="btn btn-default" data-bazooka="uploadButton">
-                                    <i className="glyphicon glyphicon-cloud-upload"/> Выберите файлы
-                                </button>
-                                <input id="input" className="upload" type="file" name="file[]"
-                                       accept="image/gif, image/jpeg, image/jpg, image/png" multiple="true" hidden="true"/>
-                                <label id="custom-upload-button-label" htmlFor="input"/>
+                            <button className="btn btn-default" data-bazooka="uploadButton">
+                                <i className="glyphicon glyphicon-cloud-upload"/> Выберите файлы
+                            </button>
+                            <input id="input" className="upload" type="file" name="file[]"
+                                   accept="image/gif, image/jpeg, image/jpg, image/png" multiple="true" hidden="true"/>
+                            <label id="custom-upload-button-label" htmlFor="input"/>
                         </div>
                         <div>
                             <input name="project" hidden="true" value={this.props.projectId}/>
@@ -141,15 +141,15 @@ class Backgrounds extends ImagesList {
                     }
                 </div>
             </div>
-    );
-    }
-    }
-
-    export default function (node) {
-        const {imageArray, projectId} = h.getAttrs(BAZOOKA_PREFIX, node);
-
-        ReactDOM.render(
-        <Backgrounds imageArray={imageArray} projectId={projectId}/>,
-        node
         );
     }
+}
+
+export default function (node) {
+    const {imageArray, projectId} = h.getAttrs(BAZOOKA_PREFIX, node);
+
+    ReactDOM.render(
+        <Backgrounds imageArray={imageArray} projectId={projectId}/>,
+        node
+    );
+}

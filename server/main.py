@@ -36,6 +36,7 @@ def create_app():
     # auth init
     login_manager = LoginManager(app)
     login_manager.login_view = "login_page"
+    login_manager.login_message = None
     login_manager.user_loader(load_user)
 
     CsrfProtect(app)

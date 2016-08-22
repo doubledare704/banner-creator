@@ -22,7 +22,7 @@ const FontSelect = (props) => (
             <option disabled value="">Не выбрано</option>
             {
                 props.fontList.map((font) => (
-                        <option value={font[1]}>{font[0]}</option>
+                        <option value={font.id}>{font.name}</option>
                     )
                 )
             }
@@ -79,7 +79,7 @@ class HeadersPanel extends React.Component {
             if (!headers[name]) {
                 headers[name] = {}
             }
-            headers[name].font_name = fontList[e.target.selectedIndex - 1][0];
+            headers[name].font_name = fontList[e.target.selectedIndex - 1].name;
             headers[name].font_id = e.target.value;
             this.setState({
                 headers: headers

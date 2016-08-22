@@ -14,7 +14,7 @@
     <style>
         {% for font in project.fonts %}
             @font-face {
-                font-family: {{ font.name }};
+                font-family: "{{ font.name }}";
                 src: url({{ font.url() }}); /* Путь к файлу со шрифтом */
            }
         {% endfor %}

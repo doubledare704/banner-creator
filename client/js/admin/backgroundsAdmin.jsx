@@ -33,21 +33,21 @@ class TableRow extends React.Component {
     }
 
     render() {
+        const buttonName = this.props.backgroundStatus ? "Деактивировать" : "Удалить";
+
         return (
             <tr>
                 <td>
                     {this.props.tablerow.title}
                 </td>
                 <td>
-                    <img src={this.props.tablerow.preview} alt="image"/>
+                    <img src={this.props.tablerow.preview} alt="cat"/>
+                </td>
+                <td className="for-delete">
+                    <Button name={buttonName} clickAction={this.props.onTableRowDelete(this.props.tablerow)}/>
                 </td>
                 <td>
-                    {
-                        this.props.backgroundStatus ?
-                            <Button name="Деактивировать"
-                                    clickAction={this.props.onTableRowDelete(this.props.tablerow)}/>
-                            : this.addActivateButton()
-                    }
+                    {this.addActivateButton()}
                 </td>
             </tr>
         );
@@ -100,9 +100,12 @@ class BackgroundsAdmin extends React.Component {
 
     handleTableRowRemove = (tablerow) => {
         return () => {
+
+            //if the background is active, we change status on inactive
+            if (tablerow.active === true) {
                 const index = this.state.backgrounds.indexOf(tablerow);
 
-                fetch(`/admin/inactivate_image/${this.state.backgrounds[index].id}`,{
+                fetch(`/admin/inactivate_image/${this.state.backgrounds[index].id}`, {
                     credentials: 'same-origin',
                     method: "POST",
                     headers: {
@@ -110,17 +113,44 @@ class BackgroundsAdmin extends React.Component {
                     }
                 })
                     .then((response) => {
-                    if (response.status === 200) {
-                        activatePopUp({
-                            title: "Фон стал неактивным",
-                            flash: true
-                        });
-                        this.state.backgrounds.splice(index, 1);
-                        this.setState({
-                            backgrounds: this.state.backgrounds
+                        if (response.status === 200) {
+                            activatePopUp({
+                                title: "Фон стал неактивным",
+                                flash: true
+                            });
+                            this.state.backgrounds.splice(index, 1);
+                            this.setState({
+                                backgrounds: this.state.backgrounds
+                            });
+                        }
+                    });
+
+                //if the background is inactive we delete this background from DB
+            } else {
+                const index = this.state.backgrounds.indexOf(tablerow);
+
+                activatePopUp({
+                    title: "Вы действительно хотите удалить картинку? Операция не может быть отменена.",
+                    confirm: true,
+                    confirmAction: () => {
+                        fetch(
+                            `/admin/delete_image/${this.state.backgrounds[index].id}`, {
+                                credentials: 'same-origin',
+                                method: "POST",
+                                headers: {
+                                    'X-CSRFToken': csrfToken()
+                                }
+                            }
+                        ).then((response) => {
+                            if (response.status === 204) {
+                                this.state.backgrounds.splice(index, 1);
+                                this.setState({backgrounds: this.state.backgrounds});
+                            }
                         });
                     }
                 });
+
+            }
         }
     };
 

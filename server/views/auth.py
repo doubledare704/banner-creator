@@ -22,7 +22,8 @@ def oauth_callback(social_network_name):
     if resp is None or isinstance(resp, OAuthException):
         return None
     user_data = oauth_app.get(oauth_dict['fetch_query'], token=(resp['access_token'], '')).data
-    user = User.query.filter_by(social_id=user_data['id'], social_type=social_network_name).first()
+    user = User.query.filter(((User.social_id == user_data['id']) & (User.social_type == social_network_name)) |
+                             (User.email == user_data['email'])).first()
 
     if user is None:
         user_fields = oauth_dict['custom_fields']

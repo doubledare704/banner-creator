@@ -3,7 +3,7 @@
 {% block admin_projects_content %}
     <div class="row">
         <h3>Загруженные шрифты</h3>
-        <div data-bazooka="projectsPanel" data-projects-font-list="{{ fonts }}"></div>
+        <div data-bazooka="projectsPanel" data-projects-font-list="{{ fonts }}" data-projects-is-admin="{{ current_user.is_admin()|tojson }}"></div>
 
         <h3>Загрузить шрифт</h3>
         <div class="container">
