@@ -3,6 +3,9 @@ import {editor} from './fabmain.js';
 function loadNewGridSize() {
     const newSize = document.getElementById('newGrid');
     let ns = newSize.value;
+    if (ns < 5) {
+        ns = 5;
+    }
     editor.setNewGridSize(ns);
 }
 
