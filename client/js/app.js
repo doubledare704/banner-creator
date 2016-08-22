@@ -15,9 +15,7 @@ import {uploadButton} from './helpers';
 import uploadFont from './admin/upload_font';
 import projectsHeaders from './admin/headers.jsx';
 import {dropDown} from './projects/dropdown';
-import uploadFiles from './images/uploadFiles';
 import reviewResult from './images/reviewResult.jsx';
-import backgrounds from './admin/backgrounds';
 import saveBanner from './dashboard/save_banner';
 import removeProjectButton from './admin/button.jsx';
 import copyBanner from './dashboard/dashboard_copy_banner';
@@ -41,7 +39,6 @@ Baz.register({
     'projectsPanel': projectsPanel,
     'uploadFont': uploadFont,
     'projectsHeaders': projectsHeaders,
-    'backgrounds': backgrounds,
     'removeProjectButton': removeProjectButton,
     // dashboard
     'goToReview': goToReview,
@@ -49,7 +46,6 @@ Baz.register({
     'deleteReview': deleteReview,
     'deleteBanner': deleteBanner,
     'dropDown': dropDown,
-    'uploadFiles' : uploadFiles,
     'reviewResult': reviewResult,
     'saveBanner': saveBanner,
     'copyBanner': copyBanner,

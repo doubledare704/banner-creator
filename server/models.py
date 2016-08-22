@@ -146,6 +146,7 @@ class Font(db.Model):
     __tablename__ = 'font'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
+    readable_name = db.Column(db.String(255))
     filename = db.Column(db.String(255))
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     headers = db.relationship('Header', backref='font', cascade="delete")

@@ -12,7 +12,7 @@ const FontSelect = (props) => (
         <select className="form-control" defaultValue={(props.fontList[0] || {}).id} size="9" onChange={props.changeSelected}>
             {
                 props.fontList.map((font) => (
-                        <option value={font.id}>{font.name}</option>
+                        <option value={font.id}>{font.readable_name}</option>
                     )
                 )
             }
@@ -26,7 +26,7 @@ const FontShower = (props) => {
     };
     return (<div className="col-md-9">
         <div className="well">
-            <p>Имя шрифта: <b>{props.name}</b></p>
+            <p>Имя шрифта: <b>{props.readable_name}</b></p>
             <p>Пример оформления шрифта:</p>
             <div style={exampleStyle}>
                 <p>1234567890 ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz </p>
@@ -108,6 +108,7 @@ class FontPanel extends React.Component {
                 />
                 <FontShower
                     name={(selectedFont || {}).name}
+                    readable_name={(selectedFont || {}).readable_name}
                     isAdmin={this.props.isAdmin}
                     removeFont={this.removeFont}
                 />

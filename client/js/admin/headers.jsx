@@ -22,7 +22,7 @@ const FontSelect = (props) => (
             <option disabled value="">Не выбрано</option>
             {
                 props.fontList.map((font) => (
-                        <option value={font.id}>{font.name}</option>
+                        <option value={font.id}>{font.readable_name}</option>
                     )
                 )
             }
