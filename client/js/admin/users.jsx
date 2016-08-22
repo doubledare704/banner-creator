@@ -4,7 +4,7 @@ import {h} from 'bazooka';
 import moment from 'moment';
 import classNames from 'classnames';
 import {activatePopUp, deactivatePopUp} from '../popUp.js';
-import {csrfToken} from '../helpers';
+import {csrfToken, SuccessAlert, ErrorAlert} from '../helpers';
 
 const BAZOOKA_PREFIX = 'users';
 
@@ -47,7 +47,7 @@ class User extends React.Component {
                     .catch((response) => {
                         console.error(response.message);
                         activatePopUp({
-                            title: `Ошибка сервера`,
+                            child: <ErrorAlert text="Произошла ошибка. Попробуйте обновить страницу и повторить попытку"/>,
                             flash: true,
                         });
                     });
@@ -80,7 +80,7 @@ class User extends React.Component {
             .catch((response) => {
                 console.error(response.message);
                 activatePopUp({
-                    title: `Ошибка сервера`,
+                    child: <ErrorAlert text="Произошла ошибка. Попробуйте обновить страницу и повторить попытку"/>,
                     flash: true,
                 });
             });
@@ -108,7 +108,7 @@ class User extends React.Component {
             .catch((response) => {
                 console.error(response.message);
                 activatePopUp({
-                    title: `Ошибка сервера`,
+                    child: <ErrorAlert text="Произошла ошибка. Попробуйте обновить страницу и повторить попытку"/>,
                     flash: true,
                 });
             });

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
 import {activatePopUp} from '../popUp';
-import {csrfToken} from '../helpers';
+import {csrfToken, SuccessAlert} from '../helpers';
 
 
 const BAZOOKA_PREFIX = 'backgrounds-admin';
@@ -115,7 +115,7 @@ class BackgroundsAdmin extends React.Component {
                     .then((response) => {
                         if (response.status === 200) {
                             activatePopUp({
-                                title: "Фон стал неактивным",
+                                child: <SuccessAlert text="Фон стал неактивным"/>,
                                 flash: true
                             });
                             this.state.backgrounds.splice(index, 1);
@@ -169,7 +169,7 @@ class BackgroundsAdmin extends React.Component {
                 .then((response) => {
                     if (response.status === 200) {
                         activatePopUp({
-                            title: "Фон стал активным",
+                            child: <SuccessAlert text="Фон стал активным"/>,
                             flash: true
                         });
                         this.state.backgrounds.splice(index, 1);
