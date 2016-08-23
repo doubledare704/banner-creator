@@ -19,6 +19,7 @@ class Comments extends React.Component{
         const pStyle ={
             marginLeft: '7px',
             marginTop: '0px',
+            marginRight: '5px',
             backgroundColor: '#f5f5f5',
             whiteSpace: 'pre'
         };
