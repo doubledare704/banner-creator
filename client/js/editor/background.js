@@ -18,7 +18,7 @@ class BackgroundImage extends React.Component {
   render() {
     return (
       <li onClick={this.setBackground}>
-        <a title={`${this.props.imageSize.width} x ${this.props.imageSize.height}`}>
+        <a title={`${this.props.imageTitle}\n${this.props.imageSize.width} x ${this.props.imageSize.height}`}>
           <img src={this.props.imagePreview}/>
         </a>
       </li>
@@ -87,7 +87,8 @@ class BackgroundsList extends React.Component {
         {this.state.images.map(function(image, i) {
           return <BackgroundImage imagePreview={imgUrl + image.preview} key={i}
                                   imageOriginal={imgUrl + image.name}
-                                  imageSize={{'width': image.width, 'height': image.height}} />
+                                  imageSize={{'width': image.width, 'height': image.height}}
+                                  imageTitle={image.title} />
         })}
       </ul>
     )
