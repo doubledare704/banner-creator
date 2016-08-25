@@ -1,7 +1,7 @@
 import os
 import sys
 
-from flask_script import Manager, Server
+from flask_script import Manager
 from flask_migrate import MigrateCommand
 
 from server.main import create_app
@@ -11,7 +11,6 @@ app = create_app()
 
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
-manager.add_command("runprod", Server(host="0.0.0.0", port=20000))
 
 
 @manager.command

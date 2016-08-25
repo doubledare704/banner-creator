@@ -14,4 +14,8 @@ workdir: /app
 executable: /usr/bin/python3
 arguments:
   - manage.py
-  - runprod
+  - runserver
+  - -h
+  - 0.0.0.0
+  - -p
+  - 20000
