@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {h} from 'bazooka';
 import {activatePopUp} from '../popUp.js';
-import {csrfToken} from '../helpers';
+import {csrfToken, ErrorAlert} from '../helpers';
 
 const BAZOOKA_PREFIX = 'projects';
 
@@ -22,7 +22,7 @@ const FontSelect = (props) => (
             <option disabled value="">Не выбрано</option>
             {
                 props.fontList.map((font) => (
-                        <option value={font.id}>{font.name}</option>
+                        <option value={font.id}>{font.readable_name}</option>
                     )
                 )
             }
@@ -108,7 +108,7 @@ class HeadersPanel extends React.Component {
         });
         if (hasEmpty || Object.keys(headers).length < HEADERS_ORDER.length) {
             activatePopUp({
-                title: 'Шрифт и размер должны быть проставлены для всех пунктов',
+                child: <ErrorAlert text="Шрифт и размер должны быть проставлены для всех пунктов"/>,
                 flash: true,
             });
             return
@@ -131,7 +131,7 @@ class HeadersPanel extends React.Component {
             .catch((response) => {
                 console.error(response.message);
                 activatePopUp({
-                    title: 'Ошибка сервера',
+                    child: <ErrorAlert text="Произошла ошибка. Попробуйте обновить страницу и повторить попытку"/>,
                     flash: true,
                 });
             });

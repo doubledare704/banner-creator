@@ -99,7 +99,7 @@
 
                 <section class="last-sec">
                     <a href="#" class="btn btn-default">
-                        <i class="material-icons">cloud_upload</i>
+                        <i class="material-icons">art_track</i>
                     </a>
                     <form id="upload-file" method="post" enctype="multipart/form-data">
                         <input type="file" name="file" id='inputted'/>
@@ -162,12 +162,16 @@
                             class="material-icons">undo</i></a>
                     <a href="#" class="btn btn-default tooltipp disabled " id="redo" data-tooltip="Вперед"><i
                             class="material-icons">redo</i></a>
+                    <button class="btn btn-default tooltipp" id="htmlgrid" data-tooltip="Сетка"><i
+                            class="material-icons">grid_on</i></button>
                     {% block additional_buttons %}
                     {% endblock additional_buttons %}
 
                 </div>
                 <section class="container2 forcanvas" id="parentWrap">
                     <main class="container-content" id="childWrap" data-bazooka="redoUndo">
+                        <div data-bazooka="gridhtml">
+                        </div>
                         <canvas id="main" data-bazooka="deleteKeyup">
                         </canvas>
                     </main>

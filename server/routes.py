@@ -1,3 +1,5 @@
+from jinja2 import defaults
+
 from server.utils.image import uploaded_file
 from server.views import views as main_views, dashboard as dashboard_views
 from server.views.admin import (
@@ -49,6 +51,7 @@ def setup_routes(app):
                      endpoint='dashboard_copy_banner')
     app.add_url_rule('/dashboard/banners/rename', view_func=dashboard_views.RenameBanner.as_view(
                     'dashboard_rename_banner'))
+    app.add_url_rule('/refresh/<int:project_id>', methods=['GET'], view_func=refresh)
     app.add_url_rule('/refresh/', methods=['GET'], view_func=refresh)
 
     # admin

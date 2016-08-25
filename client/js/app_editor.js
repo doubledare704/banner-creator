@@ -7,6 +7,7 @@ import sendToReview from './editor/reviewModal';
 import {logoutClick} from './authHelper';
 import {setOriginalZoom, keysListen, setNormalZoom, zoomOuter} from './editor/zoom';
 import {dropDown} from './projects/dropdown';
+import gridhtml from './images/gridhtml';
 
 require('./../css/main.styl');
 require('./editor/fabmain.js');
@@ -31,7 +32,8 @@ Baz.register({
     'deleteKeyup': deleteKeyup,
     'redoUndo': redoUndo,
     'dropDown': dropDown,
-    'setColorObjs':setColorObjs
+    'setColorObjs':setColorObjs,
+    'gridhtml': gridhtml
 });
 
 Baz.watch();
