@@ -16,7 +16,7 @@ function loadGrid() {
         defaultGrid = innumber.value;
     }
     else {
-        defaultGrid = 15;
+        defaultGrid = 10;
         innumber.value = defaultGrid;
     }
     editor.setGridToCanv(defaultGrid);
@@ -33,7 +33,15 @@ function loadGrid() {
             innumber.setAttribute("disabled", "disabled");
         }
     }
+    let trigger = document.getElementById('gridTrigger');
+    if (trigger.innerText.includes('on')) {
+        trigger.innerText = 'grid_off'
+    }
+    else {
+        trigger.innerText = 'grid_on'
+    }
 }
+
 function setGrid(node) {
     node.addEventListener('click', loadGrid);
 }
