@@ -29,9 +29,9 @@ thirdBlock.style.cssText = "top: 21%; left: 64.5%; height: 47.6%; width: 29.7%;"
 afterBlock.className = "editor-gridhtml gridhtml-dash";
 afterBlock.style.cssText = "top: 68.5%;  left: 5.5%; height: 4.7%; width: 88.7%;";
 
-betweenHeader.className = "editor-gridhtml gridhtml-footer";
-afterPrice.className = "editor-gridhtml gridhtml-footer";
-afterButton.className = "editor-gridhtml gridhtml-footer";
+betweenHeader.className = "editor-gridhtml gridhtml-afterheader";
+afterPrice.className = "editor-gridhtml gridhtml-afterheader";
+afterButton.className = "editor-gridhtml gridhtml-afterheader";
 betweenHeader.style.cssText = "top: 75.9%;  left: 10%; height: 2.4%; width: 81.3%;";
 afterPrice.style.cssText = "top: 83%;  left: 5.5%; height: 4.7%; width: 88.7%;";
 afterButton.style.cssText = "top: 95%;  left: 5.5%; height: 4.7%; width: 88.7%;";

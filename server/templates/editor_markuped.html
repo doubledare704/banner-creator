@@ -164,8 +164,14 @@
                             class="material-icons">undo</i></a>
                     <a href="#" class="btn btn-default tooltipp disabled " id="redo" data-tooltip="Вперед"><i
                             class="material-icons">redo</i></a>
-                    <button class="btn btn-default tooltipp" id="htmlgrid" data-tooltip="Сетка"><i
-                            class="material-icons">grid_on</i></button>
+                    <button class="btn btn-default tooltipp" id="htmlgrid" data-tooltip="главная"><i
+                            class="material-icons">grid_on</i>0</button>
+                    <button class="btn btn-default tooltipp" id="htmlgrid1" data-tooltip="разсилка1"><i
+                                class="material-icons">grid_on</i>1</button>
+                    <button class="btn btn-default tooltipp" id="htmlgrid2" data-tooltip="разсилка2"><i
+                                class="material-icons">grid_on</i>2</button>
+                    <button class="btn btn-default tooltipp" id="htmlgrid3" data-tooltip="разсилка3"><i
+                                class="material-icons">grid_on</i>3</button>
                     {% block additional_buttons %}
                     {% endblock additional_buttons %}
 
@@ -173,6 +179,12 @@
                 <section class="container2 forcanvas" id="parentWrap">
                     <main class="container-content" id="childWrap" data-bazooka="redoUndo">
                         <div data-bazooka="gridhtml">
+                        </div>
+                        <div data-bazooka="gridhtml1">
+                        </div>
+                        <div data-bazooka="gridhtml2">
+                        </div>
+                        <div data-bazooka="gridhtml3">
                         </div>
                         <canvas id="main" data-bazooka="deleteKeyup">
                         </canvas>

@@ -8,6 +8,9 @@ import {logoutClick} from './authHelper';
 import {setOriginalZoom, keysListen, setNormalZoom, zoomOuter} from './editor/zoom';
 import {dropDown} from './projects/dropdown';
 import gridhtml from './images/gridhtml';
+import gridhtml1 from './images/gridhtml1';
+import gridhtml2 from './images/gridhtml2';
+import gridhtml3 from './images/gridhtml3';
 
 require('./../css/main.styl');
 require('./editor/fabmain.js');
@@ -33,7 +36,10 @@ Baz.register({
     'redoUndo': redoUndo,
     'dropDown': dropDown,
     'setColorObjs':setColorObjs,
-    'gridhtml': gridhtml
+    'gridhtml': gridhtml,
+    'gridhtml1': gridhtml1,
+    'gridhtml2': gridhtml2,
+    'gridhtml3': gridhtml3
 });
 
 Baz.watch();
